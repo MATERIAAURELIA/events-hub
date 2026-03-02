@@ -1,7 +1,7 @@
 {
   "design": {
-    "bodyFont": "'Libre Baskerville', 'Baskerville', 'Georgia', serif",
-    "headFont": "'Libre Baskerville', 'Baskerville', 'Georgia', serif",
+    "bodyFont": "'Lucero', serif",
+    "headFont": "'Lucero', serif",
     "labelSize": 2,
     "btnSize": 1.12,
     "headSize": 1.4,
