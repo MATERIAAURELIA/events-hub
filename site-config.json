@@ -1,7 +1,7 @@
 {
   "design": {
-    "bodyFont": "'Inter', sans-serif",
-    "headFont": "'Inter', sans-serif",
+    "bodyFont": "'Libre Baskerville', 'Baskerville', 'Georgia', serif",
+    "headFont": "'Libre Baskerville', 'Baskerville', 'Georgia', serif",
     "labelSize": 2,
     "btnSize": 1.12,
     "headSize": 1.4,
@@ -9,7 +9,7 @@
     "radius": 13,
     "padV": 10,
     "gap": 10,
-    "thumbSize": 64,
+    "thumbSize": 88,
     "thumbR": 6,
     "bgColor": "#D4951A",
     "btnColor": "#ffffff",
