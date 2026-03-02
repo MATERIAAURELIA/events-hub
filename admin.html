@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Events Admin</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: #111; color: #eee; min-height: 100vh; }
+
+  .admin { max-width: 900px; margin: 0 auto; padding: 20px; }
+  h1 { font-size: 1.4rem; font-weight: 800; margin-bottom: 4px; }
+  .subtitle { font-size: 0.75rem; color: #888; margin-bottom: 20px; }
+
+  /* TABS */
+  .tabs { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 8px; }
+  .tab { padding: 8px 16px; background: none; border: none; color: #888; font-family: Inter, sans-serif; font-size: 0.78rem; font-weight: 600; cursor: pointer; border-radius: 8px 8px 0 0; transition: all 0.2s; }
+  .tab.active { color: #fff; background: #222; }
+  .tab:hover { color: #ccc; }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* CARDS */
+  .card { background: #1a1a1a; border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid #2a2a2a; }
+  .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .card-header h2 { font-size: 0.9rem; font-weight: 700; }
+  .card-header .badge { font-size: 0.6rem; background: #333; padding: 3px 8px; border-radius: 10px; color: #aaa; }
+
+  /* FORMS */
+  label { display: block; font-size: 0.68rem; color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; margin-top: 10px; }
+  label:first-child { margin-top: 0; }
+  input, select, textarea { width: 100%; padding: 8px 10px; background: #222; border: 1px solid #333; border-radius: 8px; color: #eee; font-family: Inter, sans-serif; font-size: 0.8rem; outline: none; transition: border 0.2s; }
+  input:focus, select:focus, textarea:focus { border-color: #c8a44e; }
+  textarea { resize: vertical; min-height: 60px; }
+  .row { display: flex; gap: 10px; }
+  .row > * { flex: 1; }
+
+  /* BUTTONS */
+  .btn { padding: 8px 16px; border: none; border-radius: 8px; font-family: Inter, sans-serif; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+  .btn-gold { background: #c8a44e; color: #000; }
+  .btn-gold:hover { background: #d4b05a; }
+  .btn-red { background: #4a2020; color: #e74c3c; }
+  .btn-red:hover { background: #5a2828; }
+  .btn-ghost { background: none; border: 1px solid #444; color: #aaa; }
+  .btn-ghost:hover { border-color: #888; color: #eee; }
+  .btn-green { background: #1a3a1a; color: #2ecc71; }
+  .btn-green:hover { background: #224422; }
+
+  .btn-row { display: flex; gap: 8px; margin-top: 14px; }
+
+  /* EVENT LIST */
+  .event-item { display: flex; align-items: center; gap: 12px; padding: 10px; background: #222; border-radius: 10px; margin-bottom: 6px; cursor: pointer; transition: background 0.2s; }
+  .event-item:hover { background: #2a2a2a; }
+  .event-item .ev-date { font-size: 0.68rem; color: #c8a44e; font-weight: 700; min-width: 70px; }
+  .event-item .ev-title { font-size: 0.8rem; font-weight: 600; flex: 1; }
+  .event-item .ev-price { font-size: 0.72rem; color: #888; }
+  .event-item .ev-type { font-size: 0.58rem; background: #333; padding: 2px 8px; border-radius: 8px; color: #aaa; }
+  .event-item .ev-actions { display: flex; gap: 4px; }
+  .event-item .ev-actions button { padding: 4px 8px; font-size: 0.6rem; }
+
+  /* LINK ITEM */
+  .link-item { display: flex; align-items: center; gap: 10px; padding: 10px; background: #222; border-radius: 10px; margin-bottom: 6px; }
+  .link-item .link-emoji { font-size: 1.2rem; width: 32px; text-align: center; }
+  .link-item .link-thumb { width: 32px; height: 32px; border-radius: 6px; object-fit: cover; }
+  .link-item .link-info { flex: 1; min-width: 0; }
+  .link-item .link-title { font-size: 0.78rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .link-item .link-url { font-size: 0.6rem; color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .link-item .link-actions { display: flex; gap: 4px; }
+  .link-item .link-actions button { padding: 4px 8px; font-size: 0.6rem; }
+
+  /* THUMB UPLOAD */
+  .thumb-upload { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
+  .thumb-preview { width: 48px; height: 48px; border-radius: 8px; background: #222; border: 1px solid #333; object-fit: cover; display: flex; align-items: center; justify-content: center; overflow: hidden; font-size: 1.4rem; }
+  .thumb-preview img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* CROP TOOL */
+  .crop-container {
+    width: 100%; max-width: 300px; aspect-ratio: 1; border-radius: 12px;
+    overflow: hidden; position: relative; background: #000;
+    border: 2px solid #444; cursor: grab; margin: 10px auto;
+    touch-action: none;
+  }
+  .crop-container:active { cursor: grabbing; }
+  .crop-container img {
+    position: absolute; min-width: 100%; min-height: 100%;
+    user-select: none; -webkit-user-drag: none; pointer-events: none;
+  }
+  .crop-hint {
+    position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+    background: rgba(0,0,0,0.7); color: #fff; font-size: 0.6rem;
+    padding: 3px 10px; border-radius: 10px; pointer-events: none;
+    font-weight: 600;
+  }
+  .crop-zoom {
+    display: flex; align-items: center; gap: 8px; justify-content: center;
+    margin-top: 8px;
+  }
+  .crop-zoom label { margin: 0; font-size: 0.65rem; color: #aaa; text-transform: none; letter-spacing: 0; }
+  .crop-zoom input[type="range"] { width: 160px; accent-color: #c8a44e; }
+
+  /* MODAL */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; }
+  .modal-overlay.show { display: flex; align-items: center; justify-content: center; }
+  .modal { background: #1a1a1a; border-radius: 16px; padding: 20px; max-width: 500px; width: 90%; max-height: 85vh; overflow-y: auto; border: 1px solid #333; }
+  .modal h2 { font-size: 1rem; font-weight: 700; margin-bottom: 14px; }
+
+  /* PREVIEW */
+  .preview-frame { background: #222; border-radius: 12px; overflow: hidden; margin-top: 10px; }
+  .preview-frame iframe { width: 100%; height: 600px; border: none; }
+
+  /* STATUS */
+  .status { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #2ecc71; color: #000; padding: 8px 20px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; opacity: 0; transition: opacity 0.3s; z-index: 200; pointer-events: none; }
+  .status.show { opacity: 1; }
+
+  /* LOGO */
+  .logo-section { display: flex; align-items: center; gap: 16px; }
+  .logo-preview { width: 72px; height: 72px; border-radius: 50%; background: #222; border: 2px solid #333; display: flex; align-items: center; justify-content: center; font-size: 2rem; overflow: hidden; }
+  .logo-preview img { width: 100%; height: 100%; object-fit: cover; }
+
+  .drag-handle { cursor: grab; color: #555; font-size: 1rem; user-select: none; }
+  .drag-handle:active { cursor: grabbing; }
+
+  /* JSON EDITOR */
+  .json-editor { width: 100%; min-height: 400px; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.72rem; background: #0a0a0a; color: #c8a44e; border: 1px solid #333; border-radius: 8px; padding: 12px; tab-size: 2; }
+</style>
+</head>
+<body>
+
+<div class="admin">
+  <h1>⚙️ Events Hub Admin</h1>
+  <div class="subtitle">Manage your events page — changes save to site-config.json</div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="events">📅 Events</button>
+    <button class="tab" data-tab="links">🔗 Links</button>
+    <button class="tab" data-tab="site">🎨 Site</button>
+    <button class="tab" data-tab="preview">👁 Preview</button>
+    <button class="tab" data-tab="stats">📊 Stats</button>
+    <button class="tab" data-tab="json">{ } JSON</button>
+  </div>
+
+  <!-- EVENTS TAB -->
+  <div class="tab-content active" id="tab-events">
+    <div class="card">
+      <div class="card-header">
+        <h2>Events</h2>
+        <button class="btn btn-gold" onclick="openEventModal()">+ Add Event</button>
+      </div>
+      <div id="events-list"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Event Types</h2>
+        <button class="btn btn-ghost" onclick="openTypeModal()">+ Add Type</button>
+      </div>
+      <div id="types-list"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Venues</h2>
+        <button class="btn btn-ghost" onclick="openVenueModal()">+ Add Venue</button>
+      </div>
+      <div id="venues-list"></div>
+    </div>
+  </div>
+
+  <!-- LINKS TAB -->
+  <div class="tab-content" id="tab-links">
+    <div class="card">
+      <div class="card-header">
+        <h2>Top Links</h2>
+        <button class="btn btn-gold" onclick="openLinkModal('topLinks')">+ Add Link</button>
+      </div>
+      <div id="top-links-list"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Resources</h2>
+        <button class="btn btn-gold" onclick="openLinkModal('resources')">+ Add Resource</button>
+      </div>
+      <div id="resources-list"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Social Links</h2>
+        <button class="btn btn-ghost" onclick="openSocialModal()">+ Add Social</button>
+      </div>
+      <div id="social-list"></div>
+    </div>
+  </div>
+
+  <!-- SITE TAB -->
+  <div class="tab-content" id="tab-site">
+    <div class="card">
+      <div class="card-header"><h2>Branding</h2></div>
+      <div class="logo-section">
+        <div class="logo-preview" id="logo-prev">🔔</div>
+        <div>
+          <label>Logo URL (or upload)</label>
+          <input type="text" id="site-logo" placeholder="https://... or leave blank for emoji">
+          <div style="margin-top:6px">
+            <input type="file" accept="image/*" id="logo-file" style="font-size:0.7rem">
+          </div>
+        </div>
+      </div>
+      <label>Logo Emoji (fallback)</label>
+      <input type="text" id="site-emoji" placeholder="🔔">
+      <label>Site Name</label>
+      <input type="text" id="site-name">
+      <label>Bio (HTML ok)</label>
+      <textarea id="site-bio"></textarea>
+      <label>Contact Email</label>
+      <input type="email" id="site-email">
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h2>Filter Order</h2></div>
+      <p style="font-size:0.7rem;color:#888;margin-bottom:8px">Comma-separated type IDs</p>
+      <input type="text" id="filter-order">
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-gold" onclick="saveSiteSettings()">💾 Save Site Settings</button>
+    </div>
+  </div>
+
+  <!-- STATS TAB -->
+  <div class="tab-content" id="tab-stats">
+    <div class="card">
+      <div class="card-header">
+        <h2>📊 Page Views</h2>
+        <button class="btn btn-ghost" onclick="renderStats()">↻ Refresh</button>
+      </div>
+      <div class="row" style="margin-bottom:14px">
+        <div class="card" style="text-align:center;margin:0">
+          <div style="font-size:0.6rem;color:#888;text-transform:uppercase;font-weight:700">Today</div>
+          <div id="stat-today" style="font-size:1.8rem;font-weight:800;color:#c8a44e">0</div>
+        </div>
+        <div class="card" style="text-align:center;margin:0">
+          <div style="font-size:0.6rem;color:#888;text-transform:uppercase;font-weight:700">This Week</div>
+          <div id="stat-week" style="font-size:1.8rem;font-weight:800;color:#c8a44e">0</div>
+        </div>
+        <div class="card" style="text-align:center;margin:0">
+          <div style="font-size:0.6rem;color:#888;text-transform:uppercase;font-weight:700">Total (90d)</div>
+          <div id="stat-total" style="font-size:1.8rem;font-weight:800;color:#c8a44e">0</div>
+        </div>
+      </div>
+      <div id="stat-chart" style="display:flex;align-items:flex-end;gap:2px;height:100px;margin-bottom:12px"></div>
+      <div style="display:flex;justify-content:space-between;font-size:0.55rem;color:#666">
+        <span>30 days ago</span><span>Today</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h2>🎟 Booking Clicks</h2></div>
+      <div id="stat-clicks"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h2>🔗 Referrers</h2></div>
+      <div id="stat-refs"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>🔧 Google Analytics</h2>
+      </div>
+      <p style="font-size:0.7rem;color:#888;margin-bottom:8px">Paste your GA4 Measurement ID to enable full Google Analytics tracking.</p>
+      <input type="text" id="ga-id" placeholder="G-XXXXXXXXXX">
+      <div class="btn-row">
+        <button class="btn btn-gold" onclick="saveGaId()">💾 Save GA ID</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PREVIEW TAB -->
+  <div class="tab-content" id="tab-preview">
+    <div class="card">
+      <div class="card-header">
+        <h2>Live Preview</h2>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-ghost" onclick="setPreviewWidth('375px')">📱 Mobile</button>
+          <button class="btn btn-ghost" onclick="setPreviewWidth('100%')">🖥 Desktop</button>
+          <button class="btn btn-ghost" onclick="openPreviewTab()">↗ New Tab</button>
+        </div>
+      </div>
+      <div class="preview-frame" id="preview-frame">
+        <iframe id="preview-iframe" src="index.html"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- JSON TAB -->
+  <div class="tab-content" id="tab-json">
+    <div class="card">
+      <div class="card-header">
+        <h2>Raw JSON</h2>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-ghost" onclick="loadJsonEditor()">↻ Reload</button>
+          <button class="btn btn-gold" onclick="saveJsonEditor()">💾 Save</button>
+        </div>
+      </div>
+      <textarea class="json-editor" id="json-editor"></textarea>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="downloadConfig()">⬇ Download site-config.json</button>
+      <label class="btn btn-ghost" style="display:inline-flex;align-items:center;cursor:pointer;margin:0;text-transform:none;letter-spacing:0">
+        ⬆ Import JSON
+        <input type="file" accept=".json" style="display:none" onchange="importConfig(this)">
+      </label>
+    </div>
+  </div>
+</div>
+
+<!-- EVENT MODAL -->
+<div class="modal-overlay" id="event-modal">
+  <div class="modal">
+    <h2 id="event-modal-title">Add Event</h2>
+    <input type="hidden" id="ev-edit-idx" value="-1">
+    <label>Title</label>
+    <input type="text" id="ev-title">
+    <div class="row">
+      <div><label>Type</label><select id="ev-type"></select></div>
+      <div>
+        <label>Venue <button class="btn btn-ghost" style="padding:2px 6px;font-size:0.55rem;margin-left:6px;vertical-align:middle" onclick="event.preventDefault();quickAddVenue()">+ New</button></label>
+        <select id="ev-venue"></select>
+      </div>
+    </div>
+    <label>Location Override <span style="font-size:0.6rem;color:#666;text-transform:none;letter-spacing:0">(leave blank to use venue's default location)</span></label>
+    <input type="text" id="ev-venue-override" placeholder="e.g. Sherwood Park — overrides venue name + hides area">
+    <div class="row">
+      <div><label>Date</label><input type="date" id="ev-date"></div>
+      <div><label>Start Time</label><input type="time" id="ev-time"></div>
+      <div><label>End Time</label><input type="time" id="ev-endtime"></div>
+    </div>
+    <div class="row">
+      <div><label>Price ($)</label><input type="number" id="ev-price" min="0"></div>
+    </div>
+    <label>Booking URL</label>
+    <input type="url" id="ev-booking">
+    <label>Description</label>
+    <textarea id="ev-desc"></textarea>
+    <label>Thumbnail</label>
+    <div class="thumb-upload">
+      <div class="thumb-preview" id="ev-thumb-prev" style="width:64px;height:64px;border-radius:8px">🔔</div>
+      <div style="flex:1">
+        <input type="url" id="ev-img" placeholder="Image URL (or upload below)">
+        <div style="display:flex;gap:6px;margin-top:4px;align-items:center">
+          <input type="file" accept="image/*" id="ev-img-file" style="font-size:0.7rem;flex:1">
+          <button class="btn btn-ghost" style="padding:4px 10px;font-size:0.6rem;white-space:nowrap" onclick="event.preventDefault();openPhotoLibrary('ev')">📂 Library</button>
+        </div>
+        <button class="btn btn-ghost" style="padding:4px 10px;font-size:0.6rem;margin-top:4px" onclick="event.preventDefault();openCropTool()">✂️ Crop & Position</button>
+        <input type="hidden" id="ev-img-crop" value="center">
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-gold" onclick="saveEvent()">💾 Save Event</button>
+      <button class="btn btn-ghost" onclick="closeModal('event-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- LINK MODAL -->
+<div class="modal-overlay" id="link-modal">
+  <div class="modal">
+    <h2 id="link-modal-title">Add Link</h2>
+    <input type="hidden" id="link-edit-section" value="">
+    <input type="hidden" id="link-edit-idx" value="-1">
+    <label>Title</label>
+    <input type="text" id="link-title">
+    <label>URL</label>
+    <input type="url" id="link-url">
+    <label>Emoji (fallback)</label>
+    <input type="text" id="link-emoji" placeholder="⭐">
+    <label>Thumbnail URL</label>
+    <input type="url" id="link-img" placeholder="https://... logo image">
+    <div class="thumb-upload">
+      <div class="thumb-preview" id="link-thumb-prev">🔗</div>
+      <div style="flex:1">
+        <input type="file" accept="image/*" id="link-thumb-file" style="font-size:0.7rem">
+        <button class="btn btn-ghost" style="padding:4px 10px;font-size:0.6rem;margin-top:4px" onclick="event.preventDefault();openPhotoLibrary('link')">📂 Library</button>
+        <button class="btn btn-ghost" style="padding:4px 10px;font-size:0.6rem;margin-top:4px" onclick="event.preventDefault();openCropTool('link')">✂️ Crop & Position</button>
+        <input type="hidden" id="link-img-crop" value="center">
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-gold" onclick="saveLink()">💾 Save</button>
+      <button class="btn btn-ghost" onclick="closeModal('link-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- TYPE MODAL -->
+<div class="modal-overlay" id="type-modal">
+  <div class="modal">
+    <h2>Add/Edit Event Type</h2>
+    <input type="hidden" id="type-edit-id" value="">
+    <label>ID (slug)</label>
+    <input type="text" id="type-id" placeholder="e.g. sound-bath">
+    <label>Display Name</label>
+    <input type="text" id="type-name">
+    <div class="row">
+      <div><label>Color</label><input type="color" id="type-color" value="#4a90d9"></div>
+      <div><label>Icon Emoji</label><input type="text" id="type-icon" placeholder="🔔"></div>
+    </div>
+    <label>Thumbnail URL</label>
+    <input type="url" id="type-img">
+    <label>Filter As (optional — group under another type)</label>
+    <input type="text" id="type-filteras" placeholder="e.g. yin-sound">
+    <div class="btn-row">
+      <button class="btn btn-gold" onclick="saveType()">💾 Save</button>
+      <button class="btn btn-ghost" onclick="closeModal('type-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- VENUE MODAL -->
+<div class="modal-overlay" id="venue-modal">
+  <div class="modal">
+    <h2>Add/Edit Venue</h2>
+    <input type="hidden" id="venue-edit-id" value="">
+    <label>ID (slug)</label>
+    <input type="text" id="venue-id" placeholder="e.g. my-studio">
+    <label>Name</label>
+    <input type="text" id="venue-name">
+    <label>Area / Neighbourhood</label>
+    <input type="text" id="venue-area">
+    <div class="btn-row">
+      <button class="btn btn-gold" onclick="saveVenue()">💾 Save</button>
+      <button class="btn btn-ghost" onclick="closeModal('venue-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- SOCIAL MODAL -->
+<div class="modal-overlay" id="social-modal">
+  <div class="modal">
+    <h2>Add/Edit Social Link</h2>
+    <input type="hidden" id="social-edit-idx" value="-1">
+    <label>Name</label>
+    <input type="text" id="social-name" placeholder="Instagram">
+    <label>URL</label>
+    <input type="url" id="social-url">
+    <label>Icon</label>
+    <select id="social-icon">
+      <option value="instagram">Instagram</option>
+      <option value="facebook">Facebook</option>
+      <option value="music">Music</option>
+      <option value="mail">Email</option>
+    </select>
+    <div class="btn-row">
+      <button class="btn btn-gold" onclick="saveSocial()">💾 Save</button>
+      <button class="btn btn-ghost" onclick="closeModal('social-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- CROP MODAL -->
+<div class="modal-overlay" id="crop-modal">
+  <div class="modal" style="max-width:400px">
+    <h2>✂️ Position & Crop</h2>
+    <p style="font-size:0.7rem;color:#888;margin-bottom:8px">Drag the image to position it. Zoom to fit.</p>
+    <div class="crop-container" id="crop-box">
+      <img id="crop-img" src="" draggable="false">
+      <div class="crop-hint">👆 Drag to reposition</div>
+    </div>
+    <div class="crop-zoom">
+      <label>🔍 Zoom</label>
+      <input type="range" id="crop-zoom" min="30" max="400" step="5" value="100">
+      <span id="crop-zoom-val" style="font-size:0.6rem;color:#888;min-width:30px">100%</span>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-gold" onclick="applyCrop()">✓ Apply</button>
+      <button class="btn btn-ghost" onclick="closeModal('crop-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- PHOTO LIBRARY MODAL -->
+<div class="modal-overlay" id="photo-modal">
+  <div class="modal" style="max-width:600px">
+    <h2>📂 Photo Library</h2>
+    <p style="font-size:0.7rem;color:#888;margin-bottom:12px">Click a photo to use it. Upload new photos to save for reuse.</p>
+    <div style="margin-bottom:12px">
+      <input type="file" accept="image/*" multiple id="lib-upload" style="font-size:0.7rem">
+    </div>
+    <div id="photo-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px"></div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="closeModal('photo-modal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="status" id="status">Saved ✓</div>
+
+<script>
+let config = {};
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+async function loadConfig() {
+  const res = await fetch('site-config.json?v='+Date.now());
+  config = await res.json();
+  renderAll();
+
+// AUTOSAVE every 10 seconds
+setInterval(() => {
+  localStorage.setItem('events-hub-config', JSON.stringify(config));
+}, 10000);
+
+// Also save before page unload (refresh/close)
+window.addEventListener('beforeunload', () => {
+  localStorage.setItem('events-hub-config', JSON.stringify(config));
+});
+}
+
+function renderAll() {
+  renderEvents();
+  renderTypes();
+  renderVenues();
+  renderTopLinks();
+  renderResources();
+  renderSocial();
+  renderSiteSettings();
+  loadJsonEditor();
+}
+
+// ============ EVENTS ============
+function renderEvents() {
+  const el = document.getElementById('events-list');
+  const events = (config.events || []).sort((a,b) => a.date.localeCompare(b.date));
+  el.innerHTML = events.map((ev, i) => {
+    const d = new Date(ev.date + 'T00:00:00');
+    const ds = `${MONTHS[d.getMonth()]} ${d.getDate()}`;
+    const type = config.eventTypes?.[ev.type];
+    const venue = ev.venueOverride || config.venues?.[ev.venue]?.name || ev.venue;
+    return `<div class="event-item" onclick="editEvent(${i})">
+      <div class="ev-date">${ds}</div>
+      <div class="ev-title">${ev.title}<br><span style="font-size:0.62rem;color:#666">📍 ${venue}</span></div>
+      <div class="ev-price">$${ev.price}</div>
+      ${type ? `<div class="ev-type" style="color:${type.color}">${type.icon} ${type.name}</div>` : ''}
+      <div class="ev-actions">
+        <button class="btn btn-ghost" onclick="event.stopPropagation();duplicateEvent(${i})">⧉</button>
+        <button class="btn btn-red" onclick="event.stopPropagation();deleteEvent(${i})">✕</button>
+      </div>
+    </div>`;
+  }).join('') || '<div style="color:#666;font-size:0.78rem;padding:10px">No events yet</div>';
+}
+
+function populateEventDropdowns() {
+  const typeEl = document.getElementById('ev-type');
+  const venueEl = document.getElementById('ev-venue');
+  typeEl.innerHTML = Object.entries(config.eventTypes || {}).map(([id, t]) =>
+    `<option value="${id}">${t.icon} ${t.name}</option>`).join('');
+  venueEl.innerHTML = Object.entries(config.venues || {}).map(([id, v]) =>
+    `<option value="${id}">${v.name}</option>`).join('');
+}
+
+function openEventModal(idx) {
+  populateEventDropdowns();
+  document.getElementById('ev-edit-idx').value = idx ?? -1;
+  document.getElementById('event-modal-title').textContent = idx >= 0 ? 'Edit Event' : 'Add Event';
+  if (idx >= 0) {
+    const ev = config.events[idx];
+    document.getElementById('ev-title').value = ev.title;
+    document.getElementById('ev-type').value = ev.type;
+    document.getElementById('ev-venue').value = ev.venue;
+    document.getElementById('ev-date').value = ev.date;
+    document.getElementById('ev-time').value = ev.time;
+    document.getElementById('ev-endtime').value = ev.endTime;
+    document.getElementById('ev-price').value = ev.price;
+    document.getElementById('ev-booking').value = ev.booking;
+    document.getElementById('ev-desc').value = ev.desc || '';
+    document.getElementById('ev-venue-override').value = ev.venueOverride || '';
+    document.getElementById('ev-img').value = ev.img || '';
+    document.getElementById('ev-img-crop').value = ev.imgCrop || 'center';
+    updateEvThumbPreview(ev);
+  } else {
+    ['ev-title','ev-date','ev-time','ev-endtime','ev-booking','ev-desc','ev-venue-override','ev-img'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('ev-price').value = 0;
+    document.getElementById('ev-img-crop').value = 'center';
+    document.getElementById('ev-thumb-prev').innerHTML = '🔔';
+  }
+  document.getElementById('event-modal').classList.add('show');
+}
+
+function editEvent(i) { openEventModal(i); }
+
+function saveEvent() {
+  const idx = parseInt(document.getElementById('ev-edit-idx').value);
+  const ev = {
+    id: idx >= 0 ? config.events[idx].id : 'ev-' + String(Date.now()).slice(-6),
+    type: document.getElementById('ev-type').value,
+    title: document.getElementById('ev-title').value,
+    date: document.getElementById('ev-date').value,
+    time: document.getElementById('ev-time').value,
+    endTime: document.getElementById('ev-endtime').value,
+    venue: document.getElementById('ev-venue').value,
+    price: parseFloat(document.getElementById('ev-price').value) || 0,
+    booking: document.getElementById('ev-booking').value,
+    desc: document.getElementById('ev-desc').value,
+  };
+  const vo = document.getElementById('ev-venue-override').value;
+  if (vo) ev.venueOverride = vo;
+  const img = document.getElementById('ev-img').value;
+  if (img) ev.img = img;
+  const crop = document.getElementById('ev-img-crop').value;
+  if (crop && crop !== 'center') ev.imgCrop = crop;
+  if (idx >= 0) config.events[idx] = ev;
+  else config.events.push(ev);
+  closeModal('event-modal');
+  saveConfig();
+}
+
+function quickAddVenue() {
+  const name = prompt('Venue name (e.g. "Sherwood Park Community Hall"):');
+  if (!name) return;
+  const area = prompt('Area/neighbourhood (optional):') || '';
+  const id = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/, '');
+  config.venues[id] = { name, area };
+  populateEventDropdowns();
+  document.getElementById('ev-venue').value = id;
+  saveConfig();
+  showStatus('Venue added ✓');
+}
+
+function deleteEvent(i) {
+  if (!confirm('Delete "' + config.events[i].title + '"?')) return;
+  config.events.splice(i, 1);
+  saveConfig();
+}
+
+function duplicateEvent(i) {
+  const dup = { ...config.events[i], id: 'ev-' + String(Date.now()).slice(-6), title: config.events[i].title + ' (copy)' };
+  config.events.push(dup);
+  saveConfig();
+}
+
+// ============ TYPES ============
+function renderTypes() {
+  const el = document.getElementById('types-list');
+  el.innerHTML = Object.entries(config.eventTypes || {}).map(([id, t]) =>
+    `<div class="link-item">
+      <span class="link-emoji">${t.icon}</span>
+      <div class="link-info">
+        <div class="link-title" style="color:${t.color}">${t.name}</div>
+        <div class="link-url">${id}${t.filterAs ? ' → filters as ' + t.filterAs : ''}</div>
+      </div>
+      <div class="link-actions">
+        <button class="btn btn-ghost" onclick="editType('${id}')">✎</button>
+        <button class="btn btn-red" onclick="deleteType('${id}')">✕</button>
+      </div>
+    </div>`).join('');
+}
+
+function openTypeModal(id) {
+  document.getElementById('type-edit-id').value = id || '';
+  if (id && config.eventTypes[id]) {
+    const t = config.eventTypes[id];
+    document.getElementById('type-id').value = id;
+    document.getElementById('type-name').value = t.name;
+    document.getElementById('type-color').value = t.color;
+    document.getElementById('type-icon').value = t.icon;
+    document.getElementById('type-img').value = t.img || '';
+    document.getElementById('type-filteras').value = t.filterAs || '';
+    document.getElementById('type-id').disabled = true;
+  } else {
+    ['type-id','type-name','type-icon','type-img','type-filteras'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('type-color').value = '#4a90d9';
+    document.getElementById('type-id').disabled = false;
+  }
+  document.getElementById('type-modal').classList.add('show');
+}
+function editType(id) { openTypeModal(id); }
+
+function saveType() {
+  const origId = document.getElementById('type-edit-id').value;
+  const id = origId || document.getElementById('type-id').value.toLowerCase().replace(/\s+/g, '-');
+  if (!id) return;
+  config.eventTypes[id] = {
+    name: document.getElementById('type-name').value,
+    color: document.getElementById('type-color').value,
+    icon: document.getElementById('type-icon').value,
+    img: document.getElementById('type-img').value,
+  };
+  const fa = document.getElementById('type-filteras').value;
+  if (fa) config.eventTypes[id].filterAs = fa;
+  closeModal('type-modal');
+  saveConfig();
+}
+
+function deleteType(id) {
+  if (!confirm('Delete type "' + id + '"?')) return;
+  delete config.eventTypes[id];
+  saveConfig();
+}
+
+// ============ VENUES ============
+function renderVenues() {
+  const el = document.getElementById('venues-list');
+  el.innerHTML = Object.entries(config.venues || {}).map(([id, v]) =>
+    `<div class="link-item">
+      <span class="link-emoji">📍</span>
+      <div class="link-info">
+        <div class="link-title">${v.name}</div>
+        <div class="link-url">${id}${v.area ? ' · ' + v.area : ''}</div>
+      </div>
+      <div class="link-actions">
+        <button class="btn btn-ghost" onclick="editVenue('${id}')">✎</button>
+        <button class="btn btn-red" onclick="deleteVenue('${id}')">✕</button>
+      </div>
+    </div>`).join('');
+}
+
+function openVenueModal(id) {
+  document.getElementById('venue-edit-id').value = id || '';
+  if (id && config.venues[id]) {
+    document.getElementById('venue-id').value = id;
+    document.getElementById('venue-name').value = config.venues[id].name;
+    document.getElementById('venue-area').value = config.venues[id].area || '';
+    document.getElementById('venue-id').disabled = true;
+  } else {
+    ['venue-id','venue-name','venue-area'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('venue-id').disabled = false;
+  }
+  document.getElementById('venue-modal').classList.add('show');
+}
+function editVenue(id) { openVenueModal(id); }
+
+function saveVenue() {
+  const origId = document.getElementById('venue-edit-id').value;
+  const id = origId || document.getElementById('venue-id').value.toLowerCase().replace(/\s+/g, '-');
+  if (!id) return;
+  config.venues[id] = { name: document.getElementById('venue-name').value, area: document.getElementById('venue-area').value };
+  closeModal('venue-modal');
+  saveConfig();
+}
+
+function deleteVenue(id) {
+  if (!confirm('Delete venue "' + id + '"?')) return;
+  delete config.venues[id];
+  saveConfig();
+}
+
+// ============ LINKS ============
+function renderTopLinks() {
+  const el = document.getElementById('top-links-list');
+  el.innerHTML = (config.topLinks || []).map((l, i) => linkItem(l, i, 'topLinks')).join('');
+}
+function renderResources() {
+  const el = document.getElementById('resources-list');
+  el.innerHTML = (config.resources || []).map((l, i) => linkItem(l, i, 'resources')).join('');
+}
+
+function linkItem(l, i, section) {
+  const thumb = l.img ? `<img class="link-thumb" src="${l.img}">` : `<span class="link-emoji">${l.emoji || '🔗'}</span>`;
+  return `<div class="link-item">
+    ${thumb}
+    <div class="link-info">
+      <div class="link-title">${l.title}</div>
+      <div class="link-url">${l.url}</div>
+    </div>
+    <div class="link-actions">
+      <button class="btn btn-ghost" onclick="editLink('${section}',${i})">✎</button>
+      <button class="btn btn-red" onclick="deleteLink('${section}',${i})">✕</button>
+    </div>
+  </div>`;
+}
+
+function openLinkModal(section, idx) {
+  document.getElementById('link-edit-section').value = section;
+  document.getElementById('link-edit-idx').value = idx ?? -1;
+  document.getElementById('link-modal-title').textContent = idx >= 0 ? 'Edit Link' : 'Add Link';
+  if (idx >= 0) {
+    const l = config[section][idx];
+    document.getElementById('link-title').value = l.title;
+    document.getElementById('link-url').value = l.url;
+    document.getElementById('link-emoji').value = l.emoji || '';
+    document.getElementById('link-img').value = l.img || '';
+    updateLinkThumbPreview(l);
+  } else {
+    ['link-title','link-url','link-emoji','link-img'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('link-thumb-prev').innerHTML = '🔗';
+  }
+  document.getElementById('link-modal').classList.add('show');
+}
+function editLink(section, i) { openLinkModal(section, i); }
+
+function updateLinkThumbPreview(l) {
+  const prev = document.getElementById('link-thumb-prev');
+  if (l && l.img) prev.innerHTML = `<img src="${l.img}" style="width:100%;height:100%;object-fit:cover">`;
+  else prev.innerHTML = l?.emoji || '🔗';
+}
+
+function saveLink() {
+  const section = document.getElementById('link-edit-section').value;
+  const idx = parseInt(document.getElementById('link-edit-idx').value);
+  const link = {
+    title: document.getElementById('link-title').value,
+    url: document.getElementById('link-url').value,
+    emoji: document.getElementById('link-emoji').value,
+    img: document.getElementById('link-img').value,
+  };
+  if (idx >= 0) config[section][idx] = link;
+  else config[section].push(link);
+  closeModal('link-modal');
+  saveConfig();
+}
+
+function deleteLink(section, i) {
+  if (!confirm('Delete "' + config[section][i].title + '"?')) return;
+  config[section].splice(i, 1);
+  saveConfig();
+}
+
+// ============ SOCIAL ============
+function renderSocial() {
+  const el = document.getElementById('social-list');
+  el.innerHTML = (config.socialLinks || []).map((s, i) =>
+    `<div class="link-item">
+      <span class="link-emoji">${s.icon === 'instagram' ? '📷' : s.icon === 'facebook' ? '📘' : s.icon === 'mail' ? '✉️' : '🎵'}</span>
+      <div class="link-info">
+        <div class="link-title">${s.name}</div>
+        <div class="link-url">${s.url}</div>
+      </div>
+      <div class="link-actions">
+        <button class="btn btn-ghost" onclick="editSocial(${i})">✎</button>
+        <button class="btn btn-red" onclick="deleteSocial(${i})">✕</button>
+      </div>
+    </div>`).join('');
+}
+
+function openSocialModal(idx) {
+  document.getElementById('social-edit-idx').value = idx ?? -1;
+  if (idx >= 0) {
+    const s = config.socialLinks[idx];
+    document.getElementById('social-name').value = s.name;
+    document.getElementById('social-url').value = s.url;
+    document.getElementById('social-icon').value = s.icon;
+  } else {
+    ['social-name','social-url'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('social-icon').value = 'instagram';
+  }
+  document.getElementById('social-modal').classList.add('show');
+}
+function editSocial(i) { openSocialModal(i); }
+
+function saveSocial() {
+  const idx = parseInt(document.getElementById('social-edit-idx').value);
+  const s = {
+    name: document.getElementById('social-name').value,
+    url: document.getElementById('social-url').value,
+    icon: document.getElementById('social-icon').value,
+  };
+  if (idx >= 0) config.socialLinks[idx] = s;
+  else config.socialLinks.push(s);
+  closeModal('social-modal');
+  saveConfig();
+}
+
+function deleteSocial(i) {
+  if (!confirm('Delete?')) return;
+  config.socialLinks.splice(i, 1);
+  saveConfig();
+}
+
+// ============ SITE SETTINGS ============
+function renderSiteSettings() {
+  const s = config.site || {};
+  document.getElementById('site-name').value = s.name || '';
+  document.getElementById('site-bio').value = s.bio || '';
+  document.getElementById('site-email').value = s.email || '';
+  document.getElementById('site-logo').value = s.logo || '';
+  document.getElementById('site-emoji').value = s.logoEmoji || '🔔';
+  document.getElementById('filter-order').value = (config.filterOrder || []).join(', ');
+
+  const prev = document.getElementById('logo-prev');
+  if (s.logo) prev.innerHTML = `<img src="${s.logo}">`;
+  else prev.innerHTML = s.logoEmoji || '🔔';
+}
+
+function saveSiteSettings() {
+  config.site = {
+    name: document.getElementById('site-name').value,
+    bio: document.getElementById('site-bio').value,
+    email: document.getElementById('site-email').value,
+    logo: document.getElementById('site-logo').value,
+    logoEmoji: document.getElementById('site-emoji').value,
+  };
+  config.filterOrder = document.getElementById('filter-order').value.split(',').map(s => s.trim()).filter(Boolean);
+  saveConfig();
+}
+
+// Event thumb file upload
+document.getElementById('ev-img-file').onchange = function() {
+  if (!this.files[0]) return;
+  const r = new FileReader();
+  r.onload = e => {
+    document.getElementById('ev-img').value = e.target.result;
+    updateEvThumbPreview({ img: e.target.result });
+  };
+  r.readAsDataURL(this.files[0]);
+};
+document.getElementById('ev-img').oninput = function() {
+  updateEvThumbPreview({ img: this.value });
+};
+function updateEvThumbPreview(ev) {
+  const prev = document.getElementById('ev-thumb-prev');
+  const crop = document.getElementById('ev-img-crop')?.value || 'center';
+  if (ev?.img) prev.innerHTML = `<img src="${ev.img}" style="width:100%;height:100%;object-fit:cover;object-position:${crop}">`;
+  else prev.innerHTML = '🔔';
+}
+
+// Logo file upload
+document.getElementById('logo-file').onchange = function() {
+  if (!this.files[0]) return;
+  const r = new FileReader();
+  r.onload = e => {
+    document.getElementById('site-logo').value = e.target.result;
+    document.getElementById('logo-prev').innerHTML = `<img src="${e.target.result}">`;
+  };
+  r.readAsDataURL(this.files[0]);
+};
+
+// Link thumb file upload
+document.getElementById('link-thumb-file').onchange = function() {
+  if (!this.files[0]) return;
+  const r = new FileReader();
+  r.onload = e => {
+    document.getElementById('link-img').value = e.target.result;
+    document.getElementById('link-thumb-prev').innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover">`;
+  };
+  r.readAsDataURL(this.files[0]);
+};
+
+// ============ JSON EDITOR ============
+function loadJsonEditor() {
+  document.getElementById('json-editor').value = JSON.stringify(config, null, 2);
+}
+
+function saveJsonEditor() {
+  try {
+    config = JSON.parse(document.getElementById('json-editor').value);
+    saveConfig();
+  } catch (e) {
+    alert('Invalid JSON: ' + e.message);
+  }
+}
+
+// ============ SAVE / DOWNLOAD / IMPORT ============
+async function saveConfig() {
+  // Save to localStorage
+  localStorage.setItem('events-hub-config', JSON.stringify(config));
+  console.log('Config saved to localStorage', new Date().toLocaleTimeString());
+
+  // Try to save to file (works with local server that supports PUT)
+  try {
+    const controller = new AbortController();
+    setTimeout(() => controller.abort(), 1000);
+    await fetch('site-config.json', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(config, null, 2), signal: controller.signal });
+  } catch (e) { /* file save may not work without server — that's ok, localStorage has it */ }
+
+  renderAll();
+  showStatus('Saved ✓');
+
+  // Refresh preview
+  const iframe = document.getElementById('preview-iframe');
+  if (iframe) iframe.src = iframe.src;
+}
+
+function downloadConfig() {
+  const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'site-config.json';
+  a.click(); URL.revokeObjectURL(url);
+}
+
+function importConfig(input) {
+  if (!input.files[0]) return;
+  const r = new FileReader();
+  r.onload = e => {
+    try {
+      config = JSON.parse(e.target.result);
+      saveConfig();
+      showStatus('Imported ✓');
+    } catch (err) { alert('Invalid JSON'); }
+  };
+  r.readAsText(input.files[0]);
+}
+
+// ============ PREVIEW ============
+function setPreviewWidth(w) {
+  document.getElementById('preview-iframe').style.maxWidth = w;
+}
+function openPreviewTab() { window.open('index.html', '_blank'); }
+
+// ============ UTILS ============
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+// Close modals on overlay click
+document.querySelectorAll('.modal-overlay').forEach(el => {
+  el.onclick = e => { if (e.target === el) el.classList.remove('show'); };
+});
+
+function showStatus(msg) {
+  const el = document.getElementById('status');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2000);
+}
+
+// TABS
+document.querySelectorAll('.tab').forEach(t => t.onclick = () => {
+  document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(x => x.classList.remove('active'));
+  t.classList.add('active');
+  document.getElementById('tab-' + t.dataset.tab).classList.add('active');
+  if (t.dataset.tab === 'stats') renderStats();
+  if (t.dataset.tab === 'json') loadJsonEditor();
+  if (t.dataset.tab === 'preview') {
+    document.getElementById('preview-iframe').src = 'index.html?v=' + Date.now();
+  }
+});
+
+// ============ CROP TOOL ============
+let cropState = { x: 0, y: 0, zoom: 100, dragging: false, startX: 0, startY: 0, origX: 0, origY: 0 };
+
+let cropContext = 'event'; // 'event' or 'link'
+function openCropTool(context) {
+  cropContext = context || 'event';
+  const srcId = cropContext === 'link' ? 'link-img' : 'ev-img';
+  const src = document.getElementById(srcId).value;
+  if (!src) { alert('Upload or enter an image first'); return; }
+  const img = document.getElementById('crop-img');
+  img.src = src;
+  cropState = { x: 0, y: 0, zoom: 100, dragging: false, startX: 0, startY: 0, origX: 0, origY: 0 };
+  document.getElementById('crop-zoom').value = 100;
+  document.getElementById('crop-zoom-val').textContent = '100%';
+  img.style.left = '0px';
+  img.style.top = '0px';
+  img.style.width = '100%';
+  img.style.height = 'auto';
+  
+  img.onload = () => {
+    // If image is wider than tall, fit height. If taller, fit width.
+    const box = document.getElementById('crop-box');
+    const ratio = img.naturalWidth / img.naturalHeight;
+    if (ratio > 1) {
+      img.style.width = 'auto';
+      img.style.height = '100%';
+    } else {
+      img.style.width = '100%';
+      img.style.height = 'auto';
+    }
+    updateCropPosition();
+  };
+  document.getElementById('crop-modal').classList.add('show');
+}
+
+function updateCropPosition() {
+  const img = document.getElementById('crop-img');
+  img.style.left = cropState.x + 'px';
+  img.style.top = cropState.y + 'px';
+}
+
+// Drag handlers
+const cropBox = document.getElementById('crop-box');
+cropBox.addEventListener('pointerdown', e => {
+  cropState.dragging = true;
+  cropState.startX = e.clientX;
+  cropState.startY = e.clientY;
+  cropState.origX = cropState.x;
+  cropState.origY = cropState.y;
+  cropBox.setPointerCapture(e.pointerId);
+});
+cropBox.addEventListener('pointermove', e => {
+  if (!cropState.dragging) return;
+  cropState.x = cropState.origX + (e.clientX - cropState.startX);
+  cropState.y = cropState.origY + (e.clientY - cropState.startY);
+  updateCropPosition();
+});
+cropBox.addEventListener('pointerup', () => { cropState.dragging = false; });
+
+// Zoom
+document.getElementById('crop-zoom').oninput = function() {
+  cropState.zoom = parseInt(this.value);
+  document.getElementById('crop-zoom-val').textContent = cropState.zoom + '%';
+  const img = document.getElementById('crop-img');
+  const ratio = img.naturalWidth / img.naturalHeight;
+  const scale = cropState.zoom / 100;
+  const box = document.getElementById('crop-box');
+  const boxW = box.offsetWidth;
+  const boxH = box.offsetHeight;
+  if (ratio > 1) {
+    // Landscape: base height = box height, scale from there
+    const baseH = boxH;
+    img.style.height = (baseH * scale) + 'px';
+    img.style.width = 'auto';
+  } else {
+    // Portrait: base width = box width, scale from there
+    const baseW = boxW;
+    img.style.width = (baseW * scale) + 'px';
+    img.style.height = 'auto';
+  }
+};
+
+function applyCrop() {
+  // Convert drag position to object-position percentage
+  const box = document.getElementById('crop-box');
+  const img = document.getElementById('crop-img');
+  const boxW = box.offsetWidth, boxH = box.offsetHeight;
+  const imgW = img.offsetWidth, imgH = img.offsetHeight;
+  
+  // Calculate percentage position
+  const overflowX = imgW - boxW;
+  const overflowY = imgH - boxH;
+  const pctX = overflowX > 0 ? Math.round(Math.max(0, Math.min(100, (-cropState.x / overflowX) * 100))) : 50;
+  const pctY = overflowY > 0 ? Math.round(Math.max(0, Math.min(100, (-cropState.y / overflowY) * 100))) : 50;
+  
+  const pos = pctX + '% ' + pctY + '%';
+  
+  if (cropContext === 'link') {
+    document.getElementById('link-img-crop').value = pos;
+    const prev = document.getElementById('link-thumb-prev');
+    prev.innerHTML = `<img src="${img.src}" style="width:100%;height:100%;object-fit:cover;object-position:${pos}">`;
+  } else {
+    document.getElementById('ev-img-crop').value = pos;
+    const prev = document.getElementById('ev-thumb-prev');
+    prev.innerHTML = `<img src="${img.src}" style="width:100%;height:100%;object-fit:cover;object-position:${pos}">`;
+  }
+  
+  closeModal('crop-modal');
+  showStatus('Crop applied ✓');
+}
+
+// ============ PHOTO LIBRARY ============
+let photoLibTarget = ''; // 'ev' or 'link'
+
+function getPhotoLib() {
+  return config.photoLibrary || [];
+}
+
+function openPhotoLibrary(target) {
+  photoLibTarget = target;
+  renderPhotoGrid();
+  document.getElementById('photo-modal').classList.add('show');
+}
+
+function renderPhotoGrid() {
+  const grid = document.getElementById('photo-grid');
+  const photos = getPhotoLib();
+  grid.innerHTML = photos.map((p, i) =>
+    `<div style="position:relative">
+      <img src="${p.data || p.url}" style="width:100%;height:80px;object-fit:cover;border-radius:8px;cursor:pointer;border:2px solid #333;transition:border 0.2s" 
+        onclick="pickPhoto(${i})" onmouseover="this.style.borderColor='#c8a44e'" onmouseout="this.style.borderColor='#333'">
+      <button style="position:absolute;top:2px;right:2px;background:rgba(0,0,0,0.7);color:#e74c3c;border:none;border-radius:50%;width:18px;height:18px;font-size:0.6rem;cursor:pointer;line-height:1" onclick="deletePhoto(${i})">✕</button>
+      <div style="font-size:0.55rem;color:#888;text-align:center;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.name || 'Photo ' + (i+1)}</div>
+    </div>`
+  ).join('') || '<div style="color:#666;font-size:0.78rem;padding:20px;text-align:center;grid-column:1/-1">No photos yet — upload some!</div>';
+}
+
+function pickPhoto(i) {
+  const photo = getPhotoLib()[i];
+  const src = photo.data || photo.url;
+  if (photoLibTarget === 'ev') {
+    document.getElementById('ev-img').value = src;
+    updateEvThumbPreview({ img: src });
+  } else if (photoLibTarget === 'link') {
+    document.getElementById('link-img').value = src;
+    document.getElementById('link-thumb-prev').innerHTML = `<img src="${src}" style="width:100%;height:100%;object-fit:cover">`;
+  }
+  closeModal('photo-modal');
+}
+
+function deletePhoto(i) {
+  if (!confirm('Remove from library?')) return;
+  config.photoLibrary.splice(i, 1);
+  saveConfig();
+}
+
+function addToLibrary(dataUrl, name) {
+  if (!config.photoLibrary) config.photoLibrary = [];
+  config.photoLibrary.push({ data: dataUrl, name: name || 'Photo ' + (config.photoLibrary.length + 1) });
+  saveConfig();
+}
+
+document.getElementById('lib-upload').onchange = function() {
+  Array.from(this.files).forEach(file => {
+    const r = new FileReader();
+    r.onload = e => {
+      addToLibrary(e.target.result, file.name.replace(/\.[^.]+$/, ''));
+      renderPhotoGrid();
+    };
+    r.readAsDataURL(file);
+  });
+  this.value = '';
+};
+
+// Override: save event images as file paths, not base64
+document.getElementById('ev-img-file').onchange = function() {
+  if (!this.files[0]) return;
+  const file = this.files[0];
+  // For now, just set a placeholder path and tell user to copy file manually
+  const filename = file.name.toLowerCase().replace(/\s+/g, '-');
+  const path = 'photos/' + filename;
+  document.getElementById('ev-img').value = path;
+  updateEvThumbPreview({ img: path });
+  showStatus(`Upload ${filename} to photos/ folder manually`, 5000);
+};
+
+const origLinkThumbHandler = document.getElementById('link-thumb-file').onchange;
+document.getElementById('link-thumb-file').onchange = function() {
+  if (!this.files[0]) return;
+  const file = this.files[0];
+  const r = new FileReader();
+  r.onload = e => {
+    document.getElementById('link-img').value = e.target.result;
+    document.getElementById('link-thumb-prev').innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover">`;
+    addToLibrary(e.target.result, file.name.replace(/\.[^.]+$/, ''));
+  };
+  r.readAsDataURL(file);
+};
+
+// ============ STATS ============
+function renderStats() {
+  const views = JSON.parse(localStorage.getItem('eh-pageviews') || '[]');
+  const clicks = JSON.parse(localStorage.getItem('eh-clicks') || '[]');
+  const today = new Date().toISOString().slice(0,10);
+  const weekAgo = new Date(Date.now() - 7*24*60*60*1000).toISOString().slice(0,10);
+
+  // Counts
+  document.getElementById('stat-today').textContent = views.filter(v => v.date === today).length;
+  document.getElementById('stat-week').textContent = views.filter(v => v.date >= weekAgo).length;
+  document.getElementById('stat-total').textContent = views.length;
+
+  // Chart — last 30 days
+  const chart = document.getElementById('stat-chart');
+  const days = [];
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date(Date.now() - i*24*60*60*1000).toISOString().slice(0,10);
+    days.push({ date: d, count: views.filter(v => v.date === d).length });
+  }
+  const max = Math.max(...days.map(d => d.count), 1);
+  chart.innerHTML = days.map(d => {
+    const h = Math.max(2, (d.count / max) * 100);
+    const isToday = d.date === today;
+    return `<div title="${d.date}: ${d.count} views" style="flex:1;background:${isToday ? '#c8a44e' : '#444'};height:${h}%;border-radius:3px 3px 0 0;min-width:4px;transition:height 0.3s"></div>`;
+  }).join('');
+
+  // Booking clicks by event
+  const clicksByEvent = {};
+  clicks.forEach(c => {
+    if (!clicksByEvent[c.eventTitle]) clicksByEvent[c.eventTitle] = 0;
+    clicksByEvent[c.eventTitle]++;
+  });
+  const sortedClicks = Object.entries(clicksByEvent).sort((a,b) => b[1] - a[1]);
+  document.getElementById('stat-clicks').innerHTML = sortedClicks.length ? sortedClicks.map(([title, count]) =>
+    `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #2a2a2a">
+      <span style="font-size:0.78rem">${title}</span>
+      <span style="font-size:0.78rem;color:#c8a44e;font-weight:700">${count} click${count>1?'s':''}</span>
+    </div>`
+  ).join('') : '<div style="color:#666;font-size:0.78rem;padding:10px">No booking clicks yet</div>';
+
+  // Referrers
+  const refs = {};
+  views.forEach(v => {
+    let ref = 'Direct';
+    if (v.ref) {
+      try { ref = new URL(v.ref).hostname || 'Direct'; } catch(e) { ref = v.ref.slice(0,40) || 'Direct'; }
+    }
+    if (!refs[ref]) refs[ref] = 0;
+    refs[ref]++;
+  });
+  const sortedRefs = Object.entries(refs).sort((a,b) => b[1] - a[1]);
+  document.getElementById('stat-refs').innerHTML = sortedRefs.length ? sortedRefs.map(([ref, count]) =>
+    `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #2a2a2a">
+      <span style="font-size:0.78rem">${ref}</span>
+      <span style="font-size:0.78rem;color:#888;font-weight:600">${count}</span>
+    </div>`
+  ).join('') : '<div style="color:#666;font-size:0.78rem;padding:10px">No data yet</div>';
+
+  // GA ID
+  document.getElementById('ga-id').value = localStorage.getItem('eh-ga-id') || '';
+}
+
+function saveGaId() {
+  const id = document.getElementById('ga-id').value.trim();
+  localStorage.setItem('eh-ga-id', id);
+  showStatus(id ? 'GA4 ID saved — add the script to index.html' : 'GA4 ID cleared');
+}
+
+// Init
+loadConfig();
+</script>
+</body>
+</html>

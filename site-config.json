@@ -1,0 +1,350 @@
+{
+  "design": {
+    "bodyFont": "'Inter', sans-serif",
+    "headFont": "'Inter', sans-serif",
+    "labelSize": 2,
+    "btnSize": 1.12,
+    "headSize": 1.4,
+    "bioSize": 0.95,
+    "radius": 13,
+    "padV": 10,
+    "gap": 10,
+    "thumbSize": 64,
+    "thumbR": 6,
+    "bgColor": "#D4951A",
+    "btnColor": "#ffffff",
+    "textColor": "#000000",
+    "headingTextColor": "#000000",
+    "showThumb": true,
+    "showEmoji": false,
+    "showBar": false,
+    "showVenue": true,
+    "centerText": true
+  },
+  "site": {
+    "name": "Earth Harmony Sound & Wellness",
+    "bio": "Sound Baths & Therapeutic Drumming Events —<br>Sound Healing Facilitator Training",
+    "email": "earthharmonysoundhealing@gmail.com",
+    "logo": "images/logo_ca65ac9a8d.jpg",
+    "logoEmoji": "🔔"
+  },
+  "socialLinks": [
+    {
+      "name": "Instagram",
+      "url": "https://instagram.com/earth.harmony.sound.healing",
+      "icon": "instagram"
+    },
+    {
+      "name": "Facebook",
+      "url": "https://www.facebook.com/marcus.fung",
+      "icon": "facebook"
+    },
+    {
+      "name": "Insight Timer",
+      "url": "https://insighttimer.com/highercallingmusic",
+      "icon": "music"
+    },
+    {
+      "name": "Email",
+      "url": "mailto:earthharmonysoundhealing@gmail.com",
+      "icon": "mail"
+    }
+  ],
+  "topLinks": [
+    {
+      "title": "How was your experience? Check Our Google Reviews",
+      "url": "https://g.page/r/CeK7fPWpwspuEAE/review",
+      "emoji": "⭐",
+      "img": "images/toplink_0_e1ac96d0d5.jpg"
+    },
+    {
+      "title": "Join my Local YEG Events Newsletter ",
+      "url": "https://list.robly.com/subscribe?a=bb2759f574f35963fb38112b07dcd45d",
+      "emoji": "📧",
+      "img": "images/toplink_1_e7486d5933.jpg"
+    }
+  ],
+  "resources": [
+    {
+      "title": "Edmonton's Premium Sound Bath & Sound Therapy",
+      "url": "https://www.earthharmonysoundwellness.com/",
+      "emoji": "🌐",
+      "img": ""
+    },
+    {
+      "title": "Watch our CTV News Feature — 3 mins",
+      "url": "https://www.ctvnews.ca/edmonton/video/2026/01/26/sound-bathing-how-some-edmontonians-are-staying-grounded/",
+      "emoji": "📺",
+      "img": "photos/ctv-news.png"
+    },
+    {
+      "title": "Insight Timer — Exclusive Music, Courses, Live Streams",
+      "url": "https://insighttimer.com/highercallingmusic",
+      "emoji": "🎧",
+      "img": "data:image/jpeg;base64,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"
+    },
+    {
+      "title": "Earth Harmony Hoodies / Payments / Tip Jars",
+      "url": "http://www.ko-fi.com/marcusworldbridger",
+      "emoji": "☕",
+      "img": "https://storage.ko-fi.com/cdn/brandasset/kofi_s_logo_nolabel.png"
+    }
+  ],
+  "eventTypes": {
+    "sound-bath": {
+      "name": "Sound Bath",
+      "color": "#4a90d9",
+      "icon": "🔔",
+      "img": "https://images.unsplash.com/photo-1591291621164-2c6367723315?w=120&h=120&fit=crop"
+    },
+    "deep-gong": {
+      "name": "Deep Gong",
+      "color": "#9b59b6",
+      "icon": "🌊",
+      "img": "https://images.unsplash.com/photo-1545389336-cf090694435e?w=120&h=120&fit=crop"
+    },
+    "sound-foundations": {
+      "name": "Training",
+      "color": "#2ecc71",
+      "icon": "🎵",
+      "img": "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=120&h=120&fit=crop"
+    },
+    "drumming": {
+      "name": "Drumming",
+      "color": "#e74c3c",
+      "icon": "🥁",
+      "img": "https://images.unsplash.com/photo-1519892300165-cb5542fb47c7?w=120&h=120&fit=crop"
+    },
+    "yin-sound": {
+      "name": "Yoga + Sound",
+      "color": "#e8a44e",
+      "icon": "🧘",
+      "img": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=120&h=120&fit=crop"
+    },
+    "restorative": {
+      "name": "Yoga + Sound",
+      "color": "#c8a44e",
+      "icon": "✨",
+      "img": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=120&h=120&fit=crop",
+      "filterAs": "yin-sound"
+    },
+    "private": {
+      "name": "Private",
+      "color": "#607080",
+      "icon": "🔒",
+      "img": ""
+    }
+  },
+  "filterOrder": [
+    "sound-bath",
+    "deep-gong",
+    "yin-sound",
+    "drumming",
+    "sound-foundations"
+  ],
+  "venues": {
+    "home": {
+      "name": "My Home",
+      "area": "Terwillegar"
+    },
+    "om-hot-yoga": {
+      "name": "OM Hot Yoga",
+      "area": "124 St"
+    },
+    "yoga-within": {
+      "name": "Yoga Within",
+      "area": ""
+    },
+    "element-yoga": {
+      "name": "Element Yoga",
+      "area": "Beaumont, AB"
+    },
+    "roots-on-whyte": {
+      "name": "Roots on Whyte",
+      "area": "3rd Floor"
+    },
+    "summerside": {
+      "name": "Summerside",
+      "area": ""
+    },
+    "prana-yoga": {
+      "name": "Prana Yoga",
+      "area": "West"
+    }
+  },
+  "events": [
+    {
+      "id": "ev-001",
+      "type": "deep-gong",
+      "title": "Deep Gong Immersion",
+      "date": "2026-02-27",
+      "time": "19:00",
+      "endTime": "20:30",
+      "venue": "home",
+      "price": 60,
+      "booking": "https://earthharmony.as.me/?appointmentType=88377661",
+      "desc": "An immersive journey through deep gong resonance. Powerful, grounding, transformative.",
+      "img": "photos/gong-immersion.png",
+      "imgCrop": "48% 41%"
+    },
+    {
+      "id": "ev-002",
+      "type": "yin-sound",
+      "title": "Yin Yoga & Sound Sanctuary",
+      "date": "2026-02-28",
+      "time": "19:00",
+      "endTime": "21:00",
+      "venue": "om-hot-yoga",
+      "price": 30,
+      "booking": "https://www.omhotyoga.ca/class-schedule",
+      "desc": "Gentle yin yoga postures held with the healing power of live sound.",
+      "img": "photos/yoga-sound.png",
+      "imgCrop": "50% 15%"
+    },
+    {
+      "id": "ev-003",
+      "type": "sound-foundations",
+      "title": "Sound Foundations Playground — Instrument Workshop and Training",
+      "date": "2026-02-28",
+      "time": "10:00",
+      "endTime": "12:30",
+      "venue": "home",
+      "price": 65,
+      "booking": "https://earthharmony.as.me/?appointmentType=88377429",
+      "desc": "An interactive workshop exploring the foundations of sound healing.",
+      "img": "images/event_2_90f77e9bf4.jpg",
+      "imgCrop": "50% 16%"
+    },
+    {
+      "id": "ev-004",
+      "type": "restorative",
+      "title": "Restorative Yoga & Healing Soundbath",
+      "date": "2026-03-06",
+      "time": "18:30",
+      "endTime": "20:00",
+      "venue": "yoga-within",
+      "price": 48,
+      "booking": "https://yogawithin.ca/restorative-yoga-soundbath",
+      "desc": "Fully supported restorative postures bathed in healing sound.",
+      "img": "photos/yoga-sound.png",
+      "imgCrop": "50% 15%"
+    },
+    {
+      "id": "ev-005",
+      "type": "sound-bath",
+      "title": "Deep Symphonic Sound Bath",
+      "date": "2026-03-08",
+      "time": "18:30",
+      "endTime": "20:00",
+      "venue": "element-yoga",
+      "price": 65,
+      "booking": "https://www.elementyogabeaumont.com/events",
+      "desc": "A full frequency spectrum sound bath experience.",
+      "img": "photos/community-sound-bath.png",
+      "imgCrop": "50% 15%"
+    },
+    {
+      "id": "ev-007",
+      "type": "deep-gong",
+      "title": "Deep Resonance Gong Immersion",
+      "date": "2026-03-20",
+      "time": "19:00",
+      "endTime": "20:30",
+      "venue": "home",
+      "price": 60,
+      "booking": "https://earthharmony.as.me/?appointmentType=89363552",
+      "desc": "An immersive journey through deep gong resonance.",
+      "img": "photos/gong-immersion.png",
+      "imgCrop": "50% 15%"
+    },
+    {
+      "id": "ev-006",
+      "type": "sound-bath",
+      "title": "Back to Basics Community Sound Bath",
+      "date": "2026-03-21",
+      "time": "17:00",
+      "endTime": "18:00",
+      "venue": "roots-on-whyte",
+      "price": 22,
+      "booking": "https://EarthHarmony.as.me/?appointmentType=89191143",
+      "desc": "Accessible community sound bath.",
+      "img": "photos/back-to-basics.png",
+      "imgCrop": "50% 15%"
+    },
+    {
+      "id": "ev-008",
+      "type": "sound-bath",
+      "title": "Back to Basics Community Sound Bath",
+      "date": "2026-03-21",
+      "time": "18:30",
+      "endTime": "19:30",
+      "venue": "roots-on-whyte",
+      "price": 22,
+      "booking": "https://EarthHarmony.as.me/?appointmentType=89191216",
+      "desc": "Accessible community sound bath.",
+      "img": "photos/back-to-basics.png",
+      "imgCrop": "50% 15%"
+    },
+    {
+      "id": "ev-009",
+      "type": "sound-bath",
+      "title": "Healing Sounds Journey",
+      "date": "2026-03-23",
+      "time": "18:30",
+      "endTime": "19:30",
+      "venue": "summerside",
+      "price": 30,
+      "booking": "https://central.ivrnet.com/ssra/searches?q=soundbath",
+      "desc": "A healing sound journey in the Summerside community.",
+      "img": "photos/community-sound-bath.png",
+      "imgCrop": "50% 15%"
+    },
+    {
+      "id": "ev-010",
+      "type": "drumming",
+      "title": "Pulse of Life Drumming Circle & Rhythm Cradle",
+      "date": "2026-03-27",
+      "time": "19:00",
+      "endTime": "22:00",
+      "venue": "home",
+      "price": 26,
+      "booking": "https://EarthHarmony.as.me/?appointmentType=89005708",
+      "desc": "A facilitated community rhythm experience. No experience needed.",
+      "venueOverride": "Sherwood Park",
+      "img": "photos/pulse-of-life.png",
+      "imgCrop": "50% 15%"
+    },
+    {
+      "id": "ev-501247",
+      "type": "sound-bath",
+      "title": "Spring Echos /w Tania Vasquez",
+      "date": "2026-03-28",
+      "time": "17:30",
+      "endTime": "19:30",
+      "venue": "prana-yoga",
+      "price": 69,
+      "booking": "https://www.pranayogastudio.ca/events/event/spring-echoes-yoga-inspired-movement-healing-sound/",
+      "desc": "As the earth softens into spring, you’re invited to step into a 2 hour immersive experience designed to awaken your body, open your senses, and reconnect you with the energy of renewal.\n\n \n\nJoin seasoned facilitators Tania Vazquez and Marcus Fung for a soulful blend of yoga-inspired movement, live soundscapes, and a deeply restorative Yoga Nidra journey.\n\n \n\nThis workshop weaves the grounding wisdom of the body with the healing resonance of sound—an invitation to shed winter’s heaviness and rise into a season of clarity, inspiration, and inner spaciousness.\n\n \n\nWhat to Expect:\n\nGentle, mindful movement to wake the body and clear energetic stagnation\n\nEarthy, intuitive soundscapes crafted live to support presence and relaxation\n\nRestorative Yoga Nidra for nervous system reset, deep rest, and inner renewal\n\nMoments of reflection & community connection\n\nA nurturing space held with skill, heart, and intention\n\n \n\nThis workshop is designed for all levels and bodies—come exactly as you are.\n\n \n\nLeave Feeling…\n\nRenewed in body and spirit Grounded and open\n\nInspired for the season ahead\n\nReconnected with yourself and supported by community\n\nLet spring’s energy guide you back to your own vitality.\n\n \n\nWe’d be honoured to share this time with you.\n\nInvestment $69\n\n15%OFF to all Gold, Silver & Prime Members",
+      "img": "https://www.pranayogastudio.ca/wp-content/uploads/2026/02/spring-echoes-instagram-1.png",
+      "imgCrop": "67% 55%"
+    }
+  ],
+  "photoLibrary": [
+    {
+      "data": "images/photo_0_c85790d581.jpg",
+      "name": "googlereviews"
+    },
+    {
+      "data": "images/photo_1_d7358567ac.jpg",
+      "name": "att.9f31ZlQCrV_EEBFrK9W1Bhh3Pks65PcyEpc7xZ3fKUU"
+    },
+    {
+      "data": "images/photo_2_e1360c0766.jpg",
+      "name": "insighttimerlogo"
+    },
+    {
+      "data": "images/photo_3_63ebb8ab58.jpg",
+      "name": "soundfoundations"
+    }
+  ]
+}

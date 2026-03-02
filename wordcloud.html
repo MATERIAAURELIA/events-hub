@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Earth Harmony — SEO Word Cloud</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #111; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Inter', sans-serif; overflow: hidden; }
+  h1 { color: #c8a44e; font-size: 0.8rem; margin-bottom: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .cloud { width: 90vw; height: 80vh; position: relative; }
+  .word {
+    position: absolute; cursor: default; transition: all 0.3s;
+    font-weight: 700; white-space: nowrap; text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  }
+  .word:hover { transform: scale(1.15); filter: brightness(1.4); }
+</style>
+</head>
+<body>
+<h1>🔔 Earth Harmony — Keyword Universe</h1>
+<div class="cloud" id="cloud"></div>
+<script>
+const words = [
+  { text: "Sound Bath", weight: 100, color: "#c8a44e" },
+  { text: "Edmonton", weight: 95, color: "#e8a820" },
+  { text: "Gong Immersion", weight: 85, color: "#9b59b6" },
+  { text: "Sound Healing", weight: 90, color: "#4a90d9" },
+  { text: "Crystal Singing Bowls", weight: 70, color: "#2ecc71" },
+  { text: "Wellness", weight: 75, color: "#e8a44e" },
+  { text: "Meditation", weight: 72, color: "#c8a44e" },
+  { text: "Yin Yoga", weight: 65, color: "#e74c3c" },
+  { text: "Therapeutic Drumming", weight: 68, color: "#e74c3c" },
+  { text: "Sound Therapy", weight: 78, color: "#4a90d9" },
+  { text: "Restorative Yoga", weight: 55, color: "#2ecc71" },
+  { text: "Nervous System", weight: 60, color: "#9b59b6" },
+  { text: "Deep Relaxation", weight: 62, color: "#4a90d9" },
+  { text: "Vibrational Healing", weight: 58, color: "#c8a44e" },
+  { text: "Frequency", weight: 65, color: "#e8a820" },
+  { text: "Sound Bath Near Me", weight: 82, color: "#e8a44e" },
+  { text: "Facilitator Training", weight: 60, color: "#2ecc71" },
+  { text: "Tibetan Bowls", weight: 52, color: "#9b59b6" },
+  { text: "Community", weight: 58, color: "#e74c3c" },
+  { text: "Alberta", weight: 50, color: "#e8a820" },
+  { text: "Beaumont", weight: 42, color: "#c8a44e" },
+  { text: "Sherwood Park", weight: 45, color: "#c8a44e" },
+  { text: "Stress Relief", weight: 63, color: "#4a90d9" },
+  { text: "Earth Harmony", weight: 88, color: "#D4951A" },
+  { text: "Singing Bowl Meditation", weight: 55, color: "#9b59b6" },
+  { text: "Sound Journey", weight: 60, color: "#4a90d9" },
+  { text: "Healing Events", weight: 65, color: "#2ecc71" },
+  { text: "Corporate Sound Bath", weight: 40, color: "#607080" },
+  { text: "Gong Bath", weight: 72, color: "#9b59b6" },
+  { text: "Private Sessions", weight: 45, color: "#607080" },
+  { text: "Sound Certification", weight: 48, color: "#2ecc71" },
+  { text: "Drumming Circle", weight: 58, color: "#e74c3c" },
+  { text: "Soundbath", weight: 80, color: "#c8a44e" },
+  { text: "YEG", weight: 55, color: "#e8a820" },
+  { text: "Relaxation", weight: 56, color: "#4a90d9" },
+  { text: "Holistic", weight: 48, color: "#2ecc71" },
+  { text: "Transformative", weight: 44, color: "#9b59b6" },
+  { text: "Grounding", weight: 50, color: "#c8a44e" },
+  { text: "Resonance", weight: 52, color: "#D4951A" },
+  { text: "Immersive", weight: 46, color: "#4a90d9" },
+  { text: "Healing Sounds", weight: 58, color: "#c8a44e" },
+  { text: "Book Now", weight: 70, color: "#e74c3c" },
+  { text: "Live Sound", weight: 50, color: "#9b59b6" },
+  { text: "Wellness Events", weight: 62, color: "#2ecc71" },
+  { text: "Sound Foundations", weight: 45, color: "#2ecc71" },
+  { text: "Entrainment", weight: 38, color: "#9b59b6" },
+  { text: "Harmonics", weight: 44, color: "#D4951A" },
+  { text: "Sleep", weight: 55, color: "#4a90d9" },
+  { text: "Anxiety Relief", weight: 52, color: "#4a90d9" },
+  { text: "Mindfulness", weight: 48, color: "#c8a44e" },
+];
+
+const cloud = document.getElementById('cloud');
+const placed = [];
+
+function fontSize(weight) {
+  return 12 + (weight / 100) * 42;
+}
+
+function overlap(r1, r2) {
+  return !(r1.right < r2.left || r1.left > r2.right || r1.bottom < r2.top || r1.top > r2.bottom);
+}
+
+function placeWords() {
+  const cw = cloud.offsetWidth, ch = cloud.offsetHeight;
+  const sorted = [...words].sort((a, b) => b.weight - a.weight);
+  
+  sorted.forEach((w, i) => {
+    const el = document.createElement('div');
+    el.className = 'word';
+    el.textContent = w.text;
+    const size = fontSize(w.weight);
+    el.style.fontSize = size + 'px';
+    el.style.color = w.color;
+    el.style.opacity = 0.15 + (w.weight / 100) * 0.85;
+    cloud.appendChild(el);
+    
+    // Spiral placement
+    let placed_ok = false;
+    const cx = cw / 2, cy = ch / 2;
+    for (let r = 0; r < Math.max(cw, ch); r += 4) {
+      for (let a = 0; a < 360; a += 15) {
+        const rad = (a + i * 37) * Math.PI / 180;
+        const x = cx + r * Math.cos(rad) - el.offsetWidth / 2;
+        const y = cy + r * Math.sin(rad) - el.offsetHeight / 2;
+        
+        if (x < 0 || y < 0 || x + el.offsetWidth > cw || y + el.offsetHeight > ch) continue;
+        
+        const rect = { left: x, top: y, right: x + el.offsetWidth, bottom: y + el.offsetHeight };
+        const pad = 6;
+        const padded = { left: rect.left - pad, top: rect.top - pad, right: rect.right + pad, bottom: rect.bottom + pad };
+        
+        if (!placed.some(p => overlap(p, padded))) {
+          el.style.left = x + 'px';
+          el.style.top = y + 'px';
+          placed.push(padded);
+          placed_ok = true;
+          break;
+        }
+      }
+      if (placed_ok) break;
+    }
+    
+    if (!placed_ok) {
+      el.style.left = Math.random() * (cw - el.offsetWidth) + 'px';
+      el.style.top = Math.random() * (ch - el.offsetHeight) + 'px';
+    }
+    
+    // Animate in
+    el.style.transform = 'scale(0)';
+    el.style.transition = 'transform 0.5s ease ' + (i * 30) + 'ms';
+    requestAnimationFrame(() => requestAnimationFrame(() => el.style.transform = 'scale(1)'));
+  });
+}
+
+placeWords();
+</script>
+</body>
+</html>

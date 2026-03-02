@@ -1,0 +1,238 @@
+{
+  "event_types": {
+    "sound-bath": {
+      "name": "Sound Bath",
+      "color": "#4a90d9",
+      "icon": "🔔",
+      "default_description": "A deep relaxation experience using singing bowls, gongs, flutes, and voice. Settle into stillness and let sound do the work.",
+      "default_duration": 90,
+      "default_images": ["sound-bath-1.jpg", "sound-bath-2.jpg", "sound-bath-3.jpg"]
+    },
+    "deep-gong": {
+      "name": "Deep Gong Immersion",
+      "color": "#9b59b6",
+      "icon": "🌊",
+      "default_description": "An immersive journey through deep gong resonance. Powerful, grounding, transformative.",
+      "default_duration": 90,
+      "default_images": ["gong-1.jpg", "gong-2.jpg"]
+    },
+    "sound-foundations": {
+      "name": "Sound Foundations Playground",
+      "color": "#2ecc71",
+      "icon": "🎵",
+      "default_description": "An interactive workshop exploring the foundations of sound healing. Learn, play, and discover your own relationship with sound.",
+      "default_duration": 150,
+      "default_images": ["workshop-1.jpg", "workshop-2.jpg"]
+    },
+    "drumming": {
+      "name": "Pulse of Life Drumming Circle",
+      "color": "#e74c3c",
+      "icon": "🥁",
+      "default_description": "A facilitated community rhythm experience. No experience needed — just show up and play.",
+      "default_duration": 180,
+      "default_images": ["drumming-1.jpg", "drumming-2.jpg"]
+    },
+    "yin-sound": {
+      "name": "Yin Yoga & Sound",
+      "color": "#e8a44e",
+      "icon": "🧘",
+      "default_description": "Gentle yin yoga postures held with the healing power of live sound. Deep release for body and mind.",
+      "default_duration": 120,
+      "default_images": ["yin-1.jpg"]
+    },
+    "restorative": {
+      "name": "Restorative Yoga & Soundbath",
+      "color": "#c8a44e",
+      "icon": "✨",
+      "default_description": "Fully supported restorative postures bathed in healing sound. The deepest rest you can experience.",
+      "default_duration": 90,
+      "default_images": ["restorative-1.jpg"]
+    },
+    "private": {
+      "name": "Private / Apprentice Session",
+      "color": "#607080",
+      "icon": "🔒",
+      "default_description": "Private training session for apprentice practitioners.",
+      "default_duration": 120,
+      "default_images": [],
+      "visibility": "private"
+    }
+  },
+  "venues": {
+    "home": {
+      "name": "Marcus's Home Studio",
+      "area": "Terwillegar",
+      "city": "Edmonton, AB"
+    },
+    "om-hot-yoga": {
+      "name": "OM Hot Yoga",
+      "address": "124 St",
+      "city": "Edmonton, AB",
+      "url": "https://www.omhotyoga.ca/class-schedule"
+    },
+    "yoga-within": {
+      "name": "Yoga Within",
+      "city": "Edmonton, AB",
+      "url": "https://yogawithin.ca/restorative-yoga-soundbath"
+    },
+    "element-yoga": {
+      "name": "Element Yoga",
+      "city": "Beaumont, AB",
+      "url": "https://www.elementyogabeaumont.com/events"
+    },
+    "roots-on-whyte": {
+      "name": "Roots on Whyte",
+      "address": "3rd Floor Conference Room",
+      "city": "Edmonton, AB"
+    },
+    "summerside": {
+      "name": "Summerside Community",
+      "city": "Edmonton, AB",
+      "url": "https://central.ivrnet.com/ssra/searches?q=soundbath"
+    }
+  },
+  "events": [
+    {
+      "id": "ev-001",
+      "type": "deep-gong",
+      "title": "Deep Gong Immersion",
+      "date": "2026-02-27",
+      "time": "19:00",
+      "duration": 90,
+      "venue": "home",
+      "price": 60,
+      "spots": 1,
+      "booking_url": "https://earthharmony.as.me/?appointmentType=88377661",
+      "status": "active",
+      "visibility": "public"
+    },
+    {
+      "id": "ev-002",
+      "type": "yin-sound",
+      "title": "Yin Yoga & Sound Sanctuary",
+      "date": "2026-02-28",
+      "time": "19:00",
+      "duration": 120,
+      "venue": "om-hot-yoga",
+      "price": 30,
+      "booking_url": "https://www.omhotyoga.ca/class-schedule",
+      "status": "active",
+      "visibility": "public"
+    },
+    {
+      "id": "ev-003",
+      "type": "sound-foundations",
+      "title": "Sound Foundations Playground — Instrument Workshop & Training",
+      "date": "2026-02-28",
+      "time": "10:00",
+      "duration": 150,
+      "venue": "home",
+      "price": 65,
+      "booking_url": "https://earthharmony.as.me/?appointmentType=88377429",
+      "status": "active",
+      "visibility": "public"
+    },
+    {
+      "id": "ev-004",
+      "type": "restorative",
+      "title": "Restorative Yoga & Healing Soundbath",
+      "date": "2026-03-06",
+      "time": "18:30",
+      "duration": 90,
+      "venue": "yoga-within",
+      "price": 48,
+      "booking_url": "https://yogawithin.ca/restorative-yoga-soundbath",
+      "status": "active",
+      "visibility": "public"
+    },
+    {
+      "id": "ev-005",
+      "type": "sound-bath",
+      "title": "Deep Symphonic Sound Bath",
+      "date": "2026-03-08",
+      "time": "18:30",
+      "duration": 90,
+      "venue": "element-yoga",
+      "price": 65,
+      "booking_url": "https://www.elementyogabeaumont.com/events",
+      "status": "active",
+      "visibility": "public"
+    },
+    {
+      "id": "ev-006",
+      "type": "sound-bath",
+      "title": "Back to Basics Community Sound Bath",
+      "date": "2026-03-21",
+      "time": "17:00",
+      "duration": 60,
+      "venue": "roots-on-whyte",
+      "price": 22,
+      "booking_url": "https://EarthHarmony.as.me/?appointmentType=89191143",
+      "status": "active",
+      "visibility": "public"
+    },
+    {
+      "id": "ev-007",
+      "type": "deep-gong",
+      "title": "Deep Resonance Gong Immersion",
+      "date": "2026-03-20",
+      "time": "19:00",
+      "duration": 90,
+      "venue": "home",
+      "price": 60,
+      "booking_url": "https://earthharmony.as.me/?appointmentType=89363552",
+      "status": "active",
+      "visibility": "public"
+    },
+    {
+      "id": "ev-008",
+      "type": "sound-bath",
+      "title": "Back to Basics Community Sound Bath",
+      "date": "2026-03-21",
+      "time": "18:30",
+      "duration": 60,
+      "venue": "roots-on-whyte",
+      "price": 22,
+      "booking_url": "https://EarthHarmony.as.me/?appointmentType=89191216",
+      "status": "active",
+      "visibility": "public"
+    },
+    {
+      "id": "ev-009",
+      "type": "sound-bath",
+      "title": "Healing Sounds Journey",
+      "date": "2026-03-23",
+      "time": "18:30",
+      "duration": 60,
+      "venue": "summerside",
+      "price": 30,
+      "booking_url": "https://central.ivrnet.com/ssra/searches?q=soundbath",
+      "status": "active",
+      "visibility": "public"
+    },
+    {
+      "id": "ev-010",
+      "type": "drumming",
+      "title": "Pulse of Life Drumming Circle & Rhythm Cradle",
+      "date": "2026-03-27",
+      "time": "19:00",
+      "duration": 180,
+      "venue": "home",
+      "price": 22,
+      "spots_note": "Sherwood Park",
+      "booking_url": "https://EarthHarmony.as.me/?appointmentType=89005708",
+      "status": "active",
+      "visibility": "public"
+    }
+  ],
+  "resources": {
+    "website": "https://www.earthharmonysoundwellness.com/",
+    "newsletter": "https://list.robly.com/subscribe?a=bb2759f574f35963fb38112b07dcd45d",
+    "reviews": "https://g.page/r/CeK7fPWpwspuEAE/review",
+    "insight_timer": "https://insighttimer.com/highercallingmusic",
+    "instagram": "https://instagram.com/earth.harmony.sound.healing",
+    "facebook": "https://www.facebook.com/marcus.fung",
+    "kofi": "http://www.ko-fi.com/marcusworldbridger",
+    "ctv_feature": "https://www.ctvnews.ca/edmonton/video/2026/01/26/sound-bathing-how-some-edmontonians-are-staying-grounded/"
+  }
+}
