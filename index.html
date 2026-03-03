@@ -1066,7 +1066,19 @@ if(new URLSearchParams(window.location.search).get('embed')==='1'){
 }
 
 // Init — load config then render
-loadConfig().then(()=>{ buildFilters(); renderList(); renderCal(); generateJsonLd(); });
+loadConfig().then(()=>{
+  buildFilters();
+  // Support ?type= URL param for deep linking to filtered view
+  const urlParams = new URLSearchParams(window.location.search);
+  const typeParam = urlParams.get('type');
+  if (typeParam && typeParam !== 'all') {
+    activeFilter = typeParam;
+    document.querySelectorAll('.filter-pill').forEach(b => {
+      b.classList.toggle('active', b.dataset.filter === typeParam);
+    });
+  }
+  renderList(); renderCal(); generateJsonLd();
+});
 </script>
 </body>
 </html>
