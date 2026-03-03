@@ -174,20 +174,6 @@
   },
   "events": [
     {
-      "id": "ev-001",
-      "type": "deep-gong",
-      "title": "Deep Gong Immersion",
-      "date": "2026-02-27",
-      "time": "19:00",
-      "endTime": "20:30",
-      "venue": "home",
-      "price": 60,
-      "booking": "https://earthharmony.as.me/?appointmentType=88377661",
-      "desc": "An immersive journey through deep gong resonance. Powerful, grounding, transformative.",
-      "img": "photos/gong-immersion.png",
-      "imgCrop": "48% 41%"
-    },
-    {
       "id": "ev-002",
       "type": "yin-sound",
       "title": "Yin Yoga & Sound Sanctuary",
@@ -200,20 +186,6 @@
       "desc": "Gentle yin yoga postures held with the healing power of live sound.",
       "img": "photos/yoga-sound.png",
       "imgCrop": "50% 15%"
-    },
-    {
-      "id": "ev-003",
-      "type": "sound-foundations",
-      "title": "Sound Foundations Playground — Instrument Workshop and Training",
-      "date": "2026-02-28",
-      "time": "10:00",
-      "endTime": "12:30",
-      "venue": "home",
-      "price": 65,
-      "booking": "https://earthharmony.as.me/?appointmentType=88377429",
-      "desc": "An interactive workshop exploring the foundations of sound healing.",
-      "img": "images/event_2_90f77e9bf4.jpg",
-      "imgCrop": "50% 16%"
     },
     {
       "id": "ev-004",
@@ -241,20 +213,6 @@
       "booking": "https://www.elementyogabeaumont.com/events",
       "desc": "A full frequency spectrum sound bath experience.",
       "img": "photos/community-sound-bath.png",
-      "imgCrop": "50% 15%"
-    },
-    {
-      "id": "ev-007",
-      "type": "deep-gong",
-      "title": "Deep Resonance Gong Immersion",
-      "date": "2026-03-20",
-      "time": "19:00",
-      "endTime": "20:30",
-      "venue": "home",
-      "price": 60,
-      "booking": "https://earthharmony.as.me/?appointmentType=89363552",
-      "desc": "An immersive journey through deep gong resonance.",
-      "img": "photos/gong-immersion.png",
       "imgCrop": "50% 15%"
     },
     {
@@ -327,6 +285,34 @@
       "desc": "As the earth softens into spring, you’re invited to step into a 2 hour immersive experience designed to awaken your body, open your senses, and reconnect you with the energy of renewal.\n\n \n\nJoin seasoned facilitators Tania Vazquez and Marcus Fung for a soulful blend of yoga-inspired movement, live soundscapes, and a deeply restorative Yoga Nidra journey.\n\n \n\nThis workshop weaves the grounding wisdom of the body with the healing resonance of sound—an invitation to shed winter’s heaviness and rise into a season of clarity, inspiration, and inner spaciousness.\n\n \n\nWhat to Expect:\n\nGentle, mindful movement to wake the body and clear energetic stagnation\n\nEarthy, intuitive soundscapes crafted live to support presence and relaxation\n\nRestorative Yoga Nidra for nervous system reset, deep rest, and inner renewal\n\nMoments of reflection & community connection\n\nA nurturing space held with skill, heart, and intention\n\n \n\nThis workshop is designed for all levels and bodies—come exactly as you are.\n\n \n\nLeave Feeling…\n\nRenewed in body and spirit Grounded and open\n\nInspired for the season ahead\n\nReconnected with yourself and supported by community\n\nLet spring’s energy guide you back to your own vitality.\n\n \n\nWe’d be honoured to share this time with you.\n\nInvestment $69\n\n15%OFF to all Gold, Silver & Prime Members",
       "img": "photos/spring-echoes.png",
       "imgCrop": "67% 55%"
+    },
+    {
+      "id": "ev-003",
+      "type": "sound-foundations",
+      "title": "Sound Foundations Playground — Vocal Empowerment",
+      "date": "2026-03-29",
+      "time": "10:00",
+      "endTime": "12:00",
+      "venue": "home",
+      "price": 65,
+      "booking": "https://earthharmony.as.me/?appointmentType=88377429",
+      "desc": "An interactive workshop exploring the foundations of sound healing.",
+      "img": "images/event_2_90f77e9bf4.jpg",
+      "imgCrop": "50% 16%"
+    },
+    {
+      "id": "ev-001",
+      "type": "deep-gong",
+      "title": "Deep Gong Immersion",
+      "date": "2026-03-29",
+      "time": "16:00",
+      "endTime": "17:30",
+      "venue": "home",
+      "price": 60,
+      "booking": "https://earthharmony.as.me/?appointmentType=88377661",
+      "desc": "An immersive journey through deep gong resonance. Powerful, grounding, transformative.",
+      "img": "photos/gong-immersion.png",
+      "imgCrop": "48% 41%"
     }
   ],
   "photoLibrary": [
