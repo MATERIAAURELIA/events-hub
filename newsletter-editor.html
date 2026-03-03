@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Earth Harmony Newsletter Editor</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #0f0f0f;
+    color: #e0e0e0;
+    display: flex;
+    min-height: 100vh;
+  }
+  
+  /* === LEFT PANEL: CONTROLS === */
+  .editor-panel {
+    width: 420px;
+    min-width: 420px;
+    background: #1a1a1a;
+    border-right: 1px solid #333;
+    overflow-y: auto;
+    padding: 20px;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+  }
+  
+  .editor-panel h1 {
+    font-size: 18px;
+    color: #D4951A;
+    margin-bottom: 4px;
+  }
+  
+  .editor-panel .subtitle {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 20px;
+  }
+  
+  /* Section blocks */
+  .section-block {
+    background: #222;
+    border: 1px solid #333;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    cursor: pointer;
+    user-select: none;
+  }
+  
+  .section-header:hover { background: #2a2a2a; }
+  
+  .section-header label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #ccc;
+    cursor: pointer;
+  }
+  
+  .section-header .toggle {
+    width: 36px;
+    height: 20px;
+    background: #444;
+    border-radius: 10px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+  
+  .section-header .toggle.on { background: #D4951A; }
+  
+  .section-header .toggle::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background: white;
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    transition: left 0.2s;
+  }
+  
+  .section-header .toggle.on::after { left: 18px; }
+  
+  .section-body {
+    padding: 10px 14px 14px;
+    border-top: 1px solid #333;
+    display: none;
+  }
+  
+  .section-block.open .section-body { display: block; }
+  .section-block.disabled .section-header label { color: #555; }
+  .section-block.disabled .section-body { opacity: 0.4; pointer-events: none; }
+  
+  /* Form elements */
+  .field-label {
+    font-size: 11px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+    margin-top: 10px;
+  }
+  
+  .field-label:first-child { margin-top: 0; }
+  
+  input[type="text"], textarea, select {
+    width: 100%;
+    padding: 8px 10px;
+    background: #1a1a1a;
+    border: 1px solid #444;
+    border-radius: 4px;
+    color: #e0e0e0;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    outline: none;
+  }
+  
+  input:focus, textarea:focus, select:focus { border-color: #D4951A; }
+  textarea { resize: vertical; min-height: 60px; }
+  select { cursor: pointer; }
+  
+  .btn {
+    display: inline-block;
+    padding: 6px 14px;
+    background: #D4951A;
+    color: #000;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+  }
+  
+  .btn:hover { background: #e5a520; }
+  .btn.secondary { background: #333; color: #ccc; }
+  .btn.secondary:hover { background: #444; }
+  
+  .btn-row { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  
+  /* Quote preview */
+  .quote-preview {
+    background: #1a1208;
+    border-left: 3px solid #D4951A;
+    padding: 10px 12px;
+    margin-top: 8px;
+    border-radius: 0 4px 4px 0;
+    font-size: 13px;
+    font-style: italic;
+    color: #D4951A;
+    line-height: 1.5;
+  }
+  
+  .quote-preview .attr {
+    font-style: normal;
+    font-size: 11px;
+    color: #888;
+    margin-top: 4px;
+  }
+  
+  /* === RIGHT PANEL: PREVIEW === */
+  .preview-panel {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .preview-toolbar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+    align-items: center;
+  }
+  
+  .preview-toolbar .btn { font-size: 14px; padding: 10px 24px; }
+  
+  .copy-success {
+    color: #4CAF50;
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  .copy-success.show { opacity: 1; }
+  
+  .preview-frame {
+    width: 640px;
+    background: #f5f0eb;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+  }
+  
+  .preview-frame iframe {
+    width: 100%;
+    min-height: 1200px;
+    border: none;
+  }
+
+  /* Month selector */
+  .month-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  
+  .month-row select {
+    width: auto;
+    padding: 6px 10px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ EDITOR PANEL ============ -->
+<div class="editor-panel">
+  <h1>🔔 Newsletter Editor</h1>
+  <p class="subtitle">Earth Harmony Sound & Wellness</p>
+  
+  <div class="month-row">
+    <div class="field-label" style="margin:0">Month</div>
+    <select id="monthSelect" onchange="updatePreview()">
+      <option value="January">January</option>
+      <option value="February">February</option>
+      <option value="March" selected>March</option>
+      <option value="April">April</option>
+      <option value="May">May</option>
+      <option value="June">June</option>
+      <option value="July">July</option>
+      <option value="August">August</option>
+      <option value="September">September</option>
+      <option value="October">October</option>
+      <option value="November">November</option>
+      <option value="December">December</option>
+    </select>
+    <select id="yearSelect" onchange="updatePreview()">
+      <option value="2026" selected>2026</option>
+      <option value="2027">2027</option>
+    </select>
+  </div>
+
+  <!-- GREETING -->
+  <div class="section-block open" data-section="greeting">
+    <div class="section-header" onclick="toggleSection(this)">
+      <label>👋 Greeting</label>
+      <div class="toggle on" onclick="toggleEnabled(event, this)"></div>
+    </div>
+    <div class="section-body">
+      <div class="field-label">Greeting Line</div>
+      <input type="text" id="greetingText" value="may you find your rhythm this month 🙏" oninput="updatePreview()">
+    </div>
+  </div>
+
+  <!-- VIBE PHOTO -->
+  <div class="section-block open" data-section="vibePhoto">
+    <div class="section-header" onclick="toggleSection(this)">
+      <label>📸 Vibe Photo</label>
+      <div class="toggle on" onclick="toggleEnabled(event, this)"></div>
+    </div>
+    <div class="section-body">
+      <div class="field-label">Image URL</div>
+      <input type="text" id="vibePhotoUrl" placeholder="Paste image URL..." oninput="updatePreview()">
+      <div class="field-label">Alt Text</div>
+      <input type="text" id="vibePhotoAlt" value="Sound healing session" oninput="updatePreview()">
+      <p style="font-size:11px;color:#666;margin-top:6px;">Upload photos to GitHub or use a hosted URL. Photos from Dropbox need a public link.</p>
+    </div>
+  </div>
+
+  <!-- QUOTE -->
+  <div class="section-block open" data-section="quote">
+    <div class="section-header" onclick="toggleSection(this)">
+      <label>✨ Quote</label>
+      <div class="toggle on" onclick="toggleEnabled(event, this)"></div>
+    </div>
+    <div class="section-body">
+      <div class="field-label">Quote Library (68 quotes)</div>
+      <select id="quoteSelect" onchange="selectQuote()">
+        <option value="">— Pick a quote or type your own —</option>
+      </select>
+      <div class="btn-row">
+        <button class="btn secondary" onclick="randomQuote()">🎲 Random</button>
+      </div>
+      <div class="field-label">Quote Text</div>
+      <textarea id="quoteText" rows="3" oninput="updatePreview()"></textarea>
+      <div class="field-label">Attribution</div>
+      <input type="text" id="quoteAttr" oninput="updatePreview()">
+      <div class="quote-preview" id="quotePreview" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- GOOD NEWS -->
+  <div class="section-block" data-section="goodNews">
+    <div class="section-header" onclick="toggleSection(this)">
+      <label>📰 What's New</label>
+      <div class="toggle on" onclick="toggleEnabled(event, this)"></div>
+    </div>
+    <div class="section-body">
+      <div class="field-label">Heading</div>
+      <input type="text" id="goodNewsHeading" value="What's New" oninput="updatePreview()">
+      <div class="field-label">Content</div>
+      <textarea id="goodNewsContent" rows="4" oninput="updatePreview()"></textarea>
+      <div class="field-label">Button Text (optional)</div>
+      <input type="text" id="goodNewsBtnText" placeholder="e.g. TRY THE EVENT FINDER →" oninput="updatePreview()">
+      <div class="field-label">Button URL</div>
+      <input type="text" id="goodNewsBtnUrl" placeholder="https://..." oninput="updatePreview()">
+    </div>
+  </div>
+
+  <!-- FEATURED EVENT -->
+  <div class="section-block" data-section="featured">
+    <div class="section-header" onclick="toggleSection(this)">
+      <label>⭐ Featured Event</label>
+      <div class="toggle on" onclick="toggleEnabled(event, this)"></div>
+    </div>
+    <div class="section-body">
+      <div class="field-label">Poster Image URL</div>
+      <input type="text" id="featuredImg" placeholder="Paste poster URL..." oninput="updatePreview()">
+      <div class="field-label">Title</div>
+      <input type="text" id="featuredTitle" value="Deep Resonance Gong Immersion" oninput="updatePreview()">
+      <div class="field-label">Details (date, time, location)</div>
+      <input type="text" id="featuredDetails" placeholder="Friday, March 20 · 7:00 – 8:30 PM · Home Studio" oninput="updatePreview()">
+      <div class="field-label">Description</div>
+      <textarea id="featuredDesc" rows="3" oninput="updatePreview()"></textarea>
+      <div class="field-label">Button Text</div>
+      <input type="text" id="featuredBtnText" value="RESERVE — $60 →" oninput="updatePreview()">
+      <div class="field-label">Booking URL</div>
+      <input type="text" id="featuredBtnUrl" placeholder="https://..." oninput="updatePreview()">
+    </div>
+  </div>
+
+  <!-- EVENT 2 -->
+  <div class="section-block" data-section="event2">
+    <div class="section-header" onclick="toggleSection(this)">
+      <label>🎵 Event 2</label>
+      <div class="toggle on" onclick="toggleEnabled(event, this)"></div>
+    </div>
+    <div class="section-body">
+      <div class="field-label">Poster Image URL</div>
+      <input type="text" id="event2Img" placeholder="Paste poster URL..." oninput="updatePreview()">
+      <div class="field-label">Title</div>
+      <input type="text" id="event2Title" oninput="updatePreview()">
+      <div class="field-label">Details</div>
+      <input type="text" id="event2Details" oninput="updatePreview()">
+      <div class="field-label">Booking URL</div>
+      <input type="text" id="event2BtnUrl" placeholder="https://..." oninput="updatePreview()">
+    </div>
+  </div>
+
+  <!-- EVENT 3 -->
+  <div class="section-block" data-section="event3">
+    <div class="section-header" onclick="toggleSection(this)">
+      <label>🥁 Event 3</label>
+      <div class="toggle on" onclick="toggleEnabled(event, this)"></div>
+    </div>
+    <div class="section-body">
+      <div class="field-label">Poster Image URL</div>
+      <input type="text" id="event3Img" placeholder="Paste poster URL..." oninput="updatePreview()">
+      <div class="field-label">Title</div>
+      <input type="text" id="event3Title" oninput="updatePreview()">
+      <div class="field-label">Details</div>
+      <input type="text" id="event3Details" oninput="updatePreview()">
+      <div class="field-label">Booking URL</div>
+      <input type="text" id="event3BtnUrl" placeholder="https://..." oninput="updatePreview()">
+    </div>
+  </div>
+
+  <!-- FIND A SOUND BATH CTA -->
+  <div class="section-block" data-section="cta">
+    <div class="section-header" onclick="toggleSection(this)">
+      <label>🔔 Find a Sound Bath CTA</label>
+      <div class="toggle on" onclick="toggleEnabled(event, this)"></div>
+    </div>
+    <div class="section-body">
+      <div class="field-label">Text</div>
+      <input type="text" id="ctaText" value="Looking for something specific?" oninput="updatePreview()">
+      <div class="field-label">Button Text</div>
+      <input type="text" id="ctaBtnText" value="🔔 FIND A SOUND BATH →" oninput="updatePreview()">
+      <div class="field-label">URL</div>
+      <input type="text" id="ctaUrl" value="https://materiaaurelia.github.io/events-hub/" oninput="updatePreview()">
+    </div>
+  </div>
+
+  <!-- CLOSING -->
+  <div class="section-block" data-section="closing">
+    <div class="section-header" onclick="toggleSection(this)">
+      <label>🙏 Closing</label>
+      <div class="toggle on" onclick="toggleEnabled(event, this)"></div>
+    </div>
+    <div class="section-body">
+      <div class="field-label">Closing Line</div>
+      <input type="text" id="closingText" value="See you in the sound. 🙏" oninput="updatePreview()">
+    </div>
+  </div>
+
+</div>
+
+<!-- ============ PREVIEW PANEL ============ -->
+<div class="preview-panel">
+  <div class="preview-toolbar">
+    <button class="btn" onclick="copyHTML()" id="copyBtn">📋 Copy HTML for Robly</button>
+    <span class="copy-success" id="copySuccess">✓ Copied!</span>
+  </div>
+  <div class="preview-frame">
+    <iframe id="previewFrame" sandbox="allow-same-origin"></iframe>
+  </div>
+</div>
+
+<script>
+// ============ QUOTES LIBRARY ============
+const quotes = [{"text": "What you encounter, recognize and discover depends to a large degree the quality of your approach. When we approach with reverence, great things decide to approach us.", "attribution": "John O'Donohue", "source": "ig-archive"}, {"text": "The word respect comes from the Latin word respicere, which means the willingness to look again... The warrior is willing to take a second look rather than remain stuck in a particular view of a situation or individual. Perhaps the most important aspect of the warrior is the ability to extend honour and respect.", "attribution": "Angeles Arrien", "source": "ig-archive"}, {"text": "The supreme challenge of a warrior is to take an enemy's fearful wrath and turn it into harmless laughter.", "attribution": "O'Sensei", "source": "ig-archive"}, {"text": "Our lives begin to end the day we become silent about the things that matter.", "attribution": "MLK", "source": "ig-archive"}, {"text": "He charged me with being a weeder, and him a gardener. He said, all you do is look for the old hurts and wounds of the past to pull them out, but you don't know how to flower your garden. How to nurture that which makes your spirit flourish. He was right.", "attribution": "Dr. Alberto Villoldo", "source": "ig-archive"}, {"text": "Wakan Tanka can take away my eyes, Wakan Tanka can take away my hands, Wakan Tanka can even take away all my gifts, my family and my possessions. The only thing Wakan Tanka cannot take away from me is my love for Wakan Tanka. For that is mine to choose, to freely give.", "attribution": "Lakota Sioux", "source": "ig-archive"}, {"text": "Real Budo is the protection of all beings with a spirit of reconciliation. That means allowing the completion of everyone's mission.", "attribution": "O'Sensei", "source": "ig-archive"}, {"text": "Participating in the Flowing of Forgiveness: All beings in the past, present or future whom I have harmed, intentionally or unintentionally, by body speech or mind — I humbly ask for forgiveness. All beings in the past or present who caused me harm, intentionally or unintentionally, by body speech or mind — I humbly practice forgiving them all. All that I've done in the past or present that has caused self-harm, intentionally or unintentionally, by body speech or mind — I ask for humility and forgive myself. May all beings rejoice and share in any goodness I receive through these lifetimes of this body speech and mind. May we live happy and free from greed and animosity.", "attribution": "Dharma", "source": "ig-archive"}, {"text": "The supreme good is like water, which nourishes all things without trying. It flows to the low places loathed by all men. Therefore it is like Tao.", "attribution": "Tao Te Ching", "source": "ig-archive"}, {"text": "Sufficient unhappiness, if we only know how to understand it, sufficient unhappiness is guidance. It pushes us to take the next step on our soul path. When we have the right intentions, life in its unlimited generosity supports our efforts.", "attribution": "Joy Manné", "source": "ig-archive"}, {"text": "If children lose contact with the beauty and wildness of the natural outdoors, there will be no one left to protect and fight for it.", "attribution": "George Monbiot", "source": "ig-archive"}, {"text": "Give of yourself except for that which weakens you. Accept what is given but not that which compromises.", "attribution": "Lujan Matus", "source": "ig-archive"}, {"text": "Better to light candles than curse the darkness.", "attribution": "Chinese Proverb", "source": "ig-archive"}, {"text": "Start by doing what's necessary, then by doing what's possible. Suddenly you are doing the impossible.", "attribution": "St. Francis of Assisi", "source": "ig-archive"}, {"text": "When an archer shoots for enjoyment, he has all his skill. When he shoots for a brass buckle, he gets nervous. When he shoots for a prize of gold, he begins to see two targets.", "attribution": "Zhuangzi", "source": "ig-archive"}, {"text": "Truth is like a lion. You don't have to defend it. Let it loose. It will defend itself.", "attribution": "St. Augustine", "source": "ig-archive"}, {"text": "As you personally travel towards your earnest realizations, your sincerity will reveal the magnitude of your responsibility as a human being.", "attribution": "Lujan Matus", "source": "ig-archive"}, {"text": "If you look deeply into the palm of your hand, you will see your parents and all generations of your ancestors. All of them are alive in this moment. Each is present in your body. You are the continuation of each of these people.", "attribution": "Thich Nhat Hanh", "source": "ig-archive"}, {"text": "If we carry intergenerational trauma (and we do), then we also carry intergenerational wisdom. It's in our genes and in our DNA.", "attribution": "Kazu Haga", "source": "ig-archive"}, {"text": "Maybe you are searching amongst the branches for what only appears in the roots.", "attribution": "Rumi", "source": "ig-archive"}, {"text": "To forget one's ancestors is to be a brook without a source, a tree without roots.", "attribution": "Chinese Proverb", "source": "ig-archive"}, {"text": "Four things your ancestors want: Your acknowledgement, your validation, your understanding, your forgiveness.", "attribution": "Dr. Stephen Farmer", "source": "ig-archive"}, {"text": "We call upon those who have lived upon this earth, our ancestors, who dreamed the best for the future generations, upon whose lives our lives are built. With gratitude we call upon them to teach us and show us the way.", "attribution": "Chinook Blessing", "source": "ig-archive"}, {"text": "However innumerable beings are, I vow to meet them with kindness and interest. However inexhaustible the states of suffering are, I vow to touch them with patience and love. However immeasurable the Dharmas are, I vow to explore them deeply. However incomparable the mystery of interbeing, I vow to surrender to it freely. From this day forth, with wisdom and compassion as my lamp and staff, I dedicate all my life energies to the welfare of all beings.", "attribution": "Bodhisattva Vows", "source": "ig-archive"}, {"text": "Breathing in, I know that my heart beating is also the heart of my ancestors, with all their dreams, joy, happiness, strength & courage. Breathing out, I am determined to practice to continue to nourish this heart for them and for me. Breathing in, I know that my heart beating is also the heart of my ancestors with all their fears, sadness, hunger, anger & discrimination. Breathing out, I am determined to practice to transform the afflictions of my ancestors in my own heart. My heart, the heart of my ancestors.", "attribution": "Thich Nhat Hanh", "source": "ig-archive"}, {"text": "The world changes one commitment at a time. And when the going gets rough, for surely it will, know what it is, without a doubt, what you are committed to.", "attribution": "Jon Young", "source": "ig-archive"}, {"text": "The day does not reveal what the year only knows.", "attribution": "Plutarch", "source": "ig-archive"}, {"text": "We must remember that the only true wealth we have is the freedom of another human, not their entrapment.", "attribution": "Lujan Matus", "source": "ig-archive"}, {"text": "Let go of what you possess, until you become possessed by what you cannot let go of. Then, learn to let go of that.", "attribution": "Lujan Matus", "source": "ig-archive"}, {"text": "Resilience is true security. Creatively use and respond to change.", "attribution": "Starhawk / Permaculture", "source": "ig-archive"}, {"text": "There's a cultivation of wisdom that requires sitting with all that uncertainty. Then to make a road where there is not one.", "attribution": "DF", "source": "ig-archive"}, {"text": "Listening has the quality of a wizard's alchemy. It has the power to melt armor and to produce beauty in the midst of hatred.", "attribution": "Brian Muldoon", "source": "ig-archive"}, {"text": "Obstacles do not block the path, they ARE the path.", "attribution": "Unknown", "source": "ig-archive"}, {"text": "Maybe you are searching among the branches, for what only appears in the roots.", "attribution": "Rumi", "source": "ig-archive"}, {"text": "We relate to the ancestors by taking care of the children because the children are the face of the ancestors returning. When we love and care for them, we care for the ancestors.", "attribution": "Tolani Adesanya", "source": "ig-archive"}, {"text": "If each person has natural gifts and innate talents, then the true nature of education must involve the awakening, inviting, and blessing of the inner genius and unique life spirit of each young person.", "attribution": "Michael Meade", "source": "ig-archive"}, {"text": "The meaning of life is in discovering your natural gifts. The purpose of life is giving your gifts to a meaningful need.", "attribution": "Natural Gifts", "source": "ig-archive"}, {"text": "The truth is like a lion. You don't have to defend it. Let it loose. It will defend itself.", "attribution": "St. Augustine", "source": "ig-archive"}, {"text": "Family dysfunction rolls down from generation to generation, like a fire in the woods, taking down everything in its path until one person in one generation has the courage to turn and face the flames. That person brings peace to their ancestors and spares the children that follow.", "attribution": "Terry Real", "source": "ig-archive"}, {"text": "Give thanks for unknown blessings already on their way.", "attribution": "Unknown", "source": "ig-archive"}, {"text": "We relate to everything from our unique viewpoints. As we become aware of our interrelatedness, we also see that how we relate to each other and the things around us determine the quality of life we are creating for ourselves.", "attribution": "Andrea Gietz", "source": "ig-archive"}, {"text": "Rather than the need to heroically save the whole world, the real work of humanity at this time may be to awaken the unique spark and inner resiliency of genius within each person.", "attribution": "Michael Meade", "source": "ig-archive"}, {"text": "Logic will get you from A to B. Imagination will take you everywhere.", "attribution": "Albert Einstein", "source": "ig-archive"}, {"text": "Everybody is a genius. But if you judge a fish by its ability to climb a tree, it will live its whole life believing that it is stupid.", "attribution": "Albert Einstein", "source": "ig-archive"}, {"text": "The most common way people give up their power is by thinking they don't have any.", "attribution": "Alice Walker", "source": "ig-archive"}, {"text": "It may be that when we no longer know what to do we have come to our real work, and that when we no longer know which way to go we have come to our real journey. The mind that is not baffled is not employed. The impeded stream is the one that sings.", "attribution": "Wendell Berry", "source": "ig-archive"}, {"text": "A person's success in life can usually be measured by the number of uncomfortable conversations a person is willing to have.", "attribution": "Tim Ferriss", "source": "ig-archive"}, {"text": "Honor your grief for the world.", "attribution": "Molly Costello", "source": "ig-archive"}, {"text": "What we discover depends largely on our approach. When we approach things with great reverence, great things approach us.", "attribution": "John O'Donohue", "source": "raw"}, {"text": "Life is more like a spiral than a straight line. We keep revisiting things we thought we already learned.", "attribution": "Barrie Gillespie (paraphrase)", "source": "raw"}, {"text": "The world changes one commitment at a time.", "attribution": "Jon Young (?)", "source": "raw"}, {"text": "Mother Nature accomplishes everything, yet is never in a hurry.", "attribution": "Lao Tzu", "source": "raw"}, {"text": "It takes only one candle to light a thousand candles, yet that candle's light is not dimmed.", "attribution": "Buddha", "source": "raw"}, {"text": "If you want to go fast, go alone. If you want to go far, go together.", "attribution": "African Proverb", "source": "raw"}, {"text": "Profound awareness and profound storytelling go hand in hand. Without profound storytelling, there will not be profound awareness in future generations.", "attribution": "Jon Young", "source": "raw"}, {"text": "How we speak shapes how people listen. How people listen shapes how we speak.", "attribution": "?", "source": "raw"}, {"text": "If you want to change the world, it starts with each and every conversation.", "attribution": "Werner Erhard (Landmark?)", "source": "raw"}, {"text": "Maybe you're looking in the branches for what you can only find in your roots.", "attribution": "Rumi", "source": "raw"}, {"text": "When you change the way you look at things, the things you look at change.", "attribution": "Wayne Dyer", "source": "raw"}, {"text": "The archetypes are alive within us just as we are alive within them. They don't exist alone, but because of each other.", "attribution": "?", "source": "raw"}, {"text": "The trickster's job is to teach you how to teach yourself. As strange as his meandering directions may sometimes seem, he has your best interest at heart.", "attribution": "? + **\"The supreme challenge of a warrior is to take an enemy's fearful wrath and turn it into harmless laughter.\"** — O'Sensei", "source": "raw"}, {"text": "We give thanks for the unknown blessings already on their way.", "attribution": "?", "source": "raw"}, {"text": "Obstacles do not block the path. They are the path.", "attribution": "Unknown", "source": "raw"}, {"text": "It is better to be a warrior in a garden than a gardener in a war.", "attribution": "Chinese Proverb", "source": "raw"}, {"text": "You don't rise to the height of your goals, you fall to the level of your systems.", "attribution": "James Clear", "source": "raw"}, {"text": "Fist of the devil, heart of the Buddha.", "attribution": "Shaolin", "source": "raw"}, {"text": "Not all those who wander are lost.", "attribution": "J.R.R. Tolkien", "source": "raw"}, {"text": "You've strived to be extraordinary in an ordinary world. Now be ordinary in an extraordinary world.", "attribution": "Dan Millman (The Peaceful Warrior)", "source": "raw"}];
+
+// Populate quote dropdown
+const quoteSelect = document.getElementById('quoteSelect');
+quotes.forEach((q, i) => {
+  const opt = document.createElement('option');
+  opt.value = i;
+  const shortText = q.text.length > 70 ? q.text.slice(0, 70) + '...' : q.text;
+  opt.textContent = `${q.attribution}: "${shortText}"`;
+  quoteSelect.appendChild(opt);
+});
+
+function selectQuote() {
+  const idx = quoteSelect.value;
+  if (idx === '') return;
+  const q = quotes[idx];
+  document.getElementById('quoteText').value = q.text;
+  document.getElementById('quoteAttr').value = q.attribution;
+  updateQuotePreview(q.text, q.attribution);
+  updatePreview();
+}
+
+function randomQuote() {
+  const idx = Math.floor(Math.random() * quotes.length);
+  quoteSelect.value = idx;
+  selectQuote();
+}
+
+function updateQuotePreview(text, attr) {
+  const el = document.getElementById('quotePreview');
+  if (text) {
+    el.innerHTML = `"${text}"<div class="attr">— ${attr}</div>`;
+    el.style.display = 'block';
+  } else {
+    el.style.display = 'none';
+  }
+}
+
+// ============ SECTION TOGGLES ============
+function toggleSection(header) {
+  const block = header.closest('.section-block');
+  block.classList.toggle('open');
+}
+
+function toggleEnabled(e, toggle) {
+  e.stopPropagation();
+  toggle.classList.toggle('on');
+  const block = toggle.closest('.section-block');
+  block.classList.toggle('disabled', !toggle.classList.contains('on'));
+  updatePreview();
+}
+
+// ============ HELPER ============
+function isEnabled(section) {
+  const block = document.querySelector(`[data-section="${section}"]`);
+  return block.querySelector('.toggle').classList.contains('on');
+}
+
+function val(id) { return document.getElementById(id).value; }
+
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ============ GENERATE HTML ============
+function generateHTML() {
+  const month = val('monthSelect');
+  const year = val('yearSelect');
+
+  let html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Earth Harmony — ${esc(month)} ${esc(year)}</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f5f0eb;font-family:Georgia,'Times New Roman',serif;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f5f0eb;">
+<tr><td align="center" style="padding:20px 10px;">
+<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border-radius:0;overflow:hidden;max-width:600px;width:100%;">
+
+<!-- LOGO -->
+<tr><td style="background-color:#1a1208;padding:30px;text-align:center;">
+  <img src="https://materiaaurelia.github.io/events-hub/images/logo_ca65ac9a8d.jpg" alt="Earth Harmony" width="80" style="border-radius:50%;margin-bottom:12px;">
+  <div style="font-size:24px;font-weight:bold;color:#D4951A;letter-spacing:2px;font-family:Georgia,'Times New Roman',serif;">EARTH HARMONY</div>
+  <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px;letter-spacing:1px;">SOUND & WELLNESS · ${esc(month.toUpperCase())} ${esc(year)}</div>
+</td></tr>`;
+
+  // GREETING
+  if (isEnabled('greeting')) {
+    html += `
+<!-- GREETING -->
+<tr><td style="padding:30px 30px 15px;background-color:#ffffff;">
+  <div style="font-size:20px;color:#1a1208;line-height:1.5;font-family:Georgia,'Times New Roman',serif;">
+    Hey -FNAME-,<br>
+    <span style="font-size:16px;color:#555;">${esc(val('greetingText'))}</span>
+  </div>
+</td></tr>`;
+  }
+
+  // VIBE PHOTO
+  if (isEnabled('vibePhoto') && val('vibePhotoUrl')) {
+    html += `
+<!-- VIBE PHOTO -->
+<tr><td style="padding:10px 30px 20px;">
+  <img src="${esc(val('vibePhotoUrl'))}" alt="${esc(val('vibePhotoAlt'))}" width="540" style="width:100%;border-radius:10px;display:block;">
+</td></tr>`;
+  }
+
+  // QUOTE
+  if (isEnabled('quote') && val('quoteText')) {
+    html += `
+<!-- QUOTE -->
+<tr><td style="padding:10px 40px 20px;text-align:center;">
+  <div style="font-size:18px;font-style:italic;color:#8B6914;line-height:1.6;font-family:Georgia,'Times New Roman',serif;">"${esc(val('quoteText'))}"</div>
+  <div style="font-size:13px;color:#999;margin-top:8px;">— ${esc(val('quoteAttr'))}</div>
+</td></tr>
+<tr><td style="padding:0 30px;"><div style="border-top:1px solid #e8e0d5;"></div></td></tr>`;
+  }
+
+  // GOOD NEWS
+  if (isEnabled('goodNews') && val('goodNewsContent')) {
+    html += `
+<!-- WHAT'S NEW -->
+<tr><td style="padding:25px 30px;">
+  <div style="font-size:11px;color:#D4951A;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;font-family:Arial,sans-serif;">✦ ${esc(val('goodNewsHeading'))}</div>
+  <div style="font-size:15px;color:#333;line-height:1.7;">${val('goodNewsContent').replace(/\n/g, '<br>')}</div>`;
+    if (val('goodNewsBtnText') && val('goodNewsBtnUrl')) {
+      html += `
+  <div style="margin-top:14px;">
+    <a href="${esc(val('goodNewsBtnUrl'))}" style="display:inline-block;background-color:#D4951A;color:#ffffff;font-size:13px;padding:10px 22px;border-radius:6px;text-decoration:none;font-family:Arial,sans-serif;font-weight:bold;letter-spacing:0.5px;">${esc(val('goodNewsBtnText'))}</a>
+  </div>`;
+    }
+    html += `
+</td></tr>
+<tr><td style="padding:0 30px;"><div style="border-top:1px solid #e8e0d5;"></div></td></tr>`;
+  }
+
+  // FEATURED EVENT
+  if (isEnabled('featured') && val('featuredTitle')) {
+    html += `
+<!-- FEATURED EVENT -->
+<tr><td style="padding:25px 30px 10px;">
+  <div style="font-size:11px;color:#D4951A;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px;font-family:Arial,sans-serif;">✦ This Month's Featured Experience</div>
+</td></tr>
+<tr><td style="padding:0 30px 20px;">`;
+    if (val('featuredImg')) {
+      html += `
+  <a href="${esc(val('featuredBtnUrl') || '#')}" style="text-decoration:none;">
+    <img src="${esc(val('featuredImg'))}" alt="${esc(val('featuredTitle'))}" width="540" style="width:100%;border-radius:10px;display:block;">
+  </a>`;
+    }
+    html += `
+  <div style="padding:15px 0;">
+    <div style="font-size:20px;color:#1a1208;font-weight:bold;font-family:Georgia,'Times New Roman',serif;">${esc(val('featuredTitle'))}</div>`;
+    if (val('featuredDetails')) {
+      html += `
+    <div style="font-size:14px;color:#777;margin-top:6px;font-family:Arial,sans-serif;">${esc(val('featuredDetails'))}</div>`;
+    }
+    if (val('featuredDesc')) {
+      html += `
+    <div style="font-size:15px;color:#333;margin-top:10px;line-height:1.6;">${esc(val('featuredDesc'))}</div>`;
+    }
+    if (val('featuredBtnText')) {
+      html += `
+    <div style="margin-top:16px;">
+      <a href="${esc(val('featuredBtnUrl') || '#')}" style="display:inline-block;background-color:#8B6914;color:#ffffff;font-size:14px;padding:12px 28px;border-radius:6px;text-decoration:none;font-family:Arial,sans-serif;font-weight:bold;letter-spacing:1px;">${esc(val('featuredBtnText'))}</a>
+    </div>`;
+    }
+    html += `
+  </div>
+</td></tr>
+<tr><td style="padding:0 30px;"><div style="border-top:1px solid #e8e0d5;"></div></td></tr>`;
+  }
+
+  // EVENT 2
+  if (isEnabled('event2') && val('event2Title')) {
+    html += `
+<!-- EVENT 2 -->
+<tr><td style="padding:25px 30px 20px;">`;
+    if (val('event2Img')) {
+      html += `
+  <a href="${esc(val('event2BtnUrl') || '#')}" style="text-decoration:none;">
+    <img src="${esc(val('event2Img'))}" alt="${esc(val('event2Title'))}" width="540" style="width:100%;border-radius:10px;display:block;">
+  </a>`;
+    }
+    html += `
+  <div style="padding:12px 0;">
+    <div style="font-size:18px;color:#1a1208;font-weight:bold;font-family:Georgia,'Times New Roman',serif;">${esc(val('event2Title'))}</div>`;
+    if (val('event2Details')) {
+      html += `
+    <div style="font-size:13px;color:#777;margin-top:4px;font-family:Arial,sans-serif;">${esc(val('event2Details'))}</div>`;
+    }
+    html += `
+    <div style="margin-top:12px;">
+      <a href="${esc(val('event2BtnUrl') || '#')}" style="display:inline-block;border:2px solid #D4951A;color:#D4951A;font-size:13px;padding:10px 22px;border-radius:6px;text-decoration:none;font-family:Arial,sans-serif;font-weight:bold;letter-spacing:0.5px;">BOOK NOW →</a>
+    </div>
+  </div>
+</td></tr>`;
+  }
+
+  // EVENT 3
+  if (isEnabled('event3') && val('event3Title')) {
+    html += `
+<!-- EVENT 3 -->
+<tr><td style="padding:5px 30px 20px;">`;
+    if (val('event3Img')) {
+      html += `
+  <a href="${esc(val('event3BtnUrl') || '#')}" style="text-decoration:none;">
+    <img src="${esc(val('event3Img'))}" alt="${esc(val('event3Title'))}" width="540" style="width:100%;border-radius:10px;display:block;">
+  </a>`;
+    }
+    html += `
+  <div style="padding:12px 0;">
+    <div style="font-size:18px;color:#1a1208;font-weight:bold;font-family:Georgia,'Times New Roman',serif;">${esc(val('event3Title'))}</div>`;
+    if (val('event3Details')) {
+      html += `
+    <div style="font-size:13px;color:#777;margin-top:4px;font-family:Arial,sans-serif;">${esc(val('event3Details'))}</div>`;
+    }
+    html += `
+    <div style="margin-top:12px;">
+      <a href="${esc(val('event3BtnUrl') || '#')}" style="display:inline-block;border:2px solid #D4951A;color:#D4951A;font-size:13px;padding:10px 22px;border-radius:6px;text-decoration:none;font-family:Arial,sans-serif;font-weight:bold;letter-spacing:0.5px;">BOOK NOW →</a>
+    </div>
+  </div>
+</td></tr>
+<tr><td style="padding:0 30px;"><div style="border-top:1px solid #e8e0d5;"></div></td></tr>`;
+  }
+
+  // CTA
+  if (isEnabled('cta')) {
+    html += `
+<!-- FIND A SOUND BATH -->
+<tr><td style="padding:25px 30px;text-align:center;">
+  <div style="font-size:16px;color:#333;margin-bottom:14px;font-family:Georgia,'Times New Roman',serif;">${esc(val('ctaText'))}</div>
+  <a href="${esc(val('ctaUrl'))}" style="display:inline-block;background-color:#D4951A;color:#ffffff;font-size:14px;padding:14px 32px;border-radius:8px;text-decoration:none;font-family:Arial,sans-serif;font-weight:bold;letter-spacing:1px;">${esc(val('ctaBtnText'))}</a>
+</td></tr>`;
+  }
+
+  // CLOSING
+  if (isEnabled('closing')) {
+    html += `
+<!-- CLOSING -->
+<tr><td style="padding:20px 30px 25px;text-align:center;">
+  <div style="font-size:14px;color:#888;font-style:italic;font-family:Georgia,'Times New Roman',serif;">${esc(val('closingText'))}</div>
+  <div style="font-size:14px;color:#555;margin-top:8px;">Marcus Fung<br><span style="color:#999;font-size:12px;">Earth Harmony Sound & Wellness</span></div>
+</td></tr>`;
+  }
+
+  // FOOTER (always included)
+  html += `
+<!-- FOOTER -->
+<tr><td style="padding:20px 30px;text-align:center;background-color:#1a1208;">
+  <div style="font-size:12px;color:rgba(255,255,255,0.5);line-height:2;">
+    <a href="https://instagram.com/earth.harmony.sound.healing" style="color:#D4951A;text-decoration:none;">Instagram</a> &nbsp;·&nbsp;
+    <a href="https://www.facebook.com/marcus.fung" style="color:#D4951A;text-decoration:none;">Facebook</a> &nbsp;·&nbsp;
+    <a href="https://insighttimer.com/highercallingmusic" style="color:#D4951A;text-decoration:none;">Insight Timer</a> &nbsp;·&nbsp;
+    <a href="http://www.ko-fi.com/marcusworldbridger" style="color:#D4951A;text-decoration:none;">Ko-fi</a><br>
+    Earth Harmony Sound & Wellness · Edmonton, AB<br>
+    <a href="mailto:earthharmonysoundhealing@gmail.com" style="color:rgba(255,255,255,0.4);text-decoration:none;font-size:11px;">earthharmonysoundhealing@gmail.com</a><br><br>
+    <a href="#" style="color:rgba(255,255,255,0.3);text-decoration:underline;font-size:11px;">Unsubscribe</a>
+  </div>
+</td></tr>
+
+</table>
+</td></tr>
+</table>
+</body>
+</html>`;
+
+  return html;
+}
+
+// ============ PREVIEW ============
+function updatePreview() {
+  const html = generateHTML();
+  const iframe = document.getElementById('previewFrame');
+  const doc = iframe.contentDocument || iframe.contentWindow.document;
+  doc.open();
+  doc.write(html);
+  doc.close();
+  
+  // Auto-resize iframe
+  setTimeout(() => {
+    iframe.style.height = doc.body.scrollHeight + 40 + 'px';
+  }, 100);
+  
+  // Update quote preview
+  updateQuotePreview(val('quoteText'), val('quoteAttr'));
+}
+
+// ============ COPY HTML ============
+function copyHTML() {
+  const html = generateHTML();
+  navigator.clipboard.writeText(html).then(() => {
+    const el = document.getElementById('copySuccess');
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2000);
+  });
+}
+
+// ============ INIT ============
+// Load a random quote on start
+randomQuote();
+updatePreview();
+</script>
+
+</body>
+</html>
