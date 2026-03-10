@@ -731,8 +731,11 @@ function showPopup(id){
     <div class="p-desc">${ev.desc||''}</div>
     <a class="btn-book" href="${ev.booking}" target="_blank" onclick="trackClick('${ev.id}','${ev.title.replace(/'/g,"\\'")}','${ev.booking}')">Book Now →</a>
     <button class="btn-share-popup" onclick="shareEv('${ev.title}','${ev.date}','${ev.booking}')">Share Event</button>`;
-  document.getElementById('popup').classList.add('show');
+  const pop=document.getElementById('popup');
+  pop.classList.add('show');
   document.getElementById('overlay').classList.add('show');
+  // Scroll popup into view on mobile / embed iframes
+  requestAnimationFrame(()=>pop.scrollIntoView({behavior:'smooth',block:'center'}));
 }
 function changeLogo(input){if(!input.files[0])return;const r=new FileReader();r.onload=e=>{const av=document.querySelector('.avatar');av.innerHTML=`<img src="${e.target.result}" alt="Logo">`;localStorage.setItem('eh-logo',e.target.result);};r.readAsDataURL(input.files[0]);}
 function copyPageLink(){navigator.clipboard.writeText(window.location.href);showToast('Link copied!');}
@@ -769,8 +772,10 @@ function showDayPopup(ds){
         <div style="font-size:0.72rem;color:#666">${fTime(e.time)}-${fTime(e.endTime)} · ${e.venueOverride||v.name} · $${e.price}</div>
         <a href="${e.booking}" target="_blank" class="btn-book" style="display:inline-block;padding:8px 20px;font-size:0.72rem;margin-top:8px;border-radius:10px">Book</a>
       </div>`;}).join('');
-  document.getElementById('popup').classList.add('show');
+  const pop=document.getElementById('popup');
+  pop.classList.add('show');
   document.getElementById('overlay').classList.add('show');
+  requestAnimationFrame(()=>pop.scrollIntoView({behavior:'smooth',block:'center'}));
 }
 document.getElementById('cal-prev').onclick=()=>{calM--;if(calM<0){calM=11;calY--;}renderCal();};
 document.getElementById('cal-next').onclick=()=>{calM++;if(calM>11){calM=0;calY++;}renderCal();};
