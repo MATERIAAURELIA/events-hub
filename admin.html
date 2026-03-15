@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Events Admin</title>
+<script src="../../sync.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -510,6 +511,7 @@ async function loadConfig() {
 
 // AUTOSAVE every 10 seconds
 setInterval(() => {
+  SyncStore.set('events-hub-config', config);
   localStorage.setItem('events-hub-config', JSON.stringify(config));
 }, 10000);
 
@@ -954,7 +956,8 @@ function saveJsonEditor() {
 
 // ============ SAVE / DOWNLOAD / IMPORT ============
 async function saveConfig() {
-  // Save to localStorage
+  // Save to localStorage + SyncStore
+  SyncStore.set('events-hub-config', config);
   localStorage.setItem('events-hub-config', JSON.stringify(config));
   console.log('Config saved to localStorage', new Date().toLocaleTimeString());
 
@@ -1291,6 +1294,7 @@ function renderStats() {
 
 function saveGaId() {
   const id = document.getElementById('ga-id').value.trim();
+  SyncStore.set('eh-ga-id', { id });
   localStorage.setItem('eh-ga-id', id);
   showStatus(id ? 'GA4 ID saved — add the script to index.html' : 'GA4 ID cleared');
 }

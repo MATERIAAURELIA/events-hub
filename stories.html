@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stories Collection — Earth Harmony</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: #111; color: #eee; min-height: 100vh; }
+
+  .app { max-width: 900px; margin: 0 auto; padding: 20px; }
+  h1 { font-size: 1.4rem; font-weight: 800; margin-bottom: 4px; }
+  .subtitle { font-size: 0.75rem; color: #888; margin-bottom: 20px; }
+
+  /* FILTERS */
+  .toolbar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
+  .search { flex: 1; min-width: 200px; padding: 8px 12px; background: #1a1a1a; border: 1px solid #333; border-radius: 8px; color: #eee; font-family: Inter, sans-serif; font-size: 0.8rem; outline: none; }
+  .search:focus { border-color: #c8a44e; }
+  .filter-btn { padding: 6px 12px; background: #1a1a1a; border: 1px solid #333; border-radius: 20px; color: #888; font-family: Inter, sans-serif; font-size: 0.68rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+  .filter-btn.active, .filter-btn:hover { border-color: #c8a44e; color: #c8a44e; }
+
+  /* TAG CLOUD */
+  .tag-cloud { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+  .tag-pill { padding: 4px 10px; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 14px; font-size: 0.65rem; font-weight: 600; color: #888; cursor: pointer; transition: all 0.2s; }
+  .tag-pill.active { background: #2a2010; border-color: #c8a44e; color: #c8a44e; }
+  .tag-pill:hover { border-color: #666; color: #ccc; }
+
+  /* STATS */
+  .stats { display: flex; gap: 16px; margin-bottom: 20px; }
+  .stat { font-size: 0.7rem; color: #666; }
+  .stat strong { color: #c8a44e; font-size: 1rem; }
+
+  /* CARDS */
+  .stories-grid { display: flex; flex-direction: column; gap: 10px; }
+  .story-card { background: #1a1a1a; border-radius: 12px; padding: 16px; border: 1px solid #2a2a2a; cursor: pointer; transition: all 0.2s; }
+  .story-card:hover { border-color: #444; }
+  .story-card.expanded { border-color: #c8a44e; }
+  .story-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .story-title { font-size: 0.95rem; font-weight: 700; }
+  .story-date { font-size: 0.65rem; color: #666; white-space: nowrap; }
+  .story-notes { margin-top: 8px; font-size: 0.8rem; color: #aaa; line-height: 1.5; white-space: pre-wrap; }
+  .story-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+  .story-tag { font-size: 0.62rem; font-weight: 600; color: #c8a44e; background: #2a2010; padding: 2px 8px; border-radius: 10px; }
+  .story-status { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 3px 8px; border-radius: 10px; }
+  .status-seed { background: #1a2a1a; color: #4ade80; }
+  .status-draft { background: #2a2a10; color: #facc15; }
+  .status-recorded { background: #1a1a3a; color: #818cf8; }
+  .status-published { background: #2a1020; color: #f472b6; }
+  .story-media { margin-top: 8px; font-size: 0.72rem; }
+  .story-media a { color: #818cf8; text-decoration: none; }
+  .story-media a:hover { text-decoration: underline; }
+
+  /* EXPANDED ACTIONS */
+  .story-actions { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid #2a2a2a; gap: 6px; }
+  .story-card.expanded .story-actions { display: flex; flex-wrap: wrap; }
+
+  /* FORM MODAL */
+  .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; justify-content: center; align-items: flex-start; padding: 40px 16px; overflow-y: auto; }
+  .modal-bg.open { display: flex; }
+  .modal { background: #1a1a1a; border-radius: 16px; padding: 24px; max-width: 600px; width: 100%; border: 1px solid #333; }
+  .modal h2 { font-size: 1rem; font-weight: 800; margin-bottom: 16px; }
+
+  label { display: block; font-size: 0.68rem; color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; margin-top: 12px; }
+  label:first-child { margin-top: 0; }
+  input, select, textarea { width: 100%; padding: 8px 10px; background: #222; border: 1px solid #333; border-radius: 8px; color: #eee; font-family: Inter, sans-serif; font-size: 0.8rem; outline: none; transition: border 0.2s; }
+  input:focus, select:focus, textarea:focus { border-color: #c8a44e; }
+  textarea { resize: vertical; min-height: 80px; }
+
+  .btn { padding: 8px 16px; border: none; border-radius: 8px; font-family: Inter, sans-serif; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+  .btn-gold { background: #c8a44e; color: #000; }
+  .btn-gold:hover { background: #d4b05a; }
+  .btn-red { background: #4a2020; color: #e74c3c; }
+  .btn-red:hover { background: #5a2828; }
+  .btn-ghost { background: none; border: 1px solid #444; color: #aaa; }
+  .btn-ghost:hover { border-color: #888; color: #eee; }
+  .form-actions { display: flex; gap: 8px; margin-top: 16px; justify-content: flex-end; }
+
+  .add-btn { position: fixed; bottom: 24px; right: 24px; width: 56px; height: 56px; border-radius: 50%; background: #c8a44e; color: #000; border: none; font-size: 1.8rem; font-weight: 300; cursor: pointer; box-shadow: 0 4px 20px rgba(200,164,78,0.3); transition: all 0.2s; z-index: 50; display: flex; align-items: center; justify-content: center; }
+  .add-btn:hover { transform: scale(1.1); background: #d4b05a; }
+
+  .empty { text-align: center; padding: 60px 20px; color: #444; }
+  .empty-icon { font-size: 3rem; margin-bottom: 12px; }
+  .empty-text { font-size: 0.85rem; }
+
+  .hint { font-size: 0.65rem; color: #555; margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <h1>📖 Stories Collection</h1>
+  <p class="subtitle">Your life stories — seeds to harvest. Title them, tag them, record them when ready.</p>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="toolbar">
+    <input class="search" id="search" placeholder="Search stories..." />
+    <button class="filter-btn active" data-status="all">All</button>
+    <button class="filter-btn" data-status="seed">🌱 Seed</button>
+    <button class="filter-btn" data-status="draft">📝 Draft</button>
+    <button class="filter-btn" data-status="recorded">🎙️ Recorded</button>
+    <button class="filter-btn" data-status="published">✨ Published</button>
+  </div>
+
+  <div class="tag-cloud" id="tagCloud"></div>
+
+  <div class="stories-grid" id="grid"></div>
+  <div class="empty" id="empty" style="display:none;">
+    <div class="empty-icon">📖</div>
+    <div class="empty-text">No stories yet. Hit + to plant your first seed.</div>
+  </div>
+</div>
+
+<button class="add-btn" id="addBtn">+</button>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <h2 id="modalTitle">New Story</h2>
+    <input type="hidden" id="editId" />
+
+    <label>Title</label>
+    <input id="fTitle" placeholder="Give it a name..." />
+
+    <label>Notes</label>
+    <textarea id="fNotes" rows="4" placeholder="Point-form notes, fragments, the gist..."></textarea>
+    <p class="hint">Use bullet points, stream of consciousness — whatever captures it</p>
+
+    <label>Themes / Hashtags</label>
+    <input id="fTags" placeholder="#resilience #music #healing #shadow" />
+    <p class="hint">Space-separated. These become your story map over time.</p>
+
+    <div style="display:flex;gap:10px;">
+      <div style="flex:1;">
+        <label>Status</label>
+        <select id="fStatus">
+          <option value="seed">🌱 Seed — just the title/idea</option>
+          <option value="draft">📝 Draft — notes written</option>
+          <option value="recorded">🎙️ Recorded — audio/video done</option>
+          <option value="published">✨ Published — shared with the world</option>
+        </select>
+      </div>
+      <div style="flex:1;">
+        <label>Media Type</label>
+        <select id="fMediaType">
+          <option value="">None yet</option>
+          <option value="audio">🔊 Audio</option>
+          <option value="video">🎬 Video</option>
+          <option value="written">📄 Written</option>
+        </select>
+      </div>
+    </div>
+
+    <label>Media Link</label>
+    <input id="fMediaUrl" placeholder="URL to recording, video, or written piece" />
+
+    <div class="form-actions">
+      <button class="btn btn-ghost" id="cancelBtn">Cancel</button>
+      <button class="btn btn-red" id="deleteBtn" style="display:none;">Delete</button>
+      <button class="btn btn-gold" id="saveBtn">Save Story</button>
+    </div>
+  </div>
+</div>
+
+<script src="../../sync.js"></script>
+<script>
+const STORAGE_KEY = 'eh-stories';
+
+function load() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { return []; }
+}
+function save(data) { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); SyncStore.set(STORAGE_KEY, data); }
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+function parseTags(s) { return s.split(/\s+/).filter(t => t.startsWith('#')).map(t => t.toLowerCase()); }
+
+let stories = load();
+// Async sync from server on load
+SyncStore.get(STORAGE_KEY).then(d => { if (d && Array.isArray(d) && d.length) { stories = d; localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); render(); } });
+let activeStatus = 'all';
+let activeTag = null;
+let searchQuery = '';
+
+// RENDER
+function render() {
+  let filtered = stories.slice().sort((a, b) => b.updated - a.updated);
+  if (activeStatus !== 'all') filtered = filtered.filter(s => s.status === activeStatus);
+  if (activeTag) filtered = filtered.filter(s => s.tags.includes(activeTag));
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    filtered = filtered.filter(s =>
+      s.title.toLowerCase().includes(q) ||
+      s.notes.toLowerCase().includes(q) ||
+      s.tags.some(t => t.includes(q))
+    );
+  }
+
+  // Stats
+  const counts = { seed: 0, draft: 0, recorded: 0, published: 0 };
+  stories.forEach(s => counts[s.status]++);
+  document.getElementById('stats').innerHTML =
+    `<div class="stat"><strong>${stories.length}</strong> total</div>` +
+    `<div class="stat"><strong>${counts.seed}</strong> seeds</div>` +
+    `<div class="stat"><strong>${counts.draft}</strong> drafts</div>` +
+    `<div class="stat"><strong>${counts.recorded}</strong> recorded</div>` +
+    `<div class="stat"><strong>${counts.published}</strong> published</div>`;
+
+  // Tag cloud
+  const tagCounts = {};
+  stories.forEach(s => s.tags.forEach(t => { tagCounts[t] = (tagCounts[t] || 0) + 1; }));
+  const sortedTags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
+  document.getElementById('tagCloud').innerHTML = sortedTags.map(([tag, count]) =>
+    `<span class="tag-pill ${activeTag === tag ? 'active' : ''}" data-tag="${tag}">${tag} (${count})</span>`
+  ).join('');
+
+  // Grid
+  const grid = document.getElementById('grid');
+  const empty = document.getElementById('empty');
+  if (filtered.length === 0) {
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+  } else {
+    empty.style.display = 'none';
+    grid.innerHTML = filtered.map(s => `
+      <div class="story-card" data-id="${s.id}" onclick="toggleExpand(this)">
+        <div class="story-top">
+          <div>
+            <span class="story-status status-${s.status}">${s.status}</span>
+            <span class="story-title" style="margin-left:8px;">${esc(s.title)}</span>
+          </div>
+          <span class="story-date">${new Date(s.updated).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+        </div>
+        ${s.notes ? `<div class="story-notes">${esc(s.notes)}</div>` : ''}
+        ${s.tags.length ? `<div class="story-tags">${s.tags.map(t => `<span class="story-tag">${t}</span>`).join('')}</div>` : ''}
+        ${s.mediaUrl ? `<div class="story-media">${mediaIcon(s.mediaType)} <a href="${esc(s.mediaUrl)}" target="_blank" onclick="event.stopPropagation();">${s.mediaType || 'media'} link</a></div>` : ''}
+        <div class="story-actions">
+          <button class="btn btn-ghost" onclick="event.stopPropagation(); editStory('${s.id}')">Edit</button>
+          <button class="btn btn-ghost" onclick="event.stopPropagation(); cycleStatus('${s.id}')">→ Next Status</button>
+        </div>
+      </div>
+    `).join('');
+  }
+}
+
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+function mediaIcon(t) { return t === 'audio' ? '🔊' : t === 'video' ? '🎬' : t === 'written' ? '📄' : '📎'; }
+
+function toggleExpand(el) {
+  document.querySelectorAll('.story-card.expanded').forEach(c => { if (c !== el) c.classList.remove('expanded'); });
+  el.classList.toggle('expanded');
+}
+
+function cycleStatus(id) {
+  const order = ['seed', 'draft', 'recorded', 'published'];
+  const s = stories.find(x => x.id === id);
+  if (!s) return;
+  const i = order.indexOf(s.status);
+  s.status = order[(i + 1) % order.length];
+  s.updated = Date.now();
+  save(stories);
+  render();
+}
+
+// FILTERS
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    activeStatus = btn.dataset.status;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    render();
+  });
+});
+
+document.getElementById('tagCloud').addEventListener('click', e => {
+  if (e.target.classList.contains('tag-pill')) {
+    const tag = e.target.dataset.tag;
+    activeTag = activeTag === tag ? null : tag;
+    render();
+  }
+});
+
+document.getElementById('search').addEventListener('input', e => {
+  searchQuery = e.target.value;
+  render();
+});
+
+// MODAL
+function openModal(story) {
+  document.getElementById('modal').classList.add('open');
+  document.getElementById('modalTitle').textContent = story ? 'Edit Story' : 'New Story';
+  document.getElementById('editId').value = story ? story.id : '';
+  document.getElementById('fTitle').value = story ? story.title : '';
+  document.getElementById('fNotes').value = story ? story.notes : '';
+  document.getElementById('fTags').value = story ? story.tags.join(' ') : '';
+  document.getElementById('fStatus').value = story ? story.status : 'seed';
+  document.getElementById('fMediaType').value = story ? (story.mediaType || '') : '';
+  document.getElementById('fMediaUrl').value = story ? (story.mediaUrl || '') : '';
+  document.getElementById('deleteBtn').style.display = story ? 'inline-block' : 'none';
+}
+
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+
+document.getElementById('addBtn').addEventListener('click', () => openModal(null));
+document.getElementById('cancelBtn').addEventListener('click', closeModal);
+document.getElementById('modal').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
+
+function editStory(id) {
+  const s = stories.find(x => x.id === id);
+  if (s) openModal(s);
+}
+
+document.getElementById('saveBtn').addEventListener('click', () => {
+  const title = document.getElementById('fTitle').value.trim();
+  if (!title) { document.getElementById('fTitle').style.borderColor = '#e74c3c'; return; }
+
+  const editId = document.getElementById('editId').value;
+  const data = {
+    title,
+    notes: document.getElementById('fNotes').value.trim(),
+    tags: parseTags(document.getElementById('fTags').value),
+    status: document.getElementById('fStatus').value,
+    mediaType: document.getElementById('fMediaType').value,
+    mediaUrl: document.getElementById('fMediaUrl').value.trim(),
+    updated: Date.now()
+  };
+
+  if (editId) {
+    const s = stories.find(x => x.id === editId);
+    if (s) Object.assign(s, data);
+  } else {
+    stories.push({ id: uid(), created: Date.now(), ...data });
+  }
+
+  save(stories);
+  closeModal();
+  render();
+});
+
+document.getElementById('deleteBtn').addEventListener('click', () => {
+  const editId = document.getElementById('editId').value;
+  if (editId && confirm('Delete this story?')) {
+    stories = stories.filter(x => x.id !== editId);
+    save(stories);
+    closeModal();
+    render();
+  }
+});
+
+// EXPORT/IMPORT via JSON file (for backup)
+function exportStories() {
+  const blob = new Blob([JSON.stringify(stories, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `stories-${new Date().toISOString().slice(0,10)}.json`; a.click();
+}
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+  if (e.key === 'n' && !document.querySelector('.modal-bg.open') && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') openModal(null);
+});
+
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Earth Harmony — Dashboard</title>
+<script src="../../sync.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: #0e0e0e; color: #eee; min-height: 100vh; overflow-x: hidden; }
+
+  /* TOP BAR */
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; background: #151515; border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 50; }
+  .topbar h1 { font-size: 1rem; font-weight: 800; }
+  .topbar h1 span { color: #c8a44e; }
+  .topbar-actions { display: flex; gap: 6px; }
+  .topbar .btn { font-size: 0.68rem; padding: 6px 12px; }
+
+  /* GRID */
+  .grid { display: grid; gap: 12px; padding: 16px; min-height: calc(100vh - 52px); }
+
+  /* WIDGET */
+  .widget {
+    background: #1a1a1a; border-radius: 14px; border: 1px solid #2a2a2a;
+    display: flex; flex-direction: column; overflow: hidden;
+    position: relative; transition: border-color 0.2s, box-shadow 0.2s;
+    min-width: 0; min-height: 0;
+  }
+  .widget:hover { border-color: #3a3a3a; }
+  .widget.dragging { opacity: 0.5; border-color: #c8a44e; }
+  .widget.drag-over { border-color: #c8a44e; box-shadow: 0 0 0 2px rgba(200,164,78,0.3); }
+  .widget.editing { border-color: #c8a44e; }
+
+  .widget-header {
+    display: flex; align-items: center; gap: 8px; padding: 10px 14px;
+    background: #1f1f1f; border-bottom: 1px solid #2a2a2a; cursor: grab;
+    user-select: none; flex-shrink: 0;
+  }
+  .widget-header:active { cursor: grabbing; }
+  .widget-icon { font-size: 1rem; }
+  .widget-title { font-size: 0.78rem; font-weight: 700; flex: 1; }
+  .widget-menu { display: flex; gap: 2px; }
+  .widget-menu button {
+    background: none; border: none; color: #555; font-size: 0.85rem;
+    cursor: pointer; padding: 2px 4px; border-radius: 4px; transition: all 0.15s;
+  }
+  .widget-menu button:hover { color: #ccc; background: #333; }
+
+  .widget-body { flex: 1; overflow: auto; padding: 12px 14px; }
+  .widget-body iframe { width: 100%; height: 100%; border: none; border-radius: 0; }
+
+  /* RESIZE HANDLE */
+  .resize-handle {
+    position: absolute; bottom: 0; right: 0; width: 20px; height: 20px;
+    cursor: nwse-resize; z-index: 10;
+  }
+  .resize-handle::after {
+    content: ''; position: absolute; bottom: 4px; right: 4px;
+    width: 8px; height: 8px; border-right: 2px solid #444; border-bottom: 2px solid #444;
+  }
+
+  /* EDIT MODE OVERLAY */
+  .edit-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+    z-index: 100; justify-content: center; align-items: center;
+  }
+  .edit-overlay.open { display: flex; }
+  .edit-panel {
+    background: #1a1a1a; border-radius: 16px; border: 1px solid #333;
+    padding: 24px; max-width: 500px; width: 90%;
+  }
+  .edit-panel h2 { font-size: 1rem; font-weight: 800; margin-bottom: 16px; }
+  label { display: block; font-size: 0.68rem; color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; margin-top: 12px; }
+  input, select, textarea { width: 100%; padding: 8px 10px; background: #222; border: 1px solid #333; border-radius: 8px; color: #eee; font-family: Inter, sans-serif; font-size: 0.8rem; outline: none; }
+  input:focus, select:focus { border-color: #c8a44e; }
+  .form-row { display: flex; gap: 10px; }
+  .form-row > * { flex: 1; }
+
+  .btn { padding: 8px 16px; border: none; border-radius: 8px; font-family: Inter, sans-serif; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+  .btn-gold { background: #c8a44e; color: #000; }
+  .btn-gold:hover { background: #d4b05a; }
+  .btn-ghost { background: none; border: 1px solid #444; color: #aaa; }
+  .btn-ghost:hover { border-color: #888; color: #eee; }
+  .btn-red { background: #4a2020; color: #e74c3c; font-size: 0.7rem; }
+  .btn-red:hover { background: #5a2828; }
+  .form-actions { display: flex; gap: 8px; margin-top: 16px; justify-content: flex-end; }
+
+  /* ADD WIDGET PANEL */
+  .add-panel { display: none; position: fixed; bottom: 80px; right: 20px; background: #1a1a1a; border: 1px solid #333; border-radius: 14px; padding: 16px; z-index: 60; min-width: 220px; box-shadow: 0 8px 30px rgba(0,0,0,0.5); }
+  .add-panel.open { display: block; }
+  .add-panel h3 { font-size: 0.78rem; font-weight: 700; margin-bottom: 10px; }
+  .add-option { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; cursor: pointer; transition: background 0.15s; }
+  .add-option:hover { background: #2a2a2a; }
+  .add-option .ao-icon { font-size: 1.2rem; width: 28px; text-align: center; }
+  .add-option .ao-label { font-size: 0.78rem; font-weight: 600; }
+  .add-option .ao-desc { font-size: 0.62rem; color: #666; }
+
+  .fab { position: fixed; bottom: 20px; right: 20px; width: 52px; height: 52px; border-radius: 50%; background: #c8a44e; color: #000; border: none; font-size: 1.6rem; cursor: pointer; box-shadow: 0 4px 20px rgba(200,164,78,0.3); z-index: 55; display: flex; align-items: center; justify-content: center; transition: transform 0.2s; }
+  .fab:hover { transform: scale(1.1); }
+
+  /* TOAST */
+  .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #c8a44e; color: #000; padding: 8px 20px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; opacity: 0; transition: opacity 0.3s; z-index: 200; pointer-events: none; }
+  .toast.show { opacity: 1; }
+
+  /* Placeholder for empty grid */
+  .empty-dash { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 60vh; color: #444; text-align: center; }
+  .empty-dash .icon { font-size: 3rem; margin-bottom: 12px; }
+  .empty-dash p { font-size: 0.85rem; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>🔔 <span>Earth Harmony</span> Dashboard</h1>
+  <div class="topbar-actions">
+    <button class="btn btn-ghost" onclick="resetLayout()">Reset Layout</button>
+    <button class="btn btn-ghost" onclick="exportLayout()">Export</button>
+    <button class="btn btn-ghost" onclick="importLayout()">Import</button>
+  </div>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<button class="fab" id="fabBtn" onclick="toggleAddPanel()">+</button>
+<div class="add-panel" id="addPanel">
+  <h3>Add Widget</h3>
+  <div class="add-option" onclick="addWidget('events')">
+    <span class="ao-icon">📅</span>
+    <div><div class="ao-label">Events Admin</div><div class="ao-desc">Manage your events</div></div>
+  </div>
+  <div class="add-option" onclick="addWidget('newsletter')">
+    <span class="ao-icon">📰</span>
+    <div><div class="ao-label">Newsletter Editor</div><div class="ao-desc">Build & send newsletters</div></div>
+  </div>
+  <div class="add-option" onclick="addWidget('stories')">
+    <span class="ao-icon">📖</span>
+    <div><div class="ao-label">Stories Collection</div><div class="ao-desc">Your life stories</div></div>
+  </div>
+  <div class="add-option" onclick="addWidget('preview')">
+    <span class="ao-icon">👁</span>
+    <div><div class="ao-label">Events Page Preview</div><div class="ao-desc">Live preview of public page</div></div>
+  </div>
+  <div class="add-option" onclick="addWidget('quotes')">
+    <span class="ao-icon">💬</span>
+    <div><div class="ao-label">Quotes Library</div><div class="ao-desc">Wisdom keeper quotes</div></div>
+  </div>
+  <div class="add-option" onclick="addWidget('iframe')">
+    <span class="ao-icon">🌐</span>
+    <div><div class="ao-label">Custom Embed</div><div class="ao-desc">Any URL as a widget</div></div>
+  </div>
+  <div class="add-option" onclick="addWidget('notes')">
+    <span class="ao-icon">📝</span>
+    <div><div class="ao-label">Quick Notes</div><div class="ao-desc">Scratchpad</div></div>
+  </div>
+</div>
+
+<!-- EDIT OVERLAY -->
+<div class="edit-overlay" id="editOverlay">
+  <div class="edit-panel">
+    <h2 id="editTitle">Edit Widget</h2>
+    <input type="hidden" id="editId" />
+    <label>Title</label>
+    <input id="ewTitle" />
+    <label>Icon (emoji)</label>
+    <input id="ewIcon" style="width:60px;" />
+    <div class="form-row">
+      <div><label>Column Span</label><input id="ewColSpan" type="number" min="1" max="6" /></div>
+      <div><label>Row Span</label><input id="ewRowSpan" type="number" min="1" max="6" /></div>
+    </div>
+    <div id="ewUrlGroup">
+      <label>URL (for custom embeds)</label>
+      <input id="ewUrl" placeholder="https://..." />
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-red" onclick="deleteWidget()">Delete</button>
+      <button class="btn btn-ghost" onclick="closeEdit()">Cancel</button>
+      <button class="btn btn-gold" onclick="saveEdit()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'eh-dashboard-layout';
+const NOTES_KEY = 'eh-dashboard-notes';
+
+const WIDGET_DEFS = {
+  events:     { icon: '📅', title: 'Events Admin',       src: 'admin.html',             colSpan: 2, rowSpan: 3 },
+  newsletter: { icon: '📰', title: 'Newsletter Editor',  src: 'newsletter-editor.html', colSpan: 2, rowSpan: 3 },
+  stories:    { icon: '📖', title: 'Stories Collection',  src: 'stories.html',           colSpan: 2, rowSpan: 3 },
+  preview:    { icon: '👁',  title: 'Events Page',         src: 'index.html',             colSpan: 2, rowSpan: 3 },
+  quotes:     { icon: '💬', title: 'Quotes Library',      src: 'wordcloud.html',         colSpan: 1, rowSpan: 2 },
+  iframe:     { icon: '🌐', title: 'Custom Embed',        src: '',                       colSpan: 1, rowSpan: 2 },
+  notes:      { icon: '📝', title: 'Quick Notes',         src: null,                     colSpan: 1, rowSpan: 2 },
+};
+
+let widgets = [];
+let dragSrcId = null;
+
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+async function loadLayout() {
+  const synced = await SyncStore.get(STORAGE_KEY);
+  if (synced && Array.isArray(synced) && synced.length > 0) { widgets = synced; }
+  else { try { widgets = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { widgets = []; } }
+  if (!widgets.length) {
+    // Default layout
+    widgets = [
+      { id: uid(), type: 'events',     icon: '📅', title: 'Events Admin',      src: 'admin.html',             colSpan: 2, rowSpan: 3 },
+      { id: uid(), type: 'stories',    icon: '📖', title: 'Stories Collection', src: 'stories.html',           colSpan: 2, rowSpan: 3 },
+      { id: uid(), type: 'newsletter', icon: '📰', title: 'Newsletter Editor', src: 'newsletter-editor.html', colSpan: 2, rowSpan: 3 },
+    ];
+    saveLayout();
+  }
+}
+
+function saveLayout() { SyncStore.set(STORAGE_KEY, widgets); localStorage.setItem(STORAGE_KEY, JSON.stringify(widgets)); }
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// RENDER
+function render() {
+  const grid = document.getElementById('grid');
+
+  // Compute columns: max colSpan determines grid template
+  const maxCol = Math.max(3, ...widgets.map(w => w.colSpan || 1));
+  grid.style.gridTemplateColumns = `repeat(${Math.min(maxCol, 4)}, 1fr)`;
+  grid.style.gridAutoRows = '200px';
+
+  if (!widgets.length) {
+    grid.innerHTML = '<div class="empty-dash"><div class="icon">🎛️</div><p>Your dashboard is empty.<br>Hit + to add widgets.</p></div>';
+    return;
+  }
+
+  grid.innerHTML = widgets.map(w => `
+    <div class="widget" data-id="${w.id}"
+         style="grid-column: span ${w.colSpan || 1}; grid-row: span ${w.rowSpan || 2};"
+         draggable="true">
+      <div class="widget-header"
+           ondragstart="onDragStart(event)" ondragend="onDragEnd(event)"
+           ondragover="onDragOver(event)" ondrop="onDrop(event)">
+        <span class="widget-icon">${w.icon || '📦'}</span>
+        <span class="widget-title">${w.title}</span>
+        <div class="widget-menu">
+          <button title="Edit" onclick="openEdit('${w.id}')">⚙️</button>
+          <button title="Expand" onclick="toggleSize('${w.id}')">⤢</button>
+          <button title="Collapse" onclick="toggleCollapse('${w.id}', this)">▾</button>
+        </div>
+      </div>
+      <div class="widget-body" id="body-${w.id}">
+        ${renderBody(w)}
+      </div>
+      <div class="resize-handle" onmousedown="startResize(event, '${w.id}')"></div>
+    </div>
+  `).join('');
+}
+
+function renderBody(w) {
+  if (w.type === 'notes') {
+    const notes = localStorage.getItem(NOTES_KEY + '-' + w.id) || '';
+    return `<textarea style="width:100%;height:100%;background:transparent;border:none;color:#ccc;font-family:Inter,sans-serif;font-size:0.8rem;resize:none;outline:none;padding:0;" placeholder="Type anything..." oninput="SyncStore.set('${NOTES_KEY}-${w.id}', {text:this.value}); localStorage.setItem('${NOTES_KEY}-${w.id}', this.value)">${escHtml(notes)}</textarea>`;
+  }
+  if (w.src) {
+    return `<iframe src="${w.src}" loading="lazy"></iframe>`;
+  }
+  return `<div style="color:#555;text-align:center;padding:40px;">No source configured.<br>Click ⚙️ to set URL.</div>`;
+}
+
+function escHtml(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+// DRAG & DROP REORDER
+function getWidgetEl(el) { return el.closest('.widget'); }
+
+function onDragStart(e) {
+  const w = getWidgetEl(e.target);
+  dragSrcId = w.dataset.id;
+  w.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', dragSrcId);
+}
+
+function onDragEnd(e) {
+  document.querySelectorAll('.widget').forEach(w => w.classList.remove('dragging', 'drag-over'));
+  dragSrcId = null;
+}
+
+function onDragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  const w = getWidgetEl(e.target);
+  if (w && w.dataset.id !== dragSrcId) {
+    document.querySelectorAll('.widget').forEach(el => el.classList.remove('drag-over'));
+    w.classList.add('drag-over');
+  }
+}
+
+function onDrop(e) {
+  e.preventDefault();
+  const targetWidget = getWidgetEl(e.target);
+  if (!targetWidget || !dragSrcId) return;
+  const targetId = targetWidget.dataset.id;
+  if (targetId === dragSrcId) return;
+
+  const srcIdx = widgets.findIndex(w => w.id === dragSrcId);
+  const tgtIdx = widgets.findIndex(w => w.id === targetId);
+  if (srcIdx < 0 || tgtIdx < 0) return;
+
+  const [moved] = widgets.splice(srcIdx, 1);
+  widgets.splice(tgtIdx, 0, moved);
+  saveLayout();
+  render();
+  toast('Reordered ✓');
+}
+
+// COLLAPSE
+function toggleCollapse(id, btn) {
+  const body = document.getElementById('body-' + id);
+  const widget = body.closest('.widget');
+  if (body.style.display === 'none') {
+    body.style.display = '';
+    widget.style.gridRow = '';
+    const w = widgets.find(x => x.id === id);
+    if (w) widget.style.gridRow = `span ${w.rowSpan || 2}`;
+    btn.textContent = '▾';
+  } else {
+    body.style.display = 'none';
+    widget.style.gridRow = 'span 1';
+    btn.textContent = '▸';
+  }
+}
+
+// TOGGLE SIZE (expand/shrink)
+function toggleSize(id) {
+  const w = widgets.find(x => x.id === id);
+  if (!w) return;
+  if (w._expanded) {
+    w.colSpan = w._origCol; w.rowSpan = w._origRow;
+    delete w._expanded; delete w._origCol; delete w._origRow;
+  } else {
+    w._origCol = w.colSpan; w._origRow = w.rowSpan;
+    w._expanded = true;
+    w.colSpan = 4; w.rowSpan = 4;
+  }
+  saveLayout(); render();
+}
+
+// RESIZE (drag handle)
+let resizing = null;
+function startResize(e, id) {
+  e.preventDefault();
+  const w = widgets.find(x => x.id === id);
+  const el = document.querySelector(`.widget[data-id="${id}"]`);
+  if (!w || !el) return;
+  resizing = { id, startX: e.clientX, startY: e.clientY, origCol: w.colSpan, origRow: w.rowSpan };
+  document.addEventListener('mousemove', doResize);
+  document.addEventListener('mouseup', stopResize);
+}
+
+function doResize(e) {
+  if (!resizing) return;
+  const dx = e.clientX - resizing.startX;
+  const dy = e.clientY - resizing.startY;
+  const w = widgets.find(x => x.id === resizing.id);
+  if (!w) return;
+  // Each 200px ≈ 1 grid unit
+  const newCol = Math.max(1, Math.min(4, resizing.origCol + Math.round(dx / 200)));
+  const newRow = Math.max(1, Math.min(6, resizing.origRow + Math.round(dy / 200)));
+  if (newCol !== w.colSpan || newRow !== w.rowSpan) {
+    w.colSpan = newCol; w.rowSpan = newRow;
+    saveLayout(); render();
+  }
+}
+
+function stopResize() {
+  resizing = null;
+  document.removeEventListener('mousemove', doResize);
+  document.removeEventListener('mouseup', stopResize);
+}
+
+// ADD WIDGET
+function toggleAddPanel() {
+  document.getElementById('addPanel').classList.toggle('open');
+}
+
+function addWidget(type) {
+  const def = WIDGET_DEFS[type];
+  if (!def) return;
+  let src = def.src;
+  if (type === 'iframe') {
+    src = prompt('Enter URL for embed:', 'https://');
+    if (!src) return;
+  }
+  widgets.push({
+    id: uid(), type, icon: def.icon, title: def.title,
+    src, colSpan: def.colSpan, rowSpan: def.rowSpan
+  });
+  saveLayout(); render();
+  document.getElementById('addPanel').classList.remove('open');
+  toast(`${def.title} added ✓`);
+}
+
+// EDIT WIDGET
+function openEdit(id) {
+  const w = widgets.find(x => x.id === id);
+  if (!w) return;
+  document.getElementById('editId').value = id;
+  document.getElementById('ewTitle').value = w.title;
+  document.getElementById('ewIcon').value = w.icon;
+  document.getElementById('ewColSpan').value = w.colSpan;
+  document.getElementById('ewRowSpan').value = w.rowSpan;
+  document.getElementById('ewUrl').value = w.src || '';
+  document.getElementById('ewUrlGroup').style.display = (w.type === 'notes') ? 'none' : 'block';
+  document.getElementById('editOverlay').classList.add('open');
+}
+
+function closeEdit() { document.getElementById('editOverlay').classList.remove('open'); }
+
+function saveEdit() {
+  const id = document.getElementById('editId').value;
+  const w = widgets.find(x => x.id === id);
+  if (!w) return;
+  w.title = document.getElementById('ewTitle').value || w.title;
+  w.icon = document.getElementById('ewIcon').value || w.icon;
+  w.colSpan = parseInt(document.getElementById('ewColSpan').value) || w.colSpan;
+  w.rowSpan = parseInt(document.getElementById('ewRowSpan').value) || w.rowSpan;
+  if (w.type !== 'notes') w.src = document.getElementById('ewUrl').value || w.src;
+  saveLayout(); render(); closeEdit();
+  toast('Updated ✓');
+}
+
+function deleteWidget() {
+  const id = document.getElementById('editId').value;
+  if (!confirm('Remove this widget?')) return;
+  widgets = widgets.filter(x => x.id !== id);
+  saveLayout(); render(); closeEdit();
+  toast('Removed ✓');
+}
+
+// RESET
+function resetLayout() {
+  if (!confirm('Reset to default layout?')) return;
+  SyncStore.set(STORAGE_KEY, []);
+  localStorage.removeItem(STORAGE_KEY);
+  loadLayout(); render();
+  toast('Layout reset ✓');
+}
+
+// EXPORT / IMPORT
+function exportLayout() {
+  const blob = new Blob([JSON.stringify(widgets, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `dashboard-layout-${new Date().toISOString().slice(0,10)}.json`; a.click();
+  toast('Exported ✓');
+}
+
+function importLayout() {
+  const input = document.createElement('input'); input.type = 'file'; input.accept = '.json';
+  input.onchange = e => {
+    const f = e.target.files[0]; if (!f) return;
+    const r = new FileReader();
+    r.onload = () => {
+      try { widgets = JSON.parse(r.result); saveLayout(); render(); toast('Imported ✓'); }
+      catch { toast('Invalid file'); }
+    };
+    r.readAsText(f);
+  };
+  input.click();
+}
+
+// Close panels on outside click
+document.addEventListener('click', e => {
+  const addPanel = document.getElementById('addPanel');
+  const fab = document.getElementById('fabBtn');
+  if (addPanel.classList.contains('open') && !addPanel.contains(e.target) && e.target !== fab) {
+    addPanel.classList.remove('open');
+  }
+});
+
+document.getElementById('editOverlay').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeEdit();
+});
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeEdit(); document.getElementById('addPanel').classList.remove('open'); } });
+
+// INIT
+(async () => { await loadLayout(); render(); })();
+</script>
+</body>
+</html>
