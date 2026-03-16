@@ -409,8 +409,13 @@
     .link-btn { padding: 5px 6px; }
   }
 </style>
-<script src="sync.js"></script>
-<script>if(typeof SyncStore==='undefined'){var SyncStore={get:function(k){try{return Promise.resolve(JSON.parse(localStorage.getItem(k)))}catch(e){return Promise.resolve(null)}},set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}}}</script>
+<script>
+// SyncStore — localStorage only on static hosts (no server API)
+var SyncStore={
+  get:function(k){try{return Promise.resolve(JSON.parse(localStorage.getItem(k)))}catch(e){return Promise.resolve(null)}},
+  set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+};
+</script>
 </head>
 <body>
 
