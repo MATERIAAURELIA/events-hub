@@ -120,8 +120,14 @@
   .logo-preview { width: 72px; height: 72px; border-radius: 50%; background: #222; border: 2px solid #333; display: flex; align-items: center; justify-content: center; font-size: 2rem; overflow: hidden; }
   .logo-preview img { width: 100%; height: 100%; object-fit: cover; }
 
-  .drag-handle { cursor: grab; color: #555; font-size: 1rem; user-select: none; }
+  .drag-handle { cursor: grab; color: #555; font-size: 1rem; user-select: none; padding: 4px; }
+  .drag-handle:hover { color: #c8a44e; }
   .drag-handle:active { cursor: grabbing; }
+  .event-item.dragging { opacity: 0.3; }
+  .event-item.drag-over { border-top: 2px solid #c8a44e; }
+  .sort-toggle { display: flex; gap: 6px; align-items: center; }
+  .sort-toggle .btn { font-size: 0.65rem; padding: 4px 10px; }
+  .sort-toggle .btn.active-sort { background: #c8a44e; color: #000; }
 
   /* JSON EDITOR */
   .json-editor { width: 100%; min-height: 400px; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.72rem; background: #0a0a0a; color: #c8a44e; border: 1px solid #333; border-radius: 8px; padding: 12px; tab-size: 2; }
@@ -147,7 +153,13 @@
     <div class="card">
       <div class="card-header">
         <h2>Events</h2>
-        <button class="btn btn-gold" onclick="openEventModal()">+ Add Event</button>
+        <div style="display:flex;gap:6px;align-items:center">
+          <div class="sort-toggle">
+            <button class="btn btn-ghost active-sort" id="sort-date-btn" onclick="setSortMode('date')">📅 By Date</button>
+            <button class="btn btn-ghost" id="sort-custom-btn" onclick="setSortMode('custom')">✋ Custom Order</button>
+          </div>
+          <button class="btn btn-gold" onclick="openEventModal()">+ Add Event</button>
+        </div>
       </div>
       <div id="events-list"></div>
     </div>
@@ -502,6 +514,7 @@
 
 <script>
 let config = {};
+let sortMode = 'date'; // 'date' or 'custom'
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 async function loadConfig() {
@@ -533,25 +546,97 @@ function renderAll() {
 }
 
 // ============ EVENTS ============
+function setSortMode(mode) {
+  sortMode = mode;
+  document.getElementById('sort-date-btn').classList.toggle('active-sort', mode === 'date');
+  document.getElementById('sort-custom-btn').classList.toggle('active-sort', mode === 'custom');
+  renderEvents();
+}
+
 function renderEvents() {
   const el = document.getElementById('events-list');
-  const events = (config.events || []).sort((a,b) => a.date.localeCompare(b.date));
-  el.innerHTML = events.map((ev, i) => {
+  // In date mode, sort by date. In custom mode, use array order (draggable).
+  let events = config.events || [];
+  let indexMap = events.map((_, i) => i); // real indices into config.events
+  if (sortMode === 'date') {
+    indexMap.sort((a, b) => events[a].date.localeCompare(events[b].date));
+  }
+  el.innerHTML = indexMap.map((realIdx, displayIdx) => {
+    const ev = events[realIdx];
     const d = new Date(ev.date + 'T00:00:00');
     const ds = `${MONTHS[d.getMonth()]} ${d.getDate()}`;
     const type = config.eventTypes?.[ev.type];
     const venue = ev.venueOverride || config.venues?.[ev.venue]?.name || ev.venue;
-    return `<div class="event-item" onclick="editEvent(${i})">
+    const dragAttrs = sortMode === 'custom'
+      ? `draggable="true" ondragstart="onEvDragStart(event,${realIdx})" ondragover="onEvDragOver(event)" ondragenter="onEvDragEnter(event)" ondragleave="onEvDragLeave(event)" ondrop="onEvDrop(event,${realIdx})" ondragend="onEvDragEnd(event)"`
+      : '';
+    const handle = sortMode === 'custom' ? `<span class="drag-handle" title="Drag to reorder">⠿</span>` : '';
+    return `<div class="event-item" ${dragAttrs} data-real-idx="${realIdx}" onclick="editEvent(${realIdx})">
+      ${handle}
       <div class="ev-date">${ds}</div>
       <div class="ev-title">${ev.title}<br><span style="font-size:0.62rem;color:#666">📍 ${venue}</span></div>
       <div class="ev-price">$${ev.price}</div>
       ${type ? `<div class="ev-type" style="color:${type.color}">${type.icon} ${type.name}</div>` : ''}
       <div class="ev-actions">
-        <button class="btn btn-ghost" onclick="event.stopPropagation();duplicateEvent(${i})">⧉</button>
-        <button class="btn btn-red" onclick="event.stopPropagation();deleteEvent(${i})">✕</button>
+        ${sortMode === 'custom' ? `<button class="btn btn-ghost" onclick="event.stopPropagation();moveEvent(${realIdx},-1)" title="Move up">▲</button>
+        <button class="btn btn-ghost" onclick="event.stopPropagation();moveEvent(${realIdx},1)" title="Move down">▼</button>` : ''}
+        <button class="btn btn-ghost" onclick="event.stopPropagation();duplicateEvent(${realIdx})">⧉</button>
+        <button class="btn btn-red" onclick="event.stopPropagation();deleteEvent(${realIdx})">✕</button>
       </div>
     </div>`;
   }).join('') || '<div style="color:#666;font-size:0.78rem;padding:10px">No events yet</div>';
+}
+
+// Drag and drop for event reordering
+let dragSrcIdx = null;
+
+function onEvDragStart(e, idx) {
+  dragSrcIdx = idx;
+  e.dataTransfer.effectAllowed = 'move';
+  e.currentTarget.classList.add('dragging');
+}
+
+function onEvDragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+}
+
+function onEvDragEnter(e) {
+  e.preventDefault();
+  const item = e.currentTarget.closest('.event-item');
+  if (item) item.classList.add('drag-over');
+}
+
+function onEvDragLeave(e) {
+  const item = e.currentTarget.closest('.event-item');
+  if (item) item.classList.remove('drag-over');
+}
+
+function onEvDrop(e, targetIdx) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if (dragSrcIdx === null || dragSrcIdx === targetIdx) return;
+  const events = config.events;
+  const [moved] = events.splice(dragSrcIdx, 1);
+  // Adjust target if source was before target
+  const adjustedTarget = dragSrcIdx < targetIdx ? targetIdx - 1 : targetIdx;
+  events.splice(adjustedTarget, 0, moved);
+  dragSrcIdx = null;
+  saveConfig();
+}
+
+function onEvDragEnd(e) {
+  e.currentTarget.classList.remove('dragging');
+  document.querySelectorAll('.event-item.drag-over').forEach(el => el.classList.remove('drag-over'));
+  dragSrcIdx = null;
+}
+
+function moveEvent(idx, direction) {
+  const events = config.events;
+  const newIdx = idx + direction;
+  if (newIdx < 0 || newIdx >= events.length) return;
+  [events[idx], events[newIdx]] = [events[newIdx], events[idx]];
+  saveConfig();
 }
 
 function populateEventDropdowns() {
