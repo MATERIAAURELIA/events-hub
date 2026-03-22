@@ -24,10 +24,15 @@
     background: #1a1a1a;
     border-right: 1px solid #333;
     overflow-y: auto;
-    padding: 20px;
     height: 100vh;
     position: sticky;
     top: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .editor-panel-header {
+    padding: 20px 20px 0 20px;
   }
   
   .editor-panel h1 {
@@ -39,7 +44,60 @@
   .editor-panel .subtitle {
     font-size: 12px;
     color: #666;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
+  }
+
+  /* === TAB BAR === */
+  .tab-bar {
+    display: flex;
+    border-bottom: 1px solid #333;
+    background: #151515;
+    flex-shrink: 0;
+  }
+
+  .tab-btn {
+    flex: 1;
+    padding: 12px 8px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: #777;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    letter-spacing: 0.3px;
+  }
+
+  .tab-btn:hover {
+    color: #bbb;
+    background: #1e1e1e;
+  }
+
+  .tab-btn.active {
+    color: #D4951A;
+    border-bottom-color: #D4951A;
+    background: #1a1a1a;
+  }
+
+  .tab-btn .tab-icon {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 3px;
+  }
+
+  /* Tab content areas */
+  .tab-content {
+    display: none;
+    padding: 20px;
+    overflow-y: auto;
+    flex: 1;
+  }
+
+  .tab-content.active {
+    display: block;
   }
   
   /* Section blocks */
@@ -153,6 +211,8 @@
   .btn:hover { background: #e5a520; }
   .btn.secondary { background: #333; color: #ccc; }
   .btn.secondary:hover { background: #444; }
+  .btn.danger { background: #4a2020; color: #e57373; }
+  .btn.danger:hover { background: #5a2828; }
   
   .btn-row { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
   
@@ -174,6 +234,40 @@
     font-size: 11px;
     color: #888;
     margin-top: 4px;
+  }
+
+  /* Editable list (for What to Bring, etc.) */
+  .editable-list {
+    list-style: none;
+    padding: 0;
+    margin: 4px 0 0 0;
+  }
+
+  .editable-list li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+
+  .editable-list li input[type="text"] {
+    flex: 1;
+  }
+
+  .editable-list li .remove-item {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    line-height: 1;
+  }
+
+  .editable-list li .remove-item:hover {
+    color: #e57373;
+    background: #3a2020;
   }
   
   /* === RIGHT PANEL: PREVIEW === */
@@ -211,6 +305,10 @@
     overflow: hidden;
     box-shadow: 0 4px 30px rgba(0,0,0,0.5);
   }
+
+  .preview-frame.dark-preview {
+    background: #060e07;
+  }
   
   .preview-frame iframe {
     width: 100%;
@@ -236,184 +334,400 @@
 
 <!-- ============ EDITOR PANEL ============ -->
 <div class="editor-panel">
-  <h1>🔔 Newsletter Editor</h1>
-  <p class="subtitle">Earth Harmony Sound & Wellness</p>
-  
-  <div class="month-row">
-    <div class="field-label" style="margin:0">Month</div>
-    <select id="monthSelect" onchange="updatePreview()">
-      <option value="January">January</option>
-      <option value="February">February</option>
-      <option value="March" selected>March</option>
-      <option value="April">April</option>
-      <option value="May">May</option>
-      <option value="June">June</option>
-      <option value="July">July</option>
-      <option value="August">August</option>
-      <option value="September">September</option>
-      <option value="October">October</option>
-      <option value="November">November</option>
-      <option value="December">December</option>
-    </select>
-    <select id="yearSelect" onchange="updatePreview()">
-      <option value="2026" selected>2026</option>
-      <option value="2027">2027</option>
-    </select>
+  <div class="editor-panel-header">
+    <h1>🔔 Email Editor</h1>
+    <p class="subtitle">Earth Harmony Sound & Wellness</p>
   </div>
 
-  <!-- GREETING -->
-  <div class="section-block open" data-section="greeting">
-    <div class="section-header" onclick="toggleSection(this)">
-      <label>👋 Greeting</label>
-      <div class="toggle on" onclick="toggleEnabled(event, this)"></div>
-    </div>
-    <div class="section-body">
-      <div class="field-label">Greeting Line</div>
-      <input type="text" id="greetingText" value="may you find your rhythm this month 🙏" oninput="updatePreview()">
-    </div>
+  <!-- TAB BAR -->
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('newsletter')" data-tab="newsletter">
+      <span class="tab-icon">📰</span>Newsletter
+    </button>
+    <button class="tab-btn" onclick="switchTab('welcome')" data-tab="welcome">
+      <span class="tab-icon">✉️</span>Welcome Letter
+    </button>
+    <button class="tab-btn" onclick="switchTab('onboarding')" data-tab="onboarding">
+      <span class="tab-icon">🚀</span>Onboarding
+    </button>
   </div>
 
-  <!-- VIBE PHOTO -->
-  <div class="section-block open" data-section="vibePhoto">
-    <div class="section-header" onclick="toggleSection(this)">
-      <label>📸 Vibe Photo</label>
-      <div class="toggle on" onclick="toggleEnabled(event, this)"></div>
-    </div>
-    <div class="section-body">
-      <div class="field-label">Image URL</div>
-      <input type="text" id="vibePhotoUrl" placeholder="Paste image URL..." oninput="updatePreview()">
-      <div class="field-label">Alt Text</div>
-      <input type="text" id="vibePhotoAlt" value="Sound healing session" oninput="updatePreview()">
-      <p style="font-size:11px;color:#666;margin-top:6px;">Upload photos to GitHub or use a hosted URL. Photos from Dropbox need a public link.</p>
-    </div>
-  </div>
-
-  <!-- QUOTE -->
-  <div class="section-block open" data-section="quote">
-    <div class="section-header" onclick="toggleSection(this)">
-      <label>✨ Quote</label>
-      <div class="toggle on" onclick="toggleEnabled(event, this)"></div>
-    </div>
-    <div class="section-body">
-      <div class="field-label">Quote Library (68 quotes)</div>
-      <select id="quoteSelect" onchange="selectQuote()">
-        <option value="">— Pick a quote or type your own —</option>
+  <!-- ======================= -->
+  <!-- TAB: NEWSLETTER         -->
+  <!-- ======================= -->
+  <div class="tab-content active" id="tab-newsletter">
+    <div class="month-row">
+      <div class="field-label" style="margin:0">Month</div>
+      <select id="monthSelect" onchange="updatePreview()">
+        <option value="January">January</option>
+        <option value="February">February</option>
+        <option value="March" selected>March</option>
+        <option value="April">April</option>
+        <option value="May">May</option>
+        <option value="June">June</option>
+        <option value="July">July</option>
+        <option value="August">August</option>
+        <option value="September">September</option>
+        <option value="October">October</option>
+        <option value="November">November</option>
+        <option value="December">December</option>
       </select>
-      <div class="btn-row">
-        <button class="btn secondary" onclick="randomQuote()">🎲 Random</button>
+      <select id="yearSelect" onchange="updatePreview()">
+        <option value="2026" selected>2026</option>
+        <option value="2027">2027</option>
+      </select>
+    </div>
+
+    <!-- GREETING -->
+    <div class="section-block open" data-section="greeting">
+      <div class="section-header" onclick="toggleSection(this)">
+        <label>👋 Greeting</label>
+        <div class="toggle on" onclick="toggleEnabled(event, this)"></div>
       </div>
-      <div class="field-label">Quote Text</div>
-      <textarea id="quoteText" rows="3" oninput="updatePreview()"></textarea>
-      <div class="field-label">Attribution</div>
-      <input type="text" id="quoteAttr" oninput="updatePreview()">
-      <div class="quote-preview" id="quotePreview" style="display:none"></div>
+      <div class="section-body">
+        <div class="field-label">Greeting Line</div>
+        <input type="text" id="greetingText" value="may you find your rhythm this month 🙏" oninput="updatePreview()">
+      </div>
+    </div>
+
+    <!-- VIBE PHOTO -->
+    <div class="section-block open" data-section="vibePhoto">
+      <div class="section-header" onclick="toggleSection(this)">
+        <label>📸 Vibe Photo</label>
+        <div class="toggle on" onclick="toggleEnabled(event, this)"></div>
+      </div>
+      <div class="section-body">
+        <div class="field-label">Image URL</div>
+        <input type="text" id="vibePhotoUrl" placeholder="Paste image URL..." oninput="updatePreview()">
+        <div class="field-label">Alt Text</div>
+        <input type="text" id="vibePhotoAlt" value="Sound healing session" oninput="updatePreview()">
+        <p style="font-size:11px;color:#666;margin-top:6px;">Upload photos to GitHub or use a hosted URL. Photos from Dropbox need a public link.</p>
+      </div>
+    </div>
+
+    <!-- QUOTE -->
+    <div class="section-block open" data-section="quote">
+      <div class="section-header" onclick="toggleSection(this)">
+        <label>✨ Quote</label>
+        <div class="toggle on" onclick="toggleEnabled(event, this)"></div>
+      </div>
+      <div class="section-body">
+        <div class="field-label">Quote Library (68 quotes)</div>
+        <select id="quoteSelect" onchange="selectQuote()">
+          <option value="">— Pick a quote or type your own —</option>
+        </select>
+        <div class="btn-row">
+          <button class="btn secondary" onclick="randomQuote()">🎲 Random</button>
+        </div>
+        <div class="field-label">Quote Text</div>
+        <textarea id="quoteText" rows="3" oninput="updatePreview()"></textarea>
+        <div class="field-label">Attribution</div>
+        <input type="text" id="quoteAttr" oninput="updatePreview()">
+        <div class="quote-preview" id="quotePreview" style="display:none"></div>
+      </div>
+    </div>
+
+    <!-- GOOD NEWS -->
+    <div class="section-block" data-section="goodNews">
+      <div class="section-header" onclick="toggleSection(this)">
+        <label>📰 What's New</label>
+        <div class="toggle on" onclick="toggleEnabled(event, this)"></div>
+      </div>
+      <div class="section-body">
+        <div class="field-label">Heading</div>
+        <input type="text" id="goodNewsHeading" value="What's New" oninput="updatePreview()">
+        <div class="field-label">Content</div>
+        <textarea id="goodNewsContent" rows="4" oninput="updatePreview()"></textarea>
+        <div class="field-label">Button Text (optional)</div>
+        <input type="text" id="goodNewsBtnText" placeholder="e.g. TRY THE EVENT FINDER →" oninput="updatePreview()">
+        <div class="field-label">Button URL</div>
+        <input type="text" id="goodNewsBtnUrl" placeholder="https://..." oninput="updatePreview()">
+      </div>
+    </div>
+
+    <!-- FEATURED EVENT -->
+    <div class="section-block" data-section="featured">
+      <div class="section-header" onclick="toggleSection(this)">
+        <label>⭐ Featured Event</label>
+        <div class="toggle on" onclick="toggleEnabled(event, this)"></div>
+      </div>
+      <div class="section-body">
+        <div class="field-label">Poster Image URL</div>
+        <input type="text" id="featuredImg" placeholder="Paste poster URL..." oninput="updatePreview()">
+        <div class="field-label">Title</div>
+        <input type="text" id="featuredTitle" value="Deep Resonance Gong Immersion" oninput="updatePreview()">
+        <div class="field-label">Details (date, time, location)</div>
+        <input type="text" id="featuredDetails" placeholder="Friday, March 20 · 7:00 – 8:30 PM · Home Studio" oninput="updatePreview()">
+        <div class="field-label">Description</div>
+        <textarea id="featuredDesc" rows="3" oninput="updatePreview()"></textarea>
+        <div class="field-label">Button Text</div>
+        <input type="text" id="featuredBtnText" value="RESERVE — $60 →" oninput="updatePreview()">
+        <div class="field-label">Booking URL</div>
+        <input type="text" id="featuredBtnUrl" placeholder="https://..." oninput="updatePreview()">
+      </div>
+    </div>
+
+    <!-- EVENT 2 -->
+    <div class="section-block" data-section="event2">
+      <div class="section-header" onclick="toggleSection(this)">
+        <label>🎵 Event 2</label>
+        <div class="toggle on" onclick="toggleEnabled(event, this)"></div>
+      </div>
+      <div class="section-body">
+        <div class="field-label">Poster Image URL</div>
+        <input type="text" id="event2Img" placeholder="Paste poster URL..." oninput="updatePreview()">
+        <div class="field-label">Title</div>
+        <input type="text" id="event2Title" oninput="updatePreview()">
+        <div class="field-label">Details</div>
+        <input type="text" id="event2Details" oninput="updatePreview()">
+        <div class="field-label">Booking URL</div>
+        <input type="text" id="event2BtnUrl" placeholder="https://..." oninput="updatePreview()">
+      </div>
+    </div>
+
+    <!-- EVENT 3 -->
+    <div class="section-block" data-section="event3">
+      <div class="section-header" onclick="toggleSection(this)">
+        <label>🥁 Event 3</label>
+        <div class="toggle on" onclick="toggleEnabled(event, this)"></div>
+      </div>
+      <div class="section-body">
+        <div class="field-label">Poster Image URL</div>
+        <input type="text" id="event3Img" placeholder="Paste poster URL..." oninput="updatePreview()">
+        <div class="field-label">Title</div>
+        <input type="text" id="event3Title" oninput="updatePreview()">
+        <div class="field-label">Details</div>
+        <input type="text" id="event3Details" oninput="updatePreview()">
+        <div class="field-label">Booking URL</div>
+        <input type="text" id="event3BtnUrl" placeholder="https://..." oninput="updatePreview()">
+      </div>
+    </div>
+
+    <!-- FIND A SOUND BATH CTA -->
+    <div class="section-block" data-section="cta">
+      <div class="section-header" onclick="toggleSection(this)">
+        <label>🔔 Find a Sound Bath CTA</label>
+        <div class="toggle on" onclick="toggleEnabled(event, this)"></div>
+      </div>
+      <div class="section-body">
+        <div class="field-label">Text</div>
+        <input type="text" id="ctaText" value="Looking for something specific?" oninput="updatePreview()">
+        <div class="field-label">Button Text</div>
+        <input type="text" id="ctaBtnText" value="🔔 FIND A SOUND BATH →" oninput="updatePreview()">
+        <div class="field-label">URL</div>
+        <input type="text" id="ctaUrl" value="https://materiaaurelia.github.io/events-hub/" oninput="updatePreview()">
+      </div>
+    </div>
+
+    <!-- CLOSING -->
+    <div class="section-block" data-section="closing">
+      <div class="section-header" onclick="toggleSection(this)">
+        <label>🙏 Closing</label>
+        <div class="toggle on" onclick="toggleEnabled(event, this)"></div>
+      </div>
+      <div class="section-body">
+        <div class="field-label">Closing Line</div>
+        <input type="text" id="closingText" value="See you in the sound. 🙏" oninput="updatePreview()">
+      </div>
     </div>
   </div>
 
-  <!-- GOOD NEWS -->
-  <div class="section-block" data-section="goodNews">
-    <div class="section-header" onclick="toggleSection(this)">
-      <label>📰 What's New</label>
-      <div class="toggle on" onclick="toggleEnabled(event, this)"></div>
+  <!-- ======================= -->
+  <!-- TAB: WELCOME LETTER     -->
+  <!-- ======================= -->
+  <div class="tab-content" id="tab-welcome">
+
+    <!-- EVENT NAME -->
+    <div class="section-block open" data-section="wEventName">
+      <div class="section-header" onclick="toggleSection(this)">
+        <label>🎵 Event Info</label>
+      </div>
+      <div class="section-body">
+        <div class="field-label">Event Name</div>
+        <input type="text" id="wEventName" value="Community Soundbath" oninput="updatePreview()">
+        <div class="field-label">Headline</div>
+        <input type="text" id="wHeadline" value="Your Community Soundbath Journey Awaits ✨" oninput="updatePreview()">
+        <div class="field-label">Location</div>
+        <input type="text" id="wLocation" value="Roots on Whyte — 3rd Floor Conference Room" oninput="updatePreview()">
+        <div class="field-label">Address</div>
+        <input type="text" id="wAddress" value="8135 102 Street NW, Edmonton, AB T6E 4A4" oninput="updatePreview()">
+        <div class="field-label">Google Maps Link</div>
+        <input type="text" id="wMapsLink" value="https://maps.google.com/?q=8135+102+Street+NW+Edmonton+AB+T6E+4A4" oninput="updatePreview()">
+        <div class="field-label">Session 1 Time</div>
+        <input type="text" id="wSession1" value="5:00 – 6:00 PM" oninput="updatePreview()">
+        <div class="field-label">Session 2 Time</div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <input type="text" id="wSession2" value="6:30 – 7:30 PM" oninput="updatePreview()" style="flex:1;">
+          <div class="toggle on" id="wSession2Toggle" onclick="this.classList.toggle('on');updatePreview();" style="width:36px;height:20px;background:#D4951A;border-radius:10px;position:relative;cursor:pointer;transition:background 0.2s;flex-shrink:0;"></div>
+        </div>
+        <div class="field-label">Arrival Note</div>
+        <input type="text" id="wArrival" value="Please arrive 10–15 minutes early so we can begin together." oninput="updatePreview()">
+        <div class="field-label">Intro Text</div>
+        <textarea id="wIntro" rows="3" oninput="updatePreview()">We're so glad you're joining us for a community soundbath. This is going to be a beautiful experience — here's everything you need to arrive feeling relaxed and ready.</textarea>
+      </div>
     </div>
-    <div class="section-body">
-      <div class="field-label">Heading</div>
-      <input type="text" id="goodNewsHeading" value="What's New" oninput="updatePreview()">
-      <div class="field-label">Content</div>
-      <textarea id="goodNewsContent" rows="4" oninput="updatePreview()"></textarea>
-      <div class="field-label">Button Text (optional)</div>
-      <input type="text" id="goodNewsBtnText" placeholder="e.g. TRY THE EVENT FINDER →" oninput="updatePreview()">
-      <div class="field-label">Button URL</div>
-      <input type="text" id="goodNewsBtnUrl" placeholder="https://..." oninput="updatePreview()">
+
+    <!-- WHAT TO BRING -->
+    <div class="section-block open" data-section="wBring">
+      <div class="section-header" onclick="toggleSection(this)">
+        <label>🧘 What to Bring</label>
+        <div class="toggle on" onclick="toggleEnabled(event, this)"></div>
+      </div>
+      <div class="section-body">
+        <div class="field-label">Intro</div>
+        <textarea id="wBringIntro" rows="2" oninput="updatePreview()">You'll be lying down for the whole session, so think COZY. A yoga mat alone on a hard floor won't cut it — layer up for maximum comfort:</textarea>
+        <div class="field-label">Items</div>
+        <ul class="editable-list" id="wBringList">
+          <li><input type="text" value="Yoga mat + extra padding (bolster, foam, sheepskin)" oninput="updatePreview()"><button class="remove-item" onclick="removeListItem(this)">×</button></li>
+          <li><input type="text" value="Pillows & blankets — as many as you want" oninput="updatePreview()"><button class="remove-item" onclick="removeListItem(this)">×</button></li>
+          <li><input type="text" value="Eye mask (to go deeper)" oninput="updatePreview()"><button class="remove-item" onclick="removeListItem(this)">×</button></li>
+          <li><input type="text" value="Warm socks (your feet will thank you)" oninput="updatePreview()"><button class="remove-item" onclick="removeListItem(this)">×</button></li>
+          <li><input type="text" value="Water bottle" oninput="updatePreview()"><button class="remove-item" onclick="removeListItem(this)">×</button></li>
+        </ul>
+        <button class="btn secondary" onclick="addListItem('wBringList')">+ Add Item</button>
+        <div class="field-label">Food Note</div>
+        <input type="text" id="wFoodNote" value="If you're eating beforehand, keep it light — a full belly and deep relaxation don't always mix well." oninput="updatePreview()">
+      </div>
+    </div>
+
+    <!-- CUSTOM SECTION -->
+    <div class="section-block open" data-section="wCustom">
+      <div class="section-header" onclick="toggleSection(this)">
+        <label>🌀 Custom Section</label>
+        <div class="toggle on" onclick="toggleEnabled(event, this)"></div>
+      </div>
+      <div class="section-body">
+        <div class="field-label">Section Label</div>
+        <input type="text" id="wCustomLabel" value="Something New" oninput="updatePreview()">
+        <div class="field-label">Section Heading</div>
+        <input type="text" id="wCustomHeading" value="🌀 The Sound Portal" oninput="updatePreview()">
+        <div class="field-label">Body</div>
+        <textarea id="wCustomBody" rows="8" oninput="updatePreview()">We're beta testing something new — the Sound Portal! It's a simple check-in on your phone (no app needed, just tap the link below).
+
+BEFORE the session: Tap your session link, enter your name, and check in with how you're feeling. Pick an archetype, set an intention — takes about 2 minutes. We know many of you prefer to keep your phone away during the event, so feel free to do this before you arrive or in the car!
+
+AFTER the session: Check out through the same link and see how your state shifted. You'll also see the room's collective word cloud.
+
+It's totally optional, but we'd love your feedback as we test it out!</textarea>
+        <div class="field-label">Session 1 Portal Link</div>
+        <input type="text" id="wPortalLink1" value="https://materiaaurelia.github.io/earth-harmony-portal/?session=B2B-S1" oninput="updatePreview()">
+        <div class="field-label">Session 2 Portal Link</div>
+        <input type="text" id="wPortalLink2" value="https://materiaaurelia.github.io/earth-harmony-portal/?session=B2B-S2" oninput="updatePreview()">
+      </div>
+    </div>
+
+    <!-- PARKING -->
+    <div class="section-block open" data-section="wParking">
+      <div class="section-header" onclick="toggleSection(this)">
+        <label>🅿️ Parking</label>
+        <div class="toggle on" onclick="toggleEnabled(event, this)"></div>
+      </div>
+      <div class="section-body">
+        <div class="field-label">Parking Info</div>
+        <textarea id="wParking" rows="4" oninput="updatePreview()">▸ Paid parkade in the Roots on Whyte building
+▸ Spend $25+ at Blush Lane (ground floor) → first 90 min reimbursed
+▸ Paid street meters nearby
+▸ Free residential street parking a short walk away
+
+Street parking: Paid meters nearby, plus free street parking on surrounding residential blocks if you don't mind a short walk.</textarea>
+      </div>
+    </div>
+
+    <!-- SIGN-OFF -->
+    <div class="section-block open" data-section="wSignoff">
+      <div class="section-header" onclick="toggleSection(this)">
+        <label>✨ Sign-Off</label>
+      </div>
+      <div class="section-body">
+        <div class="field-label">Closing Message</div>
+        <input type="text" id="wClosing" value="See you Saturday. Come ready to let go. ✨" oninput="updatePreview()">
+        <div class="field-label">Contact Name</div>
+        <input type="text" id="wContactName" value="Marcus" oninput="updatePreview()">
+        <div class="field-label">Contact Phone</div>
+        <input type="text" id="wContactPhone" value="780-257-6428" oninput="updatePreview()">
+      </div>
     </div>
   </div>
 
-  <!-- FEATURED EVENT -->
-  <div class="section-block" data-section="featured">
-    <div class="section-header" onclick="toggleSection(this)">
-      <label>⭐ Featured Event</label>
-      <div class="toggle on" onclick="toggleEnabled(event, this)"></div>
+  <!-- ======================= -->
+  <!-- TAB: ONBOARDING         -->
+  <!-- ======================= -->
+  <div class="tab-content" id="tab-onboarding">
+
+    <!-- WELCOME -->
+    <div class="section-block open" data-section="oWelcome">
+      <div class="section-header" onclick="toggleSection(this)">
+        <label>👋 Welcome</label>
+      </div>
+      <div class="section-body">
+        <div class="field-label">Welcome Heading</div>
+        <input type="text" id="oHeading" value="Welcome to Earth Harmony" oninput="updatePreview()">
+        <div class="field-label">Intro Text</div>
+        <textarea id="oIntro" rows="4" oninput="updatePreview()">We're so glad you're here. Earth Harmony is a space for community sound healing, rhythm, and reconnection — rooted in ancient practices, open to everyone.
+
+Whether you're drawn to singing bowls, drumming circles, or simply a quiet place to breathe, you've found your people.</textarea>
+      </div>
     </div>
-    <div class="section-body">
-      <div class="field-label">Poster Image URL</div>
-      <input type="text" id="featuredImg" placeholder="Paste poster URL..." oninput="updatePreview()">
-      <div class="field-label">Title</div>
-      <input type="text" id="featuredTitle" value="Deep Resonance Gong Immersion" oninput="updatePreview()">
-      <div class="field-label">Details (date, time, location)</div>
-      <input type="text" id="featuredDetails" placeholder="Friday, March 20 · 7:00 – 8:30 PM · Home Studio" oninput="updatePreview()">
-      <div class="field-label">Description</div>
-      <textarea id="featuredDesc" rows="3" oninput="updatePreview()"></textarea>
-      <div class="field-label">Button Text</div>
-      <input type="text" id="featuredBtnText" value="RESERVE — $60 →" oninput="updatePreview()">
-      <div class="field-label">Booking URL</div>
-      <input type="text" id="featuredBtnUrl" placeholder="https://..." oninput="updatePreview()">
+
+    <!-- WHAT TO EXPECT -->
+    <div class="section-block" data-section="oExpect">
+      <div class="section-header" onclick="toggleSection(this)">
+        <label>📋 What to Expect</label>
+        <div class="toggle on" onclick="toggleEnabled(event, this)"></div>
+      </div>
+      <div class="section-body">
+        <ul class="editable-list" id="oExpectList">
+          <li><input type="text" value="Monthly event schedules" oninput="updatePreview()"><button class="remove-item" onclick="removeListItem(this)">×</button></li>
+          <li><input type="text" value="Special invitations & early access" oninput="updatePreview()"><button class="remove-item" onclick="removeListItem(this)">×</button></li>
+          <li><input type="text" value="Sound healing resources & insights" oninput="updatePreview()"><button class="remove-item" onclick="removeListItem(this)">×</button></li>
+          <li><input type="text" value="Community stories & reflections" oninput="updatePreview()"><button class="remove-item" onclick="removeListItem(this)">×</button></li>
+        </ul>
+        <button class="btn secondary" onclick="addListItem('oExpectList')">+ Add Item</button>
+      </div>
+    </div>
+
+    <!-- UPCOMING EVENT -->
+    <div class="section-block" data-section="oEvent">
+      <div class="section-header" onclick="toggleSection(this)">
+        <label>⭐ Upcoming Event</label>
+        <div class="toggle on" onclick="toggleEnabled(event, this)"></div>
+      </div>
+      <div class="section-body">
+        <div class="field-label">Event Title</div>
+        <input type="text" id="oEventTitle" value="Community Soundbath" oninput="updatePreview()">
+        <div class="field-label">Date & Time</div>
+        <input type="text" id="oEventDate" placeholder="Saturday, March 22 · 5:00 PM" oninput="updatePreview()">
+        <div class="field-label">Description</div>
+        <textarea id="oEventDesc" rows="2" oninput="updatePreview()" placeholder="A brief description of the event..."></textarea>
+        <div class="field-label">Booking URL</div>
+        <input type="text" id="oEventUrl" placeholder="https://..." oninput="updatePreview()">
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="section-block open" data-section="oCta">
+      <div class="section-header" onclick="toggleSection(this)">
+        <label>🔗 Call to Action</label>
+      </div>
+      <div class="section-body">
+        <div class="field-label">Button Text</div>
+        <input type="text" id="oCtaText" value="Explore Our Events" oninput="updatePreview()">
+        <div class="field-label">Button URL</div>
+        <input type="text" id="oCtaUrl" value="https://materiaaurelia.github.io/events-hub/" oninput="updatePreview()">
+      </div>
+    </div>
+
+    <!-- SOCIAL LINKS -->
+    <div class="section-block" data-section="oSocial">
+      <div class="section-header" onclick="toggleSection(this)">
+        <label>🌐 Social Links</label>
+        <div class="toggle on" onclick="toggleEnabled(event, this)"></div>
+      </div>
+      <div class="section-body">
+        <p style="font-size:12px;color:#888;">Instagram, Facebook, Insight Timer, and Ko-fi links will be included in the footer.</p>
+      </div>
     </div>
   </div>
-
-  <!-- EVENT 2 -->
-  <div class="section-block" data-section="event2">
-    <div class="section-header" onclick="toggleSection(this)">
-      <label>🎵 Event 2</label>
-      <div class="toggle on" onclick="toggleEnabled(event, this)"></div>
-    </div>
-    <div class="section-body">
-      <div class="field-label">Poster Image URL</div>
-      <input type="text" id="event2Img" placeholder="Paste poster URL..." oninput="updatePreview()">
-      <div class="field-label">Title</div>
-      <input type="text" id="event2Title" oninput="updatePreview()">
-      <div class="field-label">Details</div>
-      <input type="text" id="event2Details" oninput="updatePreview()">
-      <div class="field-label">Booking URL</div>
-      <input type="text" id="event2BtnUrl" placeholder="https://..." oninput="updatePreview()">
-    </div>
-  </div>
-
-  <!-- EVENT 3 -->
-  <div class="section-block" data-section="event3">
-    <div class="section-header" onclick="toggleSection(this)">
-      <label>🥁 Event 3</label>
-      <div class="toggle on" onclick="toggleEnabled(event, this)"></div>
-    </div>
-    <div class="section-body">
-      <div class="field-label">Poster Image URL</div>
-      <input type="text" id="event3Img" placeholder="Paste poster URL..." oninput="updatePreview()">
-      <div class="field-label">Title</div>
-      <input type="text" id="event3Title" oninput="updatePreview()">
-      <div class="field-label">Details</div>
-      <input type="text" id="event3Details" oninput="updatePreview()">
-      <div class="field-label">Booking URL</div>
-      <input type="text" id="event3BtnUrl" placeholder="https://..." oninput="updatePreview()">
-    </div>
-  </div>
-
-  <!-- FIND A SOUND BATH CTA -->
-  <div class="section-block" data-section="cta">
-    <div class="section-header" onclick="toggleSection(this)">
-      <label>🔔 Find a Sound Bath CTA</label>
-      <div class="toggle on" onclick="toggleEnabled(event, this)"></div>
-    </div>
-    <div class="section-body">
-      <div class="field-label">Text</div>
-      <input type="text" id="ctaText" value="Looking for something specific?" oninput="updatePreview()">
-      <div class="field-label">Button Text</div>
-      <input type="text" id="ctaBtnText" value="🔔 FIND A SOUND BATH →" oninput="updatePreview()">
-      <div class="field-label">URL</div>
-      <input type="text" id="ctaUrl" value="https://materiaaurelia.github.io/events-hub/" oninput="updatePreview()">
-    </div>
-  </div>
-
-  <!-- CLOSING -->
-  <div class="section-block" data-section="closing">
-    <div class="section-header" onclick="toggleSection(this)">
-      <label>🙏 Closing</label>
-      <div class="toggle on" onclick="toggleEnabled(event, this)"></div>
-    </div>
-    <div class="section-body">
-      <div class="field-label">Closing Line</div>
-      <input type="text" id="closingText" value="See you in the sound. 🙏" oninput="updatePreview()">
-    </div>
-  </div>
-
 </div>
 
 <!-- ============ PREVIEW PANEL ============ -->
@@ -422,8 +736,8 @@
     <button class="btn" onclick="copyHTML()" id="copyBtn">📋 Copy HTML for Robly</button>
     <span class="copy-success" id="copySuccess">✓ Copied!</span>
   </div>
-  <div class="preview-frame">
-    <iframe id="previewFrame" sandbox="allow-same-origin"></iframe>
+  <div class="preview-frame" id="previewFrame">
+    <iframe id="previewIframe" sandbox="allow-same-origin"></iframe>
   </div>
 </div>
 
@@ -467,6 +781,26 @@ function updateQuotePreview(text, attr) {
   }
 }
 
+// ============ TAB SWITCHING ============
+let activeTab = 'newsletter';
+
+function switchTab(tab) {
+  activeTab = tab;
+  // Update tab buttons
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.tab === tab);
+  });
+  // Update tab content
+  document.querySelectorAll('.tab-content').forEach(tc => {
+    tc.classList.toggle('active', tc.id === 'tab-' + tab);
+  });
+  // Update preview frame background
+  const pf = document.getElementById('previewFrame');
+  pf.classList.toggle('dark-preview', tab === 'welcome');
+  // Update preview
+  updatePreview();
+}
+
 // ============ SECTION TOGGLES ============
 function toggleSection(header) {
   const block = header.closest('.section-block');
@@ -481,20 +815,53 @@ function toggleEnabled(e, toggle) {
   updatePreview();
 }
 
+// ============ EDITABLE LIST HELPERS ============
+function addListItem(listId) {
+  const list = document.getElementById(listId);
+  const li = document.createElement('li');
+  li.innerHTML = '<input type="text" value="" oninput="updatePreview()" placeholder="New item..."><button class="remove-item" onclick="removeListItem(this)">×</button>';
+  list.appendChild(li);
+  li.querySelector('input').focus();
+}
+
+function removeListItem(btn) {
+  const li = btn.closest('li');
+  const list = li.closest('ul');
+  if (list.children.length > 1) {
+    li.remove();
+    updatePreview();
+  }
+}
+
+function getListItems(listId) {
+  const list = document.getElementById(listId);
+  if (!list) return [];
+  return Array.from(list.querySelectorAll('input[type="text"]')).map(i => i.value).filter(v => v.trim());
+}
+
 // ============ HELPER ============
 function isEnabled(section) {
   const block = document.querySelector(`[data-section="${section}"]`);
-  return block.querySelector('.toggle').classList.contains('on');
+  if (!block) return false;
+  const toggle = block.querySelector('.toggle');
+  return toggle ? toggle.classList.contains('on') : true;
 }
 
-function val(id) { return document.getElementById(id).value; }
+function val(id) {
+  const el = document.getElementById(id);
+  return el ? el.value : '';
+}
 
 function esc(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// ============ GENERATE HTML ============
-function generateHTML() {
+function escBr(s) {
+  return esc(s).replace(/\n/g, '<br>');
+}
+
+// ============ GENERATE NEWSLETTER HTML ============
+function generateNewsletterHTML() {
   const month = val('monthSelect');
   const year = val('yearSelect');
 
@@ -701,10 +1068,463 @@ function generateHTML() {
   return html;
 }
 
+// ============ GENERATE WELCOME LETTER HTML ============
+function generateWelcomeHTML() {
+  const eventName = val('wEventName');
+  const headline = val('wHeadline');
+  const location = val('wLocation');
+  const address = val('wAddress');
+  const mapsLink = val('wMapsLink');
+  const session1 = val('wSession1');
+  const session2 = val('wSession2');
+  const showSession2 = document.getElementById('wSession2Toggle').classList.contains('on');
+  const arrival = val('wArrival');
+  const bringItems = getListItems('wBringList');
+  const bringIntro = val('wBringIntro');
+  const foodNote = val('wFoodNote');
+  const introText = val('wIntro');
+  const closingMsg = val('wClosing');
+  const contactName = val('wContactName');
+  const contactPhone = val('wContactPhone');
+  const parkingText = val('wParking');
+
+  let html = `<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>${esc(headline)}</title>
+<style type="text/css">
+body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+body { margin: 0; padding: 0; width: 100% !important; height: 100% !important; background-color: #f5f0eb; }
+@media screen and (max-width: 620px) {
+  .email-container { width: 100% !important; max-width: 100% !important; }
+  .padding-mobile { padding-left: 20px !important; padding-right: 20px !important; }
+  h1 { font-size: 28px !important; line-height: 34px !important; }
+  .checklist-item { font-size: 15px !important; }
+}
+</style>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f5f0eb; font-family: Georgia, 'Times New Roman', serif;">
+
+<div style="display: none; max-height: 0; overflow: hidden; font-size: 1px; line-height: 1px; color: #f5f0eb;">
+Your ${esc(eventName)} — what to bring, where to park, and how to prepare&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;
+</div>
+
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f5f0eb;">
+<tr><td align="center" style="padding: 20px 10px;">
+
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" class="email-container" style="max-width: 600px; width: 100%; background-color: #ffffff; border-radius: 0; overflow: hidden; max-width: 600px;">
+
+<!-- HEADER / LOGO -->
+<tr><td style="background-color:#1a1208;padding:30px;text-align:center;">
+  <img src="https://materiaaurelia.github.io/events-hub/images/logo_ca65ac9a8d.jpg" alt="Earth Harmony" width="80" style="border-radius:50%;margin-bottom:12px;">
+  <div style="font-size:24px;font-weight:bold;color:#D4951A;letter-spacing:2px;font-family:Georgia,'Times New Roman',serif;">EARTH HARMONY</div>
+  <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px;letter-spacing:1px;">SOUND &amp; WELLNESS</div>
+  <div style="margin-top:16px;font-family:Georgia,'Times New Roman',serif;font-size:22px;color:#D4951A;font-style:italic;line-height:30px;">
+    ${esc(headline)}
+  </div>
+</td></tr>
+
+<!-- GREETING -->
+<tr>
+<td style="padding: 30px 40px 10px 40px;" class="padding-mobile">
+  <p style="margin: 0; font-family: Georgia, serif; font-size: 18px; line-height: 28px; color: #1a1208;">
+    Hey {{FNAME}},
+  </p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 40px 25px 40px;" class="padding-mobile">
+  <p style="margin: 0; font-family: Georgia, serif; font-size: 16px; line-height: 26px; color: #555;">
+    ${escBr(introText)}
+  </p>
+</td>
+</tr>
+
+<!-- DIVIDER -->
+<tr><td style="padding: 0 40px;" class="padding-mobile"><table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"><tr><td style="border-top: 1px solid #e8e0d5; font-size: 0; line-height: 0;">&nbsp;</td></tr></table></td></tr>
+
+<!-- EVENT DETAILS -->
+<tr>
+<td style="padding: 25px 40px 10px 40px;" class="padding-mobile">
+  <p style="margin: 0 0 5px 0; font-family: Arial, Helvetica, sans-serif; font-size: 11px; letter-spacing: 2.5px; color: #D4951A; text-transform: uppercase;">The Details</p>
+  <h2 style="margin: 0; font-family: Georgia, serif; font-size: 22px; color: #D4951A; font-weight: normal;">📍 Where &amp; When</h2>
+</td>
+</tr>
+<tr>
+<td style="padding: 15px 40px 25px 40px;" class="padding-mobile">
+  <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f8f4ef; border-radius: 8px; border: 1px solid #e8e0d5;">
+    <tr><td style="padding: 25px 25px;">
+      <p style="margin: 0 0 12px 0; font-family: Georgia, serif; font-size: 16px; color: #1a1208; line-height: 24px;">
+        <strong style="color: #D4951A;">Location:</strong><br>
+        ${esc(location)}${address ? `<br><a href="${esc(mapsLink)}" style="color: #D4951A; text-decoration: none; font-size: 14px;">📍 ${esc(address)}</a>` : ''}
+      </p>
+      <p style="margin: 0 0 12px 0; font-family: Georgia, serif; font-size: 16px; color: #1a1208; line-height: 24px;">
+        <strong style="color: #D4951A;">Session #1:</strong> ${esc(session1)}`;
+
+  if (showSession2 && session2) {
+    html += `<br>
+        <strong style="color: #D4951A;">Session #2:</strong> ${esc(session2)}`;
+  }
+
+  html += `
+      </p>
+      <p style="margin: 0; font-family: Arial, Helvetica, sans-serif; font-size: 13px; color: #D4951A; line-height: 20px; font-style: italic;">
+        ⏰ ${esc(arrival)}
+      </p>
+    </td></tr>
+  </table>
+</td>
+</tr>`;
+
+  // WHAT TO BRING
+  if (bringItems.length > 0) {
+    html += `
+<!-- WHAT TO BRING -->
+<tr>
+<td style="padding: 5px 40px 10px 40px;" class="padding-mobile">
+  <h2 style="margin: 0; font-family: Georgia, serif; font-size: 22px; color: #D4951A; font-weight: normal;">🧘‍♀️ What to Bring</h2>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 40px 10px 40px;" class="padding-mobile">
+  <p style="margin: 0 0 15px 0; font-family: Georgia, serif; font-size: 16px; line-height: 26px; color: #555;">
+    ${escBr(bringIntro)}
+  </p>
+</td>
+</tr>
+<tr>
+<td style="padding: 0 40px 25px 40px;" class="padding-mobile">
+  <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">`;
+
+    bringItems.forEach(item => {
+      html += `
+    <tr><td style="padding: 8px 0; font-family: Georgia, serif; font-size: 15px; color: #555; line-height: 22px;" class="checklist-item">
+      <span style="color: #D4951A; font-size: 16px;">▸</span>&nbsp;&nbsp;${esc(item)}
+    </td></tr>`;
+    });
+
+    html += `
+  </table>`;
+
+    if (foodNote) {
+      html += `
+  <p style="margin: 15px 0 0 0; font-family: Georgia, serif; font-size: 14px; line-height: 22px; color: #888; font-style: italic;">
+    💡 ${esc(foodNote)}
+  </p>`;
+    }
+
+    html += `
+</td>
+</tr>
+
+<!-- DIVIDER -->
+<tr><td style="padding: 0 40px;" class="padding-mobile"><table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"><tr><td style="border-top: 1px solid #e8e0d5; font-size: 0; line-height: 0;">&nbsp;</td></tr></table></td></tr>`;
+  }
+
+  // CUSTOM SECTION (Sound Portal)
+  if (isEnabled('wCustom') && val('wCustomBody')) {
+    const customLabel = val('wCustomLabel');
+    const customHeading = val('wCustomHeading');
+    const customBody = val('wCustomBody');
+    const portalLink1 = val('wPortalLink1');
+    const portalLink2 = val('wPortalLink2');
+    // Split body into paragraphs
+    const paragraphs = customBody.split(/\n\n+/).filter(p => p.trim());
+
+    html += `
+<!-- SOUND PORTAL SECTION -->
+<tr>
+<td style="padding: 25px 40px 10px 40px;" class="padding-mobile">
+  <p style="margin: 0 0 5px 0; font-family: Arial, Helvetica, sans-serif; font-size: 11px; letter-spacing: 2.5px; color: #D4951A; text-transform: uppercase;">${esc(customLabel)}</p>
+  <h2 style="margin: 0; font-family: Georgia, serif; font-size: 22px; color: #D4951A; font-weight: normal;">${esc(customHeading)}</h2>
+</td>
+</tr>
+<tr>
+<td style="padding: 15px 40px 25px 40px;" class="padding-mobile">
+  <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f8f4ef; border-radius: 8px; border: 1px solid #e8e0d5;">
+    <tr><td style="padding: 28px 25px;">`;
+
+    paragraphs.forEach((p, idx) => {
+      const color = idx === 0 ? '#1a1208' : '#333';
+      html += `
+      <p style="margin: 0 0 15px 0; font-family: Georgia, serif; font-size: 16px; line-height: 26px; color: ${color};">
+        ${escBr(p.trim())}
+      </p>`;
+    });
+
+    // Portal link buttons
+    if (portalLink1) {
+      html += `
+      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-top: 10px;">
+        <tr><td style="padding: 6px 0;">
+          <a href="${esc(portalLink1)}" style="display: inline-block; background-color: #D4951A; color: #000; font-family: Arial, Helvetica, sans-serif; font-size: 14px; font-weight: bold; padding: 12px 24px; border-radius: 6px; text-decoration: none; letter-spacing: 0.5px;">📱 Session 1 (${esc(session1)}) — Check In</a>
+        </td></tr>`;
+      if (showSession2 && portalLink2) {
+        html += `
+        <tr><td style="padding: 6px 0;">
+          <a href="${esc(portalLink2)}" style="display: inline-block; background-color: #D4951A; color: #000; font-family: Arial, Helvetica, sans-serif; font-size: 14px; font-weight: bold; padding: 12px 24px; border-radius: 6px; text-decoration: none; letter-spacing: 0.5px;">📱 Session 2 (${esc(session2)}) — Check In</a>
+        </td></tr>`;
+      }
+      html += `
+      </table>
+      <p style="margin: 12px 0 0 0; font-family: Arial, Helvetica, sans-serif; font-size: 11px; color: #999; font-style: italic;">
+        🧪 Beta — we'd love your feedback!
+      </p>`;
+    }
+
+    html += `
+    </td></tr>
+  </table>
+</td>
+</tr>
+
+<!-- DIVIDER -->
+<tr><td style="padding: 0 40px;" class="padding-mobile"><table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"><tr><td style="border-top: 1px solid #e8e0d5; font-size: 0; line-height: 0;">&nbsp;</td></tr></table></td></tr>`;
+  }
+
+  // PARKING
+  if (isEnabled('wParking') && parkingText) {
+    const parkingParagraphs = parkingText.split(/\n\n+/).filter(p => p.trim());
+
+    html += `
+<!-- PARKING -->
+<tr>
+<td style="padding: 25px 40px 10px 40px;" class="padding-mobile">
+  <h2 style="margin: 0; font-family: Georgia, serif; font-size: 22px; color: #D4951A; font-weight: normal;">🅿️ Parking</h2>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 40px 25px 40px;" class="padding-mobile">`;
+
+    parkingParagraphs.forEach((p, idx) => {
+      // Bold the label before the colon if present
+      let rendered = escBr(p.trim());
+      rendered = rendered.replace(/^([^:]+:)/, '<strong style="color: #1a1208;">$1</strong>');
+      html += `
+  <p style="margin: 0${idx < parkingParagraphs.length - 1 ? ' 0 12px 0' : ''}; font-family: Georgia, serif; font-size: 15px; line-height: 24px; color: #555;">
+    ${rendered}
+  </p>`;
+    });
+
+    html += `
+</td>
+</tr>
+
+<!-- DIVIDER -->
+<tr><td style="padding: 0 40px;" class="padding-mobile"><table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"><tr><td style="border-top: 1px solid #e8e0d5; font-size: 0; line-height: 0;">&nbsp;</td></tr></table></td></tr>`;
+  }
+
+  // SIGN-OFF
+  html += `
+<!-- SIGN-OFF -->
+<tr>
+<td style="padding: 25px 40px 15px 40px;" class="padding-mobile">
+  <p style="margin: 0 0 15px 0; font-family: Georgia, serif; font-size: 16px; line-height: 26px; color: #555;">
+    If you have any questions or need to confirm which session you're in, don't hesitate to reach out.
+  </p>
+  <p style="margin: 0 0 20px 0; font-family: Georgia, serif; font-size: 16px; line-height: 26px; color: #1a1208;">
+    ${esc(closingMsg)}
+  </p>
+  <p style="margin: 0 0 5px 0; font-family: Georgia, serif; font-size: 16px; color: #D4951A;">
+    — ${esc(contactName)}
+  </p>
+  <p style="margin: 0; font-family: Arial, Helvetica, sans-serif; font-size: 13px; color: #888; line-height: 20px;">
+    Earth Harmony Sound &amp; Wellness<br>
+    📱 <a href="tel:${esc(contactPhone.replace(/[^0-9+]/g, ''))}" style="color: #D4951A; text-decoration: none;">${esc(contactPhone)}</a>
+  </p>
+</td>
+</tr>
+
+<!-- FOOTER -->
+<tr>
+<td style="padding: 20px 40px 30px 40px; text-align: center; background-color: #1a1208;" class="padding-mobile">
+  <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="60" style="margin: 0 auto 15px auto;">
+    <tr><td style="border-top: 1px solid #e8e0d5; font-size: 0; line-height: 0;">&nbsp;</td></tr>
+  </table>
+  <p style="margin: 0 0 8px 0; font-family: Arial, Helvetica, sans-serif; font-size: 11px; color: rgba(255,255,255,0.5); letter-spacing: 1px; text-transform: uppercase;">
+    Earth Harmony
+  </p>
+  <p style="margin: 0; font-family: Arial, Helvetica, sans-serif; font-size: 11px; color: rgba(255,255,255,0.3); line-height: 18px;">
+    You're receiving this because you signed up for a community sound bath.<br>
+    {{UNSUBSCRIBE}}
+  </p>
+</td>
+</tr>
+
+</table>
+
+</td></tr>
+</table>
+</body>
+</html>`;
+
+  return html;
+}
+
+// ============ GENERATE ONBOARDING HTML ============
+function generateOnboardingHTML() {
+  const heading = val('oHeading');
+  const intro = val('oIntro');
+  const expectItems = getListItems('oExpectList');
+  const eventTitle = val('oEventTitle');
+  const eventDate = val('oEventDate');
+  const eventDesc = val('oEventDesc');
+  const eventUrl = val('oEventUrl');
+  const ctaText = val('oCtaText');
+  const ctaUrl = val('oCtaUrl');
+
+  let html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${esc(heading)}</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f5f0eb;font-family:Georgia,'Times New Roman',serif;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f5f0eb;">
+<tr><td align="center" style="padding:20px 10px;">
+<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border-radius:0;overflow:hidden;max-width:600px;width:100%;">
+
+<!-- LOGO -->
+<tr><td style="background-color:#1a1208;padding:30px;text-align:center;">
+  <img src="https://materiaaurelia.github.io/events-hub/images/logo_ca65ac9a8d.jpg" alt="Earth Harmony" width="80" style="border-radius:50%;margin-bottom:12px;">
+  <div style="font-size:24px;font-weight:bold;color:#D4951A;letter-spacing:2px;font-family:Georgia,'Times New Roman',serif;">EARTH HARMONY</div>
+  <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px;letter-spacing:1px;">SOUND & WELLNESS</div>
+</td></tr>
+
+<!-- WELCOME -->
+<tr><td style="padding:30px 30px 15px;background-color:#ffffff;">
+  <div style="font-size:22px;color:#1a1208;line-height:1.4;font-family:Georgia,'Times New Roman',serif;">
+    Hey {{FNAME}} 👋
+  </div>
+  <div style="font-size:20px;color:#8B6914;margin-top:8px;font-style:italic;font-family:Georgia,'Times New Roman',serif;">
+    ${esc(heading)}
+  </div>
+</td></tr>
+
+<!-- INTRO -->
+<tr><td style="padding:10px 30px 25px;">
+  <div style="font-size:15px;color:#333;line-height:1.7;">${intro.replace(/\n\n+/g, '</div><div style="font-size:15px;color:#333;line-height:1.7;margin-top:12px;">').replace(/\n/g, '<br>')}</div>
+</td></tr>
+
+<tr><td style="padding:0 30px;"><div style="border-top:1px solid #e8e0d5;"></div></td></tr>`;
+
+  // WHAT TO EXPECT
+  if (isEnabled('oExpect') && expectItems.length > 0) {
+    html += `
+<!-- WHAT TO EXPECT -->
+<tr><td style="padding:25px 30px;">
+  <div style="font-size:11px;color:#D4951A;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px;font-family:Arial,sans-serif;">✦ What to Expect</div>
+  <div style="font-size:15px;color:#333;line-height:1.7;margin-bottom:15px;">As part of the Earth Harmony community, you'll receive:</div>
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">`;
+
+    expectItems.forEach(item => {
+      html += `
+    <tr><td style="padding:6px 0;font-family:Georgia,serif;font-size:15px;color:#333;line-height:1.5;">
+      <span style="color:#D4951A;font-size:16px;">✦</span>&nbsp;&nbsp;${esc(item)}
+    </td></tr>`;
+    });
+
+    html += `
+  </table>
+</td></tr>
+<tr><td style="padding:0 30px;"><div style="border-top:1px solid #e8e0d5;"></div></td></tr>`;
+  }
+
+  // UPCOMING EVENT
+  if (isEnabled('oEvent') && eventTitle) {
+    html += `
+<!-- UPCOMING EVENT -->
+<tr><td style="padding:25px 30px;">
+  <div style="font-size:11px;color:#D4951A;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px;font-family:Arial,sans-serif;">✦ Coming Up</div>
+  <div style="font-size:20px;color:#1a1208;font-weight:bold;font-family:Georgia,'Times New Roman',serif;">${esc(eventTitle)}</div>`;
+
+    if (eventDate) {
+      html += `
+  <div style="font-size:14px;color:#777;margin-top:6px;font-family:Arial,sans-serif;">${esc(eventDate)}</div>`;
+    }
+    if (eventDesc) {
+      html += `
+  <div style="font-size:15px;color:#333;margin-top:10px;line-height:1.6;">${esc(eventDesc)}</div>`;
+    }
+    if (eventUrl) {
+      html += `
+  <div style="margin-top:16px;">
+    <a href="${esc(eventUrl)}" style="display:inline-block;background-color:#8B6914;color:#ffffff;font-size:14px;padding:12px 28px;border-radius:6px;text-decoration:none;font-family:Arial,sans-serif;font-weight:bold;letter-spacing:1px;">LEARN MORE →</a>
+  </div>`;
+    }
+
+    html += `
+</td></tr>
+<tr><td style="padding:0 30px;"><div style="border-top:1px solid #e8e0d5;"></div></td></tr>`;
+  }
+
+  // CTA
+  if (ctaText && ctaUrl) {
+    html += `
+<!-- CTA -->
+<tr><td style="padding:25px 30px;text-align:center;">
+  <div style="font-size:16px;color:#333;margin-bottom:14px;font-family:Georgia,'Times New Roman',serif;">Ready to explore?</div>
+  <a href="${esc(ctaUrl)}" style="display:inline-block;background-color:#D4951A;color:#ffffff;font-size:14px;padding:14px 32px;border-radius:8px;text-decoration:none;font-family:Arial,sans-serif;font-weight:bold;letter-spacing:1px;">${esc(ctaText)} →</a>
+</td></tr>`;
+  }
+
+  // CLOSING
+  html += `
+<!-- CLOSING -->
+<tr><td style="padding:20px 30px 25px;text-align:center;">
+  <div style="font-size:14px;color:#888;font-style:italic;font-family:Georgia,'Times New Roman',serif;">Welcome to the circle. 🙏</div>
+  <div style="font-size:14px;color:#555;margin-top:8px;">Marcus Fung<br><span style="color:#999;font-size:12px;">Earth Harmony Sound & Wellness</span></div>
+</td></tr>`;
+
+  // FOOTER
+  html += `
+<!-- FOOTER -->
+<tr><td style="padding:20px 30px;text-align:center;background-color:#1a1208;">
+  <div style="font-size:12px;color:rgba(255,255,255,0.5);line-height:2;">`;
+
+  if (isEnabled('oSocial')) {
+    html += `
+    <a href="https://instagram.com/earth.harmony.sound.healing" style="color:#D4951A;text-decoration:none;">Instagram</a> &nbsp;·&nbsp;
+    <a href="https://www.facebook.com/marcus.fung" style="color:#D4951A;text-decoration:none;">Facebook</a> &nbsp;·&nbsp;
+    <a href="https://insighttimer.com/highercallingmusic" style="color:#D4951A;text-decoration:none;">Insight Timer</a> &nbsp;·&nbsp;
+    <a href="http://www.ko-fi.com/marcusworldbridger" style="color:#D4951A;text-decoration:none;">Ko-fi</a><br>`;
+  }
+
+  html += `
+    Earth Harmony Sound & Wellness · Edmonton, AB<br>
+    <a href="mailto:earthharmonysoundhealing@gmail.com" style="color:rgba(255,255,255,0.4);text-decoration:none;font-size:11px;">earthharmonysoundhealing@gmail.com</a><br><br>
+    <a href="{{UNSUBSCRIBE}}" style="color:rgba(255,255,255,0.3);text-decoration:underline;font-size:11px;">Unsubscribe</a>
+  </div>
+</td></tr>
+
+</table>
+</td></tr>
+</table>
+</body>
+</html>`;
+
+  return html;
+}
+
+// ============ UNIFIED GENERATE ============
+function generateHTML() {
+  switch (activeTab) {
+    case 'welcome': return generateWelcomeHTML();
+    case 'onboarding': return generateOnboardingHTML();
+    default: return generateNewsletterHTML();
+  }
+}
+
 // ============ PREVIEW ============
 function updatePreview() {
   const html = generateHTML();
-  const iframe = document.getElementById('previewFrame');
+  const iframe = document.getElementById('previewIframe');
   const doc = iframe.contentDocument || iframe.contentWindow.document;
   doc.open();
   doc.write(html);
@@ -715,8 +1535,10 @@ function updatePreview() {
     iframe.style.height = doc.body.scrollHeight + 40 + 'px';
   }, 100);
   
-  // Update quote preview
-  updateQuotePreview(val('quoteText'), val('quoteAttr'));
+  // Update quote preview (newsletter tab only)
+  if (activeTab === 'newsletter') {
+    updateQuotePreview(val('quoteText'), val('quoteAttr'));
+  }
 }
 
 // ============ COPY HTML ============
@@ -729,9 +1551,104 @@ function copyHTML() {
   });
 }
 
+// ============ AUTO-SAVE / AUTO-LOAD ============
+const SAVE_KEY = 'eh_email_editor_state';
+
+function saveState() {
+  const state = {};
+  // Save all text inputs and textareas
+  document.querySelectorAll('#tab-welcome input[type="text"], #tab-welcome textarea').forEach(el => {
+    if (el.id) state[el.id] = el.value;
+  });
+  // Save editable list items
+  document.querySelectorAll('#tab-welcome .editable-list').forEach(list => {
+    const items = [];
+    list.querySelectorAll('li input[type="text"]').forEach(inp => items.push(inp.value));
+    state['list_' + list.id] = items;
+  });
+  // Save toggle states
+  document.querySelectorAll('#tab-welcome .toggle').forEach((t, i) => {
+    state['toggle_' + i] = t.classList.contains('on');
+  });
+  // Save newsletter tab fields too
+  document.querySelectorAll('#tab-newsletter input[type="text"], #tab-newsletter textarea, #tab-newsletter select').forEach(el => {
+    if (el.id) state['nl_' + el.id] = el.value;
+  });
+  localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+}
+
+function loadState() {
+  const raw = localStorage.getItem(SAVE_KEY);
+  if (!raw) return false;
+  try {
+    const state = JSON.parse(raw);
+    // Restore text inputs and textareas
+    Object.keys(state).forEach(key => {
+      if (key.startsWith('list_') || key.startsWith('toggle_') || key.startsWith('nl_')) return;
+      const el = document.getElementById(key);
+      if (el) el.value = state[key];
+    });
+    // Restore editable lists
+    Object.keys(state).forEach(key => {
+      if (!key.startsWith('list_')) return;
+      const listId = key.replace('list_', '');
+      const list = document.getElementById(listId);
+      if (!list) return;
+      const items = state[key];
+      list.innerHTML = '';
+      items.forEach(val => {
+        const li = document.createElement('li');
+        li.innerHTML = `<input type="text" value="${val.replace(/"/g, '&quot;')}" oninput="updatePreview();saveState()"><button class="remove-item" onclick="removeListItem(this)">×</button>`;
+        list.appendChild(li);
+      });
+    });
+    // Restore toggles
+    Object.keys(state).forEach(key => {
+      if (!key.startsWith('toggle_')) return;
+      const idx = parseInt(key.replace('toggle_', ''));
+      const toggles = document.querySelectorAll('#tab-welcome .toggle');
+      if (toggles[idx]) {
+        if (state[key]) toggles[idx].classList.add('on');
+        else toggles[idx].classList.remove('on');
+        const block = toggles[idx].closest('.section-block');
+        if (block) block.classList.toggle('disabled', !state[key]);
+      }
+    });
+    return true;
+  } catch(e) { return false; }
+}
+
+// Auto-save on every input change
+document.addEventListener('input', () => { saveState(); });
+// Also save on toggle clicks
+document.addEventListener('click', (e) => {
+  if (e.target.classList.contains('toggle') || e.target.closest('.toggle')) {
+    setTimeout(saveState, 50);
+  }
+});
+
 // ============ INIT ============
-// Load a random quote on start
-randomQuote();
+// Session 2 toggle styling
+const s2t = document.getElementById('wSession2Toggle');
+if (s2t) {
+  const updateToggleStyle = () => {
+    s2t.style.background = s2t.classList.contains('on') ? '#D4951A' : '#444';
+  };
+  const origClick = s2t.onclick;
+  s2t.onclick = function() {
+    this.classList.toggle('on');
+    updateToggleStyle();
+    updatePreview();
+    saveState();
+  };
+  updateToggleStyle();
+}
+
+// Load saved state or use defaults
+const hadSavedState = loadState();
+
+// Load a random quote on start (only if no saved state)
+if (!hadSavedState) randomQuote();
 updatePreview();
 </script>
 
