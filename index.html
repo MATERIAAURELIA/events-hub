@@ -675,7 +675,7 @@ function getEvents(){
   const today=new Date().toISOString().slice(0,10);
   e=e.filter(x=>x.date>=today);
   if(activeFilter!=='all')e=e.filter(x=>(EVENT_TYPES[x.type]?.filterAs||x.type)===activeFilter);
-  if(activeSort==='date') e.sort((a,b)=>a.date.localeCompare(b.date)||a.time.localeCompare(b.time));
+  if(activeSort==='date') e.sort((a,b)=>a.date.localeCompare(b.date)||(a.time||'').localeCompare(b.time||''));
   else if(activeSort==='price') e.sort((a,b)=>a.price-b.price);
   else if(activeSort==='location') e.sort((a,b)=>{
     const va=(a.venueOverride||VENUES[a.venue]?.name||'').toLowerCase();
