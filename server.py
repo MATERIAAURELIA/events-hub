@@ -177,7 +177,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             print(f"[{ts}] {fmt % args}")
 
 def main():
-    server = http.server.HTTPServer(('localhost', PORT), Handler)
+    server = http.server.HTTPServer(('0.0.0.0', PORT), Handler)
     print(f"🚀 Events Hub server on http://localhost:{PORT}")
     print(f"   Serving: {DIR}")
     print(f"   PUT /site-config.json  → atomic save")

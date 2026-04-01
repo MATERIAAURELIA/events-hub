@@ -360,6 +360,7 @@
       <div class="card-header">
         <h2>Raw JSON</h2>
         <div style="display:flex;gap:6px">
+          <button class="btn btn-ghost" onclick="document.querySelector('.tab[data-tab=events]').click()" style="color:#c8a44e">← Back to Events</button>
           <button class="btn btn-ghost" onclick="loadJsonEditor()">↻ Reload</button>
           <button class="btn btn-gold" onclick="saveJsonEditor()">💾 Save</button>
         </div>
@@ -621,12 +622,15 @@ let config = {};
 let sortMode = 'date'; // 'date' or 'custom'
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
+// Resolve server base — works from localhost AND Tailscale
+const SERVER_BASE = 'http://' + (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'localhost' : '100.121.154.95') + ':8765';
+
 async function loadConfig() {
   let loaded = false;
 
   // 1. Try server first (source of truth — port 8765)
   try {
-    const res = await fetch('http://localhost:8765/site-config.json?v=' + Date.now(), {
+    const res = await fetch(SERVER_BASE + '/site-config.json?v=' + Date.now(), {
       signal: AbortSignal.timeout(4000)
     });
     if (res.ok) {
@@ -648,6 +652,28 @@ async function loadConfig() {
         console.log('📦 Config loaded from localStorage (server unavailable)');
         showStatus('⚠️ Server offline — using cached data. Start server.py!', 6000, true);
       } catch (e) { /* bad cache */ }
+    }
+  }
+
+  // 2b. If server loaded OK, check if localStorage has unsaved changes from a crash
+  if (loaded) {
+    const cached = localStorage.getItem('events-hub-config');
+    const cachedTs = localStorage.getItem('events-hub-config-ts');
+    if (cached && cachedTs) {
+      try {
+        const cachedData = JSON.parse(cached);
+        // If cached has more events than server, warn
+        const serverCount = (config.events || []).length;
+        const cacheCount = (cachedData.events || []).length;
+        if (cacheCount > serverCount) {
+          const recover = confirm(`⚠️ Unsaved local data detected (${cacheCount} events vs ${serverCount} on server, from ${cachedTs}).
+
+Recover local version?`);
+          if (recover) { config = cachedData; }
+        }
+        // Clear the fallback cache once we've handled it
+        localStorage.removeItem('events-hub-config-ts');
+      } catch(e) {}
     }
   }
 
@@ -1266,7 +1292,7 @@ async function saveConfig() {
   try {
     const controller = new AbortController();
     const tid = setTimeout(() => controller.abort(), 5000);
-    const res = await fetch('http://localhost:8765/site-config.json', {
+    const res = await fetch(SERVER_BASE + '/site-config.json', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(config, null, 2),
@@ -1282,8 +1308,14 @@ async function saveConfig() {
   } catch (e) {
     const msg = e.name === 'AbortError' ? 'Server timeout — is server.py running?' : e.message;
     console.error('❌ Server save failed:', msg);
+    // Emergency fallback — save to localStorage so data isn't lost
+    try {
+      localStorage.setItem('events-hub-config', JSON.stringify(config));
+      localStorage.setItem('events-hub-config-ts', new Date().toISOString());
+      console.warn('💾 Saved to localStorage as fallback');
+    } catch (lsErr) { console.error('❌ localStorage fallback also failed:', lsErr); }
     renderAll();
-    showStatus('⚠️ NOT saved to file: ' + msg, 7000, true);
+    showStatus('⚠️ Server unreachable — saved locally. Restart server.py to persist! ' + msg, 9000, true);
     return;
   }
 
@@ -1294,7 +1326,7 @@ async function saveConfig() {
 
 async function restoreLastSave() {
   try {
-    const res = await fetch('http://localhost:8765/latest-backup');
+    const res = await fetch(SERVER_BASE + '/latest-backup');
     const json = await res.json();
     if (!json.ok) { alert('No backups found.'); return; }
     const ts = json.timestamp.replace(/(\d{4})(\d{2})(\d{2})-(\d{2})(\d{2})(\d{2})/, '$1-$2-$3 $4:$5:$6');
@@ -1341,6 +1373,13 @@ function closeModal(id) { document.getElementById(id).classList.remove('show'); 
 // Close modals on overlay click
 document.querySelectorAll('.modal-overlay').forEach(el => {
   el.onclick = e => { if (e.target === el) el.classList.remove('show'); };
+});
+
+// Close modals on Escape key
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.show').forEach(el => el.classList.remove('show'));
+  }
 });
 
 function showStatus(msg, duration, isError) {
@@ -1669,7 +1708,7 @@ async function startAutoMode() {
 
   try {
     const res = await fetch(
-      `http://localhost:8765/calendar?from=${fromDate}&to=${toDate}`,
+      `${SERVER_BASE}/calendar?from=${fromDate}&to=${toDate}`,
       { signal: AbortSignal.timeout(18000) }
     );
     const data = await res.json();
