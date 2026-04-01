@@ -588,7 +588,7 @@ async function loadConfig(){
     SITE = cfg.site || {};
     EVENT_TYPES = cfg.eventTypes || {};
     VENUES = cfg.venues || {};
-    EVENTS = (cfg.events || []).map(e=>({...e, vis:'public'}));
+    EVENTS = (cfg.events || []).filter(e => !e.archived).map(e=>({...e, vis:'public'}));
     RESOURCES = cfg.resources || [];
     TOP_LINKS = cfg.topLinks || [];
     SOCIAL_LINKS = cfg.socialLinks || [];
@@ -739,7 +739,14 @@ function showPopup(id){
     <div class="p-title">${ev.title}</div>
     <div class="p-meta">📅 ${fDay(ev.date)} · ${fTime(ev.time)}-${fTime(ev.endTime)}<br>📍 ${vn}${!ev.venueOverride&&venue.area?' · '+venue.area:''}<br>🎟 $${ev.price}${ev.spots?'<br>🔥 '+ev.spots+' spot'+(ev.spots>1?'s':'')+' left!':''}</div>
     <div class="p-desc">${ev.desc||''}</div>
-    <a class="btn-book" href="${ev.booking}" target="_blank" onclick="trackClick('${ev.id}','${ev.title.replace(/'/g,"\\'")}','${ev.booking}')">Book Now →</a>
+    ${ev.booking
+      ? `<a class="btn-book" href="${ev.booking}" target="_blank" onclick="trackClick('${ev.id}','${ev.title.replace(/'/g,"\\'")}','${ev.booking}')">Book Now →</a>`
+      : ev.contactEmail
+        ? `<a class="btn-book" href="mailto:${ev.contactEmail}">Email to Register →</a>`
+        : ev.contactPhone
+          ? `<a class="btn-book" href="tel:${ev.contactPhone}">Call to Register →</a>`
+          : ''
+    }
     <button class="btn-share-popup" onclick="shareEv('${ev.title}','${ev.date}','${ev.booking}')">Share Event</button>`;
   const pop=document.getElementById('popup');
   pop.classList.add('show');

@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Events Admin</title>
 <script src="../../sync.js"></script>
@@ -112,8 +115,49 @@
   .preview-frame iframe { width: 100%; height: 600px; border: none; }
 
   /* STATUS */
-  .status { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #2ecc71; color: #000; padding: 8px 20px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; opacity: 0; transition: opacity 0.3s; z-index: 200; pointer-events: none; }
+  .status { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #2ecc71; color: #000; padding: 8px 20px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; opacity: 0; transition: opacity 0.3s; z-index: 200; pointer-events: none; max-width: 90vw; text-align: center; }
   .status.show { opacity: 1; }
+  .status.error { background: #c0392b; color: #fff; }
+
+  /* BOOTUP OVERLAY */
+  #bootup-overlay { position: fixed; inset: 0; background: rgba(10,10,10,0.97); z-index: 500; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+  #bootup-overlay.hidden { display: none; }
+  .bootup-box { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 20px; padding: 36px 40px; max-width: 500px; width: 92%; text-align: center; }
+  .bootup-heading { font-size: 1.6rem; font-weight: 800; color: #D4A24E; margin-bottom: 6px; }
+  .bootup-sub { font-size: 0.82rem; color: #666; margin-bottom: 20px; }
+  .bootup-event-count { display: inline-block; background: #222; border: 1px solid #333; border-radius: 10px; padding: 10px 24px; margin-bottom: 24px; }
+  .bootup-event-count strong { color: #D4A24E; font-size: 1.5rem; font-weight: 800; display: block; }
+  .bootup-event-count small { color: #777; font-size: 0.68rem; }
+  .bootup-btns { display: flex; gap: 12px; margin-bottom: 18px; }
+  .bootup-btn { flex: 1; padding: 16px 10px; border: none; border-radius: 14px; font-family: Inter, sans-serif; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.15s; line-height: 1.3; }
+  .bootup-btn-auto { background: #D4A24E; color: #000; }
+  .bootup-btn-auto:hover { background: #e0b55a; transform: translateY(-1px); }
+  .bootup-btn-manual { background: #242424; color: #ddd; border: 1px solid #444; }
+  .bootup-btn-manual:hover { background: #2e2e2e; border-color: #777; }
+  .bootup-skip { font-size: 0.68rem; color: #444; cursor: pointer; text-decoration: underline; }
+  .bootup-skip:hover { color: #888; }
+
+  /* AUTO MODE — loading state */
+  #auto-loading { display: none; padding: 24px 0 16px; text-align: center; }
+  .auto-spinner { font-size: 1.8rem; animation: spin 1s linear infinite; display: inline-block; margin-bottom: 10px; }
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  .auto-load-label { font-size: 0.84rem; color: #bbb; font-weight: 600; }
+
+  /* AUTO MODE — calendar results */
+  #cal-results { display: none; text-align: left; }
+  .cal-month-label { font-size: 0.68rem; font-weight: 700; color: #D4A24E; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
+  .cal-list { max-height: 54vh; overflow-y: auto; margin-bottom: 12px; padding-right: 2px; }
+  .cal-card { background: #222; border: 1px solid #2e2e2e; border-radius: 10px; padding: 11px 13px; margin-bottom: 7px; display: flex; align-items: center; gap: 12px; transition: opacity 0.25s; }
+  .cal-card.added   { border-color: #27ae60; opacity: 0.4; }
+  .cal-card.skipped { opacity: 0.2; }
+  .cal-date-badge { min-width: 42px; text-align: center; background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 5px 4px; flex-shrink: 0; }
+  .cal-date-badge .cal-day   { font-size: 1.15rem; font-weight: 800; color: #D4A24E; line-height: 1; }
+  .cal-date-badge .cal-month { font-size: 0.56rem; font-weight: 700; color: #666; text-transform: uppercase; margin-top: 1px; }
+  .cal-info { flex: 1; min-width: 0; }
+  .cal-title { font-size: 0.84rem; font-weight: 700; color: #eee; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .cal-time  { font-size: 0.68rem; color: #888; margin-top: 2px; }
+  .cal-actions { display: flex; gap: 6px; flex-shrink: 0; }
+  .cal-done-row { text-align: center; padding-top: 4px; border-top: 1px solid #2a2a2a; }
 
   /* LOGO */
   .logo-section { display: flex; align-items: center; gap: 16px; }
@@ -158,6 +202,7 @@
             <button class="btn btn-ghost active-sort" id="sort-date-btn" onclick="setSortMode('date')">📅 By Date</button>
             <button class="btn btn-ghost" id="sort-custom-btn" onclick="setSortMode('custom')">✋ Custom Order</button>
           </div>
+          <button class="btn btn-ghost" id="show-archived-btn" onclick="toggleArchived()" style="opacity:0.6" title="Show archived events">📦 Archived</button>
           <button class="btn btn-gold" onclick="openEventModal()">+ Add Event</button>
         </div>
       </div>
@@ -336,6 +381,17 @@
   <div class="modal">
     <h2 id="event-modal-title">Add Event</h2>
     <input type="hidden" id="ev-edit-idx" value="-1">
+
+    <!-- URL IMPORT -->
+    <div style="background:#1a1a1a;border:1px solid #333;border-radius:8px;padding:12px;margin-bottom:16px;">
+      <label style="color:#D4A24E;margin-bottom:6px;display:block;">🔗 Import from URL</label>
+      <div style="display:flex;gap:8px;">
+        <input type="url" id="import-url" placeholder="Paste event URL here..." style="flex:1;">
+        <button class="btn btn-gold" onclick="event.preventDefault();importFromUrl()" id="import-btn" style="white-space:nowrap;">⚡ Fetch</button>
+      </div>
+      <div id="import-status" style="font-size:0.7rem;color:#888;margin-top:6px;"></div>
+    </div>
+
     <label>Title</label>
     <input type="text" id="ev-title">
     <div class="row">
@@ -355,8 +411,12 @@
     <div class="row">
       <div><label>Price ($)</label><input type="number" id="ev-price" min="0"></div>
     </div>
-    <label>Booking URL</label>
-    <input type="url" id="ev-booking">
+    <label>Booking <span style="font-size:0.6rem;color:#666;text-transform:none;font-weight:400">— URL, email, or phone (all optional)</span></label>
+    <input type="url" id="ev-booking" placeholder="https://... or leave blank">
+    <div class="row" style="margin-top:6px;">
+      <div><label style="font-size:0.6rem;">📧 Register by Email</label><input type="email" id="ev-contact-email" placeholder="contact@email.com"></div>
+      <div><label style="font-size:0.6rem;">📞 Register by Phone</label><input type="tel" id="ev-contact-phone" placeholder="(780) 555-1234"></div>
+    </div>
     <label>Description</label>
     <textarea id="ev-desc"></textarea>
     <label>Thumbnail</label>
@@ -512,26 +572,108 @@
 
 <div class="status" id="status">Saved ✓</div>
 
+<!-- BOOTUP OVERLAY -->
+<div id="bootup-overlay">
+  <div class="bootup-box">
+
+    <!-- Step 1: Welcome screen -->
+    <div id="bootup-initial">
+      <div class="bootup-heading">Welcome back, Marcus 👋</div>
+      <div class="bootup-sub">Earth Harmony Sound &amp; Wellness</div>
+      <div class="bootup-event-count" id="bootup-count">
+        <strong class="bootup-count-num">—</strong>
+        <small class="bootup-count-month">loading events…</small>
+      </div>
+      <div class="bootup-btns">
+        <button class="bootup-btn bootup-btn-auto" onclick="startAutoMode()">
+          🤖 Auto Mode<br>
+          <span style="font-size:0.72rem;font-weight:400;opacity:0.8">Sync from Google Calendar</span>
+        </button>
+        <button class="bootup-btn bootup-btn-manual" onclick="dismissBootup()">
+          ✏️ Manual Mode<br>
+          <span style="font-size:0.72rem;font-weight:400;opacity:0.7">Go straight to admin</span>
+        </button>
+      </div>
+      <span class="bootup-skip" onclick="dismissBootup()">skip →</span>
+    </div>
+
+    <!-- Step 2: Loading calendar -->
+    <div id="auto-loading">
+      <div class="auto-spinner">📅</div>
+      <div class="auto-load-label">Fetching your Google Calendar…</div>
+    </div>
+
+    <!-- Step 3: Calendar event list -->
+    <div id="cal-results">
+      <div class="cal-month-label" id="cal-month-label">This month's events</div>
+      <div class="cal-list" id="cal-list"></div>
+      <div class="cal-done-row">
+        <button class="btn btn-gold" onclick="dismissBootup()">✓ Done — Go to Admin</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 <script>
 let config = {};
 let sortMode = 'date'; // 'date' or 'custom'
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 async function loadConfig() {
-  const res = await fetch('site-config.json?v='+Date.now());
-  config = await res.json();
+  let loaded = false;
+
+  // 1. Try server first (source of truth — port 8765)
+  try {
+    const res = await fetch('http://localhost:8765/site-config.json?v=' + Date.now(), {
+      signal: AbortSignal.timeout(4000)
+    });
+    if (res.ok) {
+      config = await res.json();
+      loaded = true;
+      console.log('✅ Config loaded from server (8765)');
+    }
+  } catch (e) {
+    console.warn('⚠️ Server 8765 unreachable:', e.message);
+  }
+
+  // 2. Fall back to localStorage
+  if (!loaded) {
+    const cached = localStorage.getItem('events-hub-config');
+    if (cached) {
+      try {
+        config = JSON.parse(cached);
+        loaded = true;
+        console.log('📦 Config loaded from localStorage (server unavailable)');
+        showStatus('⚠️ Server offline — using cached data. Start server.py!', 6000, true);
+      } catch (e) { /* bad cache */ }
+    }
+  }
+
+  // 3. Last resort: static server
+  if (!loaded) {
+    try {
+      const res = await fetch('site-config.json?v=' + Date.now());
+      config = await res.json();
+      console.log('📄 Config loaded from static server');
+    } catch (e) {
+      config = { events: [], eventTypes: {}, venues: {}, topLinks: [], resources: [], socialLinks: [] };
+      console.error('❌ Could not load config from anywhere:', e);
+    }
+  }
+
   renderAll();
+  showBootup();
 
-// AUTOSAVE every 10 seconds
-setInterval(() => {
-  SyncStore.set('events-hub-config', config);
-  localStorage.setItem('events-hub-config', JSON.stringify(config));
-}, 10000);
+  // Autosave to localStorage every 30s (backup only)
+  setInterval(() => {
+    localStorage.setItem('events-hub-config', JSON.stringify(config));
+  }, 30000);
 
-// Also save before page unload (refresh/close)
-window.addEventListener('beforeunload', () => {
-  localStorage.setItem('events-hub-config', JSON.stringify(config));
-});
+  // Save to localStorage on page close
+  window.addEventListener('beforeunload', () => {
+    localStorage.setItem('events-hub-config', JSON.stringify(config));
+  });
 }
 
 function renderAll() {
@@ -553,11 +695,23 @@ function setSortMode(mode) {
   renderEvents();
 }
 
+let showArchived = false;
+
+function toggleArchived() {
+  showArchived = !showArchived;
+  const btn = document.getElementById('show-archived-btn');
+  btn.style.opacity = showArchived ? '1' : '0.6';
+  btn.textContent = showArchived ? '📤 Hide Archived' : '📦 Archived';
+  renderEvents();
+}
+
 function renderEvents() {
   const el = document.getElementById('events-list');
   // In date mode, sort by date. In custom mode, use array order (draggable).
   let events = config.events || [];
   let indexMap = events.map((_, i) => i); // real indices into config.events
+  // Filter archived unless showArchived is true
+  indexMap = indexMap.filter(i => showArchived ? true : !events[i].archived);
   if (sortMode === 'date') {
     indexMap.sort((a, b) => events[a].date.localeCompare(events[b].date));
   }
@@ -580,7 +734,8 @@ function renderEvents() {
       <div class="ev-actions">
         ${sortMode === 'custom' ? `<button class="btn btn-ghost" onclick="event.stopPropagation();moveEvent(${realIdx},-1)" title="Move up">▲</button>
         <button class="btn btn-ghost" onclick="event.stopPropagation();moveEvent(${realIdx},1)" title="Move down">▼</button>` : ''}
-        <button class="btn btn-ghost" onclick="event.stopPropagation();duplicateEvent(${realIdx})">⧉</button>
+        <button class="btn btn-ghost" onclick="event.stopPropagation();duplicateEvent(${realIdx})" title="Duplicate">⧉</button>
+        <button class="btn btn-ghost" onclick="event.stopPropagation();archiveEvent(${realIdx})" title="${ev.archived ? 'Unarchive' : 'Archive'}" style="opacity:${ev.archived?'1':'0.6'}">${ev.archived ? '📤' : '📦'}</button>
         <button class="btn btn-red" onclick="event.stopPropagation();deleteEvent(${realIdx})">✕</button>
       </div>
     </div>`;
@@ -661,14 +816,16 @@ function openEventModal(idx) {
     document.getElementById('ev-time').value = ev.time;
     document.getElementById('ev-endtime').value = ev.endTime;
     document.getElementById('ev-price').value = ev.price;
-    document.getElementById('ev-booking').value = ev.booking;
+    document.getElementById('ev-booking').value = ev.booking || '';
+    if (document.getElementById('ev-contact-email')) document.getElementById('ev-contact-email').value = ev.contactEmail || '';
+    if (document.getElementById('ev-contact-phone')) document.getElementById('ev-contact-phone').value = ev.contactPhone || '';
     document.getElementById('ev-desc').value = ev.desc || '';
     document.getElementById('ev-venue-override').value = ev.venueOverride || '';
     document.getElementById('ev-img').value = ev.img || '';
     document.getElementById('ev-img-crop').value = ev.imgCrop || 'center';
     updateEvThumbPreview(ev);
   } else {
-    ['ev-title','ev-date','ev-time','ev-endtime','ev-booking','ev-desc','ev-venue-override','ev-img'].forEach(id => document.getElementById(id).value = '');
+    ['ev-title','ev-date','ev-time','ev-endtime','ev-booking','ev-contact-email','ev-contact-phone','ev-desc','ev-venue-override','ev-img'].forEach(id => { if(document.getElementById(id)) document.getElementById(id).value = ''; });
     document.getElementById('ev-price').value = 0;
     document.getElementById('ev-img-crop').value = 'center';
     document.getElementById('ev-thumb-prev').innerHTML = '🔔';
@@ -690,6 +847,8 @@ function saveEvent() {
     venue: document.getElementById('ev-venue').value,
     price: parseFloat(document.getElementById('ev-price').value) || 0,
     booking: document.getElementById('ev-booking').value,
+    contactEmail: document.getElementById('ev-contact-email')?.value || '',
+    contactPhone: document.getElementById('ev-contact-phone')?.value || '',
     desc: document.getElementById('ev-desc').value,
   };
   const vo = document.getElementById('ev-venue-override').value;
@@ -714,6 +873,63 @@ function quickAddVenue() {
   document.getElementById('ev-venue').value = id;
   saveConfig();
   showStatus('Venue added ✓');
+}
+
+async function importFromUrl() {
+  const url = document.getElementById('import-url').value.trim();
+  if (!url) return;
+  const btn = document.getElementById('import-btn');
+  const status = document.getElementById('import-status');
+  btn.textContent = '⏳ Fetching...';
+  btn.disabled = true;
+  status.textContent = 'Fetching page...';
+  status.style.color = '#888';
+
+  try {
+    // Use local server to scrape (no CORS issues, faster)
+    const res = await fetch(`http://localhost:8101/scrape?url=${encodeURIComponent(url)}`, {
+      signal: AbortSignal.timeout(10000)
+    });
+    if (!res.ok) throw new Error('Server error ' + res.status);
+    const extracted = await res.json();
+
+    // Fill form — highlight fields we filled in yellow
+    const fill = (id, val, highlight=true) => {
+      const el = document.getElementById(id);
+      if (el && val) {
+        el.value = val;
+        if (highlight) el.style.background = '#2a2a00';
+        setTimeout(() => { if (el) el.style.background = ''; }, 3000);
+      }
+    };
+
+    fill('ev-title', extracted.title);
+    fill('ev-desc', extracted.desc);
+    fill('ev-date', extracted.date);
+    fill('ev-time', extracted.time);
+    fill('ev-price', extracted.price);
+    fill('ev-booking', extracted.booking);
+    if (extracted.img) fill('ev-img', extracted.img);
+    if (extracted.contactEmail) fill('ev-contact-email', extracted.contactEmail);
+    if (extracted.contactPhone) fill('ev-contact-phone', extracted.contactPhone);
+
+    // Count what we got
+    const filled = Object.values(extracted).filter(Boolean).length;
+    status.textContent = `✅ Filled ${filled} fields. Yellow = auto-filled — verify before saving. Pick venue + type manually.`;
+    status.style.color = '#D4A24E';
+
+  } catch (err) {
+    status.textContent = `⚠️ Couldn't fetch: ${err.message}. Fill manually.`;
+    status.style.color = '#cc3333';
+  }
+
+  btn.textContent = '⚡ Fetch';
+  btn.disabled = false;
+}
+
+function archiveEvent(i) {
+  config.events[i].archived = !config.events[i].archived;
+  saveConfig();
 }
 
 function deleteEvent(i) {
@@ -1041,20 +1257,34 @@ function saveJsonEditor() {
 
 // ============ SAVE / DOWNLOAD / IMPORT ============
 async function saveConfig() {
-  // Save to localStorage + SyncStore
-  SyncStore.set('events-hub-config', config);
-  localStorage.setItem('events-hub-config', JSON.stringify(config));
-  console.log('Config saved to localStorage', new Date().toLocaleTimeString());
+  // Always snapshot to localStorage first (instant backup)
+  // localStorage save disabled — server (8765) is source of truth
+  // localStorage.setItem('events-hub-config', JSON.stringify(config));
 
-  // Try to save to file (works with local server that supports PUT)
+  // PUT to server (5s timeout — server is source of truth)
   try {
     const controller = new AbortController();
-    setTimeout(() => controller.abort(), 1000);
-    await fetch('site-config.json', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(config, null, 2), signal: controller.signal });
-  } catch (e) { /* file save may not work without server — that's ok, localStorage has it */ }
-
-  renderAll();
-  showStatus('Saved ✓');
+    const tid = setTimeout(() => controller.abort(), 5000);
+    const res = await fetch('http://localhost:8765/site-config.json', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(config, null, 2),
+      signal: controller.signal
+    });
+    clearTimeout(tid);
+    if (!res.ok) {
+      const txt = await res.text().catch(() => 'server error');
+      throw new Error('HTTP ' + res.status + ': ' + txt);
+    }
+    renderAll();
+    showStatus('Saved ✓');
+  } catch (e) {
+    const msg = e.name === 'AbortError' ? 'Server timeout — is server.py running?' : e.message;
+    console.error('❌ Server save failed:', msg);
+    renderAll();
+    showStatus('⚠️ NOT saved to file: ' + msg, 7000, true);
+    return;
+  }
 
   // Refresh preview
   const iframe = document.getElementById('preview-iframe');
@@ -1096,11 +1326,13 @@ document.querySelectorAll('.modal-overlay').forEach(el => {
   el.onclick = e => { if (e.target === el) el.classList.remove('show'); };
 });
 
-function showStatus(msg) {
+function showStatus(msg, duration, isError) {
   const el = document.getElementById('status');
   el.textContent = msg;
+  el.classList.toggle('error', !!isError);
   el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 2000);
+  clearTimeout(el._tid);
+  el._tid = setTimeout(() => { el.classList.remove('show', 'error'); }, duration || 2500);
 }
 
 // TABS
@@ -1382,6 +1614,168 @@ function saveGaId() {
   SyncStore.set('eh-ga-id', { id });
   localStorage.setItem('eh-ga-id', id);
   showStatus(id ? 'GA4 ID saved — add the script to index.html' : 'GA4 ID cleared');
+}
+
+// ============ BOOTUP SCREEN ============
+
+function showBootup() {
+  // Count upcoming events (not archived, date >= today)
+  const today = new Date().toISOString().slice(0, 10);
+  const upcoming = (config.events || []).filter(ev => !ev.archived && ev.date >= today);
+
+  const numEl  = document.querySelector('#bootup-count .bootup-count-num');
+  const subEl  = document.querySelector('#bootup-count .bootup-count-month');
+  if (numEl) numEl.textContent = upcoming.length;
+  if (subEl) subEl.textContent = upcoming.length === 1 ? '1 upcoming event' : upcoming.length + ' upcoming events';
+}
+
+function dismissBootup() {
+  document.getElementById('bootup-overlay').classList.add('hidden');
+}
+
+// Auto Mode: pull Google Calendar via server.py /calendar, show cards
+let calEvents = [];
+
+async function startAutoMode() {
+  // Transition: hide welcome, show loading
+  document.getElementById('bootup-initial').style.display = 'none';
+  document.getElementById('auto-loading').style.display   = 'block';
+  document.getElementById('cal-results').style.display    = 'none';
+
+  // Build date range: first → last day of current month
+  const now      = new Date();
+  const year     = now.getFullYear();
+  const month    = String(now.getMonth() + 1).padStart(2, '0');
+  const lastDay  = new Date(year, now.getMonth() + 1, 0).getDate();
+  const fromDate = `${year}-${month}-01`;
+  const toDate   = `${year}-${month}-${String(lastDay).padStart(2, '0')}`;
+
+  try {
+    const res = await fetch(
+      `http://localhost:8765/calendar?from=${fromDate}&to=${toDate}`,
+      { signal: AbortSignal.timeout(18000) }
+    );
+    const data = await res.json();
+    if (!res.ok || !data.ok) throw new Error(data.error || 'Server error');
+    const GIG_KEYWORDS = ['sound bath', 'soundbath', 'sound', 'drum', 'gig', 'yoga', 'workshop', 'journey', 'revitalife', 'session', 'healing', 'circle', 'immersion', 'nidra', 'breathwork', 'meditation'];
+    calEvents = (data.events || []).filter(ev => {
+      const title = (ev.title || '').toLowerCase();
+      return GIG_KEYWORDS.some(kw => title.includes(kw));
+    });
+  } catch (e) {
+    document.getElementById('auto-loading').style.display = 'none';
+    document.getElementById('bootup-initial').style.display = 'block';
+    showStatus('⚠️ Calendar fetch failed: ' + e.message + ' — is server.py running?', 7000, true);
+    return;
+  }
+
+  // Show results
+  document.getElementById('auto-loading').style.display = 'none';
+  document.getElementById('cal-results').style.display  = 'block';
+
+  const MONTHS_FULL = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const label = document.getElementById('cal-month-label');
+  if (label) {
+    const monthName = MONTHS_FULL[now.getMonth()];
+    label.textContent = `📅 ${monthName} ${year} — ${calEvents.length} event${calEvents.length !== 1 ? 's' : ''} on your calendar`;
+  }
+
+  const list = document.getElementById('cal-list');
+  if (!calEvents.length) {
+    list.innerHTML = '<div style="color:#666;font-size:0.82rem;text-align:center;padding:20px 0">No events found for this month on your calendar.</div>';
+    return;
+  }
+
+  list.innerHTML = calEvents.map((ev, i) => {
+    const d     = ev.date ? new Date(ev.date + 'T00:00:00') : null;
+    const day   = d ? d.getDate() : '?';
+    const mon   = d ? MONTHS_FULL[d.getMonth()] : '';
+    const timeStr = ev.time ? fmtTime(ev.time) : 'All day';
+    const endStr  = ev.endTime ? ' – ' + fmtTime(ev.endTime) : '';
+    return `<div class="cal-card" id="cal-card-${i}">
+      <div class="cal-date-badge">
+        <div class="cal-day">${day}</div>
+        <div class="cal-month">${mon}</div>
+      </div>
+      <div class="cal-info">
+        <div class="cal-title" title="${escHtml(ev.title)}">${escHtml(ev.title)}</div>
+        <div class="cal-time">${timeStr}${endStr}</div>
+      </div>
+      <div class="cal-actions">
+        <button class="btn btn-green" style="font-size:0.68rem;padding:5px 10px;white-space:nowrap"
+          onclick="calAddEvent(${i})">➕ Add</button>
+        <button class="btn btn-ghost" style="font-size:0.68rem;padding:5px 10px"
+          onclick="calSkip(${i})">⏭️</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// "Add" — pre-fill the event modal from the calendar event, keep bootup open
+function calAddEvent(i) {
+  const ev = calEvents[i];
+
+  // Pre-fill modal fields
+  populateEventDropdowns();
+  document.getElementById('ev-edit-idx').value = -1;
+  document.getElementById('event-modal-title').textContent = 'Add Event';
+  document.getElementById('ev-title').value    = ev.title || '';
+  document.getElementById('ev-date').value     = ev.date  || '';
+  document.getElementById('ev-time').value     = ev.time  || '';
+  document.getElementById('ev-endtime').value  = ev.endTime || '';
+  document.getElementById('ev-desc').value     = ev.desc  || '';
+  document.getElementById('ev-booking').value  = ev.url   || '';
+  document.getElementById('ev-price').value    = 0;
+  document.getElementById('ev-venue-override').value = ev.location || '';
+  document.getElementById('ev-img').value      = '';
+  document.getElementById('ev-img-crop').value = 'center';
+  document.getElementById('ev-thumb-prev').innerHTML = '🔔';
+  if (document.getElementById('ev-contact-email')) document.getElementById('ev-contact-email').value = '';
+  if (document.getElementById('ev-contact-phone')) document.getElementById('ev-contact-phone').value = '';
+
+  // Mark card as "pending add" visually — will confirm when modal saves
+  const card = document.getElementById('cal-card-' + i);
+  if (card) card.style.opacity = '0.5';
+
+  // Hook saveEvent to mark card as added after save
+  window._calPendingIdx = i;
+
+  // Open modal — bootup stays behind it
+  document.getElementById('event-modal').classList.add('show');
+}
+
+function calSkip(i) {
+  const card = document.getElementById('cal-card-' + i);
+  if (card) card.classList.add('skipped');
+}
+
+// Patch saveEvent to mark the cal-card as added when saving from auto mode
+const _origSaveEvent = saveEvent;
+saveEvent = function() {
+  _origSaveEvent();
+  if (window._calPendingIdx != null) {
+    const card = document.getElementById('cal-card-' + window._calPendingIdx);
+    if (card) {
+      card.classList.add('added');
+      card.style.opacity = '';
+      card.querySelector('.cal-actions').innerHTML =
+        '<span style="font-size:0.72rem;color:#27ae60;font-weight:700">✓ Added</span>';
+    }
+    window._calPendingIdx = null;
+  }
+};
+
+// Helpers
+function fmtTime(t) {
+  if (!t) return '';
+  const [h, m] = t.split(':').map(Number);
+  const ampm = h >= 12 ? 'pm' : 'am';
+  const h12  = h % 12 || 12;
+  return `${h12}:${String(m).padStart(2,'0')}${ampm}`;
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 // Init
