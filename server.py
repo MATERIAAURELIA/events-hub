@@ -111,7 +111,18 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                     json.dump(data, f, indent=2, ensure_ascii=False)
                 os.replace(tmp_path, CONFIG_PATH)
                 ts = time.strftime('%H:%M:%S')
-                print(f"[{ts}] ✅ site-config.json saved ({len(body):,} bytes, {len(data.get('events', []))} events)")
+                # Also write a timestamped backup every save
+                backup_dir = os.path.join(DIR, 'backups')
+                os.makedirs(backup_dir, exist_ok=True)
+                backup_path = os.path.join(backup_dir, f"site-config-{time.strftime('%Y%m%d-%H%M%S')}.json")
+                with open(backup_path, 'w', encoding='utf-8') as f:
+                    json.dump(data, f, indent=2, ensure_ascii=False)
+                # Keep only last 20 backups
+                backups = sorted(os.listdir(backup_dir))
+                for old in backups[:-20]:
+                    try: os.remove(os.path.join(backup_dir, old))
+                    except: pass
+                print(f"[{ts}] ✅ site-config.json saved ({len(body):,} bytes, {len(data.get('events', []))} events) + backup")
                 self.send_response(200)
                 self.send_header('Content-Type', 'application/json')
                 self._cors_headers()
