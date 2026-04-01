@@ -37,6 +37,26 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
     def do_GET(self):
         parsed = urlparse(self.path)
+        if parsed.path == '/latest-backup':
+            backup_dir = os.path.join(DIR, 'backups')
+            if not os.path.exists(backup_dir):
+                self._send_json(404, {'ok': False, 'error': 'No backups yet'})
+                return
+            backups = sorted([f for f in os.listdir(backup_dir) if f.endswith('.json')])
+            if not backups:
+                self._send_json(404, {'ok': False, 'error': 'No backups yet'})
+                return
+            latest = os.path.join(backup_dir, backups[-1])
+            with open(latest) as f:
+                data = json.load(f)
+            ts = backups[-1].replace('site-config-','').replace('.json','')
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self._cors_headers()
+            self.end_headers()
+            self.wfile.write(json.dumps({'ok': True, 'timestamp': ts, 'config': data}).encode())
+            return
+
         if parsed.path == '/calendar':
             self._handle_calendar(parsed)
         else:

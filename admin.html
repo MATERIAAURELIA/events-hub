@@ -368,6 +368,7 @@
     </div>
     <div class="btn-row">
       <button class="btn btn-ghost" onclick="downloadConfig()">⬇ Download site-config.json</button>
+      <button class="btn btn-ghost" onclick="restoreLastSave()" style="color:#E8A020;">↩️ Restore Last Save</button>
       <label class="btn btn-ghost" style="display:inline-flex;align-items:center;cursor:pointer;margin:0;text-transform:none;letter-spacing:0">
         ⬆ Import JSON
         <input type="file" accept=".json" style="display:none" onchange="importConfig(this)">
@@ -1289,6 +1290,22 @@ async function saveConfig() {
   // Refresh preview
   const iframe = document.getElementById('preview-iframe');
   if (iframe) iframe.src = iframe.src;
+}
+
+async function restoreLastSave() {
+  try {
+    const res = await fetch('http://localhost:8765/latest-backup');
+    const json = await res.json();
+    if (!json.ok) { alert('No backups found.'); return; }
+    const ts = json.timestamp.replace(/(\d{4})(\d{2})(\d{2})-(\d{2})(\d{2})(\d{2})/, '$1-$2-$3 $4:$5:$6');
+    if (!confirm(`Restore save from ${ts}?\n\nThis will replace current data.`)) return;
+    config = json.config;
+    await saveConfig();
+    renderAll();
+    showStatus(`✅ Restored from ${ts}`);
+  } catch(e) {
+    showStatus('⚠️ Restore failed: ' + e.message, 5000, true);
+  }
 }
 
 function downloadConfig() {
