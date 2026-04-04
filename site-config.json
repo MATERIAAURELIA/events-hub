@@ -89,7 +89,7 @@
       "contactEmail": "",
       "contactPhone": "",
       "desc": "An interactive workshop exploring the foundations of sound healing.",
-      "img": "",
+      "img": "photos/april-sound-foundations.png",
       "imgCrop": "50% 16%"
     },
     {
@@ -226,5 +226,11 @@
       "name": "Summerside",
       "area": ""
     }
-  }
+  },
+  "photoLibrary": [
+    {
+      "url": "photos/april-sound-foundations.png",
+      "name": "April Sound Foundations"
+    }
+  ]
 }
