@@ -698,7 +698,7 @@ function renderList(){
     const spots=ev.spots?`<div class="spots-badge">${ev.spots} spot${ev.spots>1?'s':''}!</div>`:'';
     const thumbClass=showThumb?'':'hidden';
     const barClass=showBar?'':'hidden';
-    const venueHtml=showVenue?`<div class="event-venue">📍 ${vn}${venue.area?' · '+venue.area:''}</div>`:'';
+    const venueHtml=showVenue?`<div class="event-venue">📍 ${vn}${venue.area?' - '+venue.area:''}</div>`:'';
     const imgSrc=ev.img||type.img;
     const cropPos=ev.imgCrop||'center center';
     const thumbSrc=imgSrc?toThumb(imgSrc):null;
@@ -723,7 +723,7 @@ function renderList(){
         <div class="event-date-divider"></div>
         <div class="event-info-col">
           <div class="event-title">${ev.title}</div>
-          ${showVenue?`<div class="event-venue">📍 ${vn}${!ev.venueOverride&&venue.area?' · '+venue.area:''}</div>`:''}
+          ${showVenue?`<div class="event-venue">📍 ${vn}${!ev.venueOverride&&venue.area?' - '+venue.area:''}</div>`:''}
         </div>
       </div>
       <button class="btn-share" onclick="event.stopPropagation();shareEv('${ev.title}','${ev.date}','${ev.booking}')" title="Share"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 002 2h12a2 2 0 002-2v-7"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></button>
@@ -737,7 +737,7 @@ function showPopup(id){
   const vn=ev.venueOverride||venue.name;
   document.getElementById('popup-content').innerHTML=`
     <div class="p-title">${ev.title}</div>
-    <div class="p-meta">📅 ${fDay(ev.date)} · ${fTime(ev.time)}-${fTime(ev.endTime)}<br>📍 ${vn}${!ev.venueOverride&&venue.area?' · '+venue.area:''}<br>🎟 $${ev.price}${ev.spots?'<br>🔥 '+ev.spots+' spot'+(ev.spots>1?'s':'')+' left!':''}</div>
+    <div class="p-meta">📅 ${fDay(ev.date)} · ${fTime(ev.time)}-${fTime(ev.endTime)}<br>📍 ${vn}${!ev.venueOverride&&venue.area?' - '+venue.area:''}<br>🎟 $${ev.price}${ev.spots?'<br>🔥 '+ev.spots+' spot'+(ev.spots>1?'s':'')+' left!':''}</div>
     <div class="p-desc">${ev.desc||''}</div>
     ${ev.booking
       ? `<a class="btn-book" href="${ev.booking}" target="_blank" onclick="trackClick('${ev.id}','${ev.title.replace(/'/g,"\\'")}','${ev.booking}')">Book Now →</a>`

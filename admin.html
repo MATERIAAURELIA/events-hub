@@ -1409,6 +1409,10 @@ function closeModal(id) { document.getElementById(id).classList.remove('show'); 
 document.querySelectorAll('.modal-overlay').forEach(el => {
   el.onclick = e => { if (e.target === el) el.classList.remove('show'); };
 });
+// Prevent clicks inside modal content from closing the modal
+document.querySelectorAll('.modal-overlay > .modal').forEach(el => {
+  el.onclick = e => e.stopPropagation();
+});
 
 // Close modals on Escape key
 document.addEventListener('keydown', e => {
