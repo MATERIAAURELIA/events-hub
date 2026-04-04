@@ -121,7 +121,7 @@
       "contactPhone": "",
       "desc": "Special Sounds and Artist Collaboration for our Spring SoundBath at Roots.  Featuring Marcus Fung & Brock Fritz",
       "venueOverride": "Roots on Whyte - 8135 102 St NW, Edmonton, - 3rd Floor Conference Room",
-      "img": ""
+      "img": "photos/spring-soundbath-april.png"
     },
     {
       "id": "ev-466989",
@@ -137,7 +137,7 @@
       "contactPhone": "",
       "desc": "Join us for a special spring location of our popular drumming circle.\nAll instruments included, no musical experience needed.\nSecond portion of the evening is the Rhythm Cradle, a community sound healing experience. ",
       "venueOverride": "8135 102 St NW, Edmonton, - 3rd Floor Conference Room",
-      "img": ""
+      "img": "photos/spring-drumming.png"
     },
     {
       "id": "ev-897065",
@@ -153,7 +153,7 @@
       "contactPhone": "",
       "desc": "Special Sounds and Artist Collaboration for our Spring SoundBath at Roots.  Featuring Marcus Fung & Brock Fritz",
       "venueOverride": "8135 102 St NW, Edmonton, - 3rd Floor Conference Room",
-      "img": ""
+      "img": "photos/spring-soundbath-april.png"
     }
   ],
   "eventTypes": {
@@ -231,6 +231,14 @@
     {
       "url": "photos/april-sound-foundations.png",
       "name": "April Sound Foundations"
+    },
+    {
+      "url": "photos/spring-drumming.png",
+      "name": "Spring Drumming"
+    },
+    {
+      "url": "photos/spring-soundbath-april.png",
+      "name": "Spring SoundBath April"
     }
   ]
 }
