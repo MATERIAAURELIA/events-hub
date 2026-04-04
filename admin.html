@@ -623,7 +623,7 @@ let sortMode = 'date'; // 'date' or 'custom'
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 // Resolve server base — works from localhost AND Tailscale
-const SERVER_BASE = 'http://' + (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'localhost' : '100.121.154.95') + ':8765';
+const SERVER_BASE = 'http://' + (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'localhost' : '100.121.154.95') + ':8888/projects/events-hub';
 
 async function loadConfig() {
   let loaded = false;
@@ -656,6 +656,9 @@ async function loadConfig() {
   }
 
   // 2b. If server loaded OK, check if localStorage has unsaved changes from a crash
+  // Always keep server's eventTypes/venues as source of truth
+  const serverTypes = config.eventTypes || {};
+  const serverVenues = config.venues || {};
   if (loaded) {
     const cached = localStorage.getItem('events-hub-config');
     const cachedTs = localStorage.getItem('events-hub-config-ts');
@@ -669,7 +672,12 @@ async function loadConfig() {
           const recover = confirm(`⚠️ Unsaved local data detected (${cacheCount} events vs ${serverCount} on server, from ${cachedTs}).
 
 Recover local version?`);
-          if (recover) { config = cachedData; }
+          if (recover) {
+            config = cachedData;
+            // Always restore server eventTypes/venues (localStorage often loses these)
+            if (Object.keys(serverTypes).length > 0) config.eventTypes = serverTypes;
+            if (Object.keys(serverVenues).length > 0) config.venues = serverVenues;
+          }
         }
         // Clear the fallback cache once we've handled it
         localStorage.removeItem('events-hub-config-ts');
@@ -1288,12 +1296,12 @@ async function saveConfig() {
   // localStorage save disabled — server (8765) is source of truth
   // localStorage.setItem('events-hub-config', JSON.stringify(config));
 
-  // PUT to server (5s timeout — server is source of truth)
+  // POST to API server (5s timeout — source of truth)
   try {
     const controller = new AbortController();
     const tid = setTimeout(() => controller.abort(), 5000);
-    const res = await fetch(SERVER_BASE + '/site-config.json', {
-      method: 'PUT',
+    const res = await fetch('http://localhost:8101/api/save-events-config', {
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(config, null, 2),
       signal: controller.signal
@@ -1397,12 +1405,22 @@ document.querySelectorAll('.tab').forEach(t => t.onclick = () => {
   document.querySelectorAll('.tab-content').forEach(x => x.classList.remove('active'));
   t.classList.add('active');
   document.getElementById('tab-' + t.dataset.tab).classList.add('active');
+  localStorage.setItem('admin-last-tab', t.dataset.tab);
   if (t.dataset.tab === 'stats') renderStats();
   if (t.dataset.tab === 'json') loadJsonEditor();
   if (t.dataset.tab === 'preview') {
     document.getElementById('preview-iframe').src = 'index.html?v=' + Date.now();
   }
 });
+
+// Restore last active tab
+(function() {
+  const lastTab = localStorage.getItem('admin-last-tab');
+  if (lastTab) {
+    const btn = document.querySelector('.tab[data-tab="' + lastTab + '"]');
+    if (btn) btn.click();
+  }
+})();
 
 // ============ CROP TOOL ============
 let cropState = { x: 0, y: 0, zoom: 100, dragging: false, startX: 0, startY: 0, origX: 0, origY: 0 };
@@ -1582,12 +1600,30 @@ document.getElementById('lib-upload').onchange = function() {
 document.getElementById('ev-img-file').onchange = function() {
   if (!this.files[0]) return;
   const file = this.files[0];
-  // For now, just set a placeholder path and tell user to copy file manually
   const filename = file.name.toLowerCase().replace(/\s+/g, '-');
-  const path = 'photos/' + filename;
-  document.getElementById('ev-img').value = path;
-  updateEvThumbPreview({ img: path });
-  showStatus(`Upload ${filename} to photos/ folder manually`, 5000);
+  const r = new FileReader();
+  r.onload = async e => {
+    showStatus('Uploading photo...');
+    try {
+      const res = await fetch('http://localhost:8101/api/upload-event-photo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filename, data: e.target.result })
+      });
+      const json = await res.json();
+      if (json.ok) {
+        const path = json.msg; // 'photos/filename.jpg'
+        document.getElementById('ev-img').value = path;
+        updateEvThumbPreview({ img: path });
+        showStatus('Photo uploaded ✓');
+      } else {
+        showStatus('Upload failed: ' + json.error, 5000, true);
+      }
+    } catch(e) {
+      showStatus('Upload error: ' + e.message, 5000, true);
+    }
+  };
+  r.readAsDataURL(file);
 };
 
 const origLinkThumbHandler = document.getElementById('link-thumb-file').onchange;
