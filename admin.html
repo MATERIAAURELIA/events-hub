@@ -1234,15 +1234,42 @@ function saveSiteSettings() {
   saveConfig();
 }
 
-// Event thumb file upload
-document.getElementById('ev-img-file').onchange = function() {
+// Event thumb file upload — uploads to server, stores path only
+document.getElementById('ev-img-file').onchange = async function() {
   if (!this.files[0]) return;
+  const file = this.files[0];
+  const maxSize = 500 * 1024; // 500KB
+  if (file.size > maxSize) {
+    alert('Image too large (' + Math.round(file.size/1024) + 'KB). Max 500KB. Use a smaller JPG.');
+    this.value = '';
+    return;
+  }
+  // Read as base64 for upload to server
   const r = new FileReader();
-  r.onload = e => {
-    document.getElementById('ev-img').value = e.target.result;
-    updateEvThumbPreview({ img: e.target.result });
+  r.onload = async (e) => {
+    const filename = file.name.toLowerCase().replace(/[^a-z0-9._-]/g, '-');
+    try {
+      const res = await fetch('http://localhost:8101/api/upload-event-photo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filename, data: e.target.result })
+      });
+      if (!res.ok) throw new Error('Upload failed: ' + res.status);
+      const result = await res.json();
+      if (result.ok) {
+        const photoPath = result.msg; // returns 'photos/filename.jpg'
+        document.getElementById('ev-img').value = photoPath;
+        updateEvThumbPreview({ img: photoPath });
+        showStatus('Photo uploaded ✓ (' + photoPath + ')');
+      } else {
+        throw new Error(result.error || 'Unknown error');
+      }
+    } catch (err) {
+      alert('Upload failed: ' + err.message + '\nFalling back to URL input.');
+      console.error('Photo upload error:', err);
+    }
   };
-  r.readAsDataURL(this.files[0]);
+  r.readAsDataURL(file);
 };
 document.getElementById('ev-img').oninput = function() {
   updateEvThumbPreview({ img: this.value });
@@ -1578,53 +1605,45 @@ function deletePhoto(i) {
   saveConfig();
 }
 
-function addToLibrary(dataUrl, name) {
+function addToLibrary(urlOrPath, name) {
   if (!config.photoLibrary) config.photoLibrary = [];
-  config.photoLibrary.push({ data: dataUrl, name: name || 'Photo ' + (config.photoLibrary.length + 1) });
+  config.photoLibrary.push({ url: urlOrPath, name: name || 'Photo ' + (config.photoLibrary.length + 1) });
   saveConfig();
 }
 
 document.getElementById('lib-upload').onchange = function() {
   Array.from(this.files).forEach(file => {
+    if (file.size > 500 * 1024) {
+      showStatus('⚠️ ' + file.name + ' too large (' + Math.round(file.size/1024) + 'KB). Max 500KB.', 5000, true);
+      return;
+    }
     const r = new FileReader();
-    r.onload = e => {
-      addToLibrary(e.target.result, file.name.replace(/\.[^.]+$/, ''));
-      renderPhotoGrid();
+    r.onload = async (e) => {
+      const filename = file.name.toLowerCase().replace(/[^a-z0-9._-]/g, '-');
+      try {
+        const res = await fetch('http://localhost:8101/api/upload-event-photo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ filename, data: e.target.result })
+        });
+        const json = await res.json();
+        if (json.ok) {
+          addToLibrary('photos/' + filename, file.name.replace(/\.[^.]+$/, ''));
+          renderPhotoGrid();
+          showStatus('Photo uploaded: ' + filename);
+        } else {
+          showStatus('Upload failed: ' + (json.error || 'unknown'), 5000, true);
+        }
+      } catch (err) {
+        showStatus('Upload error: ' + err.message, 5000, true);
+      }
     };
     r.readAsDataURL(file);
   });
   this.value = '';
 };
 
-// Override: save event images as file paths, not base64
-document.getElementById('ev-img-file').onchange = function() {
-  if (!this.files[0]) return;
-  const file = this.files[0];
-  const filename = file.name.toLowerCase().replace(/\s+/g, '-');
-  const r = new FileReader();
-  r.onload = async e => {
-    showStatus('Uploading photo...');
-    try {
-      const res = await fetch('http://localhost:8101/api/upload-event-photo', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ filename, data: e.target.result })
-      });
-      const json = await res.json();
-      if (json.ok) {
-        const path = json.msg; // 'photos/filename.jpg'
-        document.getElementById('ev-img').value = path;
-        updateEvThumbPreview({ img: path });
-        showStatus('Photo uploaded ✓');
-      } else {
-        showStatus('Upload failed: ' + json.error, 5000, true);
-      }
-    } catch(e) {
-      showStatus('Upload error: ' + e.message, 5000, true);
-    }
-  };
-  r.readAsDataURL(file);
-};
+// (duplicate ev-img-file handler removed — already handled above with size limit + server upload)
 
 const origLinkThumbHandler = document.getElementById('link-thumb-file').onchange;
 document.getElementById('link-thumb-file').onchange = function() {
