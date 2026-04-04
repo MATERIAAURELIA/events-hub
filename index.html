@@ -692,7 +692,7 @@ function renderList(){
   const showBar=document.getElementById('s-show-bar').checked;
   
   el.innerHTML=getEvents().map(ev=>{
-    const type=EVENT_TYPES[ev.type];
+    const type=EVENT_TYPES[ev.type]||{name:'Event',color:'#888',icon:'🔔',img:''};
     const venue=VENUES[ev.venue]||{name:'',area:''};
     const vn=ev.venueOverride||venue.name;
     const spots=ev.spots?`<div class="spots-badge">${ev.spots} spot${ev.spots>1?'s':''}!</div>`:'';
