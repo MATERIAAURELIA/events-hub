@@ -63,6 +63,22 @@
       "desc": "Special Sounds and Artist Collaboration for our Spring SoundBath at Roots.  Featuring Marcus Fung & Brock Fritz",
       "venueOverride": "8135 102 St NW, Edmonton, - 3rd Floor Conference Room",
       "img": "photos/spring-soundbath-april.png"
+    },
+    {
+      "id": "ev-629232",
+      "type": "deep-gong",
+      "title": "Deep Resonance - Gong Immersion",
+      "date": "2026-04-24",
+      "time": "18:30",
+      "endTime": "",
+      "venue": "home",
+      "price": 60,
+      "booking": "https://EarthHarmony.as.me/?appointmentType=91380261",
+      "contactEmail": "earthharmonysoundhealing@gmail.com",
+      "contactPhone": "780-257-6428",
+      "desc": "6 Large Planetary Gongs, A Cozy home environment with all thick mats, sheepskins, blankets and bolsters and tea provided.",
+      "venueOverride": "Terwilligar",
+      "img": "photos/gong-immersion.png"
     }
   ],
   "eventTypes": {
