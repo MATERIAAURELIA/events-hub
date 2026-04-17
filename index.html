@@ -740,7 +740,7 @@ function showPopup(id){
     <div class="p-meta">📅 ${fDay(ev.date)} · ${fTime(ev.time)}-${fTime(ev.endTime)}<br>📍 ${vn}${!ev.venueOverride&&venue.area?' - '+venue.area:''}<br>🎟 $${ev.price}${ev.spots?'<br>🔥 '+ev.spots+' spot'+(ev.spots>1?'s':'')+' left!':''}</div>
     <div class="p-desc">${ev.desc||''}</div>
     ${ev.booking
-      ? `<a class="btn-book" href="${ev.booking}" target="_blank" onclick="trackClick('${ev.id}','${ev.title.replace(/'/g,"\\'")}','${ev.booking}')">Book Now →</a>`
+      ? `<a class="btn-book" href="${ev.booking}" onclick="trackClick('${ev.id}','${ev.title.replace(/'/g,"\\'")}','${ev.booking}')">Book Now →</a>`
       : ev.contactEmail
         ? `<a class="btn-book" href="mailto:${ev.contactEmail}">Email to Register →</a>`
         : ev.contactPhone
@@ -751,8 +751,8 @@ function showPopup(id){
   const pop=document.getElementById('popup');
   pop.classList.add('show');
   document.getElementById('overlay').classList.add('show');
-  // Scroll page to top so fixed popup is visible (not buried below fold)
-  requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'smooth'}));
+  // Scroll page to top so fixed popup is visible on mobile
+  window.scrollTo(0,0);
 }
 function changeLogo(input){if(!input.files[0])return;const r=new FileReader();r.onload=e=>{const av=document.querySelector('.avatar');av.innerHTML=`<img src="${e.target.result}" alt="Logo">`;SyncStore.set('eh-logo',{data:e.target.result});localStorage.setItem('eh-logo',e.target.result);};r.readAsDataURL(input.files[0]);}
 function copyPageLink(){navigator.clipboard.writeText(window.location.href);showToast('Link copied!');}
@@ -792,7 +792,7 @@ function showDayPopup(ds){
   const pop=document.getElementById('popup');
   pop.classList.add('show');
   document.getElementById('overlay').classList.add('show');
-  requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'smooth'}));
+  window.scrollTo(0,0);
 }
 document.getElementById('cal-prev').onclick=()=>{calM--;if(calM<0){calM=11;calY--;}renderCal();};
 document.getElementById('cal-next').onclick=()=>{calM++;if(calM>11){calM=0;calY++;}renderCal();};
