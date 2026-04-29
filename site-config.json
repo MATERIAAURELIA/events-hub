@@ -22,7 +22,7 @@
       "title": "Sound Foundations Playground \u2014 Gong Focus",
       "date": "2026-05-17",
       "time": "10:00",
-      "endTime": "12:30",
+      "endTime": "12:00",
       "venue": "home",
       "price": 65,
       "booking": "https://EarthHarmony.as.me/?appointmentType=92543400",
@@ -67,7 +67,7 @@
     {
       "id": "ev-gong-may",
       "type": "deep-gong",
-      "title": "Deep Resonance \u2014 Gong Immersion",
+      "title": "Deep Resonance Gong Immersion",
       "date": "2026-05-29",
       "time": "18:30",
       "endTime": "20:00",
@@ -164,10 +164,6 @@
     {
       "url": "photos/community-sound-bath.png",
       "name": "Community Sound Bath"
-    },
-    {
-      "url": "photos/ctv-news.png",
-      "name": "CTV News"
     },
     {
       "url": "photos/drum-circle-banner-2160x1080.jpg",
