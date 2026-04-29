@@ -14,7 +14,7 @@
       "contactPhone": "780-257-6428",
       "desc": "A special sound bath honoring the Divine Mother \u2014 blessings of unconditional love, nurturing, benevolence and gratitude. Bring your mother, grandmother, daughter, or anyone you hold dear. 8 spots only.",
       "venueOverride": "Terwillegar",
-      "img": "photos/mothers-day-sound-bath-01.jpg"
+      "img": "photos/blank-templates/divine-mother-soundbath-blank.png"
     },
     {
       "id": "ev-sound-foundations-may",
@@ -46,7 +46,7 @@
       "contactPhone": "",
       "desc": "Community Sound Bath at Roots on Whyte. All mats and blankets welcome. Think cozy and thick!",
       "venueOverride": "Roots on Whyte - 8135 102 St NW, Edmonton - 3rd Floor Conference Room",
-      "img": "photos/may-sound-bath-.jpg"
+      "img": "photos/blank-templates/community-soundbath-blank.png"
     },
     {
       "id": "ev-b2b-may-2",
@@ -62,7 +62,7 @@
       "contactPhone": "",
       "desc": "Community Sound Bath at Roots on Whyte. All mats and blankets welcome. Think cozy and thick!",
       "venueOverride": "Roots on Whyte - 8135 102 St NW, Edmonton - 3rd Floor Conference Room",
-      "img": "photos/may-sound-bath-.jpg"
+      "img": "photos/blank-templates/community-soundbath-blank.png"
     },
     {
       "id": "ev-gong-may",
@@ -76,9 +76,9 @@
       "booking": "https://EarthHarmony.as.me/?appointmentType=92543227",
       "contactEmail": "earthharmonysoundhealing@gmail.com",
       "contactPhone": "780-257-6428",
-      "desc": "6 Large Planetary Gongs. A cozy home environment with all thick mats, sheepskins, blankets and bolsters and tea provided.",
+      "desc": "6 Large Planetary Gongs. A cozy home environment with all thick mats, sheepskins, blankets and bolsters and tea provided. 8 Spots.",
       "venueOverride": "Terwillegar",
-      "img": "photos/gong-immersion.png"
+      "img": "photos/blank-templates/gong-immersion-blank.png"
     }
   ],
   "eventTypes": {
