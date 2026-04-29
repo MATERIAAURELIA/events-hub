@@ -280,7 +280,7 @@
   /* POPUP */
   .popup-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 99; }
   .popup-overlay.show { display: block; }
-  .popup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); background: #fff; border-radius: 20px; padding: 20px; max-width: 340px; width: 90%; z-index: 100; box-shadow: 0 20px 60px rgba(0,0,0,0.3); color: #000; }
+  .popup { display: none; position: fixed; top: 10vh; left: 50%; transform: translateX(-50%); background: #fff; border-radius: 20px; padding: 20px; max-width: 340px; width: 90%; z-index: 100; box-shadow: 0 20px 60px rgba(0,0,0,0.3); color: #000; max-height: 80vh; overflow-y: auto; }
   .popup.show { display: block; }
   .popup .p-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 4px; font-family: var(--heading-font); }
   .popup .p-meta { font-size: 0.9rem; color: #555; margin-bottom: 10px; line-height: 1.5; }
