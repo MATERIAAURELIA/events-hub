@@ -206,6 +206,11 @@
     color: rgba(0,0,0,0.45); font-weight: 500; margin-top: 1px;
   }
 
+  .event-venue-row {
+    font-size: 0.82rem; color: rgba(0,0,0,0.45); font-weight: 500;
+    padding: 4px 12px 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
   .btn-share {
     width: 28px; height: 28px; flex-shrink: 0; margin-left: 6px;
     background: none; border: none; cursor: pointer;
@@ -698,10 +703,6 @@ function renderList(){
     const spots=ev.spots?`<div class="spots-badge">${ev.spots} spot${ev.spots>1?'s':''}!</div>`:'';
     const thumbClass=showThumb?'':'hidden';
     const barClass=showBar?'':'hidden';
-    const isMobile=window.innerWidth<500;
-    const venueShort=venue.name||vn.split('-')[0].trim();
-    const venueDisplay=isMobile?venueShort:vn+(venue.area&&!ev.venueOverride?' - '+venue.area:'');
-    const venueHtml=showVenue?`<div class="event-venue">📍 ${venueDisplay}</div>`:'';
     const imgSrc=ev.img||type.img;
     const cropPos=ev.imgCrop||'center center';
     const thumbSrc=imgSrc?toThumb(imgSrc):null;
@@ -712,6 +713,9 @@ function renderList(){
     const dayName=DAYS[dateObj.getDay()];
     const monthDay=MONTHS[dateObj.getMonth()]+' '+dateObj.getDate();
     
+    const isMobile=window.innerWidth<500;
+    const venueShort=venue.name||vn.split('-')[0].trim();
+    const venueDisplay=isMobile?venueShort:vn+(venue.area&&!ev.venueOverride?' - '+venue.area:'');
     return`<div class="link-btn" onclick="showPopup('${ev.id}')">
       ${spots}
       <div class="type-bar ${barClass}" style="background:${type.color}"></div>
@@ -726,9 +730,9 @@ function renderList(){
         <div class="event-date-divider"></div>
         <div class="event-info-col">
           <div class="event-title">${ev.title}</div>
-          ${showVenue?`<div class="event-venue">📍 ${vn}${!ev.venueOverride&&venue.area?' - '+venue.area:''}</div>`:''}
         </div>
       </div>
+      ${showVenue?`<div class="event-venue-row">📍 ${venueDisplay}</div>`:''}
       <button class="btn-share" onclick="event.stopPropagation();shareEv('${ev.title}','${ev.date}','${ev.booking}')" title="Share"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 002 2h12a2 2 0 002-2v-7"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></button>
     </div>`;
   }).join('');
