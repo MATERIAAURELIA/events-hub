@@ -12,14 +12,14 @@
       "booking": "https://EarthHarmony.as.me/?appointmentType=91380261",
       "contactEmail": "earthharmonysoundhealing@gmail.com",
       "contactPhone": "780-257-6428",
-      "desc": "A special sound bath honoring the Divine Mother — blessings of unconditional love, nurturing, benevolence and gratitude. Bring your mother, grandmother, daughter, or anyone you hold dear. 8 spots only.",
+      "desc": "A special sound bath honoring the Divine Mother \u2014 blessings of unconditional love, nurturing, benevolence and gratitude. Bring your mother, grandmother, daughter, or anyone you hold dear. 8 spots only.",
       "venueOverride": "Terwillegar",
-      "img": "photos/divine-mother-soundbath.jpg"
+      "img": "photos/mothers-day-sound-bath-01.jpg"
     },
     {
       "id": "ev-sound-foundations-may",
       "type": "sound-foundations",
-      "title": "Sound Foundations Playground \u2014 Singing Bowl Workshop",
+      "title": "Sound Foundations Playground \u2014 Intro to Gong Workshop",
       "date": "2026-05-17",
       "time": "10:00",
       "endTime": "12:30",
@@ -46,7 +46,7 @@
       "contactPhone": "",
       "desc": "Community Sound Bath at Roots on Whyte. All mats and blankets welcome. Think cozy and thick!",
       "venueOverride": "Roots on Whyte - 8135 102 St NW, Edmonton - 3rd Floor Conference Room",
-      "img": "photos/spring-soundbath-april.png"
+      "img": "photos/may-sound-bath-.jpg"
     },
     {
       "id": "ev-b2b-may-2",
@@ -62,7 +62,7 @@
       "contactPhone": "",
       "desc": "Community Sound Bath at Roots on Whyte. All mats and blankets welcome. Think cozy and thick!",
       "venueOverride": "Roots on Whyte - 8135 102 St NW, Edmonton - 3rd Floor Conference Room",
-      "img": "photos/spring-soundbath-april.png"
+      "img": "photos/may-sound-bath-.jpg"
     },
     {
       "id": "ev-gong-may",
@@ -212,6 +212,14 @@
     {
       "url": "photos/yoga-sound.png",
       "name": "Yoga Sound"
+    },
+    {
+      "url": "photos/mothers-day-sound-bath-01.jpg",
+      "name": "Mothers Day Sound Bath 01"
+    },
+    {
+      "url": "photos/may-sound-bath-.jpg",
+      "name": "May Sound Bath "
     }
   ]
 }
