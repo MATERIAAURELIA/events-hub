@@ -384,9 +384,9 @@
     .event-date-col .ev-date { font-size: 1.1rem; }
     .event-date-col .ev-time { font-size: 0.85rem; }
     .event-date-col .ev-price { font-size: 0.85rem; }
-    .event-info-col .event-title { font-size: 1.05rem; }
-    .event-info-col .event-venue { font-size: 0.88rem; }
-    .btn-inner { gap: 6px; }
+    .event-info-col .event-title { font-size: 0.95rem; -webkit-line-clamp: 3; }
+    .event-info-col .event-venue { font-size: 0.78rem; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+    .btn-inner { gap: 4px; }
     .btn-share { width: 24px; height: 24px; margin-left: 2px; }
     .btn-share svg { width: 12px; height: 12px; }
     .filters { gap: 4px; }
@@ -698,7 +698,10 @@ function renderList(){
     const spots=ev.spots?`<div class="spots-badge">${ev.spots} spot${ev.spots>1?'s':''}!</div>`:'';
     const thumbClass=showThumb?'':'hidden';
     const barClass=showBar?'':'hidden';
-    const venueHtml=showVenue?`<div class="event-venue">📍 ${vn}${venue.area?' - '+venue.area:''}</div>`:'';
+    const isMobile=window.innerWidth<500;
+    const venueShort=venue.name||vn.split('-')[0].trim();
+    const venueDisplay=isMobile?venueShort:vn+(venue.area&&!ev.venueOverride?' - '+venue.area:'');
+    const venueHtml=showVenue?`<div class="event-venue">📍 ${venueDisplay}</div>`:'';
     const imgSrc=ev.img||type.img;
     const cropPos=ev.imgCrop||'center center';
     const thumbSrc=imgSrc?toThumb(imgSrc):null;
