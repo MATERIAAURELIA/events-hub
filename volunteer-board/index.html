@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Earth Harmony — Team Service</title>
+<style>
+  :root {
+    --moss: #4a5d3a;
+    --moss-deep: #2f3a23;
+    --cream: #f5efdf;
+    --yellow: #d4a24e;
+    --yellow-deep: #b88534;
+    --warm: #8b7355;
+    --text: #2a2a1f;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    background: var(--cream);
+    color: var(--text);
+    padding: 24px 16px 64px;
+    min-height: 100vh;
+    line-height: 1.55;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+
+  header {
+    background: var(--moss-deep);
+    color: var(--cream);
+    padding: 28px 24px;
+    border-radius: 12px;
+    margin-bottom: 18px;
+    text-align: center;
+  }
+  header h1 { font-size: 26px; font-weight: 400; letter-spacing: 0.02em; margin-bottom: 6px; }
+  header .subtitle { color: var(--yellow); font-size: 13px; font-style: italic; letter-spacing: 0.06em; }
+
+  .intro {
+    background: white;
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin-bottom: 18px;
+    font-size: 14px;
+    color: var(--warm);
+    border-left: 3px solid var(--yellow);
+  }
+
+  /* Month navigation */
+  .month-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 14px 18px;
+    border-radius: 8px 8px 0 0;
+    margin-top: 8px;
+  }
+  .month-nav h2 {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--moss-deep);
+    letter-spacing: 0.02em;
+  }
+  .month-nav button {
+    background: var(--cream);
+    border: 1px solid #d4d0bf;
+    color: var(--moss-deep);
+    padding: 6px 14px;
+    font-family: inherit;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .month-nav button:hover { background: var(--yellow); color: white; border-color: var(--yellow); }
+
+  /* Calendar grid */
+  .calendar {
+    background: white;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 2px 10px rgba(74, 93, 58, 0.06);
+    padding: 12px;
+    margin-bottom: 16px;
+  }
+  .weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+  .weekdays div {
+    text-align: center;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--warm);
+    padding: 6px 0;
+    font-weight: 600;
+  }
+  .days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+  .day {
+    min-height: 88px;
+    background: #fafaf2;
+    border-radius: 4px;
+    padding: 6px;
+    font-size: 12px;
+    color: var(--text);
+    overflow: hidden;
+    position: relative;
+  }
+  .day.other-month { opacity: 0.35; }
+  .day.today { background: #fff8e7; box-shadow: inset 0 0 0 2px var(--yellow); }
+  .day .num { font-weight: 600; color: var(--moss-deep); margin-bottom: 4px; }
+  .day .ev {
+    background: var(--moss);
+    color: var(--cream);
+    padding: 3px 6px;
+    border-radius: 3px;
+    margin-bottom: 2px;
+    cursor: pointer;
+    font-size: 11px;
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    transition: filter 0.15s;
+  }
+  .day .ev:hover { filter: brightness(1.15); }
+  .day .ev.type-drum { background: #a85a4a; }    /* terra cotta — drumming */
+  .day .ev.type-sound { background: #4a5d3a; }   /* moss — sound bath */
+  .day .ev.type-disco { background: #6b5a8e; }   /* purple — silent disco / movement */
+  .day .ev.type-plant { background: #5d7a3a; }   /* fresh green — plant / nature */
+  .day .ev.type-other { background: #8b7355; }   /* warm brown — other */
+  .day .ev.hidden-event { background: #b8b0a0 !important; }
+
+  /* Legend */
+  .legend { display:flex; gap:14px; flex-wrap:wrap; justify-content:center; padding:8px 12px; font-size:11px; color:var(--warm); }
+  .legend-item { display:flex; align-items:center; gap:5px; }
+  .legend-dot { width:10px; height:10px; border-radius:2px; display:inline-block; }
+
+  /* List view */
+  .list-section {
+    background: white;
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin-top: 18px;
+    box-shadow: 0 2px 10px rgba(74, 93, 58, 0.06);
+  }
+  .list-section h3 {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--moss-deep);
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+  .list-event {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0e9d4;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .list-event:last-child { border-bottom: none; }
+  .list-event:hover { background: #fafaf2; }
+  .list-event .type-dot {
+    width: 8px;
+    height: 60px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .list-event .date-block {
+    flex-shrink: 0;
+    width: 56px;
+    text-align: center;
+    padding-top: 2px;
+  }
+  .list-event .date-block .month {
+    font-size: 10px;
+    text-transform: uppercase;
+    color: var(--yellow-deep);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+  }
+  .list-event .date-block .day-num {
+    font-size: 24px;
+    color: var(--moss-deep);
+    font-weight: 500;
+    line-height: 1;
+  }
+  .list-event .date-block .weekday {
+    font-size: 10px;
+    color: var(--warm);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 2px;
+  }
+  .list-event .body { flex: 1; min-width: 0; }
+  .list-event .body .title {
+    font-size: 15px;
+    color: var(--moss-deep);
+    font-weight: 500;
+    margin-bottom: 3px;
+  }
+  .list-event .body .meta { font-size: 12px; color: var(--warm); font-style: italic; }
+  .list-event .body .signup-count {
+    display: inline-block;
+    background: var(--yellow);
+    color: white;
+    font-size: 11px;
+    padding: 1px 7px;
+    border-radius: 10px;
+    margin-left: 6px;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .list-event.hidden-event { opacity: 0.45; }
+  .list-empty { color: var(--warm); font-style: italic; padding: 12px 0; text-align: center; }
+  .day .ev .count { color: var(--yellow); font-weight: 600; margin-left: 4px; }
+
+  /* Modal */
+  .modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(47, 58, 35, 0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: white;
+    border-radius: 12px;
+    max-width: 540px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 28px 28px 24px;
+    position: relative;
+  }
+  .modal .close {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: var(--warm);
+    padding: 4px 8px;
+  }
+  .modal .close:hover { color: var(--moss-deep); }
+  .modal .date {
+    font-size: 12px;
+    color: var(--yellow-deep);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .modal h2 {
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--moss-deep);
+    margin-bottom: 8px;
+    padding-right: 30px;
+  }
+  .modal .meta { font-size: 13px; color: var(--warm); font-style: italic; margin-bottom: 14px; }
+  .modal .notes {
+    font-size: 14px;
+    margin: 14px 0;
+    padding: 14px 16px;
+    background: #fafaf2;
+    border-radius: 4px;
+    color: var(--text);
+    white-space: pre-wrap;
+  }
+  .modal .notes:empty { display: none; }
+  .modal .signups-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--moss);
+    margin: 18px 0 6px;
+    font-weight: 600;
+  }
+  .modal .signups {
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 12px;
+    min-height: 18px;
+  }
+  .modal .signups .empty { color: #b8b0a0; font-style: italic; }
+  .modal .signups .person { display: inline-block; background: #f0e9d4; padding: 3px 10px; border-radius: 12px; margin: 2px 4px 2px 0; font-size: 13px; }
+
+  .signup-form {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .signup-form input {
+    flex: 1;
+    padding: 10px 12px;
+    border: 1px solid #d4d0bf;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 14px;
+    background: #fafaf2;
+    color: var(--text);
+  }
+  .signup-form input:focus { outline: none; border-color: var(--moss); }
+  .signup-form button {
+    background: var(--moss);
+    color: var(--cream);
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-family: inherit;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+  }
+  .signup-form button:hover { background: var(--moss-deep); }
+  .signup-form button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* Admin */
+  .admin-toggle {
+    text-align: center;
+    margin: 18px 0 8px;
+    font-size: 12px;
+    color: var(--warm);
+  }
+  .admin-toggle a { color: var(--warm); cursor: pointer; text-decoration: underline; }
+  .admin-controls { display: none; background: #fff8e7; border-radius: 6px; padding: 14px; margin-top: 14px; border: 1px dashed var(--yellow); }
+  body.admin .admin-controls { display: block; }
+  body.admin #admin-add-bar { display: block !important; }
+  .admin-controls label { display: block; font-size: 12px; color: var(--warm); margin-bottom: 4px; }
+  .admin-controls textarea {
+    width: 100%; min-height: 70px; padding: 8px; font-family: inherit; font-size: 13px;
+    border: 1px solid #d4d0bf; border-radius: 4px; resize: vertical;
+  }
+  .admin-controls .row { display: flex; gap: 8px; margin-top: 8px; align-items: center; }
+  .admin-controls button {
+    background: var(--moss); color: var(--cream); border: none; padding: 6px 14px;
+    font-size: 12px; border-radius: 4px; cursor: pointer; font-family: inherit;
+  }
+  .admin-controls .hide-btn { background: #a85a4a; }
+  .admin-controls .saved { color: var(--moss); font-size: 12px; font-style: italic; }
+
+  footer {
+    text-align: center;
+    margin-top: 32px;
+    font-size: 12px;
+    color: var(--warm);
+    font-style: italic;
+  }
+  .rose { color: var(--yellow); }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Earth Harmony <span class="rose">🌿</span> Team Service</h1>
+    <div class="subtitle">sign up to learn, assist, shadow</div>
+  </header>
+
+  <div class="intro" id="intro-blurb"></div>
+
+  <div class="month-nav">
+    <button id="prev-month">← Prev</button>
+    <h2 id="month-title">—</h2>
+    <button id="next-month">Next →</button>
+  </div>
+
+  <div id="admin-add-bar" style="display:none; background:#fff8e7; padding:12px 14px; border:1px dashed var(--yellow); border-bottom:none;">
+    <form id="add-event-form-inline" style="display:flex; flex-wrap:wrap; gap:6px; align-items:center;">
+      <input type="text" name="title" placeholder="Event title" required style="flex:2; min-width:160px; padding:7px 10px; border:1px solid #d4d0bf; border-radius:4px; font-family:inherit; font-size:13px;">
+      <input type="date" name="date" required style="padding:7px 10px; border:1px solid #d4d0bf; border-radius:4px; font-family:inherit; font-size:13px;">
+      <input type="time" name="time" style="padding:7px 10px; border:1px solid #d4d0bf; border-radius:4px; font-family:inherit; font-size:13px;">
+      <input type="number" name="duration" placeholder="Length (min)" min="15" step="15" style="width:110px; padding:7px 10px; border:1px solid #d4d0bf; border-radius:4px; font-family:inherit; font-size:13px;">
+      <input type="text" name="location" placeholder="Location (optional)" style="flex:1; min-width:120px; padding:7px 10px; border:1px solid #d4d0bf; border-radius:4px; font-family:inherit; font-size:13px;">
+      <button type="submit" style="background:var(--moss); color:var(--cream); border:none; padding:7px 14px; font-family:inherit; font-size:13px; border-radius:4px; cursor:pointer;">+ Add</button>
+    </form>
+  </div>
+  <div class="calendar">
+    <div class="weekdays">
+      <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+    </div>
+    <div class="days" id="days"></div>
+    <div class="legend">
+      <div class="legend-item"><span class="legend-dot" style="background:#a85a4a;"></span>Drumming</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#4a5d3a;"></span>Sound Bath</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#5d7a3a;"></span>Plant / Nature</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#8b7355;"></span>Other</div>
+    </div>
+  </div>
+
+  <div class="list-section">
+    <h3>Upcoming events <span id="event-count" style="color:var(--warm); font-weight:400; text-transform:none; letter-spacing:0; font-style:italic; margin-left:6px;"></span></h3>
+    <div id="event-list"></div>
+  </div>
+
+  <div class="admin-toggle" id="admin-toggle-wrap" style="display:none;">
+    <a id="admin-link">⚙ admin</a>
+  </div>
+
+  <footer>
+    <span class="rose">🌹</span> Earth Harmony Sound &amp; Wellness
+  </footer>
+</div>
+
+<!-- Add Event Modal -->
+<div class="modal-overlay" id="add-modal-overlay">
+  <div class="modal">
+    <button class="close" id="add-modal-close">×</button>
+    <h2 style="font-size:20px; margin-bottom:14px;">Add custom event</h2>
+    <form id="add-event-form" style="display:flex; flex-direction:column; gap:10px;">
+      <input type="text" name="title" placeholder="Event title (e.g. Sunday Community Sound Bath)" required style="padding:10px; border:1px solid #d4d0bf; border-radius:4px; font-family:inherit;">
+      <div style="display:flex; gap:8px;">
+        <input type="date" name="date" required style="flex:1; padding:10px; border:1px solid #d4d0bf; border-radius:4px; font-family:inherit;">
+        <input type="time" name="time" placeholder="HH:MM" style="flex:1; padding:10px; border:1px solid #d4d0bf; border-radius:4px; font-family:inherit;">
+      </div>
+      <input type="text" name="location" placeholder="Location (optional)" style="padding:10px; border:1px solid #d4d0bf; border-radius:4px; font-family:inherit;">
+      <textarea name="description" placeholder="Notes for volunteers" style="padding:10px; border:1px solid #d4d0bf; border-radius:4px; font-family:inherit; min-height:80px; resize:vertical;"></textarea>
+      <button type="submit" style="background:var(--moss); color:var(--cream); border:none; padding:10px; font-family:inherit; font-weight:600; border-radius:4px; cursor:pointer;">Add event</button>
+    </form>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" id="modal">
+    <button class="close" id="modal-close">×</button>
+    <div class="date" id="m-date"></div>
+    <h2 id="m-title"></h2>
+    <div class="meta" id="m-meta"></div>
+    <div class="notes" id="m-notes"></div>
+
+    <div class="signups-label">Signed up to help</div>
+    <div class="signups" id="m-signups"></div>
+
+    <form class="signup-form" id="m-form">
+      <input type="text" name="name" placeholder="Your name" required>
+      <button type="submit">Sign up</button>
+    </form>
+
+    <div class="admin-controls" id="m-admin">
+      <label>Title</label>
+      <input type="text" id="m-title-edit" style="width:100%; padding:8px; border:1px solid #d4d0bf; border-radius:4px; font-family:inherit; font-size:13px; margin-bottom:8px;">
+      <div style="display:flex; gap:6px; margin-bottom:8px;">
+        <div style="flex:1;">
+          <label>Date</label>
+          <input type="date" id="m-date-edit" style="width:100%; padding:8px; border:1px solid #d4d0bf; border-radius:4px; font-family:inherit; font-size:13px;">
+        </div>
+        <div style="flex:1;">
+          <label>Time</label>
+          <input type="time" id="m-time-edit" style="width:100%; padding:8px; border:1px solid #d4d0bf; border-radius:4px; font-family:inherit; font-size:13px;">
+        </div>
+        <div style="flex:1;">
+          <label>Length (min)</label>
+          <input type="number" id="m-duration-edit" min="15" step="15" style="width:100%; padding:8px; border:1px solid #d4d0bf; border-radius:4px; font-family:inherit; font-size:13px;">
+        </div>
+      </div>
+      <label>Location</label>
+      <input type="text" id="m-location-edit" style="width:100%; padding:8px; border:1px solid #d4d0bf; border-radius:4px; font-family:inherit; font-size:13px; margin-bottom:8px;">
+      <label>Notes for volunteers</label>
+      <textarea id="m-notes-edit"></textarea>
+      <div class="row">
+        <button id="m-save-all">Save changes</button>
+        <button class="hide-btn" id="m-hide-btn">Ignore event</button>
+        <button class="hide-btn" id="m-delete-btn" style="display:none;">Delete</button>
+        <span class="saved" id="m-saved"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="volunteer-events.js"></script>
+<script>
+const API_URL = 'https://script.google.com/macros/s/AKfycbzzu1jXVtwDuHyBThe62Ipc10UzBJkDQDACGZfe5oEF9jXIUl3qtGjbJD2c3IW_q4EjKQ/exec';
+
+const SIGNUPS_KEY = 'volunteer-signups';
+const META_KEY = 'volunteer-events-meta';
+const CUSTOM_KEY = 'volunteer-custom-events';
+const BLURB_KEY = 'volunteer-board-blurb';
+const DEFAULT_BLURB = 'Hi friend — these are the next gigs where I could use support. Come to <em>learn</em>, <em>assist</em>, or just <em>shadow</em> the work. Click an event to read details + sign up. 🌹';
+
+let signups = {};
+let meta = {};
+let customEvents = [];
+let viewYear, viewMonth;
+let activeEvent = null;
+
+function allEvents() {
+  return [...VOLUNTEER_EVENTS, ...customEvents].sort((a,b) => a.start.localeCompare(b.start));
+}
+
+async function loadStore(key) {
+  try {
+    const res = await fetch(`${API_URL}?key=${encodeURIComponent(key)}`);
+    if (!res.ok) return {};
+    return await res.json();
+  } catch { return {}; }
+}
+async function saveStore(key, value) {
+  try {
+    // Use text/plain to avoid CORS preflight (Apps Script reads e.postData.contents)
+    await fetch(API_URL, {
+      method: 'POST',
+      body: JSON.stringify({ key, value }),
+    });
+  } catch {}
+}
+
+function formatTime(iso) {
+  if (!iso.includes('T')) return '';
+  const d = new Date(iso);
+  return d.toLocaleTimeString('en-CA', { hour: 'numeric', minute: '2-digit', hour12: true });
+}
+function formatDate(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-CA', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+}
+
+function eventType(title) {
+  const t = (title || '').toLowerCase();
+  if (/drum|circle|rhythm/.test(t)) return 'drum';
+  if (/sound\s*bath|soundbath|gong|bowl/.test(t)) return 'sound';
+  if (/plant|garden|nature|forest|botanic/.test(t)) return 'plant';
+  return 'other';
+}
+
+function eventsByDay() {
+  const map = {};
+  allEvents().forEach(ev => {
+    const dayKey = ev.start.split('T')[0];
+    if (!map[dayKey]) map[dayKey] = [];
+    map[dayKey].push(ev);
+  });
+  return map;
+}
+
+function renderList() {
+  const container = document.getElementById('event-list');
+  container.innerHTML = '';
+  const isAdmin = document.body.classList.contains('admin');
+  const now = new Date();
+  const todayKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+
+  const upcoming = allEvents()
+    .filter(ev => {
+      const evMeta = meta[ev.id] || {};
+      if (evMeta.hidden && !isAdmin) return false;
+      const dayKey = (evMeta.start || ev.start).split('T')[0];
+      return dayKey >= todayKey;
+    })
+    .sort((a, b) => (meta[a.id]?.start || a.start).localeCompare(meta[b.id]?.start || b.start));
+
+  document.getElementById('event-count').textContent = `· ${upcoming.length} total`;
+
+  if (!upcoming.length) {
+    container.innerHTML = '<div class="list-empty">no upcoming events</div>';
+    return;
+  }
+
+  const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const weekdays = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  upcoming.forEach(ev => {
+    const eff = effectiveEvent(ev);
+    const evMeta = meta[ev.id] || {};
+    const type = eventType(eff.title);
+    const typeColors = {
+      drum: '#a85a4a', sound: '#4a5d3a', disco: '#6b5a8e', plant: '#5d7a3a', other: '#8b7355'
+    };
+    const d = new Date(eff.start);
+    const count = (signups[ev.id] || []).length;
+    const time = formatTime(eff.start);
+    const meta_str = [time, eff.location].filter(Boolean).join(' · ');
+
+    const div = document.createElement('div');
+    div.className = 'list-event' + (evMeta.hidden ? ' hidden-event' : '');
+    div.innerHTML = `
+      <div class="type-dot" style="background:${typeColors[type]}"></div>
+      <div class="date-block">
+        <div class="month">${monthNames[d.getMonth()]}</div>
+        <div class="day-num">${d.getDate()}</div>
+        <div class="weekday">${weekdays[d.getDay()]}</div>
+      </div>
+      <div class="body">
+        <div class="title">${eff.title}${count ? `<span class="signup-count">${count}</span>` : ''}${evMeta.hidden ? ' <span style="color:#a85a4a; font-size:11px;">🚫 hidden</span>' : ''}</div>
+        <div class="meta">${meta_str}</div>
+      </div>
+    `;
+    div.addEventListener('click', () => openModal(ev));
+    container.appendChild(div);
+  });
+}
+
+function renderCalendar() {
+  const title = new Date(viewYear, viewMonth, 1).toLocaleDateString('en-CA', { month: 'long', year: 'numeric' });
+  document.getElementById('month-title').textContent = title;
+
+  const firstDay = new Date(viewYear, viewMonth, 1);
+  const startOffset = firstDay.getDay();
+  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+  const prevMonthDays = new Date(viewYear, viewMonth, 0).getDate();
+
+  const evMap = eventsByDay();
+  const isAdmin = document.body.classList.contains('admin');
+  const today = new Date();
+  const todayKey = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+
+  const container = document.getElementById('days');
+  container.innerHTML = '';
+
+  const totalCells = Math.ceil((startOffset + daysInMonth) / 7) * 7;
+  for (let i = 0; i < totalCells; i++) {
+    const dayDiv = document.createElement('div');
+    dayDiv.className = 'day';
+
+    let cellDate;
+    let dayNum;
+    if (i < startOffset) {
+      dayNum = prevMonthDays - startOffset + i + 1;
+      cellDate = new Date(viewYear, viewMonth - 1, dayNum);
+      dayDiv.classList.add('other-month');
+    } else if (i >= startOffset + daysInMonth) {
+      dayNum = i - startOffset - daysInMonth + 1;
+      cellDate = new Date(viewYear, viewMonth + 1, dayNum);
+      dayDiv.classList.add('other-month');
+    } else {
+      dayNum = i - startOffset + 1;
+      cellDate = new Date(viewYear, viewMonth, dayNum);
+    }
+    const dayKey = `${cellDate.getFullYear()}-${String(cellDate.getMonth()+1).padStart(2,'0')}-${String(cellDate.getDate()).padStart(2,'0')}`;
+    if (dayKey === todayKey) dayDiv.classList.add('today');
+
+    dayDiv.innerHTML = `<div class="num">${dayNum}</div>`;
+    const events = evMap[dayKey] || [];
+    events.forEach(ev => {
+      const evMeta = meta[ev.id] || {};
+      if (evMeta.hidden && !isAdmin) return;
+      const signupCount = (signups[ev.id] || []).length;
+      const evDiv = document.createElement('div');
+      const eff = effectiveEvent(ev);
+      const type = eventType(eff.title);
+      evDiv.className = 'ev type-' + type + (evMeta.hidden ? ' hidden-event' : '');
+      const time = formatTime(eff.start);
+      const label = time ? `${time} · ${eff.title}` : eff.title;
+      evDiv.innerHTML = `${label}${signupCount ? `<span class="count">(${signupCount})</span>` : ''}`;
+      evDiv.addEventListener('click', () => openModal(ev));
+      dayDiv.appendChild(evDiv);
+    });
+    container.appendChild(dayDiv);
+  }
+  renderList();
+}
+
+function effectiveEvent(ev) {
+  const evMeta = meta[ev.id] || {};
+  return {
+    id: ev.id,
+    title: evMeta.title || ev.title,
+    start: evMeta.start || ev.start,
+    end: evMeta.end || ev.end || ev.start,
+    duration: evMeta.duration || computeDuration(ev.start, ev.end),
+    description: evMeta.notes || ev.description || '',
+    location: evMeta.location !== undefined ? evMeta.location : (ev.location || ''),
+    source: ev.source,
+    hidden: !!evMeta.hidden,
+  };
+}
+
+function computeDuration(start, end) {
+  if (!start || !end || !start.includes('T') || !end.includes('T')) return '';
+  const ms = new Date(end) - new Date(start);
+  if (isNaN(ms) || ms <= 0) return '';
+  return Math.round(ms / 60000);
+}
+
+function openModal(ev) {
+  activeEvent = ev;
+  const eff = effectiveEvent(ev);
+  const durLabel = eff.duration ? ` · ${eff.duration} min` : '';
+  document.getElementById('m-date').textContent = formatDate(eff.start) + (eff.start.includes('T') ? ` · ${formatTime(eff.start)}` : '') + durLabel;
+  document.getElementById('m-title').textContent = eff.title;
+  document.getElementById('m-meta').textContent = eff.location || '';
+  document.getElementById('m-notes').textContent = eff.description;
+
+  const evSignups = signups[ev.id] || [];
+  const signupsEl = document.getElementById('m-signups');
+  signupsEl.innerHTML = evSignups.length
+    ? evSignups.map(s => `<span class="person">${s.name}</span>`).join('')
+    : '<span class="empty">no one yet — be the first</span>';
+
+  // Admin fields
+  document.getElementById('m-title-edit').value = eff.title;
+  const [d, t] = eff.start.includes('T') ? eff.start.split('T') : [eff.start, ''];
+  document.getElementById('m-date-edit').value = d;
+  document.getElementById('m-time-edit').value = t ? t.substring(0,5) : '';
+  document.getElementById('m-duration-edit').value = eff.duration || '';
+  document.getElementById('m-location-edit').value = eff.location;
+  document.getElementById('m-notes-edit').value = eff.description;
+  document.getElementById('m-hide-btn').textContent = eff.hidden ? 'Show event' : 'Ignore event';
+  document.getElementById('m-delete-btn').style.display = ev.source === 'custom' ? '' : 'none';
+  document.getElementById('m-saved').textContent = '';
+
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  activeEvent = null;
+}
+
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-overlay').addEventListener('click', (e) => {
+  if (e.target.id === 'modal-overlay') closeModal();
+});
+
+document.getElementById('m-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (!activeEvent) return;
+  const input = e.target.querySelector('input[name="name"]');
+  const name = input.value.trim();
+  if (!name) return;
+  const btn = e.target.querySelector('button');
+  btn.disabled = true; btn.textContent = '...';
+  if (!signups[activeEvent.id]) signups[activeEvent.id] = [];
+  signups[activeEvent.id].push({ name, ts: new Date().toISOString() });
+  await saveStore(SIGNUPS_KEY, signups);
+  input.value = '';
+  btn.disabled = false; btn.textContent = 'Sign up';
+  openModal(activeEvent); // re-render
+  renderCalendar();
+});
+
+document.getElementById('m-save-all').addEventListener('click', async () => {
+  if (!activeEvent) return;
+  const title = document.getElementById('m-title-edit').value.trim();
+  const date = document.getElementById('m-date-edit').value;
+  const time = document.getElementById('m-time-edit').value;
+  const durationMin = parseInt(document.getElementById('m-duration-edit').value, 10) || 0;
+  const location = document.getElementById('m-location-edit').value.trim();
+  const notes = document.getElementById('m-notes-edit').value.trim();
+  const start = time ? `${date}T${time}:00` : date;
+  let end = start;
+  if (time && durationMin > 0) {
+    const startDate = new Date(start);
+    end = new Date(startDate.getTime() + durationMin * 60000).toISOString().substring(0, 19);
+  }
+
+  if (activeEvent.source === 'custom') {
+    const idx = customEvents.findIndex(e => e.id === activeEvent.id);
+    if (idx >= 0) {
+      customEvents[idx] = { ...customEvents[idx], title, start, end, duration: durationMin, location, description: notes };
+      await saveStore(CUSTOM_KEY, customEvents);
+    }
+  } else {
+    meta[activeEvent.id] = { ...(meta[activeEvent.id] || {}), title, start, end, duration: durationMin, location, notes };
+    await saveStore(META_KEY, meta);
+  }
+  document.getElementById('m-saved').textContent = '✓ saved';
+  setTimeout(() => { document.getElementById('m-saved').textContent = ''; }, 1500);
+  renderCalendar();
+  openModal(activeEvent.source === 'custom' ? customEvents.find(e => e.id === activeEvent.id) : activeEvent);
+});
+
+document.getElementById('m-delete-btn').addEventListener('click', async () => {
+  if (!activeEvent || activeEvent.source !== 'custom') return;
+  if (!confirm('Delete this custom event?')) return;
+  customEvents = customEvents.filter(e => e.id !== activeEvent.id);
+  await saveStore(CUSTOM_KEY, customEvents);
+  closeModal();
+  renderCalendar();
+});
+document.getElementById('m-hide-btn').addEventListener('click', async () => {
+  if (!activeEvent) return;
+  meta[activeEvent.id] = { ...(meta[activeEvent.id] || {}), hidden: !(meta[activeEvent.id]?.hidden) };
+  await saveStore(META_KEY, meta);
+  renderCalendar();
+  openModal(activeEvent);
+});
+
+document.getElementById('prev-month').addEventListener('click', () => {
+  viewMonth--;
+  if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+  renderCalendar();
+});
+document.getElementById('next-month').addEventListener('click', () => {
+  viewMonth++;
+  if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+  renderCalendar();
+});
+
+document.getElementById('admin-link').addEventListener('click', () => {
+  document.body.classList.toggle('admin');
+  renderBlurb(currentBlurb);
+  renderCalendar();
+});
+
+// Inline add custom event
+document.getElementById('add-event-form-inline').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const date = fd.get('date');
+  const time = fd.get('time');
+  const duration = parseInt(fd.get('duration'), 10) || 0;
+  const start = time ? `${date}T${time}:00` : date;
+  let end = start;
+  if (time && duration > 0) {
+    const sd = new Date(start);
+    end = new Date(sd.getTime() + duration * 60000).toISOString().substring(0, 19);
+  }
+  const newEv = {
+    id: 'custom-' + Date.now(),
+    title: fd.get('title'),
+    start,
+    end,
+    duration,
+    description: '',
+    location: fd.get('location') || '',
+    source: 'custom',
+  };
+  customEvents.push(newEv);
+  await saveStore(CUSTOM_KEY, customEvents);
+  e.target.reset();
+  renderCalendar();
+});
+
+function renderBlurb(blurb) {
+  const el = document.getElementById('intro-blurb');
+  el.innerHTML = blurb || DEFAULT_BLURB;
+  const isAdmin = document.body.classList.contains('admin');
+  el.contentEditable = isAdmin ? 'true' : 'false';
+  el.style.outline = isAdmin ? '1px dashed var(--yellow)' : 'none';
+  el.style.cursor = isAdmin ? 'text' : 'default';
+}
+
+let currentBlurb = '';
+async function saveBlurb() {
+  const el = document.getElementById('intro-blurb');
+  const html = el.innerHTML.trim();
+  currentBlurb = html;
+  await saveStore(BLURB_KEY, { html: html });
+}
+
+// Show admin toggle only when URL has ?admin=1
+const params = new URLSearchParams(location.search);
+if (params.get('admin') === '1') {
+  document.getElementById('admin-toggle-wrap').style.display = '';
+}
+
+(async () => {
+  const now = new Date();
+  viewYear = now.getFullYear();
+  viewMonth = now.getMonth();
+  const [s, m, c, b] = await Promise.all([
+    loadStore(SIGNUPS_KEY),
+    loadStore(META_KEY),
+    loadStore(CUSTOM_KEY),
+    loadStore(BLURB_KEY),
+  ]);
+  signups = s || {};
+  meta = m || {};
+  customEvents = Array.isArray(c) ? c : [];
+  currentBlurb = b?.html || DEFAULT_BLURB;
+  renderBlurb(currentBlurb);
+
+  // Save on blur
+  document.getElementById('intro-blurb').addEventListener('blur', saveBlurb);
+
+  renderCalendar();
+})();
+</script>
+</body>
+</html>
