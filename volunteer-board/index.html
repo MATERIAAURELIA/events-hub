@@ -224,6 +224,17 @@
   }
   .list-event.hidden-event { opacity: 0.45; }
   .list-empty { color: var(--warm); font-style: italic; padding: 12px 0; text-align: center; }
+  .list-signups { margin-top: 6px; }
+  .person-tag {
+    display: inline-block;
+    background: #f0e9d4;
+    color: var(--moss-deep);
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin: 2px 4px 2px 0;
+    font-size: 11px;
+    font-style: normal;
+  }
   .day .ev .count { color: var(--yellow); font-weight: 600; margin-left: 4px; }
 
   /* Modal */
@@ -597,6 +608,10 @@ function renderList() {
 
     const div = document.createElement('div');
     div.className = 'list-event' + (evMeta.hidden ? ' hidden-event' : '');
+    const evSignups = signups[ev.id] || [];
+    const namesHtml = evSignups.length
+      ? `<div class="list-signups">${evSignups.map(s => `<span class="person-tag">${s.name}</span>`).join('')}</div>`
+      : '';
     div.innerHTML = `
       <div class="type-dot" style="background:${typeColors[type]}"></div>
       <div class="date-block">
@@ -607,6 +622,7 @@ function renderList() {
       <div class="body">
         <div class="title">${eff.title}${count ? `<span class="signup-count">${count}</span>` : ''}${evMeta.hidden ? ' <span style="color:#a85a4a; font-size:11px;">🚫 hidden</span>' : ''}</div>
         <div class="meta">${meta_str}</div>
+        ${namesHtml}
       </div>
     `;
     div.addEventListener('click', () => openModal(ev));
