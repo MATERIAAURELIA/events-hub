@@ -478,8 +478,8 @@
       <textarea id="m-notes-edit"></textarea>
       <div class="row">
         <button id="m-save-all">Save changes</button>
-        <button class="hide-btn" id="m-hide-btn">Ignore event</button>
-        <button class="hide-btn" id="m-delete-btn" style="display:none;">Delete</button>
+        <button class="hide-btn" id="m-hide-btn">Hide</button>
+        <button class="hide-btn" id="m-delete-btn" style="background:#7a2a1a;">Delete forever</button>
         <span class="saved" id="m-saved"></span>
       </div>
     </div>
@@ -503,7 +503,9 @@ let viewYear, viewMonth;
 let activeEvent = null;
 
 function allEvents() {
-  return [...VOLUNTEER_EVENTS, ...customEvents].sort((a,b) => a.start.localeCompare(b.start));
+  return [...VOLUNTEER_EVENTS, ...customEvents]
+    .filter(ev => !(meta[ev.id] && meta[ev.id].deleted))
+    .sort((a,b) => a.start.localeCompare(b.start));
 }
 
 async function loadStore(key) {
@@ -713,8 +715,7 @@ function openModal(ev) {
   document.getElementById('m-duration-edit').value = eff.duration || '';
   document.getElementById('m-location-edit').value = eff.location;
   document.getElementById('m-notes-edit').value = eff.description;
-  document.getElementById('m-hide-btn').textContent = eff.hidden ? 'Show event' : 'Ignore event';
-  document.getElementById('m-delete-btn').style.display = ev.source === 'custom' ? '' : 'none';
+  document.getElementById('m-hide-btn').textContent = eff.hidden ? 'Unhide' : 'Hide';
   document.getElementById('m-saved').textContent = '';
 
   document.getElementById('modal-overlay').classList.add('open');
@@ -778,10 +779,15 @@ document.getElementById('m-save-all').addEventListener('click', async () => {
 });
 
 document.getElementById('m-delete-btn').addEventListener('click', async () => {
-  if (!activeEvent || activeEvent.source !== 'custom') return;
-  if (!confirm('Delete this custom event?')) return;
-  customEvents = customEvents.filter(e => e.id !== activeEvent.id);
-  await saveStore(CUSTOM_KEY, customEvents);
+  if (!activeEvent) return;
+  if (!confirm('Delete forever? This removes the event from the board completely (you won\'t see it again, even in admin).')) return;
+  if (activeEvent.source === 'custom') {
+    customEvents = customEvents.filter(e => e.id !== activeEvent.id);
+    await saveStore(CUSTOM_KEY, customEvents);
+  } else {
+    meta[activeEvent.id] = { ...(meta[activeEvent.id] || {}), deleted: true };
+    await saveStore(META_KEY, meta);
+  }
   closeModal();
   renderCalendar();
 });
