@@ -377,13 +377,7 @@
 
   <div class="intro" id="intro-blurb"></div>
 
-  <div class="month-nav">
-    <button id="prev-month">← Prev</button>
-    <h2 id="month-title">—</h2>
-    <button id="next-month">Next →</button>
-  </div>
-
-  <div id="admin-add-bar" style="display:none; background:#fff8e7; padding:12px 14px; border:1px dashed var(--yellow); border-bottom:none;">
+  <div id="admin-add-bar" style="display:none; background:#fff8e7; padding:12px 14px; border:1px dashed var(--yellow); border-radius:8px; margin-bottom:12px;">
     <form id="add-event-form-inline" style="display:flex; flex-wrap:wrap; gap:6px; align-items:center;">
       <input type="text" name="title" placeholder="Event title" required style="flex:2; min-width:160px; padding:7px 10px; border:1px solid #d4d0bf; border-radius:4px; font-family:inherit; font-size:13px;">
       <input type="date" name="date" required style="padding:7px 10px; border:1px solid #d4d0bf; border-radius:4px; font-family:inherit; font-size:13px;">
@@ -392,6 +386,21 @@
       <input type="text" name="location" placeholder="Location (optional)" style="flex:1; min-width:120px; padding:7px 10px; border:1px solid #d4d0bf; border-radius:4px; font-family:inherit; font-size:13px;">
       <button type="submit" style="background:var(--moss); color:var(--cream); border:none; padding:7px 14px; font-family:inherit; font-size:13px; border-radius:4px; cursor:pointer;">+ Add</button>
     </form>
+  </div>
+
+  <div class="list-section">
+    <h3>Upcoming events <span id="event-count" style="color:var(--warm); font-weight:400; text-transform:none; letter-spacing:0; font-style:italic; margin-left:6px;"></span></h3>
+    <div id="event-list"></div>
+  </div>
+
+  <div style="text-align:center; margin:18px 0 8px; font-size:12px; color:var(--warm); font-style:italic;">
+    ↓ scroll down for calendar view ↓
+  </div>
+
+  <div class="month-nav">
+    <button id="prev-month">← Prev</button>
+    <h2 id="month-title">—</h2>
+    <button id="next-month">Next →</button>
   </div>
   <div class="calendar">
     <div class="weekdays">
@@ -404,11 +413,6 @@
       <div class="legend-item"><span class="legend-dot" style="background:#5d7a3a;"></span>Plant / Nature</div>
       <div class="legend-item"><span class="legend-dot" style="background:#8b7355;"></span>Other</div>
     </div>
-  </div>
-
-  <div class="list-section">
-    <h3>Upcoming events <span id="event-count" style="color:var(--warm); font-weight:400; text-transform:none; letter-spacing:0; font-style:italic; margin-left:6px;"></span></h3>
-    <div id="event-list"></div>
   </div>
 
   <div class="admin-toggle" id="admin-toggle-wrap" style="display:none;">
