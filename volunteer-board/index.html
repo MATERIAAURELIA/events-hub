@@ -620,7 +620,7 @@ function renderList() {
         <div class="weekday">${weekdays[d.getDay()]}</div>
       </div>
       <div class="body">
-        <div class="title">${eff.title}${count ? `<span class="signup-count">${count}</span>` : ''}${evMeta.hidden ? ' <span style="color:#a85a4a; font-size:11px;">🚫 hidden</span>' : ''}</div>
+        <div class="title">${eff.title}${evMeta.hidden ? ' <span style="color:#a85a4a; font-size:11px;">🚫 hidden</span>' : ''}</div>
         <div class="meta">${meta_str}</div>
         ${namesHtml}
       </div>
@@ -681,7 +681,7 @@ function renderCalendar() {
       evDiv.className = 'ev type-' + type + (evMeta.hidden ? ' hidden-event' : '');
       const time = formatTime(eff.start);
       const label = time ? `${time} · ${eff.title}` : eff.title;
-      evDiv.innerHTML = `${label}${signupCount ? `<span class="count">(${signupCount})</span>` : ''}`;
+      evDiv.innerHTML = label;
       evDiv.addEventListener('click', () => openModal(ev));
       dayDiv.appendChild(evDiv);
     });
