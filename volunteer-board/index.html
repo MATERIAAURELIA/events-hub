@@ -763,7 +763,7 @@ document.getElementById('m-form').addEventListener('submit', async (e) => {
   await saveStore(SIGNUPS_KEY, signups);
   input.value = '';
   btn.disabled = false; btn.textContent = 'Sign up';
-  openModal(activeEvent); // re-render
+  closeModal();
   renderCalendar();
 });
 
