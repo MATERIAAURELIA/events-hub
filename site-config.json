@@ -30,7 +30,8 @@
       "contactPhone": "",
       "desc": "An interactive workshop exploring the foundations of sound healing.",
       "img": "photos/april-sound-foundations.png",
-      "imgCrop": "50% 16%"
+      "imgCrop": "50% 16%",
+      "archived": true
     },
     {
       "id": "ev-b2b-may",
@@ -62,7 +63,8 @@
       "contactPhone": "",
       "desc": "Community Sound Bath at Roots on Whyte. All mats and blankets welcome. Think cozy and thick!",
       "venueOverride": "Roots on Whyte - 8135 102 St NW, Edmonton - 3rd Floor Conference Room",
-      "img": "photos/blank-templates/community-soundbath-blank.png"
+      "img": "photos/blank-templates/community-soundbath-blank.png",
+      "archived": true
     },
     {
       "id": "ev-gong-may",
@@ -79,6 +81,22 @@
       "desc": "6 Large Planetary Gongs. A cozy home environment with all thick mats, sheepskins, blankets and bolsters and tea provided. 8 Spots.",
       "venueOverride": "Terwillegar",
       "img": "photos/blank-templates/gong-immersion-blank.png"
+    },
+    {
+      "id": "ev-703230",
+      "type": "drumming",
+      "title": "Pulse of Life Drum Circle & Rhythm Cradle",
+      "date": "2026-06-05",
+      "time": "19:00",
+      "endTime": "",
+      "venue": "home",
+      "price": 26,
+      "booking": "https://EarthHarmony.as.me/?appointmentType=93243634",
+      "contactEmail": "",
+      "contactPhone": "",
+      "desc": "All instruments included - Season Finale",
+      "venueOverride": "Sherwood Park - Integr8 Massage ",
+      "img": "photos/drum-circle-banner-2160x1080.jpg"
     }
   ],
   "eventTypes": {
