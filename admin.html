@@ -670,6 +670,14 @@
 
 <script>
 let config = {};
+// --- Dirty tracking: only what THIS session actually changed gets written over
+// disk state on save. A stale tab can no longer clobber edits made elsewhere
+// (the bug that ate the Revitalife phone line + the site/design keys).
+const dirtyEventIds = new Set();   // events edited this session
+const deletedEventIds = new Set(); // events deleted this session
+const dirtyKeys = new Set();       // top-level keys edited this session (venues, eventTypes, ...)
+let allDirty = false;              // wholesale imports/restores: skip merge, save everything
+function touchEvent(ev) { if (!ev) return; ev.updatedAt = Date.now(); if (ev.id) dirtyEventIds.add(ev.id); }
 let knownEventIds = new Set(); // event ids this browser has loaded — used by the clobber guard
 let sortMode = 'date'; // 'date' or 'custom'
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -726,6 +734,7 @@ async function loadConfig() {
 Recover local version?`);
           if (recover) {
             config = cachedData;
+            allDirty = true; // recovered cache replaces disk wholesale — don't half-merge
             // Always restore server eventTypes/venues (localStorage often loses these)
             if (Object.keys(serverTypes).length > 0) config.eventTypes = serverTypes;
             if (Object.keys(serverVenues).length > 0) config.venues = serverVenues;
@@ -851,6 +860,7 @@ function saveInlineField(i, field, el) {
     if (v === venueFullOf(config.events[i])) return;             // no change
     config.events[i].venueOverride = v;
   } else { return; }
+  touchEvent(config.events[i]);
   saveConfig();
 }
 function inlineEditKey(e, el) {
@@ -957,7 +967,11 @@ function editEvent(i) { openEventModal(i); }
 
 function saveEvent() {
   const idx = parseInt(document.getElementById('ev-edit-idx').value);
+  // Spread the original so fields the form doesn't render (archived, pinned,
+  // titleAlign, descAlign, any hand-added key) survive a modal save.
+  const orig = idx >= 0 ? config.events[idx] : {};
   const ev = {
+    ...orig,
     id: idx >= 0 ? config.events[idx].id : 'ev-' + String(Date.now()).slice(-6),
     type: document.getElementById('ev-type').value,
     title: document.getElementById('ev-title').value,
@@ -965,7 +979,7 @@ function saveEvent() {
     time: document.getElementById('ev-time').value,
     endTime: document.getElementById('ev-endtime').value,
     venue: document.getElementById('ev-venue').value,
-    price: parseFloat(document.getElementById('ev-price').value) || 0,
+    price: document.getElementById('ev-price').value === '' ? (orig.price ?? '') : (parseFloat(document.getElementById('ev-price').value) || 0),
     booking: document.getElementById('ev-booking').value,
     contactEmail: document.getElementById('ev-contact-email')?.value || '',
     contactPhone: document.getElementById('ev-contact-phone')?.value || '',
@@ -974,11 +988,12 @@ function saveEvent() {
     repeatable: document.getElementById('ev-repeatable').checked,
   };
   const vo = document.getElementById('ev-venue-override').value;
-  if (vo) ev.venueOverride = vo;
+  if (vo) ev.venueOverride = vo; else delete ev.venueOverride;   // cleared in form = removed
   const img = document.getElementById('ev-img').value;
-  if (img) ev.img = img;
+  if (img) ev.img = img; else delete ev.img;
   const crop = document.getElementById('ev-img-crop').value;
-  if (crop && crop !== 'center') ev.imgCrop = crop;
+  if (crop && crop !== 'center') ev.imgCrop = crop; else delete ev.imgCrop;
+  touchEvent(ev);
   if (idx >= 0) config.events[idx] = ev;
   else config.events.push(ev);
   closeModal('event-modal');
@@ -991,6 +1006,7 @@ function quickAddVenue() {
   const area = prompt('Area/neighbourhood (optional):') || '';
   const id = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/, '');
   config.venues[id] = { name, area };
+  dirtyKeys.add('venues');
   populateEventDropdowns();
   document.getElementById('ev-venue').value = id;
   saveConfig();
@@ -1051,12 +1067,14 @@ async function importFromUrl() {
 
 function archiveEvent(i) {
   config.events[i].archived = !config.events[i].archived;
+  touchEvent(config.events[i]);
   saveConfig();
 }
 
 function togglePublish(i) {
   // one-click flip public<->private (published<->draft). Safety net.
   config.events[i].status = config.events[i].status === 'draft' ? 'published' : 'draft';
+  touchEvent(config.events[i]);
   saveConfig();
   renderEvents();
 }
@@ -1064,18 +1082,21 @@ function togglePublish(i) {
 function toggleRepeatable(i) {
   // one-click mark/unmark repeatable, right from the list
   config.events[i].repeatable = !config.events[i].repeatable;
+  touchEvent(config.events[i]);
   saveConfig();
   renderEvents();
 }
 
 function deleteEvent(i) {
   if (!confirm('Delete "' + config.events[i].title + '"?')) return;
+  if (config.events[i].id) deletedEventIds.add(config.events[i].id);
   config.events.splice(i, 1);
   saveConfig();
 }
 
 function duplicateEvent(i) {
   const dup = { ...config.events[i], id: 'ev-' + String(Date.now()).slice(-6), title: config.events[i].title + ' (copy)' };
+  touchEvent(dup);
   config.events.push(dup);
   saveConfig();
 }
@@ -1121,6 +1142,7 @@ function saveType() {
   const origId = document.getElementById('type-edit-id').value;
   const id = origId || document.getElementById('type-id').value.toLowerCase().replace(/\s+/g, '-');
   if (!id) return;
+  dirtyKeys.add('eventTypes');
   config.eventTypes[id] = {
     name: document.getElementById('type-name').value,
     color: document.getElementById('type-color').value,
@@ -1135,6 +1157,7 @@ function saveType() {
 
 function deleteType(id) {
   if (!confirm('Delete type "' + id + '"?')) return;
+  dirtyKeys.add('eventTypes');
   delete config.eventTypes[id];
   saveConfig();
 }
@@ -1175,6 +1198,7 @@ function saveVenue() {
   const origId = document.getElementById('venue-edit-id').value;
   const id = origId || document.getElementById('venue-id').value.toLowerCase().replace(/\s+/g, '-');
   if (!id) return;
+  dirtyKeys.add('venues');
   config.venues[id] = { name: document.getElementById('venue-name').value, area: document.getElementById('venue-area').value };
   closeModal('venue-modal');
   saveConfig();
@@ -1182,6 +1206,7 @@ function saveVenue() {
 
 function deleteVenue(id) {
   if (!confirm('Delete venue "' + id + '"?')) return;
+  dirtyKeys.add('venues');
   delete config.venues[id];
   saveConfig();
 }
@@ -1325,6 +1350,7 @@ function renderSiteSettings() {
 
 function saveSiteSettings() {
   config.site = {
+    ...config.site, // keep keys the form doesn't render
     name: document.getElementById('site-name').value,
     bio: document.getElementById('site-bio').value,
     email: document.getElementById('site-email').value,
@@ -1332,6 +1358,7 @@ function saveSiteSettings() {
     logoEmoji: document.getElementById('site-emoji').value,
   };
   config.filterOrder = document.getElementById('filter-order').value.split(',').map(s => s.trim()).filter(Boolean);
+  dirtyKeys.add('site'); dirtyKeys.add('filterOrder');
   saveConfig();
 }
 
@@ -1437,6 +1464,7 @@ function loadJsonEditor() {
 function saveJsonEditor() {
   try {
     config = JSON.parse(document.getElementById('json-editor').value);
+    allDirty = true; // hand-edited JSON is authoritative — skip merge
     saveConfig();
   } catch (e) {
     alert('Invalid JSON: ' + e.message);
@@ -1445,21 +1473,26 @@ function saveJsonEditor() {
 
 // ============ SAVE / DOWNLOAD / IMPORT ============
 async function saveConfig(skipPreview) {
-  // CLOBBER GUARD: re-read the disk and rescue any events this browser never
-  // loaded (e.g. boxes seeded/added from elsewhere) so a stale-memory save
-  // can't silently wipe them. Deletions of known events still work.
+  // MERGE GUARD: disk is the base; only what THIS session changed overwrites it.
+  // Untouched events and top-level keys (site, design, socialLinks, ...) keep
+  // their disk state, so a stale tab can't silently revert edits made elsewhere
+  // — the mechanism that previously ate the Revitalife phone line and the whole
+  // site/design config. Wholesale flows (import/restore/JSON editor) set
+  // allDirty and skip the merge.
   try {
     const dres = await fetch('site-config.json?v=' + Date.now());
-    if (dres.ok) {
+    if (dres.ok && !allDirty) {
       const disk = await dres.json();
-      const memIds = new Set((config.events || []).map(e => e.id));
-      let rescued = 0;
-      for (const de of (disk.events || [])) {
-        if (!memIds.has(de.id) && !knownEventIds.has(de.id)) {
-          config.events.push(de); knownEventIds.add(de.id); rescued++;
-        }
-      }
-      if (rescued) showStatus('Kept ' + rescued + ' event(s) added elsewhere ✓');
+      const merged = { ...disk };
+      for (const k of Object.keys(config)) if (!(k in merged)) merged[k] = config[k];
+      for (const k of dirtyKeys) merged[k] = config[k];
+      const memById = new Map((config.events || []).map(e => [e.id, e]));
+      const diskIds = new Set((disk.events || []).map(e => e.id));
+      merged.events = (disk.events || [])
+        .filter(e => !deletedEventIds.has(e.id))
+        .map(e => (dirtyEventIds.has(e.id) && memById.has(e.id)) ? memById.get(e.id) : e);
+      for (const e of (config.events || [])) if (!diskIds.has(e.id)) merged.events.push(e);
+      config = merged;
     }
   } catch (e) { /* offline / no disk copy — proceed with in-memory save */ }
 
@@ -1478,6 +1511,8 @@ async function saveConfig(skipPreview) {
       const txt = await res.text().catch(() => 'server error');
       throw new Error('HTTP ' + res.status + ': ' + txt);
     }
+    // Disk now matches memory — this session's changes are no longer "pending"
+    dirtyEventIds.clear(); deletedEventIds.clear(); dirtyKeys.clear(); allDirty = false;
     renderAll();
     showStatus('Saved ✓');
   } catch (e) {
@@ -1519,9 +1554,11 @@ window.addEventListener('message', function(e){
     if (!config.photoLibrary) config.photoLibrary = [];
     if (!config.photoLibrary.some(p => p.url === d.value)) {
       config.photoLibrary.push({ url: d.value, name: d.value.split('/').pop().replace(/\.[^.]+$/, '') });
+      dirtyKeys.add('photoLibrary');
     }
   }
   else return;
+  touchEvent(ev);
   saveConfig(true); // don't reload the iframe — keep the popup he's editing open
   showStatus('Saved from preview ✓');
 });
@@ -1559,6 +1596,7 @@ async function restoreLastSave() {
     const ts = json.timestamp.replace(/(\d{4})(\d{2})(\d{2})-(\d{2})(\d{2})(\d{2})/, '$1-$2-$3 $4:$5:$6');
     if (!confirm(`Restore save from ${ts}?\n\nThis will replace current data.`)) return;
     config = json.config;
+    allDirty = true; // restored backup is authoritative — skip merge
     await saveConfig();
     renderAll();
     showStatus(`✅ Restored from ${ts}`);
@@ -1581,6 +1619,7 @@ function importConfig(input) {
   r.onload = e => {
     try {
       config = JSON.parse(e.target.result);
+      allDirty = true; // imported file is authoritative — skip merge
       saveConfig();
       showStatus('Imported ✓');
     } catch (err) { alert('Invalid JSON'); }
@@ -1815,12 +1854,14 @@ function pickPhoto(i) {
 function deletePhoto(i) {
   if (!confirm('Remove from library?')) return;
   config.photoLibrary.splice(i, 1);
+  dirtyKeys.add('photoLibrary');
   saveConfig();
 }
 
 function addToLibrary(urlOrPath, name) {
   if (!config.photoLibrary) config.photoLibrary = [];
   config.photoLibrary.push({ url: urlOrPath, name: name || 'Photo ' + (config.photoLibrary.length + 1) });
+  dirtyKeys.add('photoLibrary');
   saveConfig();
 }
 
