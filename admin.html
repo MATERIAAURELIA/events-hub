@@ -1,0 +1,2109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Events Admin</title>
+<script src="../../sync.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: #111; color: #eee; min-height: 100vh; }
+
+  .admin { max-width: 900px; margin: 0 auto; padding: 20px; }
+  h1 { font-size: 1.4rem; font-weight: 800; margin-bottom: 4px; }
+  .subtitle { font-size: 0.75rem; color: #888; margin-bottom: 20px; }
+
+  /* TABS */
+  .tabs { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 8px; }
+  .tab { padding: 8px 16px; background: none; border: none; color: #888; font-family: Inter, sans-serif; font-size: 0.78rem; font-weight: 600; cursor: pointer; border-radius: 8px 8px 0 0; transition: all 0.2s; }
+  .tab.active { color: #fff; background: #222; }
+  .tab:hover { color: #ccc; }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* CARDS */
+  .card { background: #1a1a1a; border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid #2a2a2a; }
+  .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .card-header h2 { font-size: 0.9rem; font-weight: 700; }
+  .card-header .badge { font-size: 0.6rem; background: #333; padding: 3px 8px; border-radius: 10px; color: #aaa; }
+
+  /* FORMS */
+  label { display: block; font-size: 0.68rem; color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; margin-top: 10px; }
+  label:first-child { margin-top: 0; }
+  input, select, textarea { width: 100%; padding: 8px 10px; background: #222; border: 1px solid #333; border-radius: 8px; color: #eee; font-family: Inter, sans-serif; font-size: 0.8rem; outline: none; transition: border 0.2s; }
+  input:focus, select:focus, textarea:focus { border-color: #c8a44e; }
+  textarea { resize: vertical; min-height: 60px; }
+  .row { display: flex; gap: 10px; }
+  .row > * { flex: 1; }
+
+  /* BUTTONS */
+  .btn { padding: 8px 16px; border: none; border-radius: 8px; font-family: Inter, sans-serif; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+  .btn-gold { background: #c8a44e; color: #000; }
+  .btn-gold:hover { background: #d4b05a; }
+  .btn-red { background: #4a2020; color: #e74c3c; }
+  .btn-red:hover { background: #5a2828; }
+  .btn-ghost { background: none; border: 1px solid #444; color: #aaa; }
+  .btn-ghost:hover { border-color: #888; color: #eee; }
+  .btn-green { background: #1a3a1a; color: #2ecc71; }
+  .btn-green:hover { background: #224422; }
+
+  .btn-row { display: flex; gap: 8px; margin-top: 14px; }
+
+  /* EVENT LIST */
+  .event-item { display: flex; align-items: center; gap: 12px; padding: 10px; background: #222; border-radius: 10px; margin-bottom: 6px; cursor: pointer; transition: background 0.2s; }
+  .event-item:hover { background: #2a2a2a; }
+  .event-item .ev-date { font-size: 0.68rem; color: #c8a44e; font-weight: 700; min-width: 70px; }
+  .event-item .ev-title { font-size: 0.8rem; font-weight: 600; flex: 1; }
+  .ev-title-text { cursor: text; padding: 1px 4px; border-radius: 4px; outline: none; }
+  .ev-title-text:hover { background: #2e2e2e; box-shadow: inset 0 0 0 1px #555; }
+  .ev-title-text:focus { background: #1a1a1a; box-shadow: inset 0 0 0 1px #c8a44e; cursor: text; }
+  .ev-date-edit { background: #1a1a1a; border: 1px solid #333; border-radius: 6px; color: #c8a44e; font-weight: 700; font-size: 0.68rem; padding: 3px 4px; color-scheme: dark; cursor: pointer; min-width: 70px; }
+  .ev-date-edit:hover { border-color: #555; }
+  .ev-date-edit:focus { outline: none; border-color: #c8a44e; }
+  .ev-book-text { display: inline-block; max-width: 240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: bottom; }
+  .ev-book-text:focus { max-width: none; overflow: visible; white-space: normal; }
+  .event-item .ev-price { font-size: 0.72rem; color: #888; }
+  .event-item .ev-type { font-size: 0.58rem; background: #333; padding: 2px 8px; border-radius: 8px; color: #aaa; }
+  .event-item .ev-actions { display: flex; gap: 4px; }
+  .event-item .ev-actions button { padding: 4px 8px; font-size: 0.6rem; }
+
+  /* LINK ITEM */
+  .link-item { display: flex; align-items: center; gap: 10px; padding: 10px; background: #222; border-radius: 10px; margin-bottom: 6px; }
+  .link-item .link-emoji { font-size: 1.2rem; width: 32px; text-align: center; }
+  .link-item .link-thumb { width: 32px; height: 32px; border-radius: 6px; object-fit: cover; }
+  .link-item .link-info { flex: 1; min-width: 0; }
+  .link-item .link-title { font-size: 0.78rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .link-item .link-url { font-size: 0.6rem; color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .link-item .link-actions { display: flex; gap: 4px; }
+  .link-item .link-actions button { padding: 4px 8px; font-size: 0.6rem; }
+
+  /* THUMB UPLOAD */
+  .thumb-upload { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
+  .thumb-preview { width: 48px; height: 48px; border-radius: 8px; background: #222; border: 1px solid #333; object-fit: cover; display: flex; align-items: center; justify-content: center; overflow: hidden; font-size: 1.4rem; }
+  .thumb-preview img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* CROP TOOL */
+  .crop-container {
+    width: 100%; max-width: 300px; aspect-ratio: 1; border-radius: 12px;
+    overflow: hidden; position: relative; background: #000;
+    border: 2px solid #444; cursor: grab; margin: 10px auto;
+    touch-action: none;
+  }
+  .crop-container:active { cursor: grabbing; }
+  .crop-container img {
+    position: absolute; min-width: 100%; min-height: 100%;
+    user-select: none; -webkit-user-drag: none; pointer-events: none;
+  }
+  .crop-hint {
+    position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+    background: rgba(0,0,0,0.7); color: #fff; font-size: 0.6rem;
+    padding: 3px 10px; border-radius: 10px; pointer-events: none;
+    font-weight: 600;
+  }
+  .crop-zoom {
+    display: flex; align-items: center; gap: 8px; justify-content: center;
+    margin-top: 8px;
+  }
+  .crop-zoom label { margin: 0; font-size: 0.65rem; color: #aaa; text-transform: none; letter-spacing: 0; }
+  .crop-zoom input[type="range"] { width: 160px; accent-color: #c8a44e; }
+
+  /* MODAL */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; }
+  .modal-overlay.show { display: flex; align-items: center; justify-content: center; }
+  .modal { background: #1a1a1a; border-radius: 16px; padding: 20px; max-width: 500px; width: 90%; max-height: 85vh; overflow-y: auto; border: 1px solid #333; }
+  .modal h2 { font-size: 1rem; font-weight: 700; margin-bottom: 14px; }
+
+  /* PREVIEW */
+  .preview-frame { background: #222; border-radius: 12px; overflow: hidden; margin-top: 10px; }
+  .preview-frame iframe { width: 100%; height: 600px; border: none; }
+  .phone-stage { display: flex; justify-content: center; margin-top: 16px; }
+  .phone-frame { width: 390px; height: 780px; border: 1px solid #555; border-radius: 30px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.45); background: #000; transition: width 0.2s; }
+  .phone-frame iframe { width: 100%; height: 100%; border: none; display: block; background: #fff; }
+
+  /* STATUS */
+  .status { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #2ecc71; color: #000; padding: 8px 20px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; opacity: 0; transition: opacity 0.3s; z-index: 200; pointer-events: none; max-width: 90vw; text-align: center; }
+  .status.show { opacity: 1; }
+  .status.error { background: #c0392b; color: #fff; }
+
+  /* BOOTUP OVERLAY */
+  #bootup-overlay { position: fixed; inset: 0; background: rgba(10,10,10,0.97); z-index: 500; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+  #bootup-overlay.hidden { display: none; }
+  .bootup-box { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 20px; padding: 36px 40px; max-width: 500px; width: 92%; text-align: center; }
+  .bootup-heading { font-size: 1.6rem; font-weight: 800; color: #D4A24E; margin-bottom: 6px; }
+  .bootup-sub { font-size: 0.82rem; color: #666; margin-bottom: 20px; }
+  .bootup-event-count { display: inline-block; background: #222; border: 1px solid #333; border-radius: 10px; padding: 10px 24px; margin-bottom: 24px; }
+  .bootup-event-count strong { color: #D4A24E; font-size: 1.5rem; font-weight: 800; display: block; }
+  .bootup-event-count small { color: #777; font-size: 0.68rem; }
+  .bootup-btns { display: flex; gap: 12px; margin-bottom: 18px; }
+  .bootup-btn { flex: 1; padding: 16px 10px; border: none; border-radius: 14px; font-family: Inter, sans-serif; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.15s; line-height: 1.3; }
+  .bootup-btn-auto { background: #D4A24E; color: #000; }
+  .bootup-btn-auto:hover { background: #e0b55a; transform: translateY(-1px); }
+  .bootup-btn-manual { background: #242424; color: #ddd; border: 1px solid #444; }
+  .bootup-btn-manual:hover { background: #2e2e2e; border-color: #777; }
+  .bootup-skip { font-size: 0.68rem; color: #444; cursor: pointer; text-decoration: underline; }
+  .bootup-skip:hover { color: #888; }
+
+  /* AUTO MODE — loading state */
+  #auto-loading { display: none; padding: 24px 0 16px; text-align: center; }
+  .auto-spinner { font-size: 1.8rem; animation: spin 1s linear infinite; display: inline-block; margin-bottom: 10px; }
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  .auto-load-label { font-size: 0.84rem; color: #bbb; font-weight: 600; }
+
+  /* AUTO MODE — calendar results */
+  #cal-results { display: none; text-align: left; }
+  .cal-month-label { font-size: 0.68rem; font-weight: 700; color: #D4A24E; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
+  .cal-list { max-height: 54vh; overflow-y: auto; margin-bottom: 12px; padding-right: 2px; }
+  .cal-card { background: #222; border: 1px solid #2e2e2e; border-radius: 10px; padding: 11px 13px; margin-bottom: 7px; display: flex; align-items: center; gap: 12px; transition: opacity 0.25s; }
+  .cal-card.added   { border-color: #27ae60; opacity: 0.4; }
+  .cal-card.skipped { opacity: 0.2; }
+  .cal-date-badge { min-width: 42px; text-align: center; background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 5px 4px; flex-shrink: 0; }
+  .cal-date-badge .cal-day   { font-size: 1.15rem; font-weight: 800; color: #D4A24E; line-height: 1; }
+  .cal-date-badge .cal-month { font-size: 0.56rem; font-weight: 700; color: #666; text-transform: uppercase; margin-top: 1px; }
+  .cal-info { flex: 1; min-width: 0; }
+  .cal-title { font-size: 0.84rem; font-weight: 700; color: #eee; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .cal-time  { font-size: 0.68rem; color: #888; margin-top: 2px; }
+  .cal-actions { display: flex; gap: 6px; flex-shrink: 0; }
+  .cal-done-row { text-align: center; padding-top: 4px; border-top: 1px solid #2a2a2a; }
+
+  /* LOGO */
+  .logo-section { display: flex; align-items: center; gap: 16px; }
+  .logo-preview { width: 72px; height: 72px; border-radius: 50%; background: #222; border: 2px solid #333; display: flex; align-items: center; justify-content: center; font-size: 2rem; overflow: hidden; }
+  .logo-preview img { width: 100%; height: 100%; object-fit: cover; }
+
+  .drag-handle { cursor: grab; color: #555; font-size: 1rem; user-select: none; padding: 4px; }
+  .drag-handle:hover { color: #c8a44e; }
+  .drag-handle:active { cursor: grabbing; }
+  .event-item.dragging { opacity: 0.3; }
+  .event-item.drag-over { border-top: 2px solid #c8a44e; }
+  .sort-toggle { display: flex; gap: 6px; align-items: center; }
+  .sort-toggle .btn { font-size: 0.65rem; padding: 4px 10px; }
+  .sort-toggle .btn.active-sort { background: #c8a44e; color: #000; }
+
+  /* JSON EDITOR */
+  .json-editor { width: 100%; min-height: 400px; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.72rem; background: #0a0a0a; color: #c8a44e; border: 1px solid #333; border-radius: 8px; padding: 12px; tab-size: 2; }
+</style>
+</head>
+<body>
+
+<div class="admin">
+  <h1>⚙️ Events Hub Admin</h1>
+  <div class="subtitle">Manage your events page — changes save to site-config.json</div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="events">📅 Events</button>
+    <button class="tab" data-tab="links">🔗 Links</button>
+    <button class="tab" data-tab="site">🎨 Site</button>
+    <button class="tab" data-tab="preview">👁 Preview</button>
+    <button class="tab" data-tab="mobile">📱 Mobile Preview</button>
+    <button class="tab" data-tab="stats">📊 Stats</button>
+    <button class="tab" data-tab="json">{ } JSON</button>
+  </div>
+
+  <!-- EVENTS TAB -->
+  <div class="tab-content active" id="tab-events">
+    <div class="card">
+      <div class="card-header">
+        <h2>Events</h2>
+        <div style="display:flex;gap:6px;align-items:center">
+          <div class="sort-toggle">
+            <button class="btn btn-ghost active-sort" id="sort-date-btn" onclick="setSortMode('date')">📅 By Date</button>
+            <button class="btn btn-ghost" id="sort-custom-btn" onclick="setSortMode('custom')">✋ Custom Order</button>
+          </div>
+          <button class="btn btn-ghost" id="show-archived-btn" onclick="toggleArchived()" style="opacity:0.6" title="Show archived events">📦 Archived</button>
+          <button class="btn btn-gold" onclick="openEventModal()">+ Add Event</button>
+          <button class="btn" onclick="publishLive(this)" style="background:#2ecc71;color:#063;font-weight:700" title="Push all changes to the live website now">🚀 Publish to Live</button>
+        </div>
+      </div>
+      <div id="events-list"></div>
+    </div>
+
+    <a href="volunteer-board/?admin=1" target="_blank" style="text-decoration:none; display:block;">
+      <div style="background:linear-gradient(135deg, #2f3a23 0%, #4a5d3a 70%, #5d7a3a 100%); padding:18px 22px; border-radius:12px; margin-bottom:20px; display:flex; align-items:center; gap:16px; box-shadow:0 2px 12px rgba(74,93,58,0.25); transition:transform 0.15s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div style="font-size:42px; line-height:1;">🌿</div>
+        <div style="flex:1;">
+          <div style="color:#f5efdf; font-size:1.05rem; font-weight:600; letter-spacing:0.02em; font-family:Georgia,serif;">Team Service Exchange</div>
+          <div style="color:#d4a24e; font-size:0.78rem; font-style:italic; margin-top:2px;">volunteer board — calendar + signup</div>
+        </div>
+        <div style="color:#d4a24e; font-size:1.4rem;">→</div>
+      </div>
+    </a>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Event Types</h2>
+        <button class="btn btn-ghost" onclick="openTypeModal()">+ Add Type</button>
+      </div>
+      <div id="types-list"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Venues</h2>
+        <button class="btn btn-ghost" onclick="openVenueModal()">+ Add Venue</button>
+      </div>
+      <div id="venues-list"></div>
+    </div>
+  </div>
+
+  <!-- LINKS TAB -->
+  <div class="tab-content" id="tab-links">
+    <div class="card">
+      <div class="card-header">
+        <h2>Top Links</h2>
+        <button class="btn btn-gold" onclick="openLinkModal('topLinks')">+ Add Link</button>
+      </div>
+      <div id="top-links-list"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Resources</h2>
+        <button class="btn btn-gold" onclick="openLinkModal('resources')">+ Add Resource</button>
+      </div>
+      <div id="resources-list"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Social Links</h2>
+        <button class="btn btn-ghost" onclick="openSocialModal()">+ Add Social</button>
+      </div>
+      <div id="social-list"></div>
+    </div>
+  </div>
+
+  <!-- SITE TAB -->
+  <div class="tab-content" id="tab-site">
+    <div class="card">
+      <div class="card-header"><h2>Branding</h2></div>
+      <div class="logo-section">
+        <div class="logo-preview" id="logo-prev">🔔</div>
+        <div>
+          <label>Logo URL (or upload)</label>
+          <input type="text" id="site-logo" placeholder="https://... or leave blank for emoji">
+          <div style="margin-top:6px">
+            <input type="file" accept="image/*" id="logo-file" style="font-size:0.7rem">
+          </div>
+        </div>
+      </div>
+      <label>Logo Emoji (fallback)</label>
+      <input type="text" id="site-emoji" placeholder="🔔">
+      <label>Site Name</label>
+      <input type="text" id="site-name">
+      <label>Bio (HTML ok)</label>
+      <textarea id="site-bio"></textarea>
+      <label>Contact Email</label>
+      <input type="email" id="site-email">
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h2>Filter Order</h2></div>
+      <p style="font-size:0.7rem;color:#888;margin-bottom:8px">Comma-separated type IDs</p>
+      <input type="text" id="filter-order">
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-gold" onclick="saveSiteSettings()">💾 Save Site Settings</button>
+    </div>
+  </div>
+
+  <!-- STATS TAB -->
+  <div class="tab-content" id="tab-stats">
+    <div class="card">
+      <div class="card-header">
+        <h2>📊 Page Views</h2>
+        <button class="btn btn-ghost" onclick="renderStats()">↻ Refresh</button>
+      </div>
+      <div class="row" style="margin-bottom:14px">
+        <div class="card" style="text-align:center;margin:0">
+          <div style="font-size:0.6rem;color:#888;text-transform:uppercase;font-weight:700">Today</div>
+          <div id="stat-today" style="font-size:1.8rem;font-weight:800;color:#c8a44e">0</div>
+        </div>
+        <div class="card" style="text-align:center;margin:0">
+          <div style="font-size:0.6rem;color:#888;text-transform:uppercase;font-weight:700">This Week</div>
+          <div id="stat-week" style="font-size:1.8rem;font-weight:800;color:#c8a44e">0</div>
+        </div>
+        <div class="card" style="text-align:center;margin:0">
+          <div style="font-size:0.6rem;color:#888;text-transform:uppercase;font-weight:700">Total (90d)</div>
+          <div id="stat-total" style="font-size:1.8rem;font-weight:800;color:#c8a44e">0</div>
+        </div>
+      </div>
+      <div id="stat-chart" style="display:flex;align-items:flex-end;gap:2px;height:100px;margin-bottom:12px"></div>
+      <div style="display:flex;justify-content:space-between;font-size:0.55rem;color:#666">
+        <span>30 days ago</span><span>Today</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h2>🎟 Booking Clicks</h2></div>
+      <div id="stat-clicks"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h2>🔗 Referrers</h2></div>
+      <div id="stat-refs"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>🔧 Google Analytics</h2>
+      </div>
+      <p style="font-size:0.7rem;color:#888;margin-bottom:8px">Paste your GA4 Measurement ID to enable full Google Analytics tracking.</p>
+      <input type="text" id="ga-id" placeholder="G-XXXXXXXXXX">
+      <div class="btn-row">
+        <button class="btn btn-gold" onclick="saveGaId()">💾 Save GA ID</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PREVIEW TAB -->
+  <div class="tab-content" id="tab-preview">
+    <div class="card">
+      <div class="card-header">
+        <h2>Live Preview</h2>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-ghost" onclick="setPreviewWidth('375px')">📱 Mobile</button>
+          <button class="btn btn-ghost" onclick="setPreviewWidth('100%')">🖥 Desktop</button>
+          <button class="btn btn-ghost" onclick="openPreviewTab()">↗ New Tab</button>
+        </div>
+      </div>
+      <div class="preview-frame" id="preview-frame">
+        <iframe id="preview-iframe" src="index.html?admin&edit"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOBILE PREVIEW TAB -->
+  <div class="tab-content" id="tab-mobile">
+    <div class="card">
+      <div class="card-header">
+        <h2>Mobile Preview</h2>
+        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+          <button class="btn btn-ghost" id="mobile-w-375" onclick="setMobileWidth(375)">375</button>
+          <button class="btn btn-ghost" id="mobile-w-390" style="background:#c8a44e;color:#000;border-color:#c8a44e" onclick="setMobileWidth(390)">390</button>
+          <button class="btn btn-ghost" id="mobile-w-414" onclick="setMobileWidth(414)">414</button>
+          <button class="btn btn-ghost" onclick="refreshMobilePreview()">🔄 Refresh</button>
+        </div>
+      </div>
+      <div class="phone-stage">
+        <div class="phone-frame" id="phone-frame">
+          <iframe id="mobile-iframe" src="index.html?admin&edit"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JSON TAB -->
+  <div class="tab-content" id="tab-json">
+    <div class="card">
+      <div class="card-header">
+        <h2>Raw JSON</h2>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-ghost" onclick="document.querySelector('.tab[data-tab=events]').click()" style="color:#c8a44e">← Back to Events</button>
+          <button class="btn btn-ghost" onclick="loadJsonEditor()">↻ Reload</button>
+          <button class="btn btn-gold" onclick="saveJsonEditor()">💾 Save</button>
+        </div>
+      </div>
+      <textarea class="json-editor" id="json-editor"></textarea>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="downloadConfig()">⬇ Download site-config.json</button>
+      <button class="btn btn-ghost" onclick="restoreLastSave()" style="color:#E8A020;">↩️ Restore Last Save</button>
+      <label class="btn btn-ghost" style="display:inline-flex;align-items:center;cursor:pointer;margin:0;text-transform:none;letter-spacing:0">
+        ⬆ Import JSON
+        <input type="file" accept=".json" style="display:none" onchange="importConfig(this)">
+      </label>
+    </div>
+  </div>
+</div>
+
+<!-- EVENT MODAL -->
+<div class="modal-overlay" id="event-modal">
+  <div class="modal">
+    <h2 id="event-modal-title">Add Event</h2>
+    <input type="hidden" id="ev-edit-idx" value="-1">
+
+    <!-- URL IMPORT -->
+    <div style="background:#1a1a1a;border:1px solid #333;border-radius:8px;padding:12px;margin-bottom:16px;">
+      <label style="color:#D4A24E;margin-bottom:6px;display:block;">🔗 Import from URL</label>
+      <div style="display:flex;gap:8px;">
+        <input type="url" id="import-url" placeholder="Paste event URL here..." style="flex:1;">
+        <button class="btn btn-gold" onclick="event.preventDefault();importFromUrl()" id="import-btn" style="white-space:nowrap;">⚡ Fetch</button>
+      </div>
+      <div id="import-status" style="font-size:0.7rem;color:#888;margin-top:6px;"></div>
+    </div>
+
+    <label>Title</label>
+    <input type="text" id="ev-title">
+    <label>Status</label>
+    <select id="ev-status">
+      <option value="draft">📝 Draft — hidden from public (finish later)</option>
+      <option value="published">✨ Published — live on site</option>
+    </select>
+    <label style="display:flex;align-items:center;gap:6px;margin-top:6px;cursor:pointer;"><input type="checkbox" id="ev-repeatable" style="width:auto;margin:0;"> 🔁 Repeatable — reuse for future dates (just swap the date/link)</label>
+    <div class="row">
+      <div><label>Type</label><select id="ev-type"></select></div>
+      <div>
+        <label>Venue <button class="btn btn-ghost" style="padding:2px 6px;font-size:0.55rem;margin-left:6px;vertical-align:middle" onclick="event.preventDefault();quickAddVenue()">+ New</button></label>
+        <select id="ev-venue"></select>
+      </div>
+    </div>
+    <label>Location Override <span style="font-size:0.6rem;color:#666;text-transform:none;letter-spacing:0">(leave blank to use venue's default location)</span></label>
+    <input type="text" id="ev-venue-override" placeholder="e.g. Sherwood Park — overrides venue name + hides area">
+    <div class="row">
+      <div><label>Date</label><input type="date" id="ev-date"></div>
+      <div><label>Start Time</label><input type="time" id="ev-time"></div>
+      <div><label>End Time</label><input type="time" id="ev-endtime"></div>
+    </div>
+    <div class="row">
+      <div><label>Price ($)</label><input type="number" id="ev-price" min="0"></div>
+    </div>
+    <label>Booking <span style="font-size:0.6rem;color:#666;text-transform:none;font-weight:400">— URL, email, or phone (all optional)</span></label>
+    <input type="url" id="ev-booking" placeholder="https://... or leave blank">
+    <div class="row" style="margin-top:6px;">
+      <div><label style="font-size:0.6rem;">📧 Register by Email</label><input type="email" id="ev-contact-email" placeholder="contact@email.com"></div>
+      <div><label style="font-size:0.6rem;">📞 Register by Phone</label><input type="tel" id="ev-contact-phone" placeholder="(780) 555-1234"></div>
+    </div>
+    <label>Description</label>
+    <textarea id="ev-desc"></textarea>
+    <label>Thumbnail</label>
+    <div class="thumb-upload">
+      <div class="thumb-preview" id="ev-thumb-prev" style="width:64px;height:64px;border-radius:8px">🔔</div>
+      <div style="flex:1">
+        <label style="font-size:0.62rem;color:#c8a44e;display:block;margin-bottom:3px;font-weight:600;">📷 Photo URL — paste a link here</label>
+        <input type="url" id="ev-img" placeholder="https://...  (paste any image link)">
+        <div style="display:flex;gap:6px;margin-top:4px;align-items:center">
+          <input type="file" accept="image/*" id="ev-img-file" style="font-size:0.7rem;flex:1">
+          <button class="btn btn-ghost" style="padding:4px 10px;font-size:0.6rem;white-space:nowrap" onclick="event.preventDefault();openPhotoLibrary('ev')">📂 Library</button>
+        </div>
+        <button class="btn btn-ghost" style="padding:4px 10px;font-size:0.6rem;margin-top:4px" onclick="event.preventDefault();openCropTool()">✂️ Crop & Position</button>
+        <input type="hidden" id="ev-img-crop" value="center">
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-gold" onclick="saveEvent()">💾 Save Event</button>
+      <button class="btn btn-ghost" onclick="closeModal('event-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- LINK MODAL -->
+<div class="modal-overlay" id="link-modal">
+  <div class="modal">
+    <h2 id="link-modal-title">Add Link</h2>
+    <input type="hidden" id="link-edit-section" value="">
+    <input type="hidden" id="link-edit-idx" value="-1">
+    <label>Title</label>
+    <input type="text" id="link-title">
+    <label>URL</label>
+    <input type="url" id="link-url">
+    <label>Emoji (fallback)</label>
+    <input type="text" id="link-emoji" placeholder="⭐">
+    <label>Thumbnail URL</label>
+    <input type="url" id="link-img" placeholder="https://... logo image">
+    <div class="thumb-upload">
+      <div class="thumb-preview" id="link-thumb-prev">🔗</div>
+      <div style="flex:1">
+        <input type="file" accept="image/*" id="link-thumb-file" style="font-size:0.7rem">
+        <button class="btn btn-ghost" style="padding:4px 10px;font-size:0.6rem;margin-top:4px" onclick="event.preventDefault();openPhotoLibrary('link')">📂 Library</button>
+        <button class="btn btn-ghost" style="padding:4px 10px;font-size:0.6rem;margin-top:4px" onclick="event.preventDefault();openCropTool('link')">✂️ Crop & Position</button>
+        <input type="hidden" id="link-img-crop" value="center">
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-gold" onclick="saveLink()">💾 Save</button>
+      <button class="btn btn-ghost" onclick="closeModal('link-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- TYPE MODAL -->
+<div class="modal-overlay" id="type-modal">
+  <div class="modal">
+    <h2>Add/Edit Event Type</h2>
+    <input type="hidden" id="type-edit-id" value="">
+    <label>ID (slug)</label>
+    <input type="text" id="type-id" placeholder="e.g. sound-bath">
+    <label>Display Name</label>
+    <input type="text" id="type-name">
+    <div class="row">
+      <div><label>Color</label><input type="color" id="type-color" value="#4a90d9"></div>
+      <div><label>Icon Emoji</label><input type="text" id="type-icon" placeholder="🔔"></div>
+    </div>
+    <label>Thumbnail URL</label>
+    <input type="url" id="type-img">
+    <label>Filter As (optional — group under another type)</label>
+    <input type="text" id="type-filteras" placeholder="e.g. yin-sound">
+    <div class="btn-row">
+      <button class="btn btn-gold" onclick="saveType()">💾 Save</button>
+      <button class="btn btn-ghost" onclick="closeModal('type-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- VENUE MODAL -->
+<div class="modal-overlay" id="venue-modal">
+  <div class="modal">
+    <h2>Add/Edit Venue</h2>
+    <input type="hidden" id="venue-edit-id" value="">
+    <label>ID (slug)</label>
+    <input type="text" id="venue-id" placeholder="e.g. my-studio">
+    <label>Name</label>
+    <input type="text" id="venue-name">
+    <label>Area / Neighbourhood</label>
+    <input type="text" id="venue-area">
+    <div class="btn-row">
+      <button class="btn btn-gold" onclick="saveVenue()">💾 Save</button>
+      <button class="btn btn-ghost" onclick="closeModal('venue-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- SOCIAL MODAL -->
+<div class="modal-overlay" id="social-modal">
+  <div class="modal">
+    <h2>Add/Edit Social Link</h2>
+    <input type="hidden" id="social-edit-idx" value="-1">
+    <label>Name</label>
+    <input type="text" id="social-name" placeholder="Instagram">
+    <label>URL</label>
+    <input type="url" id="social-url">
+    <label>Icon</label>
+    <select id="social-icon">
+      <option value="instagram">Instagram</option>
+      <option value="facebook">Facebook</option>
+      <option value="music">Music</option>
+      <option value="mail">Email</option>
+    </select>
+    <div class="btn-row">
+      <button class="btn btn-gold" onclick="saveSocial()">💾 Save</button>
+      <button class="btn btn-ghost" onclick="closeModal('social-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- CROP MODAL -->
+<div class="modal-overlay" id="crop-modal">
+  <div class="modal" style="max-width:400px">
+    <h2>✂️ Position & Crop</h2>
+    <p style="font-size:0.7rem;color:#888;margin-bottom:8px">Drag the image to position it. Zoom to fit.</p>
+    <div class="crop-container" id="crop-box">
+      <img id="crop-img" src="" draggable="false">
+      <div class="crop-hint">👆 Drag to reposition</div>
+    </div>
+    <div class="crop-zoom">
+      <label>🔍 Zoom</label>
+      <input type="range" id="crop-zoom" min="30" max="400" step="5" value="100">
+      <span id="crop-zoom-val" style="font-size:0.6rem;color:#888;min-width:30px">100%</span>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-gold" onclick="applyCrop()">✓ Apply</button>
+      <button class="btn btn-ghost" onclick="closeModal('crop-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- PHOTO LIBRARY MODAL -->
+<div class="modal-overlay" id="photo-modal">
+  <div class="modal" style="max-width:600px">
+    <h2>📂 Photo Library</h2>
+    <p style="font-size:0.7rem;color:#888;margin-bottom:12px">Click a photo to use it. Upload new photos to save for reuse.</p>
+    <div style="margin-bottom:12px">
+      <input type="file" accept="image/*" multiple id="lib-upload" style="font-size:0.7rem">
+    </div>
+    <div id="photo-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px"></div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="closeModal('photo-modal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="status" id="status">Saved ✓</div>
+
+<!-- BOOTUP OVERLAY -->
+<div id="bootup-overlay">
+  <div class="bootup-box">
+
+    <!-- Step 1: Welcome screen -->
+    <div id="bootup-initial">
+      <div class="bootup-heading">Welcome back, Marcus 👋</div>
+      <div class="bootup-sub">Earth Harmony Sound &amp; Wellness</div>
+      <div class="bootup-event-count" id="bootup-count">
+        <strong class="bootup-count-num">—</strong>
+        <small class="bootup-count-month">loading events…</small>
+      </div>
+      <div class="bootup-btns">
+        <button class="bootup-btn bootup-btn-auto" onclick="startAutoMode()">
+          🤖 Auto Mode<br>
+          <span style="font-size:0.72rem;font-weight:400;opacity:0.8">Sync from Google Calendar</span>
+        </button>
+        <button class="bootup-btn bootup-btn-manual" onclick="dismissBootup()">
+          ✏️ Manual Mode<br>
+          <span style="font-size:0.72rem;font-weight:400;opacity:0.7">Go straight to admin</span>
+        </button>
+      </div>
+      <span class="bootup-skip" onclick="dismissBootup()">skip →</span>
+    </div>
+
+    <!-- Step 2: Loading calendar -->
+    <div id="auto-loading">
+      <div class="auto-spinner">📅</div>
+      <div class="auto-load-label">Fetching your Google Calendar…</div>
+    </div>
+
+    <!-- Step 3: Calendar event list -->
+    <div id="cal-results">
+      <div class="cal-month-label" id="cal-month-label">This month's events</div>
+      <div class="cal-list" id="cal-list"></div>
+      <div class="cal-done-row">
+        <button class="btn btn-gold" onclick="dismissBootup()">✓ Done — Go to Admin</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+let config = {};
+let knownEventIds = new Set(); // event ids this browser has loaded — used by the clobber guard
+let sortMode = 'date'; // 'date' or 'custom'
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+// Resolve server base — works from localhost AND Tailscale
+const SERVER_BASE = 'http://' + (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'localhost' : '100.121.154.95') + ':8888/projects/events-hub';
+
+async function loadConfig() {
+  let loaded = false;
+
+  // 1. Try server first (source of truth — port 8765)
+  try {
+    const res = await fetch(SERVER_BASE + '/site-config.json?v=' + Date.now(), {
+      signal: AbortSignal.timeout(4000)
+    });
+    if (res.ok) {
+      config = await res.json();
+      loaded = true;
+      console.log('✅ Config loaded from server (8765)');
+    }
+  } catch (e) {
+    console.warn('⚠️ Server 8765 unreachable:', e.message);
+  }
+
+  // 2. Fall back to localStorage
+  if (!loaded) {
+    const cached = localStorage.getItem('events-hub-config');
+    if (cached) {
+      try {
+        config = JSON.parse(cached);
+        loaded = true;
+        console.log('📦 Config loaded from localStorage (server unavailable)');
+        showStatus('⚠️ Server offline — using cached data. Start server.py!', 6000, true);
+      } catch (e) { /* bad cache */ }
+    }
+  }
+
+  // 2b. If server loaded OK, check if localStorage has unsaved changes from a crash
+  // Always keep server's eventTypes/venues as source of truth
+  const serverTypes = config.eventTypes || {};
+  const serverVenues = config.venues || {};
+  if (loaded) {
+    const cached = localStorage.getItem('events-hub-config');
+    const cachedTs = localStorage.getItem('events-hub-config-ts');
+    if (cached && cachedTs) {
+      try {
+        const cachedData = JSON.parse(cached);
+        // If cached has more events than server, warn
+        const serverCount = (config.events || []).length;
+        const cacheCount = (cachedData.events || []).length;
+        if (cacheCount > serverCount) {
+          const recover = confirm(`⚠️ Unsaved local data detected (${cacheCount} events vs ${serverCount} on server, from ${cachedTs}).
+
+Recover local version?`);
+          if (recover) {
+            config = cachedData;
+            // Always restore server eventTypes/venues (localStorage often loses these)
+            if (Object.keys(serverTypes).length > 0) config.eventTypes = serverTypes;
+            if (Object.keys(serverVenues).length > 0) config.venues = serverVenues;
+          }
+        }
+        // Clear the fallback cache once we've handled it
+        localStorage.removeItem('events-hub-config-ts');
+      } catch(e) {}
+    }
+  }
+
+  // 3. Last resort: static server
+  if (!loaded) {
+    try {
+      const res = await fetch('site-config.json?v=' + Date.now());
+      config = await res.json();
+      console.log('📄 Config loaded from static server');
+    } catch (e) {
+      config = { events: [], eventTypes: {}, venues: {}, topLinks: [], resources: [], socialLinks: [] };
+      console.error('❌ Could not load config from anywhere:', e);
+    }
+  }
+
+  knownEventIds = new Set((config.events || []).map(e => e.id));
+  renderAll();
+  showBootup();
+
+  // Autosave to localStorage every 30s (backup only)
+  setInterval(() => {
+    localStorage.setItem('events-hub-config', JSON.stringify(config));
+  }, 30000);
+
+  // Save to localStorage on page close
+  window.addEventListener('beforeunload', () => {
+    localStorage.setItem('events-hub-config', JSON.stringify(config));
+  });
+}
+
+function renderAll() {
+  renderEvents();
+  renderTypes();
+  renderVenues();
+  renderTopLinks();
+  renderResources();
+  renderSocial();
+  renderSiteSettings();
+  loadJsonEditor();
+}
+
+// ============ EVENTS ============
+function setSortMode(mode) {
+  sortMode = mode;
+  document.getElementById('sort-date-btn').classList.toggle('active-sort', mode === 'date');
+  document.getElementById('sort-custom-btn').classList.toggle('active-sort', mode === 'custom');
+  renderEvents();
+}
+
+let showArchived = false;
+
+function toggleArchived() {
+  showArchived = !showArchived;
+  const btn = document.getElementById('show-archived-btn');
+  btn.style.opacity = showArchived ? '1' : '0.6';
+  btn.textContent = showArchived ? '📤 Hide Archived' : '📦 Archived';
+  renderEvents();
+}
+
+function renderEvents() {
+  const el = document.getElementById('events-list');
+  // In date mode, sort by date. In custom mode, use array order (draggable).
+  let events = config.events || [];
+  let indexMap = events.map((_, i) => i); // real indices into config.events
+  // Filter archived unless showArchived is true
+  indexMap = indexMap.filter(i => showArchived ? true : !events[i].archived);
+  if (sortMode === 'date') {
+    indexMap.sort((a, b) => events[a].date.localeCompare(events[b].date));
+  }
+  el.innerHTML = indexMap.map((realIdx, displayIdx) => {
+    const ev = events[realIdx];
+    const d = new Date(ev.date + 'T00:00:00');
+    const ds = `${MONTHS[d.getMonth()]} ${d.getDate()}`;
+    const type = config.eventTypes?.[ev.type];
+    const venue = ev.venueOverride || config.venues?.[ev.venue]?.name || ev.venue;
+    const dragAttrs = sortMode === 'custom'
+      ? `draggable="true" ondragstart="onEvDragStart(event,${realIdx})" ondragover="onEvDragOver(event)" ondragenter="onEvDragEnter(event)" ondragleave="onEvDragLeave(event)" ondrop="onEvDrop(event,${realIdx})" ondragend="onEvDragEnd(event)"`
+      : '';
+    const handle = sortMode === 'custom' ? `<span class="drag-handle" title="Drag to reorder">⠿</span>` : '';
+    return `<div class="event-item" ${dragAttrs} data-real-idx="${realIdx}" onclick="editEvent(${realIdx})">
+      ${handle}
+      <div class="ev-date">${ds}</div>
+      <div class="ev-title"><span class="ev-title-text" contenteditable="true" spellcheck="false" onclick="event.stopPropagation()" onkeydown="inlineEditKey(event,this)" onblur="saveInlineField(${realIdx},'title',this)">${ev.title}</span>${ev.status === 'draft' ? ' <span style="font-size:0.55rem;background:#2a2a10;color:#facc15;padding:1px 6px;border-radius:8px;vertical-align:middle;">DRAFT</span>' : ''}${ev.repeatable ? ' <span style="font-size:0.55rem;background:#11253a;color:#7fc7ff;padding:1px 6px;border-radius:8px;vertical-align:middle;" title="Repeatable">🔁</span>' : ''}<br><span style="font-size:0.62rem;color:#666">📍 <span class="ev-title-text ev-venue-text" contenteditable="true" spellcheck="false" onclick="event.stopPropagation()" onkeydown="inlineEditKey(event,this)" onblur="saveInlineField(${realIdx},'venueOverride',this)">${venueFullOf(ev)}</span></span></div>
+      <div class="ev-price">$${ev.price}</div>
+      ${type ? `<div class="ev-type" style="color:${type.color}">${type.icon} ${type.name}</div>` : ''}
+      <div class="ev-actions">
+        ${sortMode === 'custom' ? `<button class="btn btn-ghost" onclick="event.stopPropagation();moveEvent(${realIdx},-1)" title="Move up">▲</button>
+        <button class="btn btn-ghost" onclick="event.stopPropagation();moveEvent(${realIdx},1)" title="Move down">▼</button>` : ''}
+        <button class="btn btn-ghost" onclick="event.stopPropagation();togglePublish(${realIdx})" title="${ev.status==='draft'?'Make Public (Publish)':'Make Private (Draft)'}">${ev.status==='draft'?'📝':'✨'}</button>
+        <button class="btn btn-ghost" onclick="event.stopPropagation();toggleRepeatable(${realIdx})" title="${ev.repeatable?'Repeatable ✓ — click to turn off':'Mark repeatable'}" style="opacity:${ev.repeatable?'1':'0.4'}">🔁</button>
+        ${ev.booking ? `<button class="btn btn-ghost" onclick="event.stopPropagation();window.open('${ev.booking}','_blank')" title="Open booking link — ${ev.booking}">🔗</button>` : ''}
+        <button class="btn btn-ghost" onclick="event.stopPropagation();duplicateEvent(${realIdx})" title="Duplicate">⧉</button>
+        <button class="btn btn-ghost" onclick="event.stopPropagation();archiveEvent(${realIdx})" title="${ev.archived ? 'Unarchive' : 'Archive'}" style="opacity:${ev.archived?'1':'0.6'}">${ev.archived ? '📤' : '📦'}</button>
+        <button class="btn btn-red" onclick="event.stopPropagation();deleteEvent(${realIdx})">✕</button>
+      </div>
+    </div>`;
+  }).join('') || '<div style="color:#666;font-size:0.78rem;padding:10px">No events yet</div>';
+}
+
+// ---- Inline editing (title + location, directly in the event list) ----
+// Effective location text: venueOverride wins, else venue name + " - area".
+function venueFullOf(ev) {
+  if (ev.venueOverride) return ev.venueOverride;
+  const v = (config.venues && config.venues[ev.venue]) || {};
+  return (v.name || ev.venue || '') + (v.area ? ' - ' + v.area : '');
+}
+// Save one inline-edited field back to the stored event, then persist.
+function saveInlineField(i, field, el) {
+  const v = el.textContent.trim();
+  if (field === 'title') {
+    if (!v) { el.textContent = config.events[i].title; return; } // never blank a title
+    if (v === config.events[i].title) return;                    // no change
+    config.events[i].title = v;
+  } else if (field === 'venueOverride') {
+    if (v === venueFullOf(config.events[i])) return;             // no change
+    config.events[i].venueOverride = v;
+  } else { return; }
+  saveConfig();
+}
+function inlineEditKey(e, el) {
+  if (e.key === 'Enter') { e.preventDefault(); el.blur(); }      // Enter = save
+  else if (e.key === 'Escape') { e.preventDefault(); renderEvents(); } // Esc = discard
+}
+
+// Drag and drop for event reordering
+let dragSrcIdx = null;
+
+function onEvDragStart(e, idx) {
+  dragSrcIdx = idx;
+  e.dataTransfer.effectAllowed = 'move';
+  e.currentTarget.classList.add('dragging');
+}
+
+function onEvDragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+}
+
+function onEvDragEnter(e) {
+  e.preventDefault();
+  const item = e.currentTarget.closest('.event-item');
+  if (item) item.classList.add('drag-over');
+}
+
+function onEvDragLeave(e) {
+  const item = e.currentTarget.closest('.event-item');
+  if (item) item.classList.remove('drag-over');
+}
+
+function onEvDrop(e, targetIdx) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if (dragSrcIdx === null || dragSrcIdx === targetIdx) return;
+  const events = config.events;
+  const [moved] = events.splice(dragSrcIdx, 1);
+  // Adjust target if source was before target
+  const adjustedTarget = dragSrcIdx < targetIdx ? targetIdx - 1 : targetIdx;
+  events.splice(adjustedTarget, 0, moved);
+  dragSrcIdx = null;
+  saveConfig();
+}
+
+function onEvDragEnd(e) {
+  e.currentTarget.classList.remove('dragging');
+  document.querySelectorAll('.event-item.drag-over').forEach(el => el.classList.remove('drag-over'));
+  dragSrcIdx = null;
+}
+
+function moveEvent(idx, direction) {
+  const events = config.events;
+  const newIdx = idx + direction;
+  if (newIdx < 0 || newIdx >= events.length) return;
+  [events[idx], events[newIdx]] = [events[newIdx], events[idx]];
+  saveConfig();
+}
+
+function populateEventDropdowns() {
+  const typeEl = document.getElementById('ev-type');
+  const venueEl = document.getElementById('ev-venue');
+  typeEl.innerHTML = Object.entries(config.eventTypes || {}).map(([id, t]) =>
+    `<option value="${id}">${t.icon} ${t.name}</option>`).join('');
+  venueEl.innerHTML = Object.entries(config.venues || {}).map(([id, v]) =>
+    `<option value="${id}">${v.name}</option>`).join('');
+}
+
+function openEventModal(idx) {
+  populateEventDropdowns();
+  document.getElementById('ev-edit-idx').value = idx ?? -1;
+  document.getElementById('event-modal-title').textContent = idx >= 0 ? 'Edit Event' : 'Add Event';
+  if (idx >= 0) {
+    const ev = config.events[idx];
+    document.getElementById('ev-title').value = ev.title;
+    document.getElementById('ev-status').value = ev.status || 'published';
+    document.getElementById('ev-repeatable').checked = !!ev.repeatable;
+    document.getElementById('ev-type').value = ev.type;
+    document.getElementById('ev-venue').value = ev.venue;
+    document.getElementById('ev-date').value = ev.date;
+    document.getElementById('ev-time').value = ev.time;
+    document.getElementById('ev-endtime').value = ev.endTime;
+    document.getElementById('ev-price').value = ev.price;
+    document.getElementById('ev-booking').value = ev.booking || '';
+    if (document.getElementById('ev-contact-email')) document.getElementById('ev-contact-email').value = ev.contactEmail || '';
+    if (document.getElementById('ev-contact-phone')) document.getElementById('ev-contact-phone').value = ev.contactPhone || '';
+    document.getElementById('ev-desc').value = ev.desc || '';
+    document.getElementById('ev-venue-override').value = ev.venueOverride || '';
+    document.getElementById('ev-img').value = ev.img || '';
+    document.getElementById('ev-img-crop').value = ev.imgCrop || 'center';
+    updateEvThumbPreview(ev);
+  } else {
+    ['ev-title','ev-date','ev-time','ev-endtime','ev-booking','ev-contact-email','ev-contact-phone','ev-desc','ev-venue-override','ev-img'].forEach(id => { if(document.getElementById(id)) document.getElementById(id).value = ''; });
+    document.getElementById('ev-price').value = 0;
+    document.getElementById('ev-img-crop').value = 'center';
+    document.getElementById('ev-thumb-prev').innerHTML = '🔔';
+    document.getElementById('ev-status').value = 'draft';
+    document.getElementById('ev-repeatable').checked = false;
+  }
+  document.getElementById('event-modal').classList.add('show');
+}
+
+function editEvent(i) { openEventModal(i); }
+
+function saveEvent() {
+  const idx = parseInt(document.getElementById('ev-edit-idx').value);
+  const ev = {
+    id: idx >= 0 ? config.events[idx].id : 'ev-' + String(Date.now()).slice(-6),
+    type: document.getElementById('ev-type').value,
+    title: document.getElementById('ev-title').value,
+    date: document.getElementById('ev-date').value,
+    time: document.getElementById('ev-time').value,
+    endTime: document.getElementById('ev-endtime').value,
+    venue: document.getElementById('ev-venue').value,
+    price: parseFloat(document.getElementById('ev-price').value) || 0,
+    booking: document.getElementById('ev-booking').value,
+    contactEmail: document.getElementById('ev-contact-email')?.value || '',
+    contactPhone: document.getElementById('ev-contact-phone')?.value || '',
+    desc: document.getElementById('ev-desc').value,
+    status: document.getElementById('ev-status').value,
+    repeatable: document.getElementById('ev-repeatable').checked,
+  };
+  const vo = document.getElementById('ev-venue-override').value;
+  if (vo) ev.venueOverride = vo;
+  const img = document.getElementById('ev-img').value;
+  if (img) ev.img = img;
+  const crop = document.getElementById('ev-img-crop').value;
+  if (crop && crop !== 'center') ev.imgCrop = crop;
+  if (idx >= 0) config.events[idx] = ev;
+  else config.events.push(ev);
+  closeModal('event-modal');
+  saveConfig();
+}
+
+function quickAddVenue() {
+  const name = prompt('Venue name (e.g. "Sherwood Park Community Hall"):');
+  if (!name) return;
+  const area = prompt('Area/neighbourhood (optional):') || '';
+  const id = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/, '');
+  config.venues[id] = { name, area };
+  populateEventDropdowns();
+  document.getElementById('ev-venue').value = id;
+  saveConfig();
+  showStatus('Venue added ✓');
+}
+
+async function importFromUrl() {
+  const url = document.getElementById('import-url').value.trim();
+  if (!url) return;
+  const btn = document.getElementById('import-btn');
+  const status = document.getElementById('import-status');
+  btn.textContent = '⏳ Fetching...';
+  btn.disabled = true;
+  status.textContent = 'Fetching page...';
+  status.style.color = '#888';
+
+  try {
+    // Use local server to scrape (no CORS issues, faster)
+    const res = await fetch(`http://localhost:8101/scrape?url=${encodeURIComponent(url)}`, {
+      signal: AbortSignal.timeout(10000)
+    });
+    if (!res.ok) throw new Error('Server error ' + res.status);
+    const extracted = await res.json();
+
+    // Fill form — highlight fields we filled in yellow
+    const fill = (id, val, highlight=true) => {
+      const el = document.getElementById(id);
+      if (el && val) {
+        el.value = val;
+        if (highlight) el.style.background = '#2a2a00';
+        setTimeout(() => { if (el) el.style.background = ''; }, 3000);
+      }
+    };
+
+    fill('ev-title', extracted.title);
+    fill('ev-desc', extracted.desc);
+    fill('ev-date', extracted.date);
+    fill('ev-time', extracted.time);
+    fill('ev-price', extracted.price);
+    fill('ev-booking', extracted.booking);
+    if (extracted.img) fill('ev-img', extracted.img);
+    if (extracted.contactEmail) fill('ev-contact-email', extracted.contactEmail);
+    if (extracted.contactPhone) fill('ev-contact-phone', extracted.contactPhone);
+
+    // Count what we got
+    const filled = Object.values(extracted).filter(Boolean).length;
+    status.textContent = `✅ Filled ${filled} fields. Yellow = auto-filled — verify before saving. Pick venue + type manually.`;
+    status.style.color = '#D4A24E';
+
+  } catch (err) {
+    status.textContent = `⚠️ Couldn't fetch: ${err.message}. Fill manually.`;
+    status.style.color = '#cc3333';
+  }
+
+  btn.textContent = '⚡ Fetch';
+  btn.disabled = false;
+}
+
+function archiveEvent(i) {
+  config.events[i].archived = !config.events[i].archived;
+  saveConfig();
+}
+
+function togglePublish(i) {
+  // one-click flip public<->private (published<->draft). Safety net.
+  config.events[i].status = config.events[i].status === 'draft' ? 'published' : 'draft';
+  saveConfig();
+  renderEvents();
+}
+
+function toggleRepeatable(i) {
+  // one-click mark/unmark repeatable, right from the list
+  config.events[i].repeatable = !config.events[i].repeatable;
+  saveConfig();
+  renderEvents();
+}
+
+function deleteEvent(i) {
+  if (!confirm('Delete "' + config.events[i].title + '"?')) return;
+  config.events.splice(i, 1);
+  saveConfig();
+}
+
+function duplicateEvent(i) {
+  const dup = { ...config.events[i], id: 'ev-' + String(Date.now()).slice(-6), title: config.events[i].title + ' (copy)' };
+  config.events.push(dup);
+  saveConfig();
+}
+
+// ============ TYPES ============
+function renderTypes() {
+  const el = document.getElementById('types-list');
+  el.innerHTML = Object.entries(config.eventTypes || {}).map(([id, t]) =>
+    `<div class="link-item">
+      <span class="link-emoji">${t.icon}</span>
+      <div class="link-info">
+        <div class="link-title" style="color:${t.color}">${t.name}</div>
+        <div class="link-url">${id}${t.filterAs ? ' → filters as ' + t.filterAs : ''}</div>
+      </div>
+      <div class="link-actions">
+        <button class="btn btn-ghost" onclick="editType('${id}')">✎</button>
+        <button class="btn btn-red" onclick="deleteType('${id}')">✕</button>
+      </div>
+    </div>`).join('');
+}
+
+function openTypeModal(id) {
+  document.getElementById('type-edit-id').value = id || '';
+  if (id && config.eventTypes[id]) {
+    const t = config.eventTypes[id];
+    document.getElementById('type-id').value = id;
+    document.getElementById('type-name').value = t.name;
+    document.getElementById('type-color').value = t.color;
+    document.getElementById('type-icon').value = t.icon;
+    document.getElementById('type-img').value = t.img || '';
+    document.getElementById('type-filteras').value = t.filterAs || '';
+    document.getElementById('type-id').disabled = true;
+  } else {
+    ['type-id','type-name','type-icon','type-img','type-filteras'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('type-color').value = '#4a90d9';
+    document.getElementById('type-id').disabled = false;
+  }
+  document.getElementById('type-modal').classList.add('show');
+}
+function editType(id) { openTypeModal(id); }
+
+function saveType() {
+  const origId = document.getElementById('type-edit-id').value;
+  const id = origId || document.getElementById('type-id').value.toLowerCase().replace(/\s+/g, '-');
+  if (!id) return;
+  config.eventTypes[id] = {
+    name: document.getElementById('type-name').value,
+    color: document.getElementById('type-color').value,
+    icon: document.getElementById('type-icon').value,
+    img: document.getElementById('type-img').value,
+  };
+  const fa = document.getElementById('type-filteras').value;
+  if (fa) config.eventTypes[id].filterAs = fa;
+  closeModal('type-modal');
+  saveConfig();
+}
+
+function deleteType(id) {
+  if (!confirm('Delete type "' + id + '"?')) return;
+  delete config.eventTypes[id];
+  saveConfig();
+}
+
+// ============ VENUES ============
+function renderVenues() {
+  const el = document.getElementById('venues-list');
+  el.innerHTML = Object.entries(config.venues || {}).map(([id, v]) =>
+    `<div class="link-item">
+      <span class="link-emoji">📍</span>
+      <div class="link-info">
+        <div class="link-title">${v.name}</div>
+        <div class="link-url">${id}${v.area ? ' · ' + v.area : ''}</div>
+      </div>
+      <div class="link-actions">
+        <button class="btn btn-ghost" onclick="editVenue('${id}')">✎</button>
+        <button class="btn btn-red" onclick="deleteVenue('${id}')">✕</button>
+      </div>
+    </div>`).join('');
+}
+
+function openVenueModal(id) {
+  document.getElementById('venue-edit-id').value = id || '';
+  if (id && config.venues[id]) {
+    document.getElementById('venue-id').value = id;
+    document.getElementById('venue-name').value = config.venues[id].name;
+    document.getElementById('venue-area').value = config.venues[id].area || '';
+    document.getElementById('venue-id').disabled = true;
+  } else {
+    ['venue-id','venue-name','venue-area'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('venue-id').disabled = false;
+  }
+  document.getElementById('venue-modal').classList.add('show');
+}
+function editVenue(id) { openVenueModal(id); }
+
+function saveVenue() {
+  const origId = document.getElementById('venue-edit-id').value;
+  const id = origId || document.getElementById('venue-id').value.toLowerCase().replace(/\s+/g, '-');
+  if (!id) return;
+  config.venues[id] = { name: document.getElementById('venue-name').value, area: document.getElementById('venue-area').value };
+  closeModal('venue-modal');
+  saveConfig();
+}
+
+function deleteVenue(id) {
+  if (!confirm('Delete venue "' + id + '"?')) return;
+  delete config.venues[id];
+  saveConfig();
+}
+
+// ============ LINKS ============
+function renderTopLinks() {
+  const el = document.getElementById('top-links-list');
+  el.innerHTML = (config.topLinks || []).map((l, i) => linkItem(l, i, 'topLinks')).join('');
+}
+function renderResources() {
+  const el = document.getElementById('resources-list');
+  el.innerHTML = (config.resources || []).map((l, i) => linkItem(l, i, 'resources')).join('');
+}
+
+function linkItem(l, i, section) {
+  const thumb = l.img ? `<img class="link-thumb" src="${l.img}">` : `<span class="link-emoji">${l.emoji || '🔗'}</span>`;
+  return `<div class="link-item">
+    ${thumb}
+    <div class="link-info">
+      <div class="link-title">${l.title}</div>
+      <div class="link-url">${l.url}</div>
+    </div>
+    <div class="link-actions">
+      <button class="btn btn-ghost" onclick="editLink('${section}',${i})">✎</button>
+      <button class="btn btn-red" onclick="deleteLink('${section}',${i})">✕</button>
+    </div>
+  </div>`;
+}
+
+function openLinkModal(section, idx) {
+  document.getElementById('link-edit-section').value = section;
+  document.getElementById('link-edit-idx').value = idx ?? -1;
+  document.getElementById('link-modal-title').textContent = idx >= 0 ? 'Edit Link' : 'Add Link';
+  if (idx >= 0) {
+    const l = config[section][idx];
+    document.getElementById('link-title').value = l.title;
+    document.getElementById('link-url').value = l.url;
+    document.getElementById('link-emoji').value = l.emoji || '';
+    document.getElementById('link-img').value = l.img || '';
+    updateLinkThumbPreview(l);
+  } else {
+    ['link-title','link-url','link-emoji','link-img'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('link-thumb-prev').innerHTML = '🔗';
+  }
+  document.getElementById('link-modal').classList.add('show');
+}
+function editLink(section, i) { openLinkModal(section, i); }
+
+function updateLinkThumbPreview(l) {
+  const prev = document.getElementById('link-thumb-prev');
+  if (l && l.img) prev.innerHTML = `<img src="${l.img}" style="width:100%;height:100%;object-fit:cover">`;
+  else prev.innerHTML = l?.emoji || '🔗';
+}
+
+function saveLink() {
+  const section = document.getElementById('link-edit-section').value;
+  const idx = parseInt(document.getElementById('link-edit-idx').value);
+  const link = {
+    title: document.getElementById('link-title').value,
+    url: document.getElementById('link-url').value,
+    emoji: document.getElementById('link-emoji').value,
+    img: document.getElementById('link-img').value,
+  };
+  if (idx >= 0) config[section][idx] = link;
+  else config[section].push(link);
+  closeModal('link-modal');
+  saveConfig();
+}
+
+function deleteLink(section, i) {
+  if (!confirm('Delete "' + config[section][i].title + '"?')) return;
+  config[section].splice(i, 1);
+  saveConfig();
+}
+
+// ============ SOCIAL ============
+function renderSocial() {
+  const el = document.getElementById('social-list');
+  el.innerHTML = (config.socialLinks || []).map((s, i) =>
+    `<div class="link-item">
+      <span class="link-emoji">${s.icon === 'instagram' ? '📷' : s.icon === 'facebook' ? '📘' : s.icon === 'mail' ? '✉️' : '🎵'}</span>
+      <div class="link-info">
+        <div class="link-title">${s.name}</div>
+        <div class="link-url">${s.url}</div>
+      </div>
+      <div class="link-actions">
+        <button class="btn btn-ghost" onclick="editSocial(${i})">✎</button>
+        <button class="btn btn-red" onclick="deleteSocial(${i})">✕</button>
+      </div>
+    </div>`).join('');
+}
+
+function openSocialModal(idx) {
+  document.getElementById('social-edit-idx').value = idx ?? -1;
+  if (idx >= 0) {
+    const s = config.socialLinks[idx];
+    document.getElementById('social-name').value = s.name;
+    document.getElementById('social-url').value = s.url;
+    document.getElementById('social-icon').value = s.icon;
+  } else {
+    ['social-name','social-url'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('social-icon').value = 'instagram';
+  }
+  document.getElementById('social-modal').classList.add('show');
+}
+function editSocial(i) { openSocialModal(i); }
+
+function saveSocial() {
+  const idx = parseInt(document.getElementById('social-edit-idx').value);
+  const s = {
+    name: document.getElementById('social-name').value,
+    url: document.getElementById('social-url').value,
+    icon: document.getElementById('social-icon').value,
+  };
+  if (idx >= 0) config.socialLinks[idx] = s;
+  else config.socialLinks.push(s);
+  closeModal('social-modal');
+  saveConfig();
+}
+
+function deleteSocial(i) {
+  if (!confirm('Delete?')) return;
+  config.socialLinks.splice(i, 1);
+  saveConfig();
+}
+
+// ============ SITE SETTINGS ============
+function renderSiteSettings() {
+  const s = config.site || {};
+  document.getElementById('site-name').value = s.name || '';
+  document.getElementById('site-bio').value = s.bio || '';
+  document.getElementById('site-email').value = s.email || '';
+  document.getElementById('site-logo').value = s.logo || '';
+  document.getElementById('site-emoji').value = s.logoEmoji || '🔔';
+  document.getElementById('filter-order').value = (config.filterOrder || []).join(', ');
+
+  const prev = document.getElementById('logo-prev');
+  if (s.logo) prev.innerHTML = `<img src="${s.logo}">`;
+  else prev.innerHTML = s.logoEmoji || '🔔';
+}
+
+function saveSiteSettings() {
+  config.site = {
+    name: document.getElementById('site-name').value,
+    bio: document.getElementById('site-bio').value,
+    email: document.getElementById('site-email').value,
+    logo: document.getElementById('site-logo').value,
+    logoEmoji: document.getElementById('site-emoji').value,
+  };
+  config.filterOrder = document.getElementById('filter-order').value.split(',').map(s => s.trim()).filter(Boolean);
+  saveConfig();
+}
+
+// Event thumb file upload — uploads to server, stores path only
+// Auto-optimize any image in the browser: resize to max dimension + JPEG compress.
+// Turns a 5MB phone photo into a ~100-300KB web image so uploads ALWAYS work.
+function optimizeImage(file, maxDim = 1400, quality = 0.82) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      let w = img.naturalWidth, h = img.naturalHeight;
+      if (w > maxDim || h > maxDim) {
+        if (w >= h) { h = Math.round(h * maxDim / w); w = maxDim; }
+        else { w = Math.round(w * maxDim / h); h = maxDim; }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h); // flatten transparency for jpeg
+      ctx.drawImage(img, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL('image/jpeg', quality);
+      URL.revokeObjectURL(img.src);
+      resolve(dataUrl);
+    };
+    img.onerror = () => { URL.revokeObjectURL(img.src); reject(new Error('Could not read image')); };
+    img.src = URL.createObjectURL(file);
+  });
+}
+
+document.getElementById('ev-img-file').onchange = async function() {
+  if (!this.files[0]) return;
+  const file = this.files[0];
+  const input = this;
+  const origKB = Math.round(file.size / 1024);
+  showStatus('Optimizing photo… (' + origKB + 'KB)');
+  let dataUrl;
+  try {
+    dataUrl = await optimizeImage(file); // NO size limit — auto-resized + compressed
+  } catch (err) {
+    alert('Could not read that image: ' + err.message); input.value = ''; return;
+  }
+  const optKB = Math.round((dataUrl.length * 0.75) / 1024); // approx
+  // re-encoded to jpeg, so force .jpg extension
+  const filename = (file.name.replace(/\.[^.]+$/, '') + '.jpg').toLowerCase().replace(/[^a-z0-9._-]/g, '-');
+  try {
+    const res = await fetch('http://localhost:8101/api/upload-event-photo', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ filename, data: dataUrl })
+    });
+    if (!res.ok) throw new Error('Upload failed: ' + res.status);
+    const result = await res.json();
+    if (result.ok) {
+      const photoPath = result.msg; // 'photos/filename.jpg'
+      document.getElementById('ev-img').value = photoPath;
+      updateEvThumbPreview({ img: photoPath });
+      showStatus('Photo optimized + uploaded ✓ ' + origKB + 'KB → ~' + optKB + 'KB (' + photoPath + ')');
+    } else {
+      throw new Error(result.error || 'Unknown error');
+    }
+  } catch (err) {
+    alert('Upload failed: ' + err.message); console.error('Photo upload error:', err);
+  }
+  input.value = '';
+};
+document.getElementById('ev-img').oninput = function() {
+  updateEvThumbPreview({ img: this.value });
+};
+function updateEvThumbPreview(ev) {
+  const prev = document.getElementById('ev-thumb-prev');
+  const crop = document.getElementById('ev-img-crop')?.value || 'center';
+  if (ev?.img) prev.innerHTML = `<img src="${ev.img}" style="width:100%;height:100%;object-fit:cover;object-position:${crop}">`;
+  else prev.innerHTML = '🔔';
+}
+
+// Logo file upload
+document.getElementById('logo-file').onchange = function() {
+  if (!this.files[0]) return;
+  const r = new FileReader();
+  r.onload = e => {
+    document.getElementById('site-logo').value = e.target.result;
+    document.getElementById('logo-prev').innerHTML = `<img src="${e.target.result}">`;
+  };
+  r.readAsDataURL(this.files[0]);
+};
+
+// Link thumb file upload
+document.getElementById('link-thumb-file').onchange = function() {
+  if (!this.files[0]) return;
+  const r = new FileReader();
+  r.onload = e => {
+    document.getElementById('link-img').value = e.target.result;
+    document.getElementById('link-thumb-prev').innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover">`;
+  };
+  r.readAsDataURL(this.files[0]);
+};
+
+// ============ JSON EDITOR ============
+function loadJsonEditor() {
+  document.getElementById('json-editor').value = JSON.stringify(config, null, 2);
+}
+
+function saveJsonEditor() {
+  try {
+    config = JSON.parse(document.getElementById('json-editor').value);
+    saveConfig();
+  } catch (e) {
+    alert('Invalid JSON: ' + e.message);
+  }
+}
+
+// ============ SAVE / DOWNLOAD / IMPORT ============
+async function saveConfig(skipPreview) {
+  // CLOBBER GUARD: re-read the disk and rescue any events this browser never
+  // loaded (e.g. boxes seeded/added from elsewhere) so a stale-memory save
+  // can't silently wipe them. Deletions of known events still work.
+  try {
+    const dres = await fetch('site-config.json?v=' + Date.now());
+    if (dres.ok) {
+      const disk = await dres.json();
+      const memIds = new Set((config.events || []).map(e => e.id));
+      let rescued = 0;
+      for (const de of (disk.events || [])) {
+        if (!memIds.has(de.id) && !knownEventIds.has(de.id)) {
+          config.events.push(de); knownEventIds.add(de.id); rescued++;
+        }
+      }
+      if (rescued) showStatus('Kept ' + rescued + ' event(s) added elsewhere ✓');
+    }
+  } catch (e) { /* offline / no disk copy — proceed with in-memory save */ }
+
+  // POST to API server (5s timeout — source of truth)
+  try {
+    const controller = new AbortController();
+    const tid = setTimeout(() => controller.abort(), 5000);
+    const res = await fetch('http://localhost:8101/api/save-events-config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(config, null, 2),
+      signal: controller.signal
+    });
+    clearTimeout(tid);
+    if (!res.ok) {
+      const txt = await res.text().catch(() => 'server error');
+      throw new Error('HTTP ' + res.status + ': ' + txt);
+    }
+    renderAll();
+    showStatus('Saved ✓');
+  } catch (e) {
+    const msg = e.name === 'AbortError' ? 'Server timeout — is server.py running?' : e.message;
+    console.error('❌ Server save failed:', msg);
+    // Emergency fallback — save to localStorage so data isn't lost
+    try {
+      localStorage.setItem('events-hub-config', JSON.stringify(config));
+      localStorage.setItem('events-hub-config-ts', new Date().toISOString());
+      console.warn('💾 Saved to localStorage as fallback');
+    } catch (lsErr) { console.error('❌ localStorage fallback also failed:', lsErr); }
+    renderAll();
+    showStatus('⚠️ Server unreachable — saved locally. Restart server.py to persist! ' + msg, 9000, true);
+    return;
+  }
+
+  // Refresh preview (skip when the edit came FROM the preview — keeps the open popup intact)
+  if (!skipPreview) {
+    const iframe = document.getElementById('preview-iframe');
+    if (iframe) iframe.src = iframe.src;
+  }
+}
+
+// Receive inline edits made directly in the preview popup and persist them.
+window.addEventListener('message', function(e){
+  const d = e.data;
+  if (!d || d.source !== 'eh-preview-edit') return;
+  const ev = (config.events || []).find(x => x.id === d.id);
+  if (!ev) return;
+  if (d.field === 'title') { if (!d.value) return; ev.title = d.value; }
+  else if (d.field === 'desc') { ev.desc = d.value; }
+  else if (d.field === 'descAlign') { ev.descAlign = d.value; }
+  else if (d.field === 'titleAlign') { ev.titleAlign = d.value; }
+  else if (d.field === 'venueOverride') { ev.venueOverride = d.value; }
+  else if (['date','time','endTime','price'].includes(d.field)) { ev[d.field] = d.value; }
+  else if (d.field === 'img') {
+    ev.img = d.value;
+    // also save the uploaded photo to the library for future reuse
+    if (!config.photoLibrary) config.photoLibrary = [];
+    if (!config.photoLibrary.some(p => p.url === d.value)) {
+      config.photoLibrary.push({ url: d.value, name: d.value.split('/').pop().replace(/\.[^.]+$/, '') });
+    }
+  }
+  else return;
+  saveConfig(true); // don't reload the iframe — keep the popup he's editing open
+  showStatus('Saved from preview ✓');
+});
+
+// Always load the preview iframes with a fresh, cache-busted index.html so code
+// changes appear without a manual hard-reload (ends the recurring cache pain).
+window.addEventListener('load', () => {
+  ['preview-iframe', 'mobile-iframe'].forEach(id => {
+    const f = document.getElementById(id);
+    if (f) f.src = 'index.html?admin&edit&v=' + Date.now();
+  });
+});
+
+// Manual "Publish to Live" — pushes events-hub to GitHub Pages on demand.
+async function publishLive(btn){
+  const orig = btn ? btn.textContent : '';
+  if (btn){ btn.disabled = true; btn.textContent = '⏳ Publishing…'; }
+  showStatus('Publishing to live…');
+  try {
+    const res = await fetch('http://localhost:8101/api/publish', { method:'POST', headers:{'Content-Type':'application/json'}, body:'{}' });
+    const j = await res.json();
+    if (j.ok) showStatus('🚀 ' + (j.msg || 'Published to live ✓'), 6000);
+    else showStatus('Publish failed: ' + (j.error || 'unknown'), 9000, true);
+  } catch(e){
+    showStatus('Publish error: ' + e.message, 9000, true);
+  }
+  if (btn){ btn.disabled = false; btn.textContent = orig; }
+}
+
+async function restoreLastSave() {
+  try {
+    const res = await fetch(SERVER_BASE + '/latest-backup');
+    const json = await res.json();
+    if (!json.ok) { alert('No backups found.'); return; }
+    const ts = json.timestamp.replace(/(\d{4})(\d{2})(\d{2})-(\d{2})(\d{2})(\d{2})/, '$1-$2-$3 $4:$5:$6');
+    if (!confirm(`Restore save from ${ts}?\n\nThis will replace current data.`)) return;
+    config = json.config;
+    await saveConfig();
+    renderAll();
+    showStatus(`✅ Restored from ${ts}`);
+  } catch(e) {
+    showStatus('⚠️ Restore failed: ' + e.message, 5000, true);
+  }
+}
+
+function downloadConfig() {
+  const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'site-config.json';
+  a.click(); URL.revokeObjectURL(url);
+}
+
+function importConfig(input) {
+  if (!input.files[0]) return;
+  const r = new FileReader();
+  r.onload = e => {
+    try {
+      config = JSON.parse(e.target.result);
+      saveConfig();
+      showStatus('Imported ✓');
+    } catch (err) { alert('Invalid JSON'); }
+  };
+  r.readAsText(input.files[0]);
+}
+
+// ============ PREVIEW ============
+function setPreviewWidth(w) {
+  document.getElementById('preview-iframe').style.maxWidth = w;
+}
+function openPreviewTab() { window.open('index.html', '_blank'); }
+
+// ============ MOBILE PREVIEW ============
+function setMobileWidth(w) {
+  document.getElementById('phone-frame').style.width = w + 'px';
+  [375, 390, 414].forEach(x => {
+    const b = document.getElementById('mobile-w-' + x);
+    const on = x === w;
+    b.style.background = on ? '#c8a44e' : '';
+    b.style.color = on ? '#000' : '';
+    b.style.borderColor = on ? '#c8a44e' : '';
+  });
+}
+function loadMobilePreview() {
+  document.getElementById('mobile-iframe').src = 'index.html?admin&edit&v=' + Date.now();
+}
+function refreshMobilePreview() { loadMobilePreview(); }
+
+// ============ UTILS ============
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+// Close modals on overlay click
+document.querySelectorAll('.modal-overlay').forEach(el => {
+  el.onclick = e => { if (e.target === el) el.classList.remove('show'); };
+});
+// Prevent clicks inside modal content from closing the modal
+document.querySelectorAll('.modal-overlay > .modal').forEach(el => {
+  el.onclick = e => e.stopPropagation();
+});
+
+// Close modals on Escape key
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.show').forEach(el => el.classList.remove('show'));
+  }
+});
+
+function showStatus(msg, duration, isError) {
+  const el = document.getElementById('status');
+  el.textContent = msg;
+  el.classList.toggle('error', !!isError);
+  el.classList.add('show');
+  clearTimeout(el._tid);
+  el._tid = setTimeout(() => { el.classList.remove('show', 'error'); }, duration || 2500);
+}
+
+// TABS
+document.querySelectorAll('.tab').forEach(t => t.onclick = () => {
+  document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(x => x.classList.remove('active'));
+  t.classList.add('active');
+  document.getElementById('tab-' + t.dataset.tab).classList.add('active');
+  localStorage.setItem('admin-last-tab', t.dataset.tab);
+  if (t.dataset.tab === 'stats') renderStats();
+  if (t.dataset.tab === 'json') loadJsonEditor();
+  if (t.dataset.tab === 'preview') {
+    document.getElementById('preview-iframe').src = 'index.html?admin&edit&v=' + Date.now();
+  }
+  if (t.dataset.tab === 'mobile') loadMobilePreview();
+});
+
+// Restore last active tab
+(function() {
+  const lastTab = localStorage.getItem('admin-last-tab');
+  if (lastTab) {
+    const btn = document.querySelector('.tab[data-tab="' + lastTab + '"]');
+    if (btn) btn.click();
+  }
+})();
+
+// ============ CROP TOOL ============
+let cropState = { x: 0, y: 0, zoom: 100, dragging: false, startX: 0, startY: 0, origX: 0, origY: 0 };
+
+let cropContext = 'event'; // 'event' or 'link'
+function openCropTool(context) {
+  cropContext = context || 'event';
+  const srcId = cropContext === 'link' ? 'link-img' : 'ev-img';
+  const src = document.getElementById(srcId).value;
+  if (!src) { alert('Upload or enter an image first'); return; }
+  const img = document.getElementById('crop-img');
+  img.src = src;
+  cropState = { x: 0, y: 0, zoom: 100, dragging: false, startX: 0, startY: 0, origX: 0, origY: 0 };
+  document.getElementById('crop-zoom').value = 100;
+  document.getElementById('crop-zoom-val').textContent = '100%';
+  img.style.left = '0px';
+  img.style.top = '0px';
+  img.style.width = '100%';
+  img.style.height = 'auto';
+  
+  img.onload = () => {
+    // If image is wider than tall, fit height. If taller, fit width.
+    const box = document.getElementById('crop-box');
+    const ratio = img.naturalWidth / img.naturalHeight;
+    if (ratio > 1) {
+      img.style.width = 'auto';
+      img.style.height = '100%';
+    } else {
+      img.style.width = '100%';
+      img.style.height = 'auto';
+    }
+    updateCropPosition();
+  };
+  document.getElementById('crop-modal').classList.add('show');
+}
+
+function updateCropPosition() {
+  const img = document.getElementById('crop-img');
+  img.style.left = cropState.x + 'px';
+  img.style.top = cropState.y + 'px';
+}
+
+// Drag handlers
+const cropBox = document.getElementById('crop-box');
+cropBox.addEventListener('pointerdown', e => {
+  cropState.dragging = true;
+  cropState.startX = e.clientX;
+  cropState.startY = e.clientY;
+  cropState.origX = cropState.x;
+  cropState.origY = cropState.y;
+  cropBox.setPointerCapture(e.pointerId);
+});
+cropBox.addEventListener('pointermove', e => {
+  if (!cropState.dragging) return;
+  cropState.x = cropState.origX + (e.clientX - cropState.startX);
+  cropState.y = cropState.origY + (e.clientY - cropState.startY);
+  updateCropPosition();
+});
+cropBox.addEventListener('pointerup', () => { cropState.dragging = false; });
+
+// Zoom
+document.getElementById('crop-zoom').oninput = function() {
+  cropState.zoom = parseInt(this.value);
+  document.getElementById('crop-zoom-val').textContent = cropState.zoom + '%';
+  const img = document.getElementById('crop-img');
+  const ratio = img.naturalWidth / img.naturalHeight;
+  const scale = cropState.zoom / 100;
+  const box = document.getElementById('crop-box');
+  const boxW = box.offsetWidth;
+  const boxH = box.offsetHeight;
+  if (ratio > 1) {
+    // Landscape: base height = box height, scale from there
+    const baseH = boxH;
+    img.style.height = (baseH * scale) + 'px';
+    img.style.width = 'auto';
+  } else {
+    // Portrait: base width = box width, scale from there
+    const baseW = boxW;
+    img.style.width = (baseW * scale) + 'px';
+    img.style.height = 'auto';
+  }
+};
+
+function applyCrop() {
+  // Convert drag position to object-position percentage
+  const box = document.getElementById('crop-box');
+  const img = document.getElementById('crop-img');
+  const boxW = box.offsetWidth, boxH = box.offsetHeight;
+  const imgW = img.offsetWidth, imgH = img.offsetHeight;
+  
+  // Calculate percentage position
+  const overflowX = imgW - boxW;
+  const overflowY = imgH - boxH;
+  const pctX = overflowX > 0 ? Math.round(Math.max(0, Math.min(100, (-cropState.x / overflowX) * 100))) : 50;
+  const pctY = overflowY > 0 ? Math.round(Math.max(0, Math.min(100, (-cropState.y / overflowY) * 100))) : 50;
+  
+  const pos = pctX + '% ' + pctY + '%';
+  
+  if (cropContext === 'link') {
+    document.getElementById('link-img-crop').value = pos;
+    const prev = document.getElementById('link-thumb-prev');
+    prev.innerHTML = `<img src="${img.src}" style="width:100%;height:100%;object-fit:cover;object-position:${pos}">`;
+  } else {
+    document.getElementById('ev-img-crop').value = pos;
+    const prev = document.getElementById('ev-thumb-prev');
+    prev.innerHTML = `<img src="${img.src}" style="width:100%;height:100%;object-fit:cover;object-position:${pos}">`;
+  }
+  
+  closeModal('crop-modal');
+  showStatus('Crop applied ✓');
+}
+
+// ============ PHOTO LIBRARY ============
+let photoLibTarget = ''; // 'ev' or 'link'
+
+function getPhotoLib() {
+  return config.photoLibrary || [];
+}
+
+function openPhotoLibrary(target) {
+  photoLibTarget = target;
+  renderPhotoGrid();
+  document.getElementById('photo-modal').classList.add('show');
+}
+
+function renderPhotoGrid() {
+  const grid = document.getElementById('photo-grid');
+  const photos = getPhotoLib();
+  grid.innerHTML = photos.map((p, i) =>
+    `<div style="position:relative">
+      <img src="${p.data || p.url}" style="width:100%;height:80px;object-fit:cover;border-radius:8px;cursor:pointer;border:2px solid #333;transition:border 0.2s" 
+        onclick="pickPhoto(${i})" onmouseover="this.style.borderColor='#c8a44e'" onmouseout="this.style.borderColor='#333'">
+      <button style="position:absolute;top:2px;right:2px;background:rgba(0,0,0,0.7);color:#e74c3c;border:none;border-radius:50%;width:18px;height:18px;font-size:0.6rem;cursor:pointer;line-height:1" onclick="deletePhoto(${i})">✕</button>
+      <div style="font-size:0.55rem;color:#888;text-align:center;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.name || 'Photo ' + (i+1)}</div>
+    </div>`
+  ).join('') || '<div style="color:#666;font-size:0.78rem;padding:20px;text-align:center;grid-column:1/-1">No photos yet — upload some!</div>';
+}
+
+function pickPhoto(i) {
+  const photo = getPhotoLib()[i];
+  const src = photo.data || photo.url;
+  if (photoLibTarget === 'ev') {
+    document.getElementById('ev-img').value = src;
+    updateEvThumbPreview({ img: src });
+  } else if (photoLibTarget === 'link') {
+    document.getElementById('link-img').value = src;
+    document.getElementById('link-thumb-prev').innerHTML = `<img src="${src}" style="width:100%;height:100%;object-fit:cover">`;
+  }
+  closeModal('photo-modal');
+}
+
+function deletePhoto(i) {
+  if (!confirm('Remove from library?')) return;
+  config.photoLibrary.splice(i, 1);
+  saveConfig();
+}
+
+function addToLibrary(urlOrPath, name) {
+  if (!config.photoLibrary) config.photoLibrary = [];
+  config.photoLibrary.push({ url: urlOrPath, name: name || 'Photo ' + (config.photoLibrary.length + 1) });
+  saveConfig();
+}
+
+document.getElementById('lib-upload').onchange = function() {
+  Array.from(this.files).forEach(async file => {
+    const origKB = Math.round(file.size / 1024);
+    let dataUrl;
+    try {
+      dataUrl = await optimizeImage(file); // NO size limit — auto-resized + compressed
+    } catch (err) {
+      showStatus('⚠️ ' + file.name + ': ' + err.message, 5000, true); return;
+    }
+    // re-encoded to jpeg, so force .jpg extension
+    const filename = (file.name.replace(/\.[^.]+$/, '') + '.jpg').toLowerCase().replace(/[^a-z0-9._-]/g, '-');
+    try {
+      const res = await fetch('http://localhost:8101/api/upload-event-photo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filename, data: dataUrl })
+      });
+      const json = await res.json();
+      if (json.ok) {
+        addToLibrary('photos/' + filename, file.name.replace(/\.[^.]+$/, ''));
+        renderPhotoGrid();
+        showStatus('Photo optimized + uploaded: ' + filename + ' (' + origKB + 'KB → smaller)');
+      } else {
+        showStatus('Upload failed: ' + (json.error || 'unknown'), 5000, true);
+      }
+    } catch (err) {
+      showStatus('Upload error: ' + err.message, 5000, true);
+    }
+  });
+  this.value = '';
+};
+
+// (duplicate ev-img-file handler removed — already handled above with size limit + server upload)
+
+const origLinkThumbHandler = document.getElementById('link-thumb-file').onchange;
+document.getElementById('link-thumb-file').onchange = function() {
+  if (!this.files[0]) return;
+  const file = this.files[0];
+  const r = new FileReader();
+  r.onload = e => {
+    document.getElementById('link-img').value = e.target.result;
+    document.getElementById('link-thumb-prev').innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover">`;
+    addToLibrary(e.target.result, file.name.replace(/\.[^.]+$/, ''));
+  };
+  r.readAsDataURL(file);
+};
+
+// ============ STATS ============
+function renderStats() {
+  const views = JSON.parse(localStorage.getItem('eh-pageviews') || '[]');
+  const clicks = JSON.parse(localStorage.getItem('eh-clicks') || '[]');
+  const today = new Date().toISOString().slice(0,10);
+  const weekAgo = new Date(Date.now() - 7*24*60*60*1000).toISOString().slice(0,10);
+
+  // Counts
+  document.getElementById('stat-today').textContent = views.filter(v => v.date === today).length;
+  document.getElementById('stat-week').textContent = views.filter(v => v.date >= weekAgo).length;
+  document.getElementById('stat-total').textContent = views.length;
+
+  // Chart — last 30 days
+  const chart = document.getElementById('stat-chart');
+  const days = [];
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date(Date.now() - i*24*60*60*1000).toISOString().slice(0,10);
+    days.push({ date: d, count: views.filter(v => v.date === d).length });
+  }
+  const max = Math.max(...days.map(d => d.count), 1);
+  chart.innerHTML = days.map(d => {
+    const h = Math.max(2, (d.count / max) * 100);
+    const isToday = d.date === today;
+    return `<div title="${d.date}: ${d.count} views" style="flex:1;background:${isToday ? '#c8a44e' : '#444'};height:${h}%;border-radius:3px 3px 0 0;min-width:4px;transition:height 0.3s"></div>`;
+  }).join('');
+
+  // Booking clicks by event
+  const clicksByEvent = {};
+  clicks.forEach(c => {
+    if (!clicksByEvent[c.eventTitle]) clicksByEvent[c.eventTitle] = 0;
+    clicksByEvent[c.eventTitle]++;
+  });
+  const sortedClicks = Object.entries(clicksByEvent).sort((a,b) => b[1] - a[1]);
+  document.getElementById('stat-clicks').innerHTML = sortedClicks.length ? sortedClicks.map(([title, count]) =>
+    `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #2a2a2a">
+      <span style="font-size:0.78rem">${title}</span>
+      <span style="font-size:0.78rem;color:#c8a44e;font-weight:700">${count} click${count>1?'s':''}</span>
+    </div>`
+  ).join('') : '<div style="color:#666;font-size:0.78rem;padding:10px">No booking clicks yet</div>';
+
+  // Referrers
+  const refs = {};
+  views.forEach(v => {
+    let ref = 'Direct';
+    if (v.ref) {
+      try { ref = new URL(v.ref).hostname || 'Direct'; } catch(e) { ref = v.ref.slice(0,40) || 'Direct'; }
+    }
+    if (!refs[ref]) refs[ref] = 0;
+    refs[ref]++;
+  });
+  const sortedRefs = Object.entries(refs).sort((a,b) => b[1] - a[1]);
+  document.getElementById('stat-refs').innerHTML = sortedRefs.length ? sortedRefs.map(([ref, count]) =>
+    `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #2a2a2a">
+      <span style="font-size:0.78rem">${ref}</span>
+      <span style="font-size:0.78rem;color:#888;font-weight:600">${count}</span>
+    </div>`
+  ).join('') : '<div style="color:#666;font-size:0.78rem;padding:10px">No data yet</div>';
+
+  // GA ID
+  document.getElementById('ga-id').value = localStorage.getItem('eh-ga-id') || '';
+}
+
+function saveGaId() {
+  const id = document.getElementById('ga-id').value.trim();
+  SyncStore.set('eh-ga-id', { id });
+  localStorage.setItem('eh-ga-id', id);
+  showStatus(id ? 'GA4 ID saved — add the script to index.html' : 'GA4 ID cleared');
+}
+
+// ============ BOOTUP SCREEN ============
+
+function showBootup() {
+  // Count upcoming events (not archived, date >= today)
+  const today = new Date().toISOString().slice(0, 10);
+  const upcoming = (config.events || []).filter(ev => !ev.archived && ev.date >= today);
+
+  const numEl  = document.querySelector('#bootup-count .bootup-count-num');
+  const subEl  = document.querySelector('#bootup-count .bootup-count-month');
+  if (numEl) numEl.textContent = upcoming.length;
+  if (subEl) subEl.textContent = upcoming.length === 1 ? '1 upcoming event' : upcoming.length + ' upcoming events';
+}
+
+function dismissBootup() {
+  document.getElementById('bootup-overlay').classList.add('hidden');
+}
+
+// Auto Mode: pull Google Calendar via server.py /calendar, show cards
+let calEvents = [];
+
+async function startAutoMode() {
+  // Transition: hide welcome, show loading
+  document.getElementById('bootup-initial').style.display = 'none';
+  document.getElementById('auto-loading').style.display   = 'block';
+  document.getElementById('cal-results').style.display    = 'none';
+
+  // Build date range: first → last day of current month
+  const now      = new Date();
+  const year     = now.getFullYear();
+  const month    = String(now.getMonth() + 1).padStart(2, '0');
+  const lastDay  = new Date(year, now.getMonth() + 1, 0).getDate();
+  const fromDate = `${year}-${month}-01`;
+  const toDate   = `${year}-${month}-${String(lastDay).padStart(2, '0')}`;
+
+  try {
+    const res = await fetch(
+      `${SERVER_BASE}/calendar?from=${fromDate}&to=${toDate}`,
+      { signal: AbortSignal.timeout(18000) }
+    );
+    const data = await res.json();
+    if (!res.ok || !data.ok) throw new Error(data.error || 'Server error');
+    const GIG_KEYWORDS = ['sound bath', 'soundbath', 'sound', 'drum', 'gig', 'yoga', 'workshop', 'journey', 'revitalife', 'session', 'healing', 'circle', 'immersion', 'nidra', 'breathwork', 'meditation'];
+    calEvents = (data.events || []).filter(ev => {
+      const title = (ev.title || '').toLowerCase();
+      return GIG_KEYWORDS.some(kw => title.includes(kw));
+    });
+  } catch (e) {
+    document.getElementById('auto-loading').style.display = 'none';
+    document.getElementById('bootup-initial').style.display = 'block';
+    showStatus('⚠️ Calendar fetch failed: ' + e.message + ' — is server.py running?', 7000, true);
+    return;
+  }
+
+  // Show results
+  document.getElementById('auto-loading').style.display = 'none';
+  document.getElementById('cal-results').style.display  = 'block';
+
+  const MONTHS_FULL = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const label = document.getElementById('cal-month-label');
+  if (label) {
+    const monthName = MONTHS_FULL[now.getMonth()];
+    label.textContent = `📅 ${monthName} ${year} — ${calEvents.length} event${calEvents.length !== 1 ? 's' : ''} on your calendar`;
+  }
+
+  const list = document.getElementById('cal-list');
+  if (!calEvents.length) {
+    list.innerHTML = '<div style="color:#666;font-size:0.82rem;text-align:center;padding:20px 0">No events found for this month on your calendar.</div>';
+    return;
+  }
+
+  list.innerHTML = calEvents.map((ev, i) => {
+    const d     = ev.date ? new Date(ev.date + 'T00:00:00') : null;
+    const day   = d ? d.getDate() : '?';
+    const mon   = d ? MONTHS_FULL[d.getMonth()] : '';
+    const timeStr = ev.time ? fmtTime(ev.time) : 'All day';
+    const endStr  = ev.endTime ? ' – ' + fmtTime(ev.endTime) : '';
+    return `<div class="cal-card" id="cal-card-${i}">
+      <div class="cal-date-badge">
+        <div class="cal-day">${day}</div>
+        <div class="cal-month">${mon}</div>
+      </div>
+      <div class="cal-info">
+        <div class="cal-title" title="${escHtml(ev.title)}">${escHtml(ev.title)}</div>
+        <div class="cal-time">${timeStr}${endStr}</div>
+      </div>
+      <div class="cal-actions">
+        <button class="btn btn-green" style="font-size:0.68rem;padding:5px 10px;white-space:nowrap"
+          onclick="calAddEvent(${i})">➕ Add</button>
+        <button class="btn btn-ghost" style="font-size:0.68rem;padding:5px 10px"
+          onclick="calSkip(${i})">⏭️</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// "Add" — pre-fill the event modal from the calendar event, keep bootup open
+function calAddEvent(i) {
+  const ev = calEvents[i];
+
+  // Pre-fill modal fields
+  populateEventDropdowns();
+  document.getElementById('ev-edit-idx').value = -1;
+  document.getElementById('event-modal-title').textContent = 'Add Event';
+  document.getElementById('ev-title').value    = ev.title || '';
+  document.getElementById('ev-date').value     = ev.date  || '';
+  document.getElementById('ev-time').value     = ev.time  || '';
+  document.getElementById('ev-endtime').value  = ev.endTime || '';
+  document.getElementById('ev-desc').value     = ev.desc  || '';
+  document.getElementById('ev-booking').value  = ev.url   || '';
+  document.getElementById('ev-price').value    = 0;
+  document.getElementById('ev-venue-override').value = ev.location || '';
+  document.getElementById('ev-img').value      = '';
+  document.getElementById('ev-img-crop').value = 'center';
+  document.getElementById('ev-thumb-prev').innerHTML = '🔔';
+  if (document.getElementById('ev-contact-email')) document.getElementById('ev-contact-email').value = '';
+  if (document.getElementById('ev-contact-phone')) document.getElementById('ev-contact-phone').value = '';
+
+  // Mark card as "pending add" visually — will confirm when modal saves
+  const card = document.getElementById('cal-card-' + i);
+  if (card) card.style.opacity = '0.5';
+
+  // Hook saveEvent to mark card as added after save
+  window._calPendingIdx = i;
+
+  // Open modal — bootup stays behind it
+  document.getElementById('event-modal').classList.add('show');
+}
+
+function calSkip(i) {
+  const card = document.getElementById('cal-card-' + i);
+  if (card) card.classList.add('skipped');
+}
+
+// Patch saveEvent to mark the cal-card as added when saving from auto mode
+const _origSaveEvent = saveEvent;
+saveEvent = function() {
+  _origSaveEvent();
+  if (window._calPendingIdx != null) {
+    const card = document.getElementById('cal-card-' + window._calPendingIdx);
+    if (card) {
+      card.classList.add('added');
+      card.style.opacity = '';
+      card.querySelector('.cal-actions').innerHTML =
+        '<span style="font-size:0.72rem;color:#27ae60;font-weight:700">✓ Added</span>';
+    }
+    window._calPendingIdx = null;
+  }
+};
+
+// Helpers
+function fmtTime(t) {
+  if (!t) return '';
+  const [h, m] = t.split(':').map(Number);
+  const ampm = h >= 12 ? 'pm' : 'am';
+  const h12  = h % 12 || 12;
+  return `${h12}:${String(m).padStart(2,'0')}${ampm}`;
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Init
+loadConfig();
+</script>
+</body>
+</html>

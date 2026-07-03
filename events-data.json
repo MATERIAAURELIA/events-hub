@@ -1,0 +1,30 @@
+[
+  {
+    "id": "ev-apr18-001",
+    "type": "sound-bath",
+    "title": "Spring Community Sound Bath",
+    "date": "2026-04-18",
+    "time": "16:00",
+    "endTime": "17:00",
+    "venue": "roots-on-whyte",
+    "price": 22,
+    "booking": "https://EarthHarmony.as.me/?appointmentType=90942395",
+    "desc": "A community sound bath to welcome spring. Accessible, grounding, and deeply restorative.",
+    "img": "photos/back-to-basics.png",
+    "imgCrop": "50% 15%"
+  },
+  {
+    "id": "ev-apr18-002",
+    "type": "sound-bath",
+    "title": "Spring Community Sound Bath",
+    "date": "2026-04-18",
+    "time": "17:30",
+    "endTime": "18:30",
+    "venue": "roots-on-whyte",
+    "price": 22,
+    "booking": "https://EarthHarmony.as.me/?appointmentType=90942447",
+    "desc": "A community sound bath to welcome spring. Accessible, grounding, and deeply restorative.",
+    "img": "photos/back-to-basics.png",
+    "imgCrop": "50% 15%"
+  }
+]

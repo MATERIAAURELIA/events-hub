@@ -1,0 +1,58 @@
+{
+  "_note": "DRAFT STARTERS — June 2026 public events. Schema mirrors site-config.json events[]. NOT live. Review/complete, then add to the hub via admin. 'price' = attendee ticket (venue-set; left blank for venue-hosted gigs) — NOT Marcus's income (tracked separately in the income assessment). Created 2026-06-02.",
+  "starters": [
+    {
+      "id": "ev-draft-jun07-devonian",
+      "type": "yin-sound",
+      "title": "Yoga + Sound Bath @ Devonian Gardens",
+      "date": "2026-06-07",
+      "time": "18:30",
+      "endTime": "21:00",
+      "venue": "",
+      "venueOverride": "UAlberta Botanic Garden — Devonian",
+      "price": "",
+      "booking": "https://www.ualberta.ca/en/botanic-garden/events-programs/yoga-in-garden.html",
+      "contactEmail": "",
+      "contactPhone": "",
+      "desc": "[STARTER — fill: description, confirm ticket price + exact time]",
+      "img": "",
+      "_incomeToMarcus": "~$350 (est, confirm)",
+      "_calNote": "calendar shows 6:30–7:30pm; you listed 6:30–9pm"
+    },
+    {
+      "id": "ev-draft-jun09-revitalife",
+      "type": "sound-bath",
+      "title": "Revitalife Sound Bath",
+      "date": "2026-06-09",
+      "time": "18:30",
+      "endTime": "20:00",
+      "venue": "",
+      "venueOverride": "Revitalife Wellness",
+      "price": "",
+      "booking": "",
+      "contactEmail": "",
+      "contactPhone": "",
+      "desc": "[STARTER — partner gig; confirm whether this belongs on the public hub or is booked via Revitalife]",
+      "img": "",
+      "_incomeToMarcus": "$429"
+    },
+    {
+      "id": "ev-draft-jun12-yogawithin",
+      "type": "restorative",
+      "title": "Restorative Yoga + Soundbath",
+      "date": "2026-06-12",
+      "time": "18:00",
+      "endTime": "19:30",
+      "venue": "yoga-within",
+      "venueOverride": "",
+      "price": "",
+      "booking": "https://yogawithin.ca/restorative-yoga-soundbath",
+      "contactEmail": "",
+      "contactPhone": "",
+      "desc": "[STARTER — fill: description, confirm ticket price]",
+      "img": "",
+      "_incomeToMarcus": "~$350 (est, confirm)",
+      "_calNote": "calendar shows 6:30–8pm; you listed 6–7:30pm"
+    }
+  ]
+}
