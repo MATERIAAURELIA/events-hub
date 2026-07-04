@@ -1,3 +1,7 @@
 backups/
 server.log
+*.log
+.DS_Store
+*.bak*
+*.tmp
 photos/test.txt

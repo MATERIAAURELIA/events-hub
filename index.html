@@ -697,6 +697,8 @@ function toThumb(src){if(!src)return src;const dir=src.substring(0,src.lastIndex
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const FMONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const fDay=d=>{const x=new Date(d+'T00:00:00');return`${DAYS[x.getDay()]} ${MONTHS[x.getMonth()]} ${x.getDate()}`};
+// Local (Edmonton) date, NOT UTC — with toISOString() same-day events vanished at 6pm local
+const localToday=()=>{const d=new Date();return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 const fTime=t=>{if(!t||!t.includes(':'))return'';const[h,m]=t.split(':').map(Number);if(isNaN(h)||isNaN(m))return'';return`${h%12||12}:${m.toString().padStart(2,'0')}${h>=12?'pm':'am'}`};
 
 let activeFilter='all', activeSort='date', showVenue=true;
@@ -713,7 +715,7 @@ function buildFilters(){
 
 function getEvents(){
   let e=EVENTS.filter(e=>e.vis==='public');
-  const today=new Date().toISOString().slice(0,10);
+  const today=localToday();
   e=e.filter(x=>x.pinned||x.date>=today); // pinned (CTA) always shows
   if(activeFilter!=='all')e=e.filter(x=>(EVENT_TYPES[x.type]?.filterAs||x.type)===activeFilter);
   if(activeSort==='date') e.sort((a,b)=>a.date.localeCompare(b.date)||(a.time||'').localeCompare(b.time||''));
@@ -772,7 +774,7 @@ function renderList(){
           ${showVenue?`<div class="event-venue">📍 ${venueDisplay}</div>`:''}
         </div>
       </div>
-      <button class="btn-share" onclick="event.stopPropagation();shareEv('${ev.title}','${ev.date}','${ev.booking}')" title="Share"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 002 2h12a2 2 0 002-2v-7"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></button>
+      <button class="btn-share" onclick="event.stopPropagation();shareEvById('${ev.id}')" title="Share"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 002 2h12a2 2 0 002-2v-7"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></button>
       ${showVenue&&venueDisplay?`<div class="event-venue-row">📍 ${venueDisplay}</div>`:''}
     </div>`;
   }).join('');
@@ -885,14 +887,14 @@ function showPopup(id){
     <div class="p-desc${!isEdit&&(ev.desc||'').length>280?' clamped':''}"${isEdit?` contenteditable="true" onkeydown="pvDescKey(event,this)" onblur="pvEdit(this,'desc','${ev.id}')"`:''} style="text-align:${ev.descAlign||'left'}">${ev.desc||''}</div>
     ${!isEdit&&(ev.desc||'').length>280?`<button class="p-more" onclick="const d=this.previousElementSibling;d.classList.toggle('clamped');this.textContent=d.classList.contains('clamped')?'Show more ▾':'Show less ▴'">Show more ▾</button>`:''}
     ${ev.booking
-      ? `<a class="btn-book" href="${ev.booking}" ${ev.booking.startsWith('mailto:')?'':'target="_blank" rel="noopener"'} onclick="trackClick('${ev.id}','${ev.title.replace(/'/g,"\\'")}','${ev.booking}')">${ev.booking.startsWith('mailto:')?'Send a Message →':'Book Now →'}</a>`
+      ? `<a class="btn-book" href="${ev.booking}" ${ev.booking.startsWith('mailto:')?'':'target="_blank" rel="noopener"'} onclick="trackClickById('${ev.id}')">${ev.booking.startsWith('mailto:')?'Send a Message →':'Book Now →'}</a>`
       : ev.contactEmail
         ? `<a class="btn-book" href="mailto:${ev.contactEmail}">Email to Register →</a>`
         : ev.contactPhone
           ? `<a class="btn-book" href="tel:${ev.contactPhone}">Call to Register →</a>`
           : ''
     }
-    <button class="btn-share-popup" onclick="shareEv('${ev.title}','${ev.date}','${ev.booking}')">Share Event</button>${isEdit?`<button class="pv-done" onclick="closePopup()">✓ Done editing</button>`:''}`;
+    <button class="btn-share-popup" onclick="shareEvById('${ev.id}')">Share Event</button>${isEdit?`<button class="pv-done" onclick="closePopup()">✓ Done editing</button>`:''}`;
   const pop=document.getElementById('popup');
   pop.classList.add('show');
   document.getElementById('overlay').classList.add('show');
@@ -904,6 +906,10 @@ function changeLogo(input){if(!input.files[0])return;const r=new FileReader();r.
 function copyPageLink(){navigator.clipboard.writeText(window.location.href);showToast('Link copied!');}
 function sharePage(){const u=window.location.href;if(navigator.share)navigator.share({title:'Earth Harmony Sound & Wellness',url:u});else{navigator.clipboard.writeText(u);showToast('Link copied!');}}
 function shareEv(t,d,u){const x=`${t} — ${fDay(d)}\n${u}`;if(navigator.share)navigator.share({title:t,text:x,url:u});else{navigator.clipboard.writeText(x);showToast('Link copied!');}}
+// Id-based wrappers for inline onclick handlers — interpolating titles/URLs into
+// handler strings broke on apostrophes and newlines (share buttons silently died).
+function shareEvById(id){const e=EVENTS.find(x=>x.id===id);if(e)shareEv(e.title,e.date,e.booking);}
+function trackClickById(id){const e=EVENTS.find(x=>x.id===id);if(e)trackClick(e.id,e.title,e.booking);}
 function showToast(msg){const t=document.createElement('div');t.textContent=msg;Object.assign(t.style,{position:'fixed',bottom:'80px',left:'50%',transform:'translateX(-50%)',background:'#333',color:'#fff',padding:'8px 20px',borderRadius:'20px',fontSize:'0.78rem',fontFamily:'Inter,sans-serif',fontWeight:'600',zIndex:'999',opacity:'0',transition:'opacity 0.3s'});document.body.appendChild(t);requestAnimationFrame(()=>t.style.opacity='1');setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),300);},1800);}
 function closePopup(){
   const a=document.activeElement; if(a&&a.blur) a.blur(); // commit any in-progress edit before closing
@@ -918,7 +924,7 @@ let calM=new Date().getMonth(),calY=new Date().getFullYear();
 function renderCal(){
   const g=document.getElementById('cal-grid');
   document.getElementById('cal-title').textContent=`${FMONTHS[calM]} ${calY}`;
-  const f=new Date(calY,calM,1).getDay(),ds=new Date(calY,calM+1,0).getDate(),ts=new Date().toISOString().slice(0,10),p=new Date(calY,calM,0).getDate();
+  const f=new Date(calY,calM,1).getDay(),ds=new Date(calY,calM+1,0).getDate(),ts=localToday(),p=new Date(calY,calM,0).getDate();
   let h=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>`<div class="cal-day-header">${d}</div>`).join('');
   for(let i=f-1;i>=0;i--)h+=`<div class="cal-day other-month">${p-i}</div>`;
   for(let d=1;d<=ds;d++){
@@ -939,7 +945,7 @@ function showDayPopup(ds){
         <div style="font-size:0.62rem;color:${t.color};font-weight:700;text-transform:uppercase">${t.icon} ${t.name}</div>
         <div style="font-weight:600;margin:4px 0">${e.title}</div>
         <div style="font-size:0.72rem;color:#666">${fTime(e.time)}-${fTime(e.endTime)} · ${e.venueOverride||v.name} · $${e.price}</div>
-        <a href="${e.booking}" target="_blank" class="btn-book" style="display:inline-block;padding:8px 20px;font-size:0.72rem;margin-top:8px;border-radius:10px">Book</a>
+        ${e.booking?`<a href="${e.booking}" target="_blank" class="btn-book" style="display:inline-block;padding:8px 20px;font-size:0.72rem;margin-top:8px;border-radius:10px">Book</a>`:''}
       </div>`;}).join('');
   const pop=document.getElementById('popup');
   pop.classList.add('show');
@@ -1135,18 +1141,31 @@ document.getElementById('s-reset').onclick = () => {
 };
 
 // SEO — Generate JSON-LD structured data for events
+// Correct UTC offset for Edmonton on a given date (MDT -06:00 / MST -07:00)
+function edmontonOffset(dateStr) {
+  try {
+    const parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Edmonton', timeZoneName: 'longOffset' })
+      .formatToParts(new Date(dateStr + 'T12:00:00Z'));
+    const tz = (parts.find(p => p.type === 'timeZoneName') || {}).value || '';
+    const m = tz.match(/GMT([+-]\d{2}:\d{2})/);
+    return m ? m[1] : '-07:00';
+  } catch (e) { return '-07:00'; }
+}
 function generateJsonLd() {
-  const events = EVENTS.filter(e => e.vis === 'public' && e.date >= new Date().toISOString().slice(0,10));
+  // Real dated events only — pinned CTA cards (date 2099, no time/price) produce
+  // invalid Event markup that can get ALL rich results ignored by Google.
+  const events = EVENTS.filter(e => e.vis === 'public' && !e.pinned && e.date < '2090-01-01' && e.date >= localToday());
   const jsonLd = events.map(ev => {
     const venue = VENUES[ev.venue] || {};
     const vName = ev.venueOverride || venue.name || '';
+    const off = edmontonOffset(ev.date);
     return {
       "@context": "https://schema.org",
       "@type": "Event",
       "name": ev.title,
       "description": ev.desc || '',
-      "startDate": `${ev.date}T${ev.time}:00-07:00`,
-      "endDate": `${ev.date}T${ev.endTime}:00-07:00`,
+      "startDate": ev.time ? `${ev.date}T${ev.time}:00${off}` : ev.date,
+      ...(ev.endTime ? { "endDate": `${ev.date}T${ev.endTime}:00${off}` } : {}),
       "eventStatus": "https://schema.org/EventScheduled",
       "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
       "location": {
