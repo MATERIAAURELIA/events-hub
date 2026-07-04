@@ -1590,7 +1590,7 @@ async function publishLive(btn){
 
 async function restoreLastSave() {
   try {
-    const res = await fetch(SERVER_BASE + '/latest-backup');
+    const res = await fetch('http://localhost:8101/api/latest-backup');
     const json = await res.json();
     if (!json.ok) { alert('No backups found.'); return; }
     const ts = json.timestamp.replace(/(\d{4})(\d{2})(\d{2})-(\d{2})(\d{2})(\d{2})/, '$1-$2-$3 $4:$5:$6');
