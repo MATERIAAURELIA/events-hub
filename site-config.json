@@ -665,6 +665,24 @@
       "img": "photos/chakras.jpg"
     },
     {
+      "id": "ev-jul24-divine-mother",
+      "type": "sound-bath",
+      "title": "Held & Nurtured: Divine Mother's Song",
+      "date": "2026-07-24",
+      "time": "18:30",
+      "endTime": "20:00",
+      "venue": "home",
+      "price": 60,
+      "booking": "https://EarthHarmony.as.me/?appointmentType=95442128",
+      "contactEmail": "earthharmonysoundhealing@gmail.com",
+      "contactPhone": "780-257-6428",
+      "desc": "A sound bath of celestial voices.\n\nLayered sacred voice — the human instrument at its most tender — carried over an octave of singing bowls, deep sine tones, and a Grotto Sonora gong. A soft, held space to rest, release, and be carried home to yourself.\n\nCome as you are. Intimate home studio — thick mats, sheepskins, blankets and tea all provided.",
+      "status": "published",
+      "repeatable": false,
+      "venueOverride": "Terwillegar Home Studio",
+      "img": "photos/divine-mothers-song.jpg"
+    },
+    {
       "id": "ev-jul31-gong",
       "type": "deep-gong",
       "title": "Deep Resonance: Planetary Gong Immersion",
