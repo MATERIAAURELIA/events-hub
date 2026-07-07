@@ -662,7 +662,8 @@
       "status": "published",
       "repeatable": false,
       "venueOverride": "Terwillegar Home Studio",
-      "img": "photos/chakras.jpg"
+      "img": "photos/chakras.jpg",
+      "tint": "#7c5cd6"
     },
     {
       "id": "ev-jul24-divine-mother",
@@ -680,7 +681,8 @@
       "status": "published",
       "repeatable": false,
       "venueOverride": "Terwillegar Home Studio",
-      "img": "photos/divine-mothers-song.jpg"
+      "img": "photos/divine-mothers-song.jpg",
+      "tint": "#d66a8a"
     },
     {
       "id": "ev-jul31-gong",
@@ -698,7 +700,8 @@
       "status": "published",
       "repeatable": true,
       "venueOverride": "Terwillegar Home Studio",
-      "img": "photos/sndthepmf--43-of-43-.jpg"
+      "img": "photos/sndthepmf--43-of-43-.jpg",
+      "tint": "#c98a3f"
     }
   ]
 }

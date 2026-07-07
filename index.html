@@ -139,6 +139,9 @@
   .link-btn:hover { transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
   .link-btn:active { transform: scale(0.98); }
   .link-btn.cta-event + .link-btn.cta-event { margin-top: 10px; }
+  .btn-thumb { position: relative; }
+  .btn-thumb.tinted img { filter: grayscale(.55) sepia(.12) contrast(1.06) brightness(1.02); }
+  .thumb-tint { position:absolute; inset:0; mix-blend-mode:color; opacity:.8; pointer-events:none; border-radius: inherit; }
   .t-pair { font-weight: 700; }
   .t-name { font-weight: 400; opacity: .95; }
   .link-btn.cta-event { margin-top: 48px; background: linear-gradient(135deg, #fbf1d2, #fff9ec); border: 1px solid #e6d39a; box-shadow: 0 3px 16px rgba(200,164,78,0.32); }
@@ -748,7 +751,7 @@ function renderList(){
     const imgSrc=ev.img||type.img;
     const cropPos=ev.imgCrop||'center center';
     const thumbSrc=imgSrc?toThumb(imgSrc):null;
-    const thumbContent=thumbSrc?`<img src="${thumbSrc}" alt="" loading="lazy" onerror="this.onerror=null;this.src='${imgSrc}'" style="object-position:${cropPos}">`
+    const thumbContent=thumbSrc?`<img src="${thumbSrc}" alt="" loading="lazy" onerror="this.onerror=null;this.src='${imgSrc}'" style="object-position:${cropPos}">${ev.tint?`<div class="thumb-tint" style="background:${ev.tint}"></div>`:''}`
       :`<span class="emoji">${type.icon}</span>`;
     
     const dateObj=new Date(ev.date+'T00:00:00');
@@ -766,7 +769,7 @@ function renderList(){
     return`<div class="link-btn ${ev.pinned?'cta-event':''}" onclick="showPopup('${ev.id}')">
       ${spots}
       <div class="type-bar ${barClass}" style="background:${type.color}"></div>
-      <div class="btn-thumb ${thumbClass}">${thumbContent}</div>
+      <div class="btn-thumb ${thumbClass}${ev.tint?' tinted':''}">${thumbContent}</div>
       <div class="btn-inner">
         <div class="event-date-col">
           ${dateColHtml}
