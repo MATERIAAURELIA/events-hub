@@ -139,6 +139,8 @@
   .link-btn:hover { transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
   .link-btn:active { transform: scale(0.98); }
   .link-btn.cta-event + .link-btn.cta-event { margin-top: 10px; }
+  .t-pair { font-weight: 700; }
+  .t-name { font-weight: 400; opacity: .95; }
   .link-btn.cta-event { margin-top: 48px; background: linear-gradient(135deg, #fbf1d2, #fff9ec); border: 1px solid #e6d39a; box-shadow: 0 3px 16px rgba(200,164,78,0.32); }
 
   .btn-thumb {
@@ -672,7 +674,7 @@ function applySiteConfig(){
     const thumb = l.img ? `<img src="${l.img}" alt="" loading="lazy">` : `<span class="emoji">${l.emoji||'🔗'}</span>`;
     return `<a class="link-btn" href="${l.url}" target="_blank">
       <div class="btn-thumb">${thumb}</div>
-      <div class="btn-text"><div class="event-title">${l.title}</div></div>
+      <div class="btn-text"><div class="event-title">${fmtTitle(l.title)}</div></div>
     </a>`;
   }).join('');
 
@@ -682,7 +684,7 @@ function applySiteConfig(){
     const thumb = r.img ? `<img src="${r.img}" alt="" loading="lazy" style="border-radius:4px">` : `<span class="emoji">${r.emoji||'🔗'}</span>`;
     return `<a class="link-btn" href="${r.url}" target="_blank">
       <div class="btn-thumb">${thumb}</div>
-      <div class="btn-text"><div class="event-title">${r.title}</div></div>
+      <div class="btn-text"><div class="event-title">${fmtTitle(r.title)}</div></div>
     </a>`;
   }).join('');
 
@@ -771,7 +773,7 @@ function renderList(){
         </div>
         <div class="event-date-divider"></div>
         <div class="event-info-col">
-          <div class="event-title ${titleClass}">${ev.title}</div>
+          <div class="event-title ${titleClass}">${fmtTitle(ev.title)}</div>
           ${showVenue?`<div class="event-venue">📍 ${venueDisplay}</div>`:''}
         </div>
       </div>
@@ -874,7 +876,7 @@ function showPopup(id){
   const popImg = ev.img || (type&&type.img) || '';
   document.getElementById('popup-content').innerHTML=`
     ${popImg?`<div class="p-img-wrap"${isEdit?` onclick="pvPhoto('${ev.id}')" title="Click to change photo"`:''}><img class="p-img" src="${popImg}" alt="">${isEdit?`<div class="p-img-edit">📷 Change photo</div>`:''}</div>`:(isEdit?`<div class="p-img-empty" onclick="pvPhoto('${ev.id}')">📷 Add a photo</div>`:'')}
-    <div class="p-title"${isEdit?` contenteditable="true" onblur="pvEdit(this,'title','${ev.id}')" onkeydown="pvDescKey(event,this)"`:''} style="text-align:${ev.titleAlign||''}">${ev.title}</div>
+    <div class="p-title"${isEdit?` contenteditable="true" onblur="pvEdit(this,'title','${ev.id}')" onkeydown="pvDescKey(event,this)"`:''} style="text-align:${ev.titleAlign||''}">${isEdit?ev.title:fmtTitle(ev.title)}</div>
     ${isEdit?`<div class="pv-toolbar"><button type="button" onclick="pvAlign('titleAlign','left','${ev.id}')">Title ⬅</button><button type="button" onclick="pvAlign('titleAlign','center','${ev.id}')">Title ↔</button></div>`:''}
     ${isEdit ? `<div class="p-meta pv-meta-edit">
       <div class="pv-row">📅 <input type="date" value="${ev.date>='2090-01-01'?'':(ev.date||'')}" onchange="pvField('date',this.value,'${ev.id}')"></div>
@@ -909,8 +911,14 @@ function sharePage(){const u=window.location.href;if(navigator.share)navigator.s
 function shareEv(t,d,u){const x=`${t} — ${fDay(d)}\n${u}`;if(navigator.share)navigator.share({title:t,text:x,url:u});else{navigator.clipboard.writeText(x);showToast('Link copied!');}}
 // Id-based wrappers for inline onclick handlers — interpolating titles/URLs into
 // handler strings broke on apostrophes and newlines (share buttons silently died).
-function shareEvById(id){const e=EVENTS.find(x=>x.id===id);if(e)shareEv(e.title,e.date,e.booking);}
-function trackClickById(id){const e=EVENTS.find(x=>x.id===id);if(e)trackClick(e.id,e.title,e.booking);}
+function fmtTitle(s){
+  if(!s || !s.includes('\n')) return s;
+  const [first, ...rest] = s.split('\n');
+  return `<span class="t-pair">${first}</span><br><span class="t-name">${rest.join(' ')}</span>`;
+}
+function flatTitle(s){ return String(s||'').replace(/\n+/g,' '); }
+function shareEvById(id){const e=EVENTS.find(x=>x.id===id);if(e)shareEv(flatTitle(e.title),e.date,e.booking);}
+function trackClickById(id){const e=EVENTS.find(x=>x.id===id);if(e)trackClick(e.id,flatTitle(e.title),e.booking);}
 function showToast(msg){const t=document.createElement('div');t.textContent=msg;Object.assign(t.style,{position:'fixed',bottom:'80px',left:'50%',transform:'translateX(-50%)',background:'#333',color:'#fff',padding:'8px 20px',borderRadius:'20px',fontSize:'0.78rem',fontFamily:'Inter,sans-serif',fontWeight:'600',zIndex:'999',opacity:'0',transition:'opacity 0.3s'});document.body.appendChild(t);requestAnimationFrame(()=>t.style.opacity='1');setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),300);},1800);}
 function closePopup(){
   const a=document.activeElement; if(a&&a.blur) a.blur(); // commit any in-progress edit before closing
@@ -944,7 +952,7 @@ function showDayPopup(ds){
     de.map(e=>{const t=EVENT_TYPES[e.type],v=VENUES[e.venue]||{name:''};
       return`<div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #eee">
         <div style="font-size:0.62rem;color:${t.color};font-weight:700;text-transform:uppercase">${t.icon} ${t.name}</div>
-        <div style="font-weight:600;margin:4px 0">${e.title}</div>
+        <div style="font-weight:600;margin:4px 0">${flatTitle(e.title)}</div>
         <div style="font-size:0.72rem;color:#666">${fTime(e.time)}-${fTime(e.endTime)} · ${e.venueOverride||v.name} · $${e.price}</div>
         ${e.booking?`<a href="${e.booking}" target="_blank" class="btn-book" style="display:inline-block;padding:8px 20px;font-size:0.72rem;margin-top:8px;border-radius:10px">Book</a>`:''}
       </div>`;}).join('');
@@ -1163,7 +1171,7 @@ function generateJsonLd() {
     return {
       "@context": "https://schema.org",
       "@type": "Event",
-      "name": ev.title,
+      "name": flatTitle(ev.title),
       "description": ev.desc || '',
       "startDate": ev.time ? `${ev.date}T${ev.time}:00${off}` : ev.date,
       ...(ev.endTime ? { "endDate": `${ev.date}T${ev.endTime}:00${off}` } : {}),
