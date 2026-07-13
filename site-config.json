@@ -703,5 +703,9 @@
       "img": "photos/plate-stillness-release-jul31.jpg",
       "tint": "#c98a3f"
     }
-  ]
+  ],
+  "bgColor": "#0e1522",
+  "btnColor": "#d2a44e",
+  "textColor": "#0e1522",
+  "headingTextColor": "#f3ebdd"
 }

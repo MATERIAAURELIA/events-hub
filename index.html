@@ -34,7 +34,7 @@
 <meta name="geo.placename" content="Edmonton">
 
 <!-- Theme -->
-<meta name="theme-color" content="#D4951A">
+<meta name="theme-color" content="#0e1522">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Cormorant+Garamond:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&family=Libre+Baskerville:wght@400;700&family=Outfit:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700;800&family=Lucero&display=swap');
@@ -42,10 +42,10 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   :root {
-    --bg: #D4951A;
-    --btn-bg: #ffffff;
-    --btn-text: #000000;
-    --heading-text: #000000;
+    --bg: #0e1522;
+    --btn-bg: #d2a44e;
+    --btn-text: #0e1522;
+    --heading-text: #f3ebdd;
     --body-font: 'Inter', sans-serif;
     --heading-font: 'Palatino Linotype', 'Iowan Old Style', Palatino, Georgia, serif;  /* the plates' old-book voice */
     --btn-radius: 13px;
@@ -121,7 +121,7 @@
 
   .section-label {
     text-align: center; font-size: var(--section-label-size, 2rem); font-weight: 700;
-    color: var(--heading-text); margin: 16px 0 8px;
+    color: #d2a44e; margin: 16px 0 8px;
     font-family: var(--heading-font);
   }
 
@@ -602,11 +602,11 @@ var SyncStore={
   <div class="s-row">
     <div class="s-group">
       <label>Background Color</label>
-      <input type="color" id="s-bg-color" value="#D4951A">
+      <input type="color" id="s-bg-color" value="#0e1522">
     </div>
     <div class="s-group">
       <label>Button Color</label>
-      <input type="color" id="s-btn-color" value="#ffffff">
+      <input type="color" id="s-btn-color" value="#d2a44e">
     </div>
     <div class="s-group">
       <label>Text Color</label>
@@ -1062,8 +1062,8 @@ function applySettings(s) {
   document.getElementById('s-gap').value = s.gap || d.gap || 10;
   document.getElementById('s-thumb').value = s.thumbSize || d.thumbSize || 52;
   document.getElementById('s-thumb-r').value = s.thumbR != null ? s.thumbR : (d.thumbR != null ? d.thumbR : 8);
-  document.getElementById('s-bg-color').value = s.bgColor || d.bgColor || '#D4951A';
-  document.getElementById('s-btn-color').value = s.btnColor || d.btnColor || '#ffffff';
+  document.getElementById('s-bg-color').value = s.bgColor || d.bgColor || '#0e1522';
+  document.getElementById('s-btn-color').value = s.btnColor || d.btnColor || '#d2a44e';
   document.getElementById('s-text-color').value = s.textColor || d.textColor || '#000000';
   document.getElementById('s-show-thumb').checked = s.showThumb !== false;
   document.getElementById('s-show-emoji').checked = s.showEmoji || false;
@@ -1082,8 +1082,8 @@ function applySettings(s) {
   const gp = s.gap || d.gap || 10;
   const ts = s.thumbSize || d.thumbSize || 52;
   const tr = s.thumbR != null ? s.thumbR : (d.thumbR != null ? d.thumbR : 8);
-  const bg = s.bgColor || d.bgColor || '#D4951A';
-  const bc = s.btnColor || d.btnColor || '#ffffff';
+  const bg = s.bgColor || d.bgColor || '#0e1522';
+  const bc = s.btnColor || d.btnColor || '#d2a44e';
   const tc = s.textColor || d.textColor || '#000000';
 
   r.style.setProperty('--body-font', bf);
