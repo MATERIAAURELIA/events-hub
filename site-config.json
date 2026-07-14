@@ -1,14 +1,14 @@
 {
   "site": {
     "name": "Earth Harmony Sound & Wellness",
-    "bio": "Sound Baths & Therapeutic Drumming Events —<br>Sound Healing Facilitator Training",
+    "bio": "Sound Baths & Therapeutic Drumming Events \u2014<br>Sound Healing Facilitator Training",
     "email": "earthharmonysoundhealing@gmail.com",
     "logo": "images/logo.jpg",
-    "logoEmoji": "🔔"
+    "logoEmoji": "\ud83d\udd14"
   },
   "design": {
-    "bodyFont": "'Inter', sans-serif",
-    "headFont": "'Inter', sans-serif",
+    "bodyFont": "'Mulish', sans-serif",
+    "headFont": "'Marcellus', serif",
     "labelSize": 2,
     "btnSize": 1.12,
     "headSize": 1.4,
@@ -54,13 +54,13 @@
     {
       "title": "How was your experience? Check Our Google Reviews",
       "url": "https://g.page/r/CeK7fPWpwspuEAE/review",
-      "emoji": "⭐",
+      "emoji": "\u2b50",
       "img": ""
     },
     {
       "title": "Join my Local YEG Events Newsletter ",
       "url": "https://list.robly.com/subscribe?a=bb2759f574f35963fb38112b07dcd45d",
-      "emoji": "📧",
+      "emoji": "\ud83d\udce7",
       "img": ""
     }
   ],
@@ -68,25 +68,25 @@
     {
       "title": "Edmonton's Premium Sound Bath & Sound Therapy",
       "url": "https://www.earthharmonysoundwellness.com/",
-      "emoji": "🌐",
+      "emoji": "\ud83c\udf10",
       "img": ""
     },
     {
-      "title": "Watch our CTV News Feature — 3 mins",
+      "title": "Watch our CTV News Feature \u2014 3 mins",
       "url": "https://www.ctvnews.ca/edmonton/video/2026/01/26/sound-bathing-how-some-edmontonians-are-staying-grounded/",
-      "emoji": "📺",
+      "emoji": "\ud83d\udcfa",
       "img": "photos/ctv-news.png"
     },
     {
-      "title": "Insight Timer — Exclusive Music, Courses, Live Streams",
+      "title": "Insight Timer \u2014 Exclusive Music, Courses, Live Streams",
       "url": "https://insighttimer.com/highercallingmusic",
-      "emoji": "🎧",
+      "emoji": "\ud83c\udfa7",
       "img": ""
     },
     {
       "title": "Earth Harmony Hoodies / Payments / Tip Jars",
       "url": "http://www.ko-fi.com/marcusworldbridger",
-      "emoji": "☕",
+      "emoji": "\u2615",
       "img": "https://storage.ko-fi.com/cdn/brandasset/kofi_s_logo_nolabel.png"
     }
   ],
@@ -101,44 +101,44 @@
     "sound-bath": {
       "name": "Sound Bath",
       "color": "#4a90d9",
-      "icon": "🔔",
+      "icon": "\ud83d\udd14",
       "img": "https://images.unsplash.com/photo-1591291621164-2c6367723315?w=120&h=120&fit=crop"
     },
     "deep-gong": {
       "name": "Deep Gong",
       "color": "#9b59b6",
-      "icon": "🌊",
+      "icon": "\ud83c\udf0a",
       "img": "https://images.unsplash.com/photo-1545389336-cf090694435e?w=120&h=120&fit=crop"
     },
     "sound-foundations": {
       "name": "Training",
       "color": "#2ecc71",
-      "icon": "🎵",
+      "icon": "\ud83c\udfb5",
       "img": "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=120&h=120&fit=crop"
     },
     "drumming": {
       "name": "Drumming",
       "color": "#e74c3c",
-      "icon": "🥁",
+      "icon": "\ud83e\udd41",
       "img": "https://images.unsplash.com/photo-1519892300165-cb5542fb47c7?w=120&h=120&fit=crop"
     },
     "yin-sound": {
       "name": "Yoga + Sound",
       "color": "#e8a44e",
-      "icon": "🧘",
+      "icon": "\ud83e\uddd8",
       "img": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=120&h=120&fit=crop"
     },
     "restorative": {
       "name": "Yoga + Sound",
       "color": "#c8a44e",
-      "icon": "✨",
+      "icon": "\u2728",
       "img": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=120&h=120&fit=crop",
       "filterAs": "yin-sound"
     },
     "private": {
       "name": "Private",
       "color": "#607080",
-      "icon": "🔒",
+      "icon": "\ud83d\udd12",
       "img": ""
     }
   },
@@ -347,7 +347,7 @@
       "booking": "https://EarthHarmony.as.me/?appointmentType=92539450",
       "contactEmail": "earthharmonysoundhealing@gmail.com",
       "contactPhone": "780-257-6428",
-      "desc": "A special sound bath honoring the Divine Mother — blessings of unconditional love, nurturing, benevolence and gratitude. Bring your mother, grandmother, daughter, or anyone you hold dear. 8 spots only.",
+      "desc": "A special sound bath honoring the Divine Mother \u2014 blessings of unconditional love, nurturing, benevolence and gratitude. Bring your mother, grandmother, daughter, or anyone you hold dear. 8 spots only.",
       "venueOverride": "Terwillegar",
       "img": "photos/blank-templates/divine-mother-soundbath-blank.png",
       "archived": true
@@ -355,7 +355,7 @@
     {
       "id": "ev-sound-foundations-may",
       "type": "sound-foundations",
-      "title": "Sound Foundations Playground — Gong Focus",
+      "title": "Sound Foundations Playground \u2014 Gong Focus",
       "date": "2026-05-17",
       "time": "10:00",
       "endTime": "12:00",
@@ -372,7 +372,7 @@
     {
       "id": "ev-b2b-may",
       "type": "sound-bath",
-      "title": "Back 2 Basics | Community Sound Bath — Session 1",
+      "title": "Back 2 Basics | Community Sound Bath \u2014 Session 1",
       "date": "2026-05-23",
       "time": "16:00",
       "endTime": "17:00",
@@ -389,7 +389,7 @@
     {
       "id": "ev-b2b-may-2",
       "type": "sound-bath",
-      "title": "Back 2 Basics | Community Sound Bath — Session 2",
+      "title": "Back 2 Basics | Community Sound Bath \u2014 Session 2",
       "date": "2026-05-23",
       "time": "17:30",
       "endTime": "18:30",
@@ -415,7 +415,7 @@
       "booking": "https://revitalifewellness.ca/",
       "contactEmail": "info@revitalifewellness.ca",
       "contactPhone": " (780)975-0385",
-      "desc": "The EESystem uses quantum technology to generate scalar waves that recharge your body’s cells to an optimal energy level.\n\n\n When paired with the acoustic vibrations of live sound healing instruments, it creates a powerful compound effect that instantly shifts your nervous system out of stress mode. \n\n\nThis dual approach accelerates cellular regeneration, deeply reduces inflammation, and clears away mental clutter. Ultimately, it bathes the body in a multi-dimensional field of healing frequencies for profound physical and mental reset.\n\nTo register: call Revitalife directly at (780) 975-0385 — or tap through to their page to book your spot.",
+      "desc": "The EESystem uses quantum technology to generate scalar waves that recharge your body\u2019s cells to an optimal energy level.\n\n\n When paired with the acoustic vibrations of live sound healing instruments, it creates a powerful compound effect that instantly shifts your nervous system out of stress mode. \n\n\nThis dual approach accelerates cellular regeneration, deeply reduces inflammation, and clears away mental clutter. Ultimately, it bathes the body in a multi-dimensional field of healing frequencies for profound physical and mental reset.\n\nTo register: call Revitalife directly at (780) 975-0385 \u2014 or tap through to their page to book your spot.",
       "status": "published",
       "repeatable": true,
       "venueOverride": "Revitalife Wellness - Sherwood Park",
@@ -443,7 +443,7 @@
     {
       "id": "ev-draft-jun13-embers",
       "type": "sound-bath",
-      "title": "Embers to Essence  Evening Retreat",
+      "title": "Embers to Essence\u00a0 Evening Retreat",
       "date": "2026-06-13",
       "time": "19:00",
       "endTime": "23:00",
@@ -462,7 +462,7 @@
     {
       "id": "ev-draft-jun21-yaa",
       "type": "restorative",
-      "title": "YAA 50th Anniversary — Yoga + Sound",
+      "title": "YAA 50th Anniversary \u2014 Yoga + Sound",
       "date": "2026-06-21",
       "time": "10:00",
       "endTime": "12:00",
@@ -479,7 +479,7 @@
     {
       "id": "ev-draft-jun26-deepgong",
       "type": "deep-gong",
-      "title": "FULL — Deep Resonance:   Planetary Gong Immersion",
+      "title": "FULL \u2014 Deep Resonance:\u00a0 \u00a0Planetary Gong Immersion",
       "date": "2026-06-26",
       "time": "18:30",
       "endTime": "20:00",
@@ -499,7 +499,7 @@
     {
       "id": "ev-jun26-deepgong-late",
       "type": "deep-gong",
-      "title": "Deep Resonance:   Planetary Gong Immersion",
+      "title": "Deep Resonance:\u00a0 \u00a0Planetary Gong Immersion",
       "date": "2026-06-26",
       "time": "20:30",
       "endTime": "22:00",
@@ -529,7 +529,7 @@
       "booking": "",
       "contactEmail": "",
       "contactPhone": "",
-      "desc": "[DRAFT — $450]",
+      "desc": "[DRAFT \u2014 $450]",
       "img": "",
       "status": "draft",
       "archived": true
@@ -546,7 +546,7 @@
       "booking": "https://EarthHarmony.as.me/?appointmentType=93995396",
       "contactEmail": "",
       "contactPhone": "",
-      "desc": "An immersive sound journey through a rich array of therapeutic instruments — drum, didgeridoo, flute, voice, singing bowls, and gongs.\n\nAt each centre, sound helps to move what's stagnant and returns it to balance. Clearing and balancing each energy centre from the ground up.",
+      "desc": "An immersive sound journey through a rich array of therapeutic instruments \u2014 drum, didgeridoo, flute, voice, singing bowls, and gongs.\n\nAt each centre, sound helps to move what's stagnant and returns it to balance. Clearing and balancing each energy centre from the ground up.",
       "status": "published",
       "repeatable": false,
       "venueOverride": "Terwillegar Home Studio",
@@ -585,7 +585,7 @@
       "venueOverride": "Your space or ours",
       "price": "",
       "booking": "mailto:earthharmonysoundhealing@gmail.com?subject=Small Group or Custom Booking Inquiry",
-      "desc": "Private sessions, small groups, Room for 8 in my home studio, corporate wellness, or a gift for someone special — let's craft something tailored to you.",
+      "desc": "Private sessions, small groups, Room for 8 in my home studio, corporate wellness, or a gift for someone special \u2014 let's craft something tailored to you.",
       "img": "photos/soundcomfort.jpg",
       "status": "published",
       "pinned": true,
@@ -602,7 +602,7 @@
       "venueOverride": "",
       "price": "",
       "booking": "mailto:earthharmonysoundhealing@gmail.com?subject=Question for Earth Harmony",
-      "desc": "Not sure what's the right fit? Curious about a session, pricing, or a gift? Send a note — happy to help.",
+      "desc": "Not sure what's the right fit? Curious about a session, pricing, or a gift? Send a note \u2014 happy to help.",
       "img": "photos/sndthepmf--38-of-43-.jpg",
       "status": "published",
       "pinned": true,
@@ -620,10 +620,10 @@
       "booking": "https://www.ualberta.ca/en/botanic-garden/events-programs/yoga-in-garden.html",
       "contactEmail": "",
       "contactPhone": "",
-      "desc": "Yoga + Sound Bath in the Garden.\n\nYoga in the Garden begins with a gentle, inclusive hour-long practice led by instructor Melanie Maltais. Following a short break, settle in for a rejuvenating hour-long sound bath — instruments tuned to healing frequencies offering a full-body reset for mind, body and spirit. The gentle yoga beforehand lets the vibrations resonate more deeply.\n\nIncludes yoga, sound bath and admission to the Garden.",
+      "desc": "Yoga + Sound Bath in the Garden.\n\nYoga in the Garden begins with a gentle, inclusive hour-long practice led by instructor Melanie Maltais. Following a short break, settle in for a rejuvenating hour-long sound bath \u2014 instruments tuned to healing frequencies offering a full-body reset for mind, body and spirit. The gentle yoga beforehand lets the vibrations resonate more deeply.\n\nIncludes yoga, sound bath and admission to the Garden.",
       "status": "published",
       "repeatable": true,
-      "venueOverride": "Devonian Botanical Gardens — Aga Khan Garden",
+      "venueOverride": "Devonian Botanical Gardens \u2014 Aga Khan Garden",
       "img": "photos/botanicalgardens.jpg",
       "titleAlign": "center"
     },
@@ -639,10 +639,10 @@
       "booking": "https://www.ualberta.ca/en/botanic-garden/events-programs/yoga-in-garden.html",
       "contactEmail": "",
       "contactPhone": "",
-      "desc": "Yoga + Sound Bath in the Garden.\n\nYoga in the Garden begins with a gentle, inclusive hour-long practice led by instructor Melanie Maltais. Following a short break, settle in for a rejuvenating hour-long sound bath — instruments tuned to healing frequencies offering a full-body reset for mind, body and spirit. The gentle yoga beforehand lets the vibrations resonate more deeply.\n\nIncludes yoga, sound bath and admission to the Garden.",
+      "desc": "Yoga + Sound Bath in the Garden.\n\nYoga in the Garden begins with a gentle, inclusive hour-long practice led by instructor Melanie Maltais. Following a short break, settle in for a rejuvenating hour-long sound bath \u2014 instruments tuned to healing frequencies offering a full-body reset for mind, body and spirit. The gentle yoga beforehand lets the vibrations resonate more deeply.\n\nIncludes yoga, sound bath and admission to the Garden.",
       "status": "published",
       "repeatable": true,
-      "venueOverride": "Devonian Botanical Gardens — Alpine Garden",
+      "venueOverride": "Devonian Botanical Gardens \u2014 Alpine Garden",
       "img": "photos/botanicalgardens.jpg",
       "titleAlign": "center"
     },
@@ -658,7 +658,7 @@
       "booking": "https://EarthHarmony.as.me/?appointmentType=93995396",
       "contactEmail": "earthharmonysoundhealing@gmail.com",
       "contactPhone": "780-257-6428",
-      "desc": "An immersive and melodic multi-instrumental sound journey that also features the human voice. With sound, we navigate the map of the 7 chakra centres.\n\nAs each energy centre (chakra) is touched in resonance, you're invited to meet your own felt sense: clearing what's stagnant and returning to balance, from the ground up.\n\nCome as you are. Intimate home studio — room for 8.",
+      "desc": "An immersive and melodic multi-instrumental sound journey that also features the human voice. With sound, we navigate the map of the 7 chakra centres.\n\nAs each energy centre (chakra) is touched in resonance, you're invited to meet your own felt sense: clearing what's stagnant and returning to balance, from the ground up.\n\nCome as you are. Intimate home studio \u2014 room for 8.",
       "status": "published",
       "repeatable": false,
       "venueOverride": "Terwillegar Home Studio",
@@ -677,7 +677,7 @@
       "booking": "https://EarthHarmony.as.me/?appointmentType=95442128",
       "contactEmail": "earthharmonysoundhealing@gmail.com",
       "contactPhone": "780-257-6428",
-      "desc": "A soft, loving space to be held, nurtured, and carried home deep into yourself.\n\nThe human voice is the heart of this journey — a healing instrument at its most tender, woven into a tapestry of song with a looping pedal, carried over crystal singing bowls, deep sine tones, and a profound Grotto Sonora gong.\n\nCome as you are. Intimate home studio — thick mats, sheepskins, blankets and tea all provided.",
+      "desc": "A soft, loving space to be held, nurtured, and carried home deep into yourself.\n\nThe human voice is the heart of this journey \u2014 a healing instrument at its most tender, woven into a tapestry of song with a looping pedal, carried over crystal singing bowls, deep sine tones, and a profound Grotto Sonora gong.\n\nCome as you are. Intimate home studio \u2014 thick mats, sheepskins, blankets and tea all provided.",
       "status": "published",
       "repeatable": false,
       "venueOverride": "Terwillegar Home Studio",
@@ -696,7 +696,7 @@
       "booking": "https://EarthHarmony.as.me/?appointmentType=92543227",
       "contactEmail": "earthharmonysoundhealing@gmail.com",
       "contactPhone": "780-257-6428",
-      "desc": "6 Large planetary gongs, deep vibrations and resonance felt in an intimate room — thick mats, sheepskins, blankets, bolsters and tea all provided.\n\nThe gongs carry you into the deep;  your only task is to arrive and let your nervous system find its own way home. A sound journey like no other — a space to be held, for those who hold a lot.",
+      "desc": "6 Large planetary gongs, deep vibrations and resonance felt in an intimate room \u2014 thick mats, sheepskins, blankets, bolsters and tea all provided.\n\nThe gongs carry you into the deep;  your only task is to arrive and let your nervous system find its own way home. A sound journey like no other \u2014 a space to be held, for those who hold a lot.",
       "status": "published",
       "repeatable": true,
       "venueOverride": "Terwillegar Home Studio",
