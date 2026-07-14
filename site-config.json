@@ -19,9 +19,9 @@
     "thumbSize": 64,
     "thumbR": 6,
     "bgColor": "#0e1522",
-    "btnColor": "#d2a44e",
-    "textColor": "#0e1522",
-    "headingTextColor": "#f3ebdd",
+    "btnColor": "#182338",
+    "textColor": "#f3ebdd",
+    "headingTextColor": "#d2a44e",
     "showThumb": true,
     "showEmoji": false,
     "showBar": false,
@@ -705,7 +705,7 @@
     }
   ],
   "bgColor": "#0e1522",
-  "btnColor": "#d2a44e",
-  "textColor": "#0e1522",
-  "headingTextColor": "#f3ebdd"
+  "btnColor": "#182338",
+  "textColor": "#f3ebdd",
+  "headingTextColor": "#d2a44e"
 }
