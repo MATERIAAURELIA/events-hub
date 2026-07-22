@@ -1,0 +1,15 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Earth Harmony Sound & Wellness//Event//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:divine-mother-jul24-2026@earthharmonysoundwellness.com
+DTSTAMP:20260722T170000Z
+DTSTART:20260725T003000Z
+DTEND:20260725T020000Z
+SUMMARY:Held & Nurtured | Divine Mother Sound Journey
+LOCATION:12 Freedom Gardens\, 1295 Carter Crest Road NW\, Edmonton\, AB
+DESCRIPTION:Sound journey with Marcus — Earth Harmony Sound & Wellness. Arrive 10 minutes early. Everything provided — wear something comfortable.
+END:VEVENT
+END:VCALENDAR
