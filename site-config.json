@@ -759,6 +759,24 @@
    "venueOverride": "Terwillegar Home Studio",
    "img": "photos/plate-return-remember-aug21.jpg",
    "tint": "#7c5cd6"
+  },
+  {
+   "id": "ev-aug12-revitalife",
+   "type": "sound-bath",
+   "title": "Energy Enhancement Technology & Sound Journey",
+   "date": "2026-08-12",
+   "time": "18:30",
+   "endTime": "20:00",
+   "venue": "",
+   "price": 65,
+   "booking": "https://revitalifewellness.ca/",
+   "contactEmail": "info@revitalifewellness.ca",
+   "contactPhone": " (780)975-0385",
+   "desc": "The EESystem uses quantum technology to generate scalar waves that recharge your body’s cells to an optimal energy level.\n\n\n When paired with the acoustic vibrations of live sound healing instruments, it creates a powerful compound effect that instantly shifts your nervous system out of stress mode. \n\n\nThis dual approach accelerates cellular regeneration, deeply reduces inflammation, and clears away mental clutter. Ultimately, it bathes the body in a multi-dimensional field of healing frequencies for profound physical and mental reset.\n\nTo register: call Revitalife directly at (780) 975-0385 — or tap through to their page to book your spot.",
+   "status": "published",
+   "repeatable": true,
+   "venueOverride": "Revitalife Wellness - Sherwood Park",
+   "img": "photos/purple-vibes-bowls.jpg"
   }
  ],
  "bgColor": "#0e1522",
