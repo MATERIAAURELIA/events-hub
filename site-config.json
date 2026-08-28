@@ -855,6 +855,26 @@
    "img": "photos/equinox-grief-gratitude-sep21.jpg",
    "titleAlign": "center",
    "tint": "#8a6a9e"
+  },
+  {
+   "id": "ev-sep30-om",
+   "type": "sound-bath",
+   "title": "Return & Remember:\nThe Harmonic OM",
+   "date": "2026-09-30",
+   "time": "19:00",
+   "endTime": "20:30",
+   "venue": "home",
+   "price": 60,
+   "booking": "https://EarthHarmony.as.me/?appointmentType=96658347",
+   "contactEmail": "earthharmonysoundhealing@gmail.com",
+   "contactPhone": "780-257-6428",
+   "desc": "This sound journey is unique from the others. Instead of melody, it focuses on drones, layered sounds, and the perfect fifth — going deeper and deeper into one sound: OM. The sound said to be contained in all sounds.\n\nInstrumentation includes male and female shruti box, a 30\" chau gong, a deep singing bowl selection, and the human voice. This journey also introduces the practice of self-generated vocal toning, its benefits, and an option to participate.\n\nThick mats, sheepskins, blankets, bolsters and tea all provided.",
+   "status": "published",
+   "repeatable": false,
+   "venueOverride": "Terwillegar Home Studio",
+   "img": "photos/harmonic-om-marcus-shruti.jpg",
+   "tint": "#7c5cd6",
+   "archived": false
   }
  ],
  "bgColor": "#0e1522",
