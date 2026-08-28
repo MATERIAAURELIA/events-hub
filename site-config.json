@@ -835,6 +835,26 @@
    "img": "photos/plate-clearing-balance-jul17.jpg",
    "tint": "#7c5cd6",
    "archived": false
+  },
+  {
+   "id": "ev-sep21-equinox",
+   "type": "sound-bath",
+   "title": "Where Do We Begin?\nAn Equinox Journey through\nGrief & Gratitude",
+   "date": "2026-09-21",
+   "time": "18:30",
+   "endTime": "20:00",
+   "venue": "home",
+   "price": 60,
+   "booking": "",
+   "contactEmail": "earthharmonysoundhealing@gmail.com",
+   "contactPhone": "780-257-6428",
+   "desc": "The equinox is the one turn of the year when dark and light stand equal. Grief and gratitude are the same balance held in the body — two sides of one coin.\n\nGratitude stays shallow until the grief beneath it is honoured. You can't be fully grateful for what you haven't grieved losing. This journey holds both: the descent into what was loved and lost, and the turn back toward what remains.\n\nWater-led — singing bowls, voice, soft flowing tone, and the gong at the threshold. You leave with an anchor: gratitude rooted in honoured grief, ground to stand on as the season turns.\n\nThick mats, sheepskins, blankets, bolsters and tea all provided. Allow two hours.",
+   "status": "draft",
+   "repeatable": false,
+   "venueOverride": "Terwillegar Home Studio",
+   "img": "photos/chakras.jpg",
+   "titleAlign": "center",
+   "tint": "#8a6a9e"
   }
  ],
  "bgColor": "#0e1522",
