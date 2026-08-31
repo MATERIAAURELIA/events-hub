@@ -28,6 +28,17 @@ button{margin-top:26px;width:100%;background:#d2a44e;color:#171310;border:none;b
  padding:16px;font-family:'Jost',sans-serif;font-weight:600;font-size:15px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
 button:hover{filter:brightness(1.08)}
 .note{margin-top:14px;font-size:12.5px;color:#8d7d61;text-align:center;line-height:1.6}
+.board{margin-top:30px;background:rgba(255,255,255,.028);border:1px solid rgba(210,164,78,.22);border-radius:16px;padding:20px 22px 22px}
+.boardBody{margin-top:10px;text-align:left}
+.boardEmpty{display:block;text-align:center;font-style:italic;font-family:'Cormorant Garamond',serif;font-size:18px;color:#8d7d61}
+.cat{margin:14px 0 4px;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#c8a25c}
+.dishRow{display:flex;justify-content:space-between;gap:12px;font-size:15.5px;padding:5px 0;border-bottom:1px dashed rgba(210,164,78,.14)}
+.dishRow:last-child{border-bottom:none}
+.dishName{color:#efe6d6}
+.dishWho{color:#a8956f;font-style:italic;font-family:'Cormorant Garamond',serif;font-size:16px;white-space:nowrap}
+.dietLine{margin-top:14px;font-size:13px;color:#b9a98c;line-height:1.7}
+.dietLine b{color:#e9c87e;font-weight:500}
+.badge{display:inline-block;border:1px solid rgba(210,164,78,.4);border-radius:999px;padding:2px 11px;margin:3px 3px;font-size:12px;color:#dec9a1}
 </style></head><body>
 <div class="wrap">
   <div class="kicker">A Potluck Gathering</div>
@@ -45,6 +56,13 @@ button:hover{filter:brightness(1.08)}
     <span style="color:#a8956f;font-style:italic">Bring swimwear if you want to cold plunge ~7:00.</span><br>
   </div>
   <div class="bring">Bring a dish to share — whatever feeds you.</div>
+
+  <div class="board">
+    <div class="shape" style="margin-top:6px">The Table So Far</div>
+    <div id="boardBody" class="boardBody"><span class="boardEmpty">The table is still open — dishes appear here as friends RSVP.</span></div>
+    <div id="dietLine" class="dietLine"></div>
+  </div>
+
   <form action="https://formsubmit.co/earthharmonysoundhealing@gmail.com" method="POST">
     <input type="hidden" name="_subject" value="🍲 Resilience Potluck RSVP">
     <input type="hidden" name="_captcha" value="false">
@@ -58,6 +76,8 @@ button:hover{filter:brightness(1.08)}
     <select name="Guests"><option>1</option><option>2</option><option>3</option><option>4+</option></select>
     <label>The dish you're bringing</label>
     <input name="Dish" placeholder="what are you bringing?">
+    <label>What kind of dish</label>
+    <select name="Category"><option>Main</option><option>Side / salad</option><option>Dessert</option><option>Drinks</option><option>Not sure yet</option></select>
     <label>Any dietary restrictions in your party</label>
     <input name="Dietary" placeholder="vegetarian, gluten-free, allergies…">
     <label>Anything else (optional)</label>
@@ -66,4 +86,28 @@ button:hover{filter:brightness(1.08)}
     <div class="note">Your RSVP goes straight to Marcus. He'll text you the address.</div>
   </form>
 </div>
+<script>
+fetch('dishes.json?cb='+Date.now()).then(r=>r.json()).then(d=>{
+  const body=document.getElementById('boardBody');
+  const cats=['Main','Side / salad','Dessert','Drinks','Not sure yet'];
+  if(d.dishes && d.dishes.length){
+    body.innerHTML='';
+    cats.forEach(c=>{
+      const rows=d.dishes.filter(x=>(x.cat||'Not sure yet')===c);
+      if(!rows.length)return;
+      const h=document.createElement('div');h.className='cat';h.textContent=c;body.appendChild(h);
+      rows.forEach(x=>{
+        const r=document.createElement('div');r.className='dishRow';
+        const a=document.createElement('span');a.className='dishName';a.textContent=x.dish;
+        const b=document.createElement('span');b.className='dishWho';b.textContent=x.who;
+        r.appendChild(a);r.appendChild(b);body.appendChild(r);
+      });
+    });
+  }
+  if(d.dietary && d.dietary.length){
+    document.getElementById('dietLine').innerHTML='<b>around the table:</b> '+
+      d.dietary.map(x=>'<span class="badge">'+x+'</span>').join('');
+  }
+}).catch(()=>{});
+</script>
 </body></html>
