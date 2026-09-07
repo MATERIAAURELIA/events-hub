@@ -4,6 +4,10 @@
  "dishes": [],
  "guests": [
   {
+   "who": "Brock",
+   "status": "yes"
+  },
+  {
    "who": "Farhaat",
    "status": "yes"
   },
