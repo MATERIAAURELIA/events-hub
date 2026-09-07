@@ -98,7 +98,7 @@ fetch('dishes.json?cb='+Date.now()).then(r=>r.json()).then(d=>{
   if(d.dishes && d.dishes.length){
     body.innerHTML='';
     cats.forEach(c=>{
-      const rows=d.dishes.filter(x=>(x.cat||'Not sure yet')===c);
+      const rows=d.dishes.filter(x=>!x._matched).filter(x=>(x.cat||'Not sure yet')===c);
       if(!rows.length)return;
       const h=document.createElement('div');h.className='cat';h.textContent=c;body.appendChild(h);
       rows.forEach(x=>{
@@ -114,6 +114,17 @@ fetch('dishes.json?cb='+Date.now()).then(r=>r.json()).then(d=>{
     const yes=d.guests.filter(g=>g.status==='yes'), mb=d.guests.filter(g=>g.status==='maybe');
     const heads=d.guests.filter(g=>g.status==='yes').reduce((s,g)=>s+(g.count||1),0);
     const box=document.createElement('div');
+    // fuzzy-match dishes to guests by first name
+    const norm=s=>(s||'').toLowerCase().replace(/[^a-z]/g,'');
+    (d.dishes||[]).forEach(x=>{
+      const w=norm(x.who);
+      let hit=d.guests.find(g=>{
+        const parts=norm(g.who), first=norm((g.who||'').split(/[&,]/)[0]);
+        return parts===w || first===w || parts.startsWith(w) || w.startsWith(first) ||
+               (w.length>3 && parts.includes(w));
+      });
+      if(hit){ hit.dish = hit.dish ? hit.dish+' · '+x.dish : x.dish; x._matched=true; }
+    });
     const row=(g,dim)=>'<div style="display:flex;justify-content:space-between;align-items:baseline;'+
       'padding:6px 0;border-bottom:1px dashed rgba(210,164,78,.13)">'+
       '<span style="font-size:15.5px;color:'+(dim?'#a8956f':'#efe6d6')+'">'+g.who+'</span>'+
