@@ -63,15 +63,19 @@ button:hover{filter:brightness(1.08)}
     <div id="dietLine" class="dietLine"></div>
   </div>
 
+  <div class="shape" style="margin-top:34px">What are you bringing?</div>
+  <div style="font-size:14px;color:#b9a98c;max-width:440px;margin:6px auto 0;line-height:1.6">
+    You're already on the list — this is just so we can piece the meal together. Have a look at the table above, then add yours.
+  </div>
   <form action="https://formsubmit.co/earthharmonysoundhealing@gmail.com" method="POST">
-    <input type="hidden" name="_subject" value="🍲 Resilience Potluck RSVP">
+    <input type="hidden" name="_subject" value="🍲 Potluck — dish sign-up">
     <input type="hidden" name="_captcha" value="false">
     <input type="hidden" name="_template" value="table">
     <input type="hidden" name="_next" value="https://events.earthharmonysoundwellness.com/potluck/thanks.html">
     <label>Your name</label>
-    <input name="Name" required placeholder="who's coming">
+    <input name="Name" required placeholder="your name">
     <label>Phone or email</label>
-    <input name="Contact" required placeholder="so Marcus can send the address">
+    <input name="Contact" placeholder="only if Marcus doesn't have it">
     <label>How many of you</label>
     <select name="Guests"><option>1</option><option>2</option><option>3</option><option>4+</option></select>
     <label>The dish you're bringing</label>
@@ -82,8 +86,8 @@ button:hover{filter:brightness(1.08)}
     <input name="Dietary" placeholder="vegetarian, gluten-free, allergies…">
     <label>Anything else (optional)</label>
     <textarea name="Note" placeholder="anything Marcus should know"></textarea>
-    <button type="submit">Save My Seat at the Table</button>
-    <div class="note">Your RSVP goes straight to Marcus. He'll text you the address.</div>
+    <button type="submit">Add My Dish to the Table</button>
+    <div class="note">This goes straight to Marcus and appears on the table above, so we don't end up with ten bowls of hummus.</div>
   </form>
 </div>
 <script>
