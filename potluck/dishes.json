@@ -1,5 +1,49 @@
 {
-  "updated": "2026-08-31",
-  "dietary": [],
-  "dishes": []
+ "updated": "2026-09-07",
+ "dietary": [],
+ "dishes": [],
+ "guests": [
+  {
+   "who": "Farhaat",
+   "status": "yes"
+  },
+  {
+   "who": "Ivan",
+   "status": "yes"
+  },
+  {
+   "who": "Brenna",
+   "status": "maybe"
+  },
+  {
+   "who": "Jess & Bobby",
+   "status": "yes",
+   "count": 2
+  },
+  {
+   "who": "Jonathon",
+   "status": "yes"
+  },
+  {
+   "who": "Ashlii & Jon",
+   "status": "yes",
+   "count": 2
+  },
+  {
+   "who": "Clayton",
+   "status": "yes"
+  },
+  {
+   "who": "Ingrid",
+   "status": "maybe"
+  },
+  {
+   "who": "Ashlee",
+   "status": "yes"
+  },
+  {
+   "who": "Lina",
+   "status": "yes"
+  }
+ ]
 }

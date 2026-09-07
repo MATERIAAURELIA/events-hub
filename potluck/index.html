@@ -59,7 +59,7 @@ button:hover{filter:brightness(1.08)}
 
   <div class="board">
     <div class="shape" style="margin-top:6px">The Table So Far</div>
-    <div id="boardBody" class="boardBody"><span class="boardEmpty">The table is still open — dishes appear here as friends RSVP.</span></div>
+    <div id="boardBody" class="boardBody"><span class="boardEmpty">Dishes appear here as friends let Marcus know what they're bringing.</span></div>
     <div id="dietLine" class="dietLine"></div>
   </div>
 
@@ -103,6 +103,16 @@ fetch('dishes.json?cb='+Date.now()).then(r=>r.json()).then(d=>{
         r.appendChild(a);r.appendChild(b);body.appendChild(r);
       });
     });
+  }
+  // who's coming
+  if(d.guests && d.guests.length){
+    const yes=d.guests.filter(g=>g.status==='yes'), mb=d.guests.filter(g=>g.status==='maybe');
+    const heads=d.guests.filter(g=>g.status==='yes').reduce((s,g)=>s+(g.count||1),0);
+    const box=document.createElement('div');
+    box.innerHTML='<div class="cat" style="margin-top:0">Coming &nbsp;·&nbsp; '+heads+'</div>'+
+      '<div style="font-size:15px;line-height:1.9;color:#efe6d6">'+yes.map(g=>g.who).join(' &middot; ')+'</div>'+
+      (mb.length?'<div class="cat">Maybe</div><div style="font-size:15px;color:#a8956f">'+mb.map(g=>g.who).join(' &middot; ')+'</div>':'');
+    body.parentNode.insertBefore(box, body);
   }
   if(d.dietary && d.dietary.length){
     document.getElementById('dietLine').innerHTML='<b>around the table:</b> '+
