@@ -114,9 +114,14 @@ fetch('dishes.json?cb='+Date.now()).then(r=>r.json()).then(d=>{
     const yes=d.guests.filter(g=>g.status==='yes'), mb=d.guests.filter(g=>g.status==='maybe');
     const heads=d.guests.filter(g=>g.status==='yes').reduce((s,g)=>s+(g.count||1),0);
     const box=document.createElement('div');
+    const row=(g,dim)=>'<div style="display:flex;justify-content:space-between;align-items:baseline;'+
+      'padding:6px 0;border-bottom:1px dashed rgba(210,164,78,.13)">'+
+      '<span style="font-size:15.5px;color:'+(dim?'#a8956f':'#efe6d6')+'">'+g.who+'</span>'+
+      '<span style="font-size:13px;color:#8d7d61;font-style:italic;font-family:\'Cormorant Garamond\',serif">'+
+      (g.dish||(dim?'maybe':'—'))+'</span></div>';
     box.innerHTML='<div class="cat" style="margin-top:0">Coming &nbsp;·&nbsp; '+heads+'</div>'+
-      '<div style="font-size:15px;line-height:1.9;color:#efe6d6">'+yes.map(g=>g.who).join(' &middot; ')+'</div>'+
-      (mb.length?'<div class="cat">Maybe</div><div style="font-size:15px;color:#a8956f">'+mb.map(g=>g.who).join(' &middot; ')+'</div>':'');
+      '<div style="text-align:left">'+yes.map(g=>row(g,false)).join('')+'</div>'+
+      (mb.length?'<div class="cat">Maybe</div><div style="text-align:left">'+mb.map(g=>row(g,true)).join('')+'</div>':'');
     body.parentNode.insertBefore(box, body);
   }
   if(d.dietary && d.dietary.length){
