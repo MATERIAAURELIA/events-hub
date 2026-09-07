@@ -901,7 +901,7 @@
   {
    "id": "ev-oct16-brandenburg",
    "type": "drumming",
-   "title": "Sampler Open House\nEarth Harmony \u00d7 Brandenburg Music",
+   "title": "Express Yourself!\nA Sound Therapy, Rhythm & Wellness Community Event",
    "date": "2026-10-16",
    "time": "18:15",
    "endTime": "21:15",
@@ -912,9 +912,10 @@
    "desc": "A free drop-in evening of sound at Brandenburg Music. Six 30-minute tastings \u2014 come for one, stay for all of it. New people meet the instruments; regulars try things they've never done.\n\n6:15  Laughter Yoga \u2014 breaking the ice the fastest way there is.\n6:45  Instrument Demo \u2014 gongs, singing bowls, handpan, flutes, drums.\n7:15  Try Everything \u2014 open floor, pick things up, play them. The shop is full of goodies.\n7:45  Drum, Body & Voice \u2014 a holistic rhythm class.\n8:15  Drum Circle Jam \u2014 the peak, everyone playing at once.\n8:45  Community Singing Bowl Choir \u2014 the long exhale, one sound made by the whole room.\n\nFree, but space is limited \u2014 please register so we know you're coming. Ages 9+, no experience needed. All instruments provided. Shop stays open late.",
    "status": "published",
    "repeatable": false,
-   "img": "photos/drum-circle-banner-2160x1080.jpg",
+   "img": "photos/open-house-oct16.jpg",
    "titleAlign": "center",
-   "tint": "#b85c48"
+   "tint": "#b85c48",
+   "booking": "https://EarthHarmony.as.me/?appointmentType=98023667"
   }
  ],
  "bgColor": "#0e1522",
