@@ -1,6 +1,7 @@
 {
  "updated": "2026-09-07",
  "dietary": [
+  "gluten-free",
   "no allergies",
   "vegan"
  ],
@@ -16,6 +17,12 @@
    "dish": "not sure yet...",
    "cat": "Main",
    "diet": "no allergies"
+  },
+  {
+   "who": "Lina",
+   "dish": "Vegetarian Chili \ud83c\udf36\ufe0f",
+   "cat": "Main",
+   "diet": "Gluten-free"
   }
  ],
  "guests": [
