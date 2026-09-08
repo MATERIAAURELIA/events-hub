@@ -1,6 +1,7 @@
 {
- "updated": "2026-09-07",
+ "updated": "2026-09-08",
  "dietary": [
+  "gluten free",
   "gluten-free",
   "no allergies",
   "vegan"
@@ -23,6 +24,12 @@
    "dish": "Vegetarian Chili \ud83c\udf36\ufe0f",
    "cat": "Main",
    "diet": "Gluten-free"
+  },
+  {
+   "who": "Ashlii",
+   "dish": "Some sort of vegetable salad , not sure yet",
+   "cat": "Side / salad",
+   "diet": "Gluten free"
   }
  ],
  "guests": [
