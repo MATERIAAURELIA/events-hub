@@ -1,6 +1,7 @@
 {
  "updated": "2026-09-07",
  "dietary": [
+  "no allergies",
   "vegan"
  ],
  "dishes": [
@@ -12,8 +13,9 @@
   },
   {
    "who": "Marcus",
-   "dish": "not sure yet\u2026",
-   "cat": "Main"
+   "dish": "not sure yet...",
+   "cat": "Main",
+   "diet": "no allergies"
   }
  ],
  "guests": [
