@@ -1,7 +1,7 @@
 {
  "updated": "2026-09-07",
  "dietary": [
-  "vegan \u00d71"
+  "vegan"
  ],
  "dishes": [
   {
@@ -12,8 +12,9 @@
   },
   {
    "who": "Marcus",
-   "dish": "not sure yet\u2026",
-   "cat": "Main"
+   "dish": "not sure yet...",
+   "cat": "Main",
+   "diet": ""
   }
  ],
  "guests": [
