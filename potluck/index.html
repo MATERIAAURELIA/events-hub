@@ -123,13 +123,18 @@ fetch('dishes.json?cb='+Date.now()).then(r=>r.json()).then(d=>{
         return parts===w || first===w || parts.startsWith(w) || w.startsWith(first) ||
                (w.length>3 && parts.includes(w));
       });
-      if(hit){ hit.dish = hit.dish ? hit.dish+' · '+x.dish : x.dish; x._matched=true; }
+      if(hit){ hit.dish = hit.dish ? hit.dish+' · '+x.dish : x.dish;
+               if(x.cat) hit.cat = x.cat;
+               if(x.diet) hit.diet = hit.diet ? hit.diet+' · '+x.diet : x.diet;
+               x._matched=true; }
     });
     const row=(g,dim)=>'<div style="display:flex;justify-content:space-between;align-items:baseline;'+
       'padding:6px 0;border-bottom:1px dashed rgba(210,164,78,.13)">'+
       '<span style="font-size:15.5px;color:'+(dim?'#a8956f':'#efe6d6')+'">'+g.who+'</span>'+
-      '<span style="font-size:13px;color:#8d7d61;font-style:italic;font-family:\'Cormorant Garamond\',serif">'+
-      (g.dish||(dim?'maybe':'—'))+'</span></div>';
+      '<span style="font-size:13px;color:#8d7d61;font-style:italic;font-family:\'Cormorant Garamond\',serif;text-align:right">'+
+      (g.dish?(g.dish+(g.cat?' <span style="opacity:.65;font-style:normal;font-size:11.5px">('+g.cat+')</span>':'')+
+        (g.diet?'<br><span style="color:#c8a25c;font-size:11.5px;font-style:normal">'+g.diet+'</span>':''))
+       :(dim?'maybe':'—'))+'</span></div>';
     box.innerHTML='<div class="cat" style="margin-top:0">Coming &nbsp;·&nbsp; '+heads+'</div>'+
       '<div style="text-align:left">'+yes.map(g=>row(g,false)).join('')+'</div>'+
       (mb.length?'<div class="cat">Maybe</div><div style="text-align:left">'+mb.map(g=>row(g,true)).join('')+'</div>':'');
