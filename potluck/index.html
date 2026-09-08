@@ -94,56 +94,46 @@ button:hover{filter:brightness(1.08)}
 <script>
 fetch('dishes.json?cb='+Date.now()).then(r=>r.json()).then(d=>{
   const body=document.getElementById('boardBody');
-  const cats=['Main','Side / salad','Dessert','Drinks','Not sure yet'];
-  if(d.dishes && d.dishes.length){
-    body.innerHTML='';
-    cats.forEach(c=>{
-      const rows=d.dishes.filter(x=>!x._matched).filter(x=>(x.cat||'Not sure yet')===c);
-      if(!rows.length)return;
-      const h=document.createElement('div');h.className='cat';h.textContent=c;body.appendChild(h);
-      rows.forEach(x=>{
-        const r=document.createElement('div');r.className='dishRow';
-        const a=document.createElement('span');a.className='dishName';a.textContent=x.dish;
-        const b=document.createElement('span');b.className='dishWho';b.textContent=x.who;
-        r.appendChild(a);r.appendChild(b);body.appendChild(r);
-      });
+  const guests=(d.guests||[]).slice();
+  const norm=s=>(s||'').toLowerCase().replace(/[^a-z]/g,'');
+
+  // fold every dish into a guest row; add a row if the name is new
+  (d.dishes||[]).forEach(x=>{
+    const w=norm(x.who);
+    let hit=guests.find(g=>{
+      const full=norm(g.who), first=norm((g.who||'').split(/[&,]/)[0]);
+      return full===w || first===w || full.startsWith(w) || w.startsWith(first) || (w.length>3 && full.includes(w));
     });
-  }
-  // who's coming
-  if(d.guests && d.guests.length){
-    const yes=d.guests.filter(g=>g.status==='yes'), mb=d.guests.filter(g=>g.status==='maybe');
-    const heads=d.guests.filter(g=>g.status==='yes').reduce((s,g)=>s+(g.count||1),0);
-    const box=document.createElement('div');
-    // fuzzy-match dishes to guests by first name
-    const norm=s=>(s||'').toLowerCase().replace(/[^a-z]/g,'');
-    (d.dishes||[]).forEach(x=>{
-      const w=norm(x.who);
-      let hit=d.guests.find(g=>{
-        const parts=norm(g.who), first=norm((g.who||'').split(/[&,]/)[0]);
-        return parts===w || first===w || parts.startsWith(w) || w.startsWith(first) ||
-               (w.length>3 && parts.includes(w));
-      });
-      if(hit){ hit.dish = hit.dish ? hit.dish+' · '+x.dish : x.dish;
-               if(x.cat) hit.cat = x.cat;
-               if(x.diet) hit.diet = hit.diet ? hit.diet+' · '+x.diet : x.diet;
-               x._matched=true; }
-    });
-    const row=(g,dim)=>'<div style="display:flex;justify-content:space-between;align-items:baseline;'+
-      'padding:6px 0;border-bottom:1px dashed rgba(210,164,78,.13)">'+
-      '<span style="font-size:15.5px;color:'+(dim?'#a8956f':'#efe6d6')+'">'+g.who+'</span>'+
-      '<span style="font-size:13px;color:#8d7d61;font-style:italic;font-family:\'Cormorant Garamond\',serif;text-align:right">'+
-      (g.dish?(g.dish+(g.cat?' <span style="opacity:.65;font-style:normal;font-size:11.5px">('+g.cat+')</span>':'')+
-        (g.diet?'<br><span style="color:#c8a25c;font-size:11.5px;font-style:normal">'+g.diet+'</span>':''))
-       :(dim?'maybe':'—'))+'</span></div>';
-    box.innerHTML='<div class="cat" style="margin-top:0">Coming &nbsp;·&nbsp; '+heads+'</div>'+
-      '<div style="text-align:left">'+yes.map(g=>row(g,false)).join('')+'</div>'+
-      (mb.length?'<div class="cat">Maybe</div><div style="text-align:left">'+mb.map(g=>row(g,true)).join('')+'</div>':'');
-    body.parentNode.insertBefore(box, body);
-  }
-  if(d.dietary && d.dietary.length){
-    document.getElementById('dietLine').innerHTML='<b>around the table:</b> '+
-      d.dietary.map(x=>'<span class="badge">'+x+'</span>').join('');
-  }
+    if(!hit){ hit={who:x.who, status:'yes'}; guests.push(hit); }
+    hit.dish = hit.dish ? hit.dish+' · '+x.dish : x.dish;
+    if(x.cat) hit.cat = x.cat;
+    if(x.diet) hit.diet = hit.diet ? hit.diet+' · '+x.diet : x.diet;
+  });
+
+  const yes=guests.filter(g=>g.status!=='maybe');
+  const mb =guests.filter(g=>g.status==='maybe');
+  const heads=yes.reduce((s,g)=>s+(g.count||1),0);
+
+  const cell=(t,c,i)=>'<td style="padding:7px 8px;border-top:1px dashed rgba(210,164,78,.13);'+
+    'color:'+c+';font-size:14px;'+(i?'font-style:italic;font-family:\'Cormorant Garamond\',serif;':'')+'">'+(t||'')+'</td>';
+  const row=g=>'<tr>'+
+    cell(g.who,'#efe6d6')+
+    cell(g.diet||'','#c8a25c')+
+    cell(g.cat||'','#a8956f')+
+    cell(g.dish||'—','#dec9a1',true)+'</tr>';
+
+  const head='<tr><th style="text-align:left;padding:0 8px 6px;font-size:10px;letter-spacing:.2em;'+
+    'text-transform:uppercase;color:#8d7d61;font-weight:400">Name</th>'+
+    '<th style="text-align:left;padding:0 8px 6px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#8d7d61;font-weight:400">Dietary</th>'+
+    '<th style="text-align:left;padding:0 8px 6px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#8d7d61;font-weight:400">Type</th>'+
+    '<th style="text-align:left;padding:0 8px 6px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#8d7d61;font-weight:400">Dish</th></tr>';
+
+  body.innerHTML='<div class="cat" style="margin-top:0">Coming &nbsp;·&nbsp; '+heads+'</div>'+
+    '<table style="width:100%;border-collapse:collapse;text-align:left">'+head+yes.map(row).join('')+'</table>'+
+    (mb.length?'<div class="cat">Maybe</div><table style="width:100%;border-collapse:collapse;text-align:left">'+mb.map(row).join('')+'</table>':'');
+
+  const dl=document.getElementById('dietLine');
+  if(dl) dl.innerHTML='';
 }).catch(()=>{});
 </script>
 </body></html>
