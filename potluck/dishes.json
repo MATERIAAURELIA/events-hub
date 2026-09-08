@@ -12,9 +12,8 @@
   },
   {
    "who": "Marcus",
-   "dish": "not sure yet...",
-   "cat": "Main",
-   "diet": ""
+   "dish": "not sure yet\u2026",
+   "cat": "Main"
   }
  ],
  "guests": [
@@ -62,6 +61,10 @@
   },
   {
    "who": "Lina",
+   "status": "yes"
+  },
+  {
+   "who": "Julia",
    "status": "yes"
   }
  ]
