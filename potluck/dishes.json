@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-08",
+ "updated": "2026-09-09",
  "dietary": [
   "gluten free",
   "gluten-free",
@@ -30,6 +30,12 @@
    "dish": "Some sort of vegetable salad , not sure yet",
    "cat": "Side / salad",
    "diet": "Gluten free"
+  },
+  {
+   "who": "Desiree",
+   "dish": "Veggies, crackers, hummus",
+   "cat": "Side / salad",
+   "diet": ""
   }
  ],
  "guests": [
