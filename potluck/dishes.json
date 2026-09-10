@@ -21,7 +21,7 @@
   },
   {
    "who": "Lina",
-   "dish": "Vegetarian Chili \ud83c\udf36\ufe0f",
+   "dish": "Vegetarian Chili 🌶️",
    "cat": "Main",
    "diet": "Gluten-free"
   },
@@ -42,6 +42,12 @@
    "dish": "Freshly baked cookies",
    "cat": "Dessert",
    "diet": ""
+  },
+  {
+   "who": "Ingrid",
+   "dish": "Dessert — GF & vegan",
+   "cat": "Dessert",
+   "diet": "Gluten free"
   }
  ],
  "guests": [
@@ -81,7 +87,7 @@
   },
   {
    "who": "Ingrid",
-   "status": "maybe"
+   "status": "yes"
   },
   {
    "who": "Ashlee",
