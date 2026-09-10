@@ -1,7 +1,7 @@
 {
  "updated": "2026-09-09",
  "dietary": [
-  "gluten free",
+  "gluten free \u00d72",
   "gluten-free",
   "no allergies",
   "vegan"
@@ -21,7 +21,7 @@
   },
   {
    "who": "Lina",
-   "dish": "Vegetarian Chili 🌶️",
+   "dish": "Vegetarian Chili \ud83c\udf36\ufe0f",
    "cat": "Main",
    "diet": "Gluten-free"
   },
@@ -29,6 +29,12 @@
    "who": "Ashlii",
    "dish": "Some sort of vegetable salad , not sure yet",
    "cat": "Side / salad",
+   "diet": "Gluten free"
+  },
+  {
+   "who": "Ingrid",
+   "dish": "Dessert \u2014 I\u2019ll make the dessert GF & vegan also",
+   "cat": "Dessert",
    "diet": "Gluten free"
   },
   {
@@ -42,12 +48,6 @@
    "dish": "Freshly baked cookies",
    "cat": "Dessert",
    "diet": ""
-  },
-  {
-   "who": "Ingrid",
-   "dish": "Dessert — GF & vegan",
-   "cat": "Dessert",
-   "diet": "Gluten free"
   }
  ],
  "guests": [
