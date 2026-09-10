@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-09",
+ "updated": "2026-09-10",
  "dietary": [
   "gluten free \u00d72",
   "gluten-free",
@@ -36,18 +36,6 @@
    "dish": "Dessert \u2014 I\u2019ll make the dessert GF & vegan also",
    "cat": "Dessert",
    "diet": "Gluten free"
-  },
-  {
-   "who": "Desiree",
-   "dish": "Veggies, crackers, hummus",
-   "cat": "Side / salad",
-   "diet": ""
-  },
-  {
-   "who": "Ashlee",
-   "dish": "Freshly baked cookies",
-   "cat": "Dessert",
-   "diet": ""
   }
  ],
  "guests": [
