@@ -128,7 +128,24 @@ fetch('dishes.json?cb='+Date.now()).then(r=>r.json()).then(d=>{
     '<th style="text-align:left;padding:0 8px 6px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#8d7d61;font-weight:400">Type</th>'+
     '<th style="text-align:left;padding:0 8px 6px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#8d7d61;font-weight:400">Dish</th></tr>';
 
-  body.innerHTML='<div class="cat" style="margin-top:0">Coming &nbsp;·&nbsp; '+heads+'</div>'+
+    // what's still needed — computed from categories vs headcount
+  const cats={};
+  (d.dishes||[]).forEach(x=>{const c=(x.cat||'').toLowerCase();
+    if(c.includes('main'))cats.main=(cats.main||0)+1;
+    else if(c.includes('side')||c.includes('salad'))cats.side=(cats.side||0)+1;
+    else if(c.includes('dessert'))cats.dessert=(cats.dessert||0)+1;
+    else if(c.includes('drink'))cats.drink=(cats.drink||0)+1;});
+  const need=[];
+  const wantMains=Math.max(2,Math.ceil(heads/5));
+  if((cats.main||0)<wantMains) need.push((wantMains-(cats.main||0))+' more main'+((wantMains-(cats.main||0))>1?'s':'')+' 🥘');
+  if((cats.side||0)<Math.ceil(heads/6)) need.push('sides / salads 🥗');
+  if((cats.dessert||0)<Math.ceil(heads/8)) need.push('dessert 🍰');
+  if((cats.drink||0)<1) need.push('drinks 🥤');
+  const needHtml=need.length
+    ? '<div style="margin:0 0 16px;padding:12px 16px;border:1px dashed rgba(210,164,78,.45);border-radius:12px;font-size:14px;color:#dec9a1"><span style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#c8a25c">The table could still use</span><br>'+need.join(' &nbsp;·&nbsp; ')+'</div>'
+    : '<div style="margin:0 0 16px;padding:12px 16px;border:1px dashed rgba(140,180,120,.4);border-radius:12px;font-size:14px;color:#cfe0c0">The table is beautifully covered 🌿</div>';
+
+  body.innerHTML=needHtml+'<div class="cat" style="margin-top:0">Coming &nbsp;·&nbsp; '+heads+'</div>'+
     '<table style="width:100%;border-collapse:collapse;text-align:left">'+head+yes.map(row).join('')+'</table>'+
     (mb.length?'<div class="cat">Maybe</div><table style="width:100%;border-collapse:collapse;text-align:left">'+mb.map(row).join('')+'</table>':'');
 
