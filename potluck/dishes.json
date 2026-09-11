@@ -1,7 +1,7 @@
 {
  "updated": "2026-09-11",
  "dietary": [
-  "gluten free ×2",
+  "gluten free \u00d72",
   "gluten-free",
   "no allergies",
   "vegan"
@@ -21,7 +21,7 @@
   },
   {
    "who": "Lina",
-   "dish": "Vegetarian Chili 🌶️",
+   "dish": "Vegetarian Chili \ud83c\udf36\ufe0f",
    "cat": "Main",
    "diet": "Gluten-free"
   },
@@ -29,6 +29,12 @@
    "who": "Ashlii",
    "dish": "Some sort of vegetable salad , not sure yet",
    "cat": "Side / salad",
+   "diet": "Gluten free"
+  },
+  {
+   "who": "Ingrid",
+   "dish": "Dessert \u2014 I\u2019ll make the dessert GF & vegan also",
+   "cat": "Dessert",
    "diet": "Gluten free"
   },
   {
@@ -50,8 +56,8 @@
    "diet": ""
   },
   {
-   "who": "Julia",
-   "dish": "Feta whip & almond crackers",
+   "who": "Juli",
+   "dish": "Feta Whip Dip & Almond Crackers",
    "cat": "Side / salad",
    "diet": ""
   }
