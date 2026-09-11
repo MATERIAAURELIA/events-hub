@@ -1,7 +1,8 @@
 {
  "updated": "2026-09-11",
  "dietary": [
-  "gluten free ×2",
+  "allergic to coconut milk. but i am fine skipping out as i know it is a vegan  staple.",
+  "gluten free",
   "gluten-free",
   "no allergies",
   "vegan"
@@ -21,7 +22,7 @@
   },
   {
    "who": "Lina",
-   "dish": "Vegetarian Chili 🌶️",
+   "dish": "Vegetarian Chili \ud83c\udf36\ufe0f",
    "cat": "Main",
    "diet": "Gluten-free"
   },
@@ -54,6 +55,12 @@
    "dish": "Feta Whip Dip & Almond Crackers",
    "cat": "Side / salad",
    "diet": ""
+  },
+  {
+   "who": "Nancy",
+   "dish": "Lentil quinoa salad",
+   "cat": "Side / salad",
+   "diet": "Allergic to coconut milk. But I am fine skipping out as I know it is a vegan  staple."
   }
  ],
  "guests": [
