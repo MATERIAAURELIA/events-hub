@@ -1,7 +1,7 @@
 {
  "updated": "2026-09-11",
  "dietary": [
-  "gluten free \u00d72",
+  "gluten free ×2",
   "gluten-free",
   "no allergies",
   "vegan"
@@ -21,7 +21,7 @@
   },
   {
    "who": "Lina",
-   "dish": "Vegetarian Chili \ud83c\udf36\ufe0f",
+   "dish": "Vegetarian Chili 🌶️",
    "cat": "Main",
    "diet": "Gluten-free"
   },
@@ -33,7 +33,7 @@
   },
   {
    "who": "Ingrid",
-   "dish": "Dessert \u2014 I\u2019ll make the dessert GF & vegan also",
+   "dish": "Dessert — I’ll make the dessert GF & vegan also",
    "cat": "Dessert",
    "diet": "Gluten free"
   },
@@ -78,11 +78,6 @@
   {
    "who": "Brenna",
    "status": "maybe"
-  },
-  {
-   "who": "Jess & Bobby",
-   "status": "yes",
-   "count": 2
   },
   {
    "who": "Jonathon",
