@@ -915,7 +915,8 @@
    "img": "photos/open-house-oct16.jpg",
    "titleAlign": "center",
    "tint": "#b85c48",
-   "booking": "https://earthharmony.as.me/schedule/a171f446/appointment/98023667/calendar/9783107"
+   "booking": "https://earthharmony.as.me/schedule/a171f446/appointment/98023667/calendar/9783107",
+   "series": "community"
   },
   {
    "id": "ev-oct2-pulseoflife",
@@ -933,7 +934,8 @@
    "desc": "An evening of shared rhythm in Sherwood Park. We open with a community drum circle — every drum provided, no experience needed — and deepen into the Rhythm Cradle, a participant-driven sound experience of connection, trust and play.\n\nHosted at a private home studio — the exact address comes with your registration.",
    "img": "photos/drum-circle-banner-2160x1080.jpg",
    "status": "published",
-   "repeatable": false
+   "repeatable": false,
+   "series": "community"
   }
  ],
  "bgColor": "#0e1522",
