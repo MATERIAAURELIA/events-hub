@@ -119,6 +119,8 @@
     font-weight: 400; line-height: 1.35; opacity: 0.8;
   }
 
+  .month-label{text-align:center;font-size:.8rem;letter-spacing:.42em;text-transform:uppercase;color:#c8a44e;margin:30px 0 8px;font-weight:700;display:flex;align-items:center;gap:14px;justify-content:center}
+  .month-label:before,.month-label:after{content:'';height:1px;background:rgba(200,164,78,.3);flex:0 0 46px}
   .section-label {
     text-align: center; font-size: var(--section-label-size, 2rem); font-weight: 700;
     color: #d2a44e; margin: 16px 0 8px;
@@ -881,6 +883,8 @@ function renderList(){
   const showEmoji=document.getElementById('s-show-emoji').checked;
   const showBar=document.getElementById('s-show-bar').checked;
   
+  const _MF=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  let _fm=null,_mSeen={};
   el.innerHTML=getEvents().map(ev=>{
     const type=EVENT_TYPES[ev.type]||{name:'Event',color:'#888',icon:'🔔',img:''};
     const venue=VENUES[ev.venue]||{name:'',area:''};
@@ -906,7 +910,13 @@ function renderList(){
     const dateColHtml=isCtaDate
       ? `<div class="ev-day" style="font-size:1.6rem;line-height:1.7">✉️</div>`
       : `<div class="ev-day">${dayName}</div><div class="ev-date">${monthDay}</div><div class="ev-time">${fTime(ev.time)}</div><div class="ev-price">$${ev.price}</div>`;
-    return`<div class="link-btn ${ev.pinned?'cta-event':''}" onclick="showPopup('${ev.id}')">
+    let monthHeader='';
+    if(!isCtaDate){
+      const _mi=dateObj.getMonth()+dateObj.getFullYear()*12;
+      if(_fm===null)_fm=_mi;
+      else if(_mi!==_fm&&!_mSeen[_mi]){_mSeen[_mi]=1;monthHeader=`<div class="month-label">${_MF[dateObj.getMonth()]}</div>`;}
+    }
+    return monthHeader+`<div class="link-btn ${ev.pinned?'cta-event':''}" onclick="showPopup('${ev.id}')">
       ${spots}
       <div class="type-bar ${barClass}" style="background:${type.color}"></div>
       <div class="btn-thumb ${thumbClass}${ev.tint?' tinted':''}">${thumbContent}</div>
