@@ -119,6 +119,14 @@
     font-weight: 400; line-height: 1.35; opacity: 0.8;
   }
 
+  .fd-row{padding:0 12px 10px}
+  .fd-btn{background:rgba(210,164,78,.10);border:1px solid rgba(210,164,78,.35);color:#e7c877;font-size:.72rem;letter-spacing:.06em;border-radius:999px;padding:4px 12px;cursor:pointer;font-weight:600}
+  .fd-btn:hover{background:rgba(210,164,78,.2)}
+  .fd-list{display:none;margin-top:8px;flex-direction:column;gap:5px}
+  .fd-list.open{display:flex}
+  .fd-list a{color:rgba(243,235,221,.85);font-size:.8rem;text-decoration:none;padding:6px 10px;border:1px solid rgba(243,235,221,.12);border-radius:8px;display:flex;justify-content:space-between}
+  .fd-list a:hover{border-color:rgba(210,164,78,.5);color:#e7c877}
+  .fd-list a span{color:#c8a44e;font-size:.72rem}
   .month-label{text-align:center;font-size:.8rem;letter-spacing:.42em;text-transform:uppercase;color:#c8a44e;margin:30px 0 8px;font-weight:700;display:flex;align-items:center;gap:14px;justify-content:center}
   .month-label:before,.month-label:after{content:'';height:1px;background:rgba(200,164,78,.3);flex:0 0 46px}
   .section-label {
@@ -934,6 +942,7 @@ function renderList(){
       </div>
       <button class="btn-share" onclick="event.stopPropagation();shareEvById('${ev.id}')" title="Share"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 002 2h12a2 2 0 002-2v-7"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></button>
       ${showVenue&&venueDisplay?`<div class="event-venue-row">📍 ${venueDisplay}</div>`:''}
+      ${(ev.futureDates&&ev.futureDates.length)?`<div class="fd-row"><button class="fd-btn" onclick="event.stopPropagation();this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'📅 future dates ▴':'📅 future dates ▾'">📅 future dates ▾</button><div class="fd-list">${ev.futureDates.map(fd=>{const[fdD,fdT]=fd.split(' ');const fo=new Date(fdD+'T00:00:00');return`<a href="${ev.booking}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${DAYS[fo.getDay()]} ${MONTHS[fo.getMonth()]} ${fo.getDate()}${fdT?' · '+fTime(fdT):''}<span>pre-register →</span></a>`}).join('')}</div></div>`:''}
     </div>`;
   }).join('');
 }
