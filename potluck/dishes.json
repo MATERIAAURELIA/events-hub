@@ -12,7 +12,8 @@
    "who": "Brock",
    "dish": "Vegan Soul Food",
    "cat": "Main",
-   "diet": "vegan"
+   "diet": "vegan",
+   "manual": true
   },
   {
    "who": "Marcus",
