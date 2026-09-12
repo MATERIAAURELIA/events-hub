@@ -119,7 +119,8 @@
     font-weight: 400; line-height: 1.35; opacity: 0.8;
   }
 
-  .fd-row{padding:0 12px 10px;display:flex;flex-direction:column;align-items:center;width:100%;flex-basis:100%;box-sizing:border-box}
+  .fd-row{padding:0 12px 10px;display:flex;flex-direction:column;align-items:center;box-sizing:border-box;flex:0 1 auto;align-self:center}
+  @media(max-width:500px){.fd-row{width:100%;flex-basis:100%}}
   .fd-list{width:100%;max-width:360px}
   .fd-btn{background:rgba(210,164,78,.10);border:1px solid rgba(210,164,78,.35);color:#e7c877;font-size:.72rem;letter-spacing:.06em;border-radius:999px;padding:4px 12px;cursor:pointer;font-weight:600}
   .fd-btn:hover{background:rgba(210,164,78,.2)}
@@ -128,6 +129,9 @@
   .fd-list a{color:rgba(243,235,221,.85);font-size:.8rem;text-decoration:none;padding:6px 10px;border:1px solid rgba(243,235,221,.12);border-radius:8px;display:flex;justify-content:space-between;align-items:center;gap:18px;width:100%;box-sizing:border-box}
   .fd-list a:hover{border-color:rgba(210,164,78,.5);color:#e7c877}
   .fd-list a span{color:#c8a44e;font-size:.72rem}
+  .series-label{text-align:center;font-size:1.05rem;letter-spacing:.3em;text-transform:uppercase;color:#e7c877;margin:34px 0 4px;font-weight:700;display:flex;align-items:center;gap:16px;justify-content:center}
+  .series-label:before,.series-label:after{content:'';height:1px;background:linear-gradient(90deg,transparent,rgba(210,164,78,.45));flex:0 0 60px}
+  .series-label:after{background:linear-gradient(90deg,rgba(210,164,78,.45),transparent)}
   .month-label{text-align:center;font-size:.8rem;letter-spacing:.42em;text-transform:uppercase;color:#c8a44e;margin:30px 0 8px;font-weight:700;display:flex;align-items:center;gap:14px;justify-content:center}
   .month-label:before,.month-label:after{content:'';height:1px;background:rgba(200,164,78,.3);flex:0 0 46px}
   .section-label {
@@ -871,11 +875,12 @@ function buildFilters(){
   });
 }
 
+const seriesOf=x=>x.series||(x.venue==='home'?'signature':(x.type==='drumming'?'community':'partner'));
+const SERIES_TITLES={signature:'Signature Sessions',community:'Community Sessions',partner:'Partner Sessions'};
 function getEvents(){
   let e=EVENTS.filter(e=>e.vis==='public');
   const today=localToday();
   e=e.filter(x=>x.pinned||x.date>=today); // pinned (CTA) always shows
-  const seriesOf=x=>x.series||(x.venue==='home'?'signature':(x.type==='drumming'?'community':'partner'));
   if(activeFilter!=='all')e=e.filter(x=>x.pinned||seriesOf(x)===activeFilter);
   if(activeSort==='date') e.sort((a,b)=>a.date.localeCompare(b.date)||(a.time||'').localeCompare(b.time||''));
   else if(activeSort==='price') e.sort((a,b)=>a.price-b.price);
@@ -884,6 +889,13 @@ function getEvents(){
     const vb=(b.venueOverride||VENUES[b.venue]?.name||'').toLowerCase();
     return va.localeCompare(vb)||a.date.localeCompare(b.date);
   });
+  if(activeFilter==='all'&&activeSort==='date'){
+    const rank={signature:0,community:1,partner:2};
+    e=[...e].sort((a,b)=>{
+      if(a.pinned||b.pinned)return 0;
+      return (rank[seriesOf(a)]??3)-(rank[seriesOf(b)]??3)||a.date.localeCompare(b.date)||(a.time||'').localeCompare(b.time||'');
+    });
+  }
   e=[...e.filter(x=>!x.pinned),...e.filter(x=>x.pinned)]; // pinned CTAs always last
   return e;
 }
@@ -895,7 +907,8 @@ function renderList(){
   const showBar=document.getElementById('s-show-bar').checked;
   
   const _MF=['January','February','March','April','May','June','July','August','September','October','November','December'];
-  let _fm=null,_mSeen={};
+  let _fm=null,_mSeen={},_lastSeries=null;
+  const _grouped=(activeFilter==='all'&&activeSort==='date');
   el.innerHTML=getEvents().map(ev=>{
     const type=EVENT_TYPES[ev.type]||{name:'Event',color:'#888',icon:'🔔',img:''};
     const venue=VENUES[ev.venue]||{name:'',area:''};
@@ -922,10 +935,18 @@ function renderList(){
       ? `<div class="ev-day" style="font-size:1.6rem;line-height:1.7">✉️</div>`
       : `<div class="ev-day">${dayName}</div><div class="ev-date">${monthDay}</div><div class="ev-time">${fTime(ev.time)}</div><div class="ev-price">$${ev.price}</div>`;
     let monthHeader='';
+    if(_grouped&&!ev.pinned){
+      const _sr=seriesOf(ev);
+      if(_sr!==_lastSeries){
+        _lastSeries=_sr;
+        monthHeader+=`<div class="series-label">${SERIES_TITLES[_sr]||''}</div>`;
+        _fm=null;_mSeen={};
+      }
+    }
     if(!isCtaDate){
       const _mi=dateObj.getMonth()+dateObj.getFullYear()*12;
       if(_fm===null)_fm=_mi;
-      else if(_mi!==_fm&&!_mSeen[_mi]){_mSeen[_mi]=1;monthHeader=`<div class="month-label">${_MF[dateObj.getMonth()]}</div>`;}
+      else if(_mi!==_fm&&!_mSeen[_mi]){_mSeen[_mi]=1;monthHeader+=`<div class="month-label">${_MF[dateObj.getMonth()]}</div>`;}
     }
     return monthHeader+`<div class="link-btn ${ev.pinned?'cta-event':''}" onclick="showPopup('${ev.id}')">
       ${spots}
