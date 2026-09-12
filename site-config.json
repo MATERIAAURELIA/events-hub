@@ -935,7 +935,11 @@
    "img": "photos/drum-circle-banner-2160x1080.jpg",
    "status": "published",
    "repeatable": false,
-   "series": "community"
+   "series": "community",
+   "futureDates": [
+    "2026-11-20 19:00",
+    "2026-12-11 19:00"
+   ]
   }
  ],
  "bgColor": "#0e1522",
