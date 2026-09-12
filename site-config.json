@@ -958,7 +958,11 @@
    "desc": "An elegant, effective community sound bath at an accessible cost — a spacious venue, a small team guiding the experience, and room to simply rest.\n\nTwo sessions to choose from: 4:00–5:00 pm or 5:30–6:30 pm — pick your time when you book.\n\nPlease bring your own mat, pillow and blankets — the thicker and cozier the better. A preparation email with all the details follows your registration.",
    "img": "photos/community-sound-bath.png",
    "status": "published",
-   "repeatable": false
+   "repeatable": false,
+   "futureDates": [
+    "2026-11-21 16:00",
+    "2026-12-19 16:00"
+   ]
   }
  ],
  "bgColor": "#0e1522",
