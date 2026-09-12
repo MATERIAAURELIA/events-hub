@@ -1076,7 +1076,7 @@ function showPopup(id){
       <div class="pv-row">📍 <span class="pv-loc" contenteditable="true" onblur="pvEdit(this,'venueOverride','${ev.id}')" onkeydown="pvTitleKey(event,this)">${ev.venueOverride||((venue.name||'')+(venue.area?' - '+venue.area:''))}</span></div>
       <div class="pv-row">🎟 $<input type="text" inputmode="decimal" value="${ev.price||''}" placeholder="(blank = hidden)" onchange="pvField('price',this.value,'${ev.id}')"></div>
     </div>`
-    : `<div class="p-meta">📅 ${ev.date&&ev.date<'2090-01-01'?`${fDay(ev.date)} · ${fTime(ev.time)}-${fTime(ev.endTime)}`:'TBA'}<br>📍 ${vn}${!ev.venueOverride&&venue.area?' - '+venue.area:''}${ev.price?`<br>🎟 $${ev.price}`:''}${ev.spots?'<br>🔥 '+ev.spots+' spot'+(ev.spots>1?'s':'')+' left!':''}</div>`}
+    : `<div class="p-meta">📅 ${ev.date&&ev.date<'2090-01-01'?`${fDay(ev.date)} · ${ev.timeLabel||`${fTime(ev.time)}-${fTime(ev.endTime)}`}`:'TBA'}<br>📍 ${vn}${!ev.venueOverride&&venue.area?' - '+venue.area:''}${ev.price?`<br>🎟 $${ev.price}`:''}${ev.spots?'<br>🔥 '+ev.spots+' spot'+(ev.spots>1?'s':'')+' left!':''}</div>`}
     ${isEdit?`<div class="pv-edit-hint">✏️ Editing — Enter for line breaks · saves when you click away · ✓ Done to close</div>
     <div class="pv-toolbar"><button type="button" onclick="pvAlign('descAlign','left','${ev.id}')">Text ⬅</button><button type="button" onclick="pvAlign('descAlign','center','${ev.id}')">Text ↔</button></div>`:''}
     <div class="p-desc${!isEdit&&(ev.desc||'').length>280?' clamped':''}"${isEdit?` contenteditable="true" onkeydown="pvDescKey(event,this)" onblur="pvEdit(this,'desc','${ev.id}')"`:''} style="text-align:${ev.descAlign||'left'}">${ev.desc||''}</div>
