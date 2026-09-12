@@ -10,8 +10,8 @@
  "dishes": [
   {
    "who": "Brock",
-   "dish": "Guacamole",
-   "cat": "Side / salad",
+   "dish": "Vegan Soul Food",
+   "cat": "Main",
    "diet": "vegan"
   },
   {
@@ -22,7 +22,7 @@
   },
   {
    "who": "Lina",
-   "dish": "Vegetarian Chili \ud83c\udf36\ufe0f",
+   "dish": "Vegetarian Chili 🌶️",
    "cat": "Main",
    "diet": "Gluten-free"
   },
