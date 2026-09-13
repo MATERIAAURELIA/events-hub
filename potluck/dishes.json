@@ -75,6 +75,12 @@
    "dish": "Juice",
    "cat": "Drinks",
    "diet": ""
+  },
+  {
+   "who": "Clayton",
+   "dish": "Chicken pot pie",
+   "cat": "Main",
+   "diet": ""
   }
  ],
  "guests": [
