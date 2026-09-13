@@ -5,7 +5,6 @@
   "gluten free",
   "gluten free preferred",
   "gluten free, lactose free",
-  "gluten-free",
   "no allergies",
   "vegan"
  ],
@@ -70,6 +69,12 @@
    "dish": "Drinks- assorted sparkling waters",
    "cat": "Drinks",
    "diet": "Gluten free, lactose free"
+  },
+  {
+   "who": "Ivan",
+   "dish": "Juice",
+   "cat": "Drinks",
+   "diet": ""
   }
  ],
  "guests": [
@@ -112,6 +117,6 @@
   }
  ],
  "stillNeeded": [
-  "more mains 🥘"
+  "more mains \ud83e\udd58"
  ]
 }
