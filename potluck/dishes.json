@@ -25,7 +25,7 @@
   },
   {
    "who": "Lina",
-   "dish": "Vegetarian Chili \ud83c\udf36\ufe0f",
+   "dish": "Vegetarian Chili 🌶️",
    "cat": "Main",
    "diet": "Gluten-free"
   },
@@ -120,5 +120,8 @@
    "who": "Julia",
    "status": "yes"
   }
+ ],
+ "stillNeeded": [
+  "one more main 🥘"
  ]
 }
