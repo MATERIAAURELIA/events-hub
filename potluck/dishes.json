@@ -24,12 +24,6 @@
    "diet": "no allergies"
   },
   {
-   "who": "Lina",
-   "dish": "Vegetarian Chili 🌶️",
-   "cat": "Main",
-   "diet": "Gluten-free"
-  },
-  {
    "who": "Ashlii",
    "dish": "Some sort of vegetable salad , not sure yet",
    "cat": "Side / salad",
@@ -113,15 +107,11 @@
    "status": "yes"
   },
   {
-   "who": "Lina",
-   "status": "yes"
-  },
-  {
    "who": "Julia",
    "status": "yes"
   }
  ],
  "stillNeeded": [
-  "one more main 🥘"
+  "more mains 🥘"
  ]
 }
