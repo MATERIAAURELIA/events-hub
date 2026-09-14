@@ -967,6 +967,26 @@
     "2026-12-19 16:00"
    ],
    "timeLabel": "two sessions: 4:00–5:00 & 5:30–6:30 PM"
+  },
+  {
+   "id": "ev-sep26-moondance",
+   "type": "sound-bath",
+   "series": "community",
+   "title": "Full Moon Forest\nMusic Movement Medicine",
+   "date": "2026-09-26",
+   "time": "19:30",
+   "endTime": "20:45",
+   "venue": "",
+   "venueOverride": "Forest by the river — spot with registration",
+   "price": 0,
+   "booking": "https://EarthHarmony.as.me/?appointmentType=98286757",
+   "contactEmail": "earthharmonysoundhealing@gmail.com",
+   "contactPhone": "780-257-6428",
+   "desc": "Dance under the Harvest Moon at her peak — a forest dance by the river, music through wireless headphones tuned to the land, water, sky and moon.\n\nWe gather at 7:30 in the last golden light. Marcus guides us gently into movement — no steps to learn, just permission to move the way your body wants — and we dance through dusk as the full moon rises through the trees. Around 8:30 the headphones come off, and the evening closes with a live sound transmission, lying in the forest under the risen moon.\n\nFree, by donation. Headphones provided — 30 available, so please register (and de-register if plans change, so your spot opens up).",
+   "timeLabel": "7:30–9:00 PM · free, by donation",
+   "img": "photos/moondance-crew.jpg",
+   "status": "published",
+   "repeatable": false
   }
  ],
  "bgColor": "#0e1522",
