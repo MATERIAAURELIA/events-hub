@@ -819,7 +819,7 @@
    "time": "18:30",
    "endTime": "20:00",
    "booking": "https://EarthHarmony.as.me/?appointmentType=97625755",
-   "spots": 1
+   "soldOut": true
   },
   {
    "id": "ev-sep11-chakra",
