@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Resilience | Full Moon Forest Dance — Sat Sept 26</title>
-<meta property="og:title" content="Resilience | Full Moon Forest Dance">
+<title>Full Moon Forest | Music Movement Medicine — Sat Sept 26</title>
+<meta property="og:title" content="Full Moon Forest | Music Movement Medicine">
 <meta property="og:description" content="Dance under the Harvest Moon at its peak — forest silent disco by the river, closing with a live sound transmission under the risen moon. Free, by donation. Sat Sept 26, 7:30–9pm.">
-<meta property="og:image" content="https://events.earthharmonysoundwellness.com/photos/blank-templates/pulse-of-life-blank.png">
+<meta property="og:image" content="https://events.earthharmonysoundwellness.com/photos/moondance-crew.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
@@ -33,8 +33,8 @@ button:hover{filter:brightness(1.07)}
 </style></head>
 <body><div class="wrap">
 <div class="moon"></div>
-<div class="kicker">Resilience</div>
-<h1>Full Moon Forest Dance</h1>
+<div class="kicker">Music Movement Medicine</div>
+<h1>Full Moon Forest</h1>
 <div class="sub">under the Harvest Moon, at her peak</div>
 <div class="when">Saturday, September 26 · 7:30–9:00 PM</div>
 <div class="where">📍 forest by the river — exact spot comes with your registration</div>
@@ -44,20 +44,7 @@ button:hover{filter:brightness(1.07)}
 
 <div class="card">
 <div class="spots" id="spotsline">30 headphone spots</div>
-<form action="https://formsubmit.co/68bf44fd6c680760a90740f0fc752510" method="POST">
-  <input type="hidden" name="_subject" value="🌕 Moon Dance registration">
-  <input type="hidden" name="_next" value="https://events.earthharmonysoundwellness.com/moondance/thanks.html">
-  <input type="hidden" name="_captcha" value="false">
-  <label>Your name</label>
-  <input name="Name" required placeholder="your name">
-  <label>Phone or email</label>
-  <input name="Contact" required placeholder="so the location can reach you">
-  <label>How many of you? (headphones needed)</label>
-  <select name="Headphones"><option>1</option><option>2</option><option>3</option><option>4</option></select>
-  <label>Anything Marcus should know (optional)</label>
-  <textarea name="Note" rows="2" placeholder="..."></textarea>
-  <button type="submit">Save my spot under the moon</button>
-</form>
+<a href="https://EarthHarmony.as.me/?appointmentType=98286757" style="display:block;text-align:center;background:linear-gradient(180deg,#e0b568,#c89a44);color:#181207;font-weight:800;font-size:.95rem;letter-spacing:.12em;text-transform:uppercase;border-radius:999px;padding:15px;text-decoration:none">Save your spot under the moon</a>
 <div class="fine">Free, by donation — come regardless.<br>Your info goes only to Marcus, never shared.</div>
 </div>
 
@@ -66,7 +53,7 @@ button:hover{filter:brightness(1.07)}
 <script>
 fetch('spots.json?cb='+Date.now()).then(r=>r.json()).then(d=>{
   const left=Math.max(0,(d.capacity||30)-(d.taken||0));
-  document.getElementById('spotsline').textContent=left>0?left+' of '+(d.capacity||30)+' headphone spots open':'headphones fully spoken for — register to join the waitlist';
+  document.getElementById('spotsline').textContent=(d.taken?Math.max(0,(d.capacity||30)-d.taken)+' of '+(d.capacity||30)+' headphone spots open':'30 headphone spots — free, by donation');
 }).catch(()=>{});
 </script>
 </div></body></html>
