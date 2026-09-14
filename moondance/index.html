@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resilience | Full Moon Forest Dance — Sat Sept 26</title>
+<meta property="og:title" content="Resilience | Full Moon Forest Dance">
+<meta property="og:description" content="Dance under the Harvest Moon at its peak — forest silent disco by the river, closing with a live sound transmission under the risen moon. Free, by donation. Sat Sept 26, 7:30–9pm.">
+<meta property="og:image" content="https://events.earthharmonysoundwellness.com/photos/blank-templates/pulse-of-life-blank.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#d2a44e;--ink:#efe6d6;--mut:#8d7d61;--bg:#0d1117}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:radial-gradient(ellipse at 50% -10%, #1c2333 0%, #0d1117 55%);color:var(--ink);font-family:'Nunito Sans',sans-serif;min-height:100vh}
+.wrap{max-width:560px;margin:0 auto;padding:40px 20px 80px}
+.moon{width:74px;height:74px;border-radius:50%;margin:6px auto 20px;background:radial-gradient(circle at 35% 35%, #fdf6e3, #e8d9a8 60%, #c8a25c);box-shadow:0 0 50px rgba(232,217,168,.5),0 0 120px rgba(232,217,168,.22)}
+.kicker{text-align:center;font-size:12px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold)}
+h1{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:600;text-align:center;line-height:1.12;margin:10px 0 4px}
+.sub{text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;color:#cfc4ab;margin-bottom:22px}
+.when{text-align:center;font-size:1.02rem;font-weight:700;color:var(--gold);letter-spacing:.04em}
+.where{text-align:center;font-size:.85rem;color:var(--mut);margin:6px 0 26px}
+.story{font-size:.98rem;line-height:1.75;color:#ddd3bd;margin:0 0 14px}
+.story em{color:var(--gold);font-style:normal}
+.card{background:rgba(255,253,247,.035);border:1px solid rgba(210,164,78,.25);border-radius:16px;padding:26px 24px;margin-top:26px}
+.spots{text-align:center;font-size:.85rem;color:var(--gold);letter-spacing:.14em;text-transform:uppercase;margin-bottom:18px}
+label{display:block;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--mut);margin:14px 0 5px}
+input,select,textarea{width:100%;background:rgba(13,17,23,.6);border:1px solid rgba(210,164,78,.3);border-radius:10px;color:var(--ink);font:inherit;font-size:.95rem;padding:11px 12px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
+button{width:100%;margin-top:22px;background:linear-gradient(180deg,#e0b568,#c89a44);color:#181207;font-weight:800;font-size:.95rem;letter-spacing:.12em;text-transform:uppercase;border:none;border-radius:999px;padding:15px;cursor:pointer}
+button:hover{filter:brightness(1.07)}
+.fine{font-size:.78rem;color:var(--mut);text-align:center;margin-top:14px;line-height:1.6}
+.bring{margin-top:20px;font-size:.88rem;color:#cfc4ab;line-height:1.8;text-align:center}
+</style></head>
+<body><div class="wrap">
+<div class="moon"></div>
+<div class="kicker">Resilience</div>
+<h1>Full Moon Forest Dance</h1>
+<div class="sub">under the Harvest Moon, at her peak</div>
+<div class="when">Saturday, September 26 · 7:30–9:00 PM</div>
+<div class="where">📍 forest by the river — exact spot comes with your registration</div>
+
+<p class="story">A forest dance with music through wireless headphones — tuned to the <em>land, water, sky and moon</em>. We gather at 7:30 in the last golden light. Marcus guides us gently into movement — no steps to learn, just permission to move how the body wants — and we dance through dusk as the full moon rises through the trees.</p>
+<p class="story">Around 8:30 the headphones come off, and the evening closes with a <em>live sound transmission</em>, lying in the forest under the risen moon — bowls, voice, and the river.</p>
+
+<div class="card">
+<div class="spots" id="spotsline">30 headphone spots</div>
+<form action="https://formsubmit.co/68bf44fd6c680760a90740f0fc752510" method="POST">
+  <input type="hidden" name="_subject" value="🌕 Moon Dance registration">
+  <input type="hidden" name="_next" value="https://events.earthharmonysoundwellness.com/moondance/thanks.html">
+  <input type="hidden" name="_captcha" value="false">
+  <label>Your name</label>
+  <input name="Name" required placeholder="your name">
+  <label>Phone or email</label>
+  <input name="Contact" required placeholder="so the location can reach you">
+  <label>How many of you? (headphones needed)</label>
+  <select name="Headphones"><option>1</option><option>2</option><option>3</option><option>4</option></select>
+  <label>Anything Marcus should know (optional)</label>
+  <textarea name="Note" rows="2" placeholder="..."></textarea>
+  <button type="submit">Save my spot under the moon</button>
+</form>
+<div class="fine">Free, by donation — come regardless.<br>Your info goes only to Marcus, never shared.</div>
+</div>
+
+<div class="bring">🧣 dress warm · 🛏 blanket to lie on · ☕ a thermos · 🌲 a friend</div>
+
+<script>
+fetch('spots.json?cb='+Date.now()).then(r=>r.json()).then(d=>{
+  const left=Math.max(0,(d.capacity||30)-(d.taken||0));
+  document.getElementById('spotsline').textContent=left>0?left+' of '+(d.capacity||30)+' headphone spots open':'headphones fully spoken for — register to join the waitlist';
+}).catch(()=>{});
+</script>
+</div></body></html>
