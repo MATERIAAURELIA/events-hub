@@ -818,7 +818,8 @@
    "id": "ev-sep18-gong-early",
    "time": "18:30",
    "endTime": "20:00",
-   "booking": "https://EarthHarmony.as.me/?appointmentType=97625755"
+   "booking": "https://EarthHarmony.as.me/?appointmentType=97625755",
+   "spots": 1
   },
   {
    "id": "ev-sep11-chakra",
@@ -858,7 +859,8 @@
    "venueOverride": "Terwillegar Home Studio",
    "img": "photos/equinox-grief-gratitude-sep21.jpg",
    "titleAlign": "center",
-   "tint": "#8a6a9e"
+   "tint": "#8a6a9e",
+   "spots": 3
   },
   {
    "id": "ev-sep30-om",
@@ -878,7 +880,8 @@
    "venueOverride": "Terwillegar Home Studio",
    "img": "photos/harmonic-om-marcus-shruti.jpg",
    "tint": "#7c5cd6",
-   "archived": false
+   "archived": false,
+   "spots": 5
   },
   {
    "id": "ev-sep12-yogawithin",
