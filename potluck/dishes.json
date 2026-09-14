@@ -113,9 +113,19 @@
   {
    "who": "Julia",
    "status": "yes"
+  },
+  {
+   "who": "Jen",
+   "status": "yes",
+   "manualAdd": true
+  },
+  {
+   "who": "Nancy",
+   "status": "yes",
+   "manualAdd": true
   }
  ],
  "stillNeeded": [
-  "more mains \ud83e\udd58"
+  "more mains 🥘"
  ]
 }
