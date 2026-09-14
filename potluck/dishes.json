@@ -1,9 +1,8 @@
 {
- "updated": "2026-09-13",
+ "updated": "2026-09-14",
  "dietary": [
   "allergic to coconut milk. but i am fine skipping out as i know it is a vegan  staple.",
   "gluten free",
-  "gluten free preferred",
   "gluten free, lactose free",
   "no allergies",
   "vegan"
@@ -57,12 +56,6 @@
    "dish": "Lentil quinoa salad",
    "cat": "Side / salad",
    "diet": "Allergic to coconut milk. But I am fine skipping out as I know it is a vegan  staple."
-  },
-  {
-   "who": "Jennifer",
-   "dish": "apple crumble /gf",
-   "cat": "Dessert",
-   "diet": "Gluten free preferred"
   },
   {
    "who": "Farhaat",
