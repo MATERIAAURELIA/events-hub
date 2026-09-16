@@ -1480,6 +1480,6 @@ loadConfig().then(()=>{
   renderList(); renderCal(); generateJsonLd();
 });
 </script>
-<script data-goatcounter="https://earthharmony.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script><script>addEventListener("click",function(e){var a=e.target.closest("a,button");if(!a||!window.goatcounter||!goatcounter.count)return;var l=(a.dataset.gc||a.textContent||"").trim().slice(0,48)||a.href;if(l)goatcounter.count({path:"click:"+l,title:l,event:true})},{capture:true});</script>
+<script data-goatcounter="https://earthharmony.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script><script>addEventListener("click",function(e){var a=e.target.closest("a,button,.link-btn");if(!a||!window.goatcounter||!goatcounter.count)return;var l=(a.dataset.gc||a.textContent||"").trim().slice(0,40)||a.href;var ctx="";var pop=a.closest(".popup,#popup,[class*=popup]");var card=a.closest(".link-btn");try{if(pop){var t=pop.querySelector("h2,h3,.p-title");if(t)ctx=t.textContent.trim().slice(0,34)}else if(card){var t2=card.querySelector(".event-title");if(t2)ctx=t2.textContent.trim().slice(0,34)}}catch(err){}if(ctx&&l.length<25)l=l+" · "+ctx;if(l)goatcounter.count({path:"click:"+l.slice(0,70),title:l,event:true})},{capture:true});</script>
 </body>
 </html>
