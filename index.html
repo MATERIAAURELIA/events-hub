@@ -257,6 +257,23 @@
     font-size: 0.58rem; font-weight: 700;
     padding: 2px 8px; border-radius: 10px;
   }
+  .full-badge {
+    position:absolute; top:-8px; right:14px; z-index:3;
+    background:#5a4a6a; color:#f0e8f8; font-size:.68rem; font-weight:700;
+    letter-spacing:.08em; padding:3px 10px; border-radius:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,.35);
+  }
+  .cap-box { margin-top:14px; padding:14px; border-radius:12px;
+    background:rgba(212,175,55,.08); border:1px solid rgba(212,175,55,.3); }
+  .cap-box p { margin:0 0 10px; font-size:.9rem; line-height:1.45; }
+  .cap-box form { display:flex; gap:8px; flex-wrap:wrap; }
+  .cap-box input[type=email] { flex:1; min-width:170px; padding:10px 12px;
+    border-radius:8px; border:1px solid rgba(212,175,55,.4);
+    background:rgba(0,0,0,.25); color:inherit; font-size:.95rem; }
+  .cap-box button { padding:10px 16px; border-radius:8px; border:none;
+    background:#d4af37; color:#1a1208; font-weight:700; cursor:pointer; font-size:.9rem; }
+  .cap-done { font-size:.95rem; padding:6px 0; }
+
 
   .type-bar {
     width: 3px; min-height: 24px; border-radius: 2px;
@@ -913,7 +930,7 @@ function renderList(){
     const type=EVENT_TYPES[ev.type]||{name:'Event',color:'#888',icon:'🔔',img:''};
     const venue=VENUES[ev.venue]||{name:'',area:''};
     const vn=ev.venueOverride||venue.name;
-    const spots=ev.spots?`<div class="spots-badge">${ev.spots} spot${ev.spots>1?'s':''}!</div>`:'';
+    const spots=ev.full?`<div class="full-badge">FULL</div>`:(ev.spots?`<div class="spots-badge">${ev.spots} spot${ev.spots>1?'s':''}!</div>`:'');
     const thumbClass=showThumb?'':'hidden';
     const barClass=showBar?'':'hidden';
     const imgSrc=ev.img||type.img;
@@ -1076,12 +1093,19 @@ function showPopup(id){
       <div class="pv-row">📍 <span class="pv-loc" contenteditable="true" onblur="pvEdit(this,'venueOverride','${ev.id}')" onkeydown="pvTitleKey(event,this)">${ev.venueOverride||((venue.name||'')+(venue.area?' - '+venue.area:''))}</span></div>
       <div class="pv-row">🎟 $<input type="text" inputmode="decimal" value="${ev.price||''}" placeholder="(blank = hidden)" onchange="pvField('price',this.value,'${ev.id}')"></div>
     </div>`
-    : `<div class="p-meta">📅 ${ev.date&&ev.date<'2090-01-01'?`${fDay(ev.date)} · ${ev.timeLabel||`${fTime(ev.time)}-${fTime(ev.endTime)}`}`:'TBA'}<br>📍 ${vn}${!ev.venueOverride&&venue.area?' - '+venue.area:''}${ev.price?`<br>🎟 $${ev.price}`:''}${ev.spots?'<br>🔥 '+ev.spots+' spot'+(ev.spots>1?'s':'')+' left!':''}</div>`}
+    : `<div class="p-meta">📅 ${ev.date&&ev.date<'2090-01-01'?`${fDay(ev.date)} · ${ev.timeLabel||`${fTime(ev.time)}-${fTime(ev.endTime)}`}`:'TBA'}<br>📍 ${vn}${!ev.venueOverride&&venue.area?' - '+venue.area:''}${ev.price?`<br>🎟 $${ev.price}`:''}${ev.full?'<br>🌕 FULL — every spot spoken for':(ev.spots?'<br>🔥 '+ev.spots+' spot'+(ev.spots>1?'s':'')+' left!':'')}</div>`}
     ${isEdit?`<div class="pv-edit-hint">✏️ Editing — Enter for line breaks · saves when you click away · ✓ Done to close</div>
     <div class="pv-toolbar"><button type="button" onclick="pvAlign('descAlign','left','${ev.id}')">Text ⬅</button><button type="button" onclick="pvAlign('descAlign','center','${ev.id}')">Text ↔</button></div>`:''}
     <div class="p-desc${!isEdit&&(ev.desc||'').length>280?' clamped':''}"${isEdit?` contenteditable="true" onkeydown="pvDescKey(event,this)" onblur="pvEdit(this,'desc','${ev.id}')"`:''} style="text-align:${ev.descAlign||'left'}">${ev.desc||''}</div>
     ${!isEdit&&(ev.desc||'').length>280?`<button class="p-more" onclick="const d=this.previousElementSibling;d.classList.toggle('clamped');this.textContent=d.classList.contains('clamped')?'Show more ▾':'Show less ▴'">Show more ▾</button>`:''}
-    ${ev.booking
+    ${ev.full
+      ? `<div class="cap-box"><p><strong>This one is full.</strong> Leave your email and you'll be the first to hear when the next one opens.</p>
+         <form onsubmit="return capSubmit(event,'${ev.id}')">
+           <input type="email" name="email" placeholder="your email" required>
+           <input type="text" name="_honey" style="display:none">
+           <button type="submit">Keep me posted ✨</button>
+         </form></div>`
+      : ev.booking
       ? `<a class="btn-book" href="${ev.booking}" ${ev.booking.startsWith('mailto:')?'':'target="_blank" rel="noopener"'} onclick="trackClickById('${ev.id}')">${ev.booking.startsWith('mailto:')?'Send a Message →':'Book Now →'}</a>`
       : ev.contactEmail
         ? `<a class="btn-book" href="mailto:${ev.contactEmail}">Email to Register →</a>`
@@ -1109,6 +1133,21 @@ function fmtTitle(s){
   return `<span class="t-pair">${first}</span><br><span class="t-name">${rest.join(' ')}</span>`;
 }
 function flatTitle(s){ return String(s||'').replace(/\n+/g,' '); }
+async function capSubmit(e,id){
+  e.preventDefault();
+  const f=e.target, btn=f.querySelector('button'), ev=EVENTS.find(x=>x.id===id);
+  btn.disabled=true; btn.textContent='...';
+  try{
+    const r=await fetch('https://formsubmit.co/ajax/68bf44fd6c680760a90740f0fc752510',{
+      method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify({email:f.email.value,event:ev?flatTitle(ev.title):id,
+        _subject:'🌕 Next-One List signup — '+(ev?flatTitle(ev.title):id)})});
+    if(!r.ok) throw 0;
+    f.parentElement.innerHTML='<div class="cap-done">🌕 You\'re on the list — we\'ll whisper first when the next one opens.</div>';
+    if(window.goatcounter&&goatcounter.count)goatcounter.count({path:'list-signup-'+id,title:'List signup',event:true});
+  }catch(_){btn.disabled=false;btn.textContent='Keep me posted ✨';alert('Hmm, that did not go through — try again or email earthharmonysoundhealing@gmail.com');}
+  return false;
+}
 function shareEvById(id){const e=EVENTS.find(x=>x.id===id);if(e)shareEv(flatTitle(e.title),e.date,e.booking);}
 function trackClickById(id){const e=EVENTS.find(x=>x.id===id);if(e)trackClick(e.id,flatTitle(e.title),e.booking);}
 function showToast(msg){const t=document.createElement('div');t.textContent=msg;Object.assign(t.style,{position:'fixed',bottom:'80px',left:'50%',transform:'translateX(-50%)',background:'#333',color:'#fff',padding:'8px 20px',borderRadius:'20px',fontSize:'0.78rem',fontFamily:'Inter,sans-serif',fontWeight:'600',zIndex:'999',opacity:'0',transition:'opacity 0.3s'});document.body.appendChild(t);requestAnimationFrame(()=>t.style.opacity='1');setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),300);},1800);}

@@ -986,7 +986,8 @@
    "timeLabel": "7:30–9:00 PM · free, by donation",
    "img": "photos/moondance-crew.jpg",
    "status": "published",
-   "repeatable": false
+   "repeatable": false,
+   "full": true
   }
  ],
  "bgColor": "#0e1522",
