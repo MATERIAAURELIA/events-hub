@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>Geometry VR — Hold the Shape</title>
+<style>
+  :root{--bg:#070a0f;--ink:#e8e2d4;--amber:#d4af37;--teal:#5fb3a3;--dim:#4a5468}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);overflow:hidden;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+  #intro{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;gap:18px;text-align:center;padding:30px;z-index:5}
+  h1{font-weight:300;letter-spacing:.24em;color:var(--amber);font-size:24px;margin:0}
+  p{color:var(--dim);font-size:13.5px;line-height:1.85;max-width:430px;margin:0;
+    letter-spacing:.04em}
+  .keys{color:var(--teal);font-size:12px;line-height:2;margin-top:6px}
+  #vrbtn{position:fixed!important}
+  button.plain{background:transparent;border:1px solid var(--amber);color:var(--amber);
+    padding:10px 22px;border-radius:999px;font-size:11px;letter-spacing:.16em;
+    text-transform:uppercase;cursor:pointer;font-weight:600}
+</style>
+</head>
+<body>
+<div id="intro">
+  <h1>G E O M E T R Y &nbsp; V R</h1>
+  <p>Twelve around one, standing in the room with you.<br>
+  Radius is wavelength — a big circle is a low tone, and every circle
+  sounds from where it actually hangs in space.</p>
+  <div class="keys">
+    trigger &nbsp;·&nbsp; strike the circle you point at<br>
+    both triggers &nbsp;·&nbsp; pull a new circle — your hands set its size<br>
+    grip &nbsp;·&nbsp; take hold of the whole shape and turn it<br>
+    both grips &nbsp;·&nbsp; pull apart to grow it, together to shrink<br>
+    A / X &nbsp;·&nbsp; unfold the pattern &nbsp;·&nbsp; B / Y &nbsp;·&nbsp; clear
+  </div>
+  <p style="color:var(--amber);font-size:12px;margin-top:8px">
+    Put the headset on and press Enter VR below.</p>
+</div>
+
+<script type="importmap">
+{ "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { VRButton } from 'three/addons/webxr/VRButton.js';
+import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
+
+// ─────────────── scene ───────────────
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0x070a0f);
+scene.fog=new THREE.FogExp2(0x070a0f,0.055);
+
+const camera=new THREE.PerspectiveCamera(70,innerWidth/innerHeight,0.05,120);
+camera.position.set(0,1.6,0);
+
+const renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(devicePixelRatio);
+renderer.setSize(innerWidth,innerHeight);
+renderer.xr.enabled=true;
+document.body.appendChild(renderer.domElement);
+document.body.appendChild(VRButton.createButton(renderer));
+addEventListener('resize',()=>{
+  camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth,innerHeight);
+});
+
+scene.add(new THREE.HemisphereLight(0x6688aa,0x0a0e14,0.6));
+const key=new THREE.DirectionalLight(0xffe9c0,0.7); key.position.set(2,4,2); scene.add(key);
+
+// a quiet floor so the body knows where it stands
+const grid=new THREE.GridHelper(14,28,0x1d2838,0x121a26);
+grid.position.y=0; scene.add(grid);
+
+// everything we build lives in one group — so it can be held
+const world=new THREE.Group();
+world.position.set(0,1.45,-1.25);
+scene.add(world);
+
+// ─────────────── audio ───────────────
+let AC=null, master=null, verbNode=null, listener=null;
+const voices=[];
+function initAudio(){
+  if(AC)return;
+  AC=new (window.AudioContext||window.webkitAudioContext)();
+  master=AC.createGain(); master.gain.value=0.55; master.connect(AC.destination);
+  const conv=AC.createConvolver();
+  const len=AC.sampleRate*4.2, buf=AC.createBuffer(2,len,AC.sampleRate);
+  for(let ch=0;ch<2;ch++){
+    const d=buf.getChannelData(ch);
+    for(let i=0;i<len;i++){const t=i/len; d[i]=(Math.random()*2-1)*Math.pow(1-t,2.4)*0.5;}
+  }
+  conv.buffer=buf;
+  const wet=AC.createGain(); wet.gain.value=0.5; conv.connect(wet); wet.connect(master);
+  verbNode=conv;
+  listener=AC.listener;
+}
+// one sine, placed in the room
+function makeVoice(freq,obj3d){
+  initAudio();
+  const osc=AC.createOscillator(); osc.type='sine'; osc.frequency.value=freq;
+  const gain=AC.createGain(); gain.gain.value=0;
+  const pan=AC.createPanner();
+  pan.panningModel='HRTF'; pan.distanceModel='inverse';
+  pan.refDistance=0.7; pan.maxDistance=28; pan.rolloffFactor=1.1;
+  osc.connect(gain); gain.connect(pan);
+  pan.connect(master); pan.connect(verbNode);
+  osc.start();
+  const v={osc,gain,pan,obj:obj3d,level:0,
+    set(l){ this.level=l; gain.gain.setTargetAtTime(l,AC.currentTime,0.25); },
+    setFreq(f){ osc.frequency.setTargetAtTime(f,AC.currentTime,0.08); },
+    strike(a=0.5){
+      const t=AC.currentTime;
+      gain.gain.cancelScheduledValues(t);
+      gain.gain.setValueAtTime(Math.max(this.level,gain.gain.value),t);
+      gain.gain.linearRampToValueAtTime(a,t+0.05);
+      gain.gain.setTargetAtTime(this.level,t+0.06,1.8);
+    },
+    kill(){ const t=AC.currentTime;
+      gain.gain.setTargetAtTime(0,t,0.25);
+      setTimeout(()=>{try{osc.stop();pan.disconnect();}catch(e){}},900);
+      const i=voices.indexOf(this); if(i>=0)voices.splice(i,1);
+    }};
+  voices.push(v); return v;
+}
+const _p=new THREE.Vector3();
+function updateAudioPositions(){
+  if(!AC||!listener)return;
+  camera.getWorldPosition(_p);
+  const fwd=new THREE.Vector3(0,0,-1).applyQuaternion(camera.getWorldQuaternion(new THREE.Quaternion()));
+  const up=new THREE.Vector3(0,1,0).applyQuaternion(camera.getWorldQuaternion(new THREE.Quaternion()));
+  if(listener.positionX){
+    const t=AC.currentTime;
+    listener.positionX.setValueAtTime(_p.x,t);
+    listener.positionY.setValueAtTime(_p.y,t);
+    listener.positionZ.setValueAtTime(_p.z,t);
+    listener.forwardX.setValueAtTime(fwd.x,t);listener.forwardY.setValueAtTime(fwd.y,t);
+    listener.forwardZ.setValueAtTime(fwd.z,t);
+    listener.upX.setValueAtTime(up.x,t);listener.upY.setValueAtTime(up.y,t);
+    listener.upZ.setValueAtTime(up.z,t);
+  }else{
+    listener.setPosition(_p.x,_p.y,_p.z);
+    listener.setOrientation(fwd.x,fwd.y,fwd.z,up.x,up.y,up.z);
+  }
+  for(const v of voices){
+    if(!v.obj)continue;
+    v.obj.getWorldPosition(_p);
+    if(v.pan.positionX){
+      const t=AC.currentTime;
+      v.pan.positionX.setValueAtTime(_p.x,t);
+      v.pan.positionY.setValueAtTime(_p.y,t);
+      v.pan.positionZ.setValueAtTime(_p.z,t);
+    }else v.pan.setPosition(_p.x,_p.y,_p.z);
+  }
+}
+
+// ─────────────── circles ───────────────
+// radius (metres) is wavelength: 0.45 m ↔ C2
+const R_REF=0.45, F_REF=65.41;
+const freqOf=r=>F_REF*R_REF/Math.max(0.04,r);
+const NAMES=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+function noteName(f){const m=Math.round(69+12*Math.log2(f/440));
+  return NAMES[((m%12)+12)%12]+(Math.floor(m/12)-1);}
+
+const rings=[];
+function addRing(pos,r,quat=null){
+  const geo=new THREE.TorusGeometry(r,Math.max(0.004,r*0.017),10,120);
+  const mat=new THREE.MeshStandardMaterial({
+    color:0xd4af37,emissive:0xd4af37,emissiveIntensity:0.55,
+    roughness:0.45,metalness:0.2,transparent:true,opacity:0.9});
+  const m=new THREE.Mesh(geo,mat);
+  m.position.copy(pos);
+  if(quat)m.quaternion.copy(quat);
+  world.add(m);
+  const freq=freqOf(r);
+  const ring={mesh:m,r,freq,voice:makeVoice(freq,m),born:0};
+  ring.voice.set(0.055);
+  ring.voice.strike(0.35);
+  rings.push(ring);
+  return ring;
+}
+function clearRings(){
+  while(rings.length){const r=rings.pop(); r.voice.kill(); world.remove(r.mesh);
+    r.mesh.geometry.dispose(); r.mesh.material.dispose();}
+}
+
+// ─────────────── controllers ───────────────
+const factory=new XRControllerModelFactory();
+const hands=[];
+for(let i=0;i<2;i++){
+  const c=renderer.xr.getController(i);
+  const grip=renderer.xr.getControllerGrip(i);
+  grip.add(factory.createControllerModel(grip));
+  scene.add(c); scene.add(grip);
+  // a soft pointer so you can see where you aim
+  const line=new THREE.Line(
+    new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,0),new THREE.Vector3(0,0,-1.6)]),
+    new THREE.LineBasicMaterial({color:0x5fb3a3,transparent:true,opacity:0.45}));
+  c.add(line);
+  // the glowing tip — the point before the circle
+  const tip=new THREE.Mesh(new THREE.SphereGeometry(0.012,12,12),
+    new THREE.MeshBasicMaterial({color:0xfff0c8}));
+  c.add(tip);
+  hands.push({c,grip,trigger:false,squeeze:false});
+  c.addEventListener('selectstart',()=>{hands[i].trigger=true; onTrigger(i);});
+  c.addEventListener('selectend',()=>{hands[i].trigger=false; onTriggerEnd(i);});
+  c.addEventListener('squeezestart',()=>{hands[i].squeeze=true; onGrip(i);});
+  c.addEventListener('squeezeend',()=>{hands[i].squeeze=false; onGripEnd(i);});
+}
+
+// preview ring while both triggers are held
+let preview=null;
+function ensurePreview(){
+  if(preview)return preview;
+  const g=new THREE.TorusGeometry(0.2,0.004,8,80);
+  const m=new THREE.MeshBasicMaterial({color:0xe8e2d4,transparent:true,opacity:0.5});
+  preview=new THREE.Mesh(g,m); scene.add(preview); return preview;
+}
+function dropPreview(){ if(preview){scene.remove(preview);preview.geometry.dispose();preview=null;} }
+
+const ray=new THREE.Raycaster();
+const tmpM=new THREE.Matrix4();
+function onTrigger(i){
+  initAudio();
+  if(hands[0].trigger&&hands[1].trigger)return;      // two-hand gesture takes over
+  // strike whatever the ray hits
+  const c=hands[i].c;
+  tmpM.identity().extractRotation(c.matrixWorld);
+  ray.ray.origin.setFromMatrixPosition(c.matrixWorld);
+  ray.ray.direction.set(0,0,-1).applyMatrix4(tmpM);
+  const hit=ray.intersectObjects(rings.map(r=>r.mesh),false)[0];
+  if(hit){
+    const ring=rings.find(r=>r.mesh===hit.object);
+    ring.voice.strike(0.6);
+    ring.mesh.material.emissiveIntensity=1.6;
+    pulse(i,0.4,60);
+  }
+}
+function onTriggerEnd(i){
+  // releasing a two-hand pull leaves a circle behind
+  if(preview){
+    const p=preview.position.clone(), r=preview.userData.r||0.2;
+    world.worldToLocal(p);
+    addRing(p, r/ world.scale.x, preview.quaternion.clone());
+    dropPreview(); pulse(0,0.6,80); pulse(1,0.6,80);
+  }
+}
+// grip = hold the shape
+let held=null, heldStart=null, twoGrip=null;
+function onGrip(i){
+  initAudio();
+  if(hands[0].squeeze&&hands[1].squeeze){
+    const d=hands[0].c.position.distanceTo(hands[1].c.position);
+    twoGrip={d0:d,s0:world.scale.x};
+    return;
+  }
+  held=i;
+  heldStart={q:world.quaternion.clone(),
+             cq:hands[i].c.getWorldQuaternion(new THREE.Quaternion()).clone()};
+}
+function onGripEnd(i){
+  twoGrip=null;
+  if(held===i)held=null;
+  if(hands[0].squeeze||hands[1].squeeze)held=hands[0].squeeze?0:1;
+}
+function pulse(i,strength,ms){
+  const src=renderer.xr.getSession()?.inputSources?.[i];
+  const act=src?.gamepad?.hapticActuators?.[0];
+  if(act&&act.pulse)act.pulse(strength,ms);
+}
+
+// buttons A/X = unfold, B/Y = clear
+let prevBtn={};
+function readButtons(){
+  const s=renderer.xr.getSession(); if(!s)return;
+  s.inputSources.forEach((src,i)=>{
+    const g=src.gamepad; if(!g)return;
+    const a=g.buttons[4]?.pressed, b=g.buttons[5]?.pressed;
+    if(a&&!prevBtn['a'+i])unfold();
+    if(b&&!prevBtn['b'+i]){clearRings();}
+    prevBtn['a'+i]=a; prevBtn['b'+i]=b;
+  });
+}
+
+// ─────────────── the pattern, in the room ───────────────
+// 24-cell vertices: permutations of (±1,±1,0,0). the twelve with w=0
+// are the cuboctahedron — twelve around one, every distance equal.
+function cell24(){
+  const v=[];
+  for(let i=0;i<4;i++)for(let j=i+1;j<4;j++)
+    for(const si of[1,-1])for(const sj of[1,-1]){
+      const p=[0,0,0,0];p[i]=si;p[j]=sj;v.push(p);
+    }
+  return v;
+}
+let unfoldQueue=[], unfoldT=0;
+function unfold(){
+  clearRings();
+  const S=0.42, R=0.12;
+  const verts=cell24().filter(v=>Math.abs(v[3])<1e-6);   // the 3D twelve
+  unfoldQueue=[{pos:new THREE.Vector3(0,0,0),r:R}];
+  verts.forEach(v=>unfoldQueue.push({
+    pos:new THREE.Vector3(v[0],v[1],v[2]).multiplyScalar(S/Math.SQRT2), r:R}));
+  unfoldT=0;
+}
+function stepUnfold(dt){
+  if(!unfoldQueue.length)return;
+  unfoldT-=dt;
+  if(unfoldT<=0){
+    const it=unfoldQueue.shift();
+    const ring=addRing(it.pos,it.r);
+    // face the ring toward the centre so the shape reads as a sphere of circles
+    ring.mesh.lookAt(0,0,0);
+    unfoldT=0.55;
+  }
+}
+
+// ─────────────── loop ───────────────
+const clock=new THREE.Clock();
+renderer.setAnimationLoop(()=>{
+  const dt=Math.min(0.05,clock.getDelta());
+  readButtons();
+  stepUnfold(dt);
+
+  // two triggers: a circle stretched between your hands
+  if(hands[0].trigger&&hands[1].trigger){
+    const a=hands[0].c.position, b=hands[1].c.position;
+    const p=ensurePreview();
+    const r=Math.max(0.05,a.distanceTo(b)/2);
+    p.position.copy(a).add(b).multiplyScalar(0.5);
+    p.lookAt(camera.position);
+    if(Math.abs((p.userData.r||0)-r)>0.004){
+      p.geometry.dispose();
+      p.geometry=new THREE.TorusGeometry(r,0.004,8,80);
+      p.userData.r=r;
+    }
+  }
+
+  // one grip: turn the shape with your wrist
+  if(held!==null&&heldStart){
+    const now=hands[held].c.getWorldQuaternion(new THREE.Quaternion());
+    const delta=now.multiply(heldStart.cq.clone().invert());
+    world.quaternion.copy(delta.multiply(heldStart.q));
+  }
+  // two grips: pull apart to grow
+  if(twoGrip){
+    const d=hands[0].c.position.distanceTo(hands[1].c.position);
+    const s=Math.max(0.25,Math.min(4,twoGrip.s0*(d/twoGrip.d0)));
+    world.scale.setScalar(s);
+  }
+
+  // breathing glow + pitch follows any change in scale
+  for(const r of rings){
+    r.mesh.material.emissiveIntensity+=(0.55-r.mesh.material.emissiveIntensity)*0.06;
+    const rr=r.r*world.scale.x;
+    const f=freqOf(rr);
+    if(Math.abs(f-r.freq)>0.5){r.freq=f;r.voice.setFreq(f);}
+  }
+
+  updateAudioPositions();
+  renderer.render(scene,camera);
+});
+
+// desktop preview: slow turn so the page isn't dead outside the headset
+let t0=performance.now();
+(function spin(){
+  if(!renderer.xr.isPresenting){
+    const t=(performance.now()-t0)/1000;
+    world.rotation.y=t*0.18;
+  }
+  requestAnimationFrame(spin);
+})();
+
+// seed something to look at
+setTimeout(()=>{unfold();},400);
+addEventListener('click',()=>initAudio(),{once:true});
+</script>
+</body>
+</html>
