@@ -121,19 +121,46 @@ function clearAll(){
 
 // ─────────────── the shelf ───────────────
 const shelf=new THREE.Group();
-shelf.position.set(0,1.05,-1.2);
+shelf.position.set(0,1.3,-0.95);
 scene.add(shelf);
 const shelfItems=[];
 SOLIDS.forEach((def,i)=>{
   const s=buildSolid(def,0.062);
   s.position.set((i-2)*0.30,0,0);
   s.userData.def=def;
+  // a generous invisible target so aiming is forgiving
+  const hit=new THREE.Mesh(new THREE.SphereGeometry(0.13,10,10),
+    new THREE.MeshBasicMaterial({visible:false}));
+  hit.userData.isHit=true; s.add(hit);
   const lb=makeLabel(def.name,0.03); lb.position.set(0,0.13,0);
   s.add(lb);
   shelf.add(s); shelfItems.push(s);
 });
 const hint=makeLabel('point  ·  trigger  ·  it appears in front of you',0.035);
 hint.position.set(0,-0.18,0); shelf.add(hint);
+
+// ─────────────── status panel (so we can debug together) ───────────────
+const statCv=document.createElement('canvas'); statCv.width=512; statCv.height=200;
+const statCtx=statCv.getContext('2d');
+const statTex=new THREE.CanvasTexture(statCv);
+const statPanel=new THREE.Mesh(new THREE.PlaneGeometry(0.5,0.195),
+  new THREE.MeshBasicMaterial({map:statTex,transparent:true,opacity:0.85,depthWrite:false}));
+statPanel.position.set(-0.75,1.35,-0.85); statPanel.rotation.y=0.5;
+scene.add(statPanel);
+let statLines=['starting…'];
+function setStatus(lines){
+  statLines=lines;
+  statCtx.clearRect(0,0,512,200);
+  statCtx.fillStyle='rgba(10,14,20,0.8)'; statCtx.fillRect(0,0,512,200);
+  statCtx.strokeStyle='rgba(212,175,55,0.5)'; statCtx.strokeRect(1,1,510,198);
+  statCtx.font='500 26px -apple-system,Segoe UI,monospace';
+  statCtx.textAlign='left'; statCtx.textBaseline='top';
+  lines.forEach((l,i)=>{
+    statCtx.fillStyle=i===0?'#d4af37':'#9fb3c8';
+    statCtx.fillText(l,18,18+i*32);
+  });
+  statTex.needsUpdate=true;
+}
 
 // ─────────────── controllers ───────────────
 const factory=new XRControllerModelFactory();
@@ -151,6 +178,7 @@ for(let i=0;i<2;i++){
   const h={c,idx:i,carry:null,prevQ:new THREE.Quaternion(),omega:new THREE.Vector3()};
   hands.push(h);
   c.addEventListener('selectstart',()=>onTrigger(h));
+  c.addEventListener('selectend',()=>{ if(h.carry)onRelease(h); });
   c.addEventListener('squeezestart',()=>onGrip(h));
   c.addEventListener('squeezeend',()=>onRelease(h));
 }
@@ -176,29 +204,47 @@ function nearHand(h,maxD=0.3){
   return best;
 }
 
+function spawnFrom(h,def){
+  h.c.getWorldPosition(_wp);
+  const dir=new THREE.Vector3(0,0,-0.6)
+    .applyQuaternion(h.c.getWorldQuaternion(new THREE.Quaternion()));
+  const s=place(def,_wp.clone().add(dir));
+  pulse(h,0.6,60);
+  return s;
+}
+// trigger does whatever makes sense where you are:
+//   hand near a solid   → pick it up and carry it (release to let go)
+//   pointing at shelf   → build that solid
+//   pointing at a solid → start / stop its spin
 function onTrigger(h){
+  const close=nearHand(h,0.38);
+  if(close){ grab(h,close); return; }
   const hit=aimed(h,shelfItems);
   if(hit){
     const s=ownerOf(hit.object,shelfItems);
-    if(s){
-      h.c.getWorldPosition(_wp);
-      const dir=new THREE.Vector3(0,0,-0.7)
-        .applyQuaternion(h.c.getWorldQuaternion(new THREE.Quaternion()));
-      place(s.userData.def,_wp.clone().add(dir));
-      pulse(h,0.6,60);
-      return;
-    }
+    if(s){ spawnFrom(h,s.userData.def); return; }
   }
-  const target=nearHand(h,0.35)||(()=>{const g=aimed(h,built);
-    return g?ownerOf(g.object,built):null;})();
+  const g=aimed(h,built);
+  const target=g?ownerOf(g.object,built):null;
   if(target){
     const sp=target.userData.spin;
     if(sp.lengthSq()>1e-6)sp.set(0,0,0); else sp.set(0,0.4,0);
     pulse(h,0.4,40);
+    return;
   }
+  // pointing at nothing: build whichever shelf solid you're closest to aiming at
+  let best=null,bang=0.45;
+  tmpM.identity().extractRotation(h.c.matrixWorld);
+  const dir=new THREE.Vector3(0,0,-1).applyMatrix4(tmpM).normalize();
+  const org=new THREE.Vector3().setFromMatrixPosition(h.c.matrixWorld);
+  for(const s of shelfItems){
+    const to=s.getWorldPosition(new THREE.Vector3()).sub(org).normalize();
+    const ang=dir.angleTo(to);
+    if(ang<bang){bang=ang;best=s;}
+  }
+  if(best)spawnFrom(h,best.userData.def);
 }
-function onGrip(h){
-  const s=nearHand(h);
+function grab(h,s){
   if(!s)return;
   s.userData.held=true;
   s.userData.spin.set(0,0,0);
@@ -209,6 +255,7 @@ function onGrip(h){
     cq0:h.c.getWorldQuaternion(new THREE.Quaternion()).clone()};
   pulse(h,0.5,40);
 }
+function onGrip(h){ grab(h,nearHand(h,0.38)); }
 function onRelease(h){
   if(!h.carry)return;
   const s=h.carry.s;
@@ -230,6 +277,7 @@ function readButtons(){
 }
 
 // ─────────────── loop ───────────────
+let statTick=0;
 const clock=new THREE.Clock();
 const _q=new THREE.Quaternion(), _e=new THREE.Euler();
 renderer.setAnimationLoop(()=>{
@@ -263,6 +311,26 @@ renderer.setAnimationLoop(()=>{
     b.opacity += ((near?0.32:0.14)-b.opacity)*0.12;
   }
   shelfItems.forEach(s=>{s.rotation.y+=dt*0.35; s.rotation.x+=dt*0.12;});
+
+  // tell the room what it's seeing
+  if((statTick=(statTick||0)+dt)>0.25){
+    statTick=0;
+    const sess=renderer.xr.getSession();
+    const n=sess?sess.inputSources.length:0;
+    const kinds=sess?[...sess.inputSources].map(s=>s.hand?'hand':'controller').join(' + '):'—';
+    let aimAt='nothing';
+    for(const h of hands){
+      if(nearHand(h,0.38)){aimAt='a solid (close)';break;}
+      if(aimed(h,shelfItems)){aimAt='the shelf';break;}
+      if(aimed(h,built)){aimAt='a solid';break;}
+    }
+    setStatus([
+      'inputs: '+n+'  '+kinds,
+      'aiming at: '+aimAt,
+      'built: '+built.length+'   carried: '+(hands.filter(h=>h.carry).length),
+      renderer.xr.isPresenting?'in VR':'desktop preview'
+    ]);
+  }
 
   renderer.render(scene,camera);
 });
