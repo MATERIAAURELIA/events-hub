@@ -4,6 +4,7 @@
   "allergic to coconut milk. but i am fine skipping out as i know it is a vegan  staple.",
   "gluten free",
   "gluten free preferred",
+  "gluten free, lactose free",
   "no allergies",
   "vegan"
  ],
@@ -62,6 +63,12 @@
    "dish": "apple crumble /gf",
    "cat": "Dessert",
    "diet": "Gluten free preferred"
+  },
+  {
+   "who": "Farhaat",
+   "dish": "Drinks- assorted sparkling waters",
+   "cat": "Drinks",
+   "diet": "Gluten free, lactose free"
   },
   {
    "who": "Ivan",
