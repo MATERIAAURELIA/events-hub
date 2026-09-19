@@ -1,11 +1,6 @@
 {
- "updated": "2026-09-18",
+ "updated": "2026-09-19",
  "dietary": [
-  "allergic to coconut milk. but i am fine skipping out as i know it is a vegan  staple.",
-  "gluten free",
-  "gluten free preferred",
-  "gluten free, lactose free",
-  "no allergies",
   "vegan"
  ],
  "dishes": [
@@ -15,72 +10,6 @@
    "cat": "Main",
    "diet": "vegan",
    "manual": true
-  },
-  {
-   "who": "Marcus",
-   "dish": "not sure yet...",
-   "cat": "Main",
-   "diet": "no allergies"
-  },
-  {
-   "who": "Ashlii",
-   "dish": "Some sort of vegetable salad , not sure yet",
-   "cat": "Side / salad",
-   "diet": "Gluten free"
-  },
-  {
-   "who": "Desiree",
-   "dish": "Veggies, crackers, hummus",
-   "cat": "Side / salad",
-   "diet": ""
-  },
-  {
-   "who": "Ashlee",
-   "dish": "Freshly baked cookies",
-   "cat": "Dessert",
-   "diet": ""
-  },
-  {
-   "who": "Brenna",
-   "dish": "Cookies or other after-dinner snacks (as I will be arriving late)",
-   "cat": "Dessert",
-   "diet": ""
-  },
-  {
-   "who": "Juli",
-   "dish": "Feta Whip Dip & Almond Crackers",
-   "cat": "Side / salad",
-   "diet": ""
-  },
-  {
-   "who": "Nancy",
-   "dish": "Lentil quinoa salad",
-   "cat": "Side / salad",
-   "diet": "Allergic to coconut milk. But I am fine skipping out as I know it is a vegan  staple."
-  },
-  {
-   "who": "Jennifer",
-   "dish": "apple crumble /gf",
-   "cat": "Dessert",
-   "diet": "Gluten free preferred"
-  },
-  {
-   "who": "Farhaat",
-   "dish": "Drinks- assorted sparkling waters",
-   "cat": "Drinks",
-   "diet": "Gluten free, lactose free"
-  },
-  {
-   "who": "Ivan",
-   "dish": "Juice",
-   "cat": "Drinks",
-   "diet": ""
-  },
-  {
-   "who": "Clayton",
-   "dish": "Chicken pot pie",
-   "cat": "Main",
-   "diet": ""
   }
  ],
  "guests": [
