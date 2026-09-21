@@ -861,7 +861,7 @@
    "img": "photos/equinox-grief-gratitude-sep21.jpg",
    "titleAlign": "center",
    "tint": "#8a6a9e",
-   "spots": 2
+   "full": true
   },
   {
    "id": "ev-sep30-om",
