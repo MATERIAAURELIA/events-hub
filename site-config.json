@@ -1008,7 +1008,8 @@
       "img": "photos/plate-clearing-balance-jul17.jpg",
       "tint": "#7c5cd6",
       "archived": false,
-      "spots": 8
+      "spots": 8,
+      "booking": "https://EarthHarmony.as.me/?appointmentType=93995396"
     },
     {
       "id": "ev-oct15-om",
@@ -1028,7 +1029,8 @@
       "img": "photos/harmonic-om-marcus-shruti-v2.jpg",
       "tint": "#7c5cd6",
       "archived": false,
-      "spots": 8
+      "spots": 8,
+      "booking": "https://EarthHarmony.as.me/?appointmentType=96658347"
     },
     {
       "type": "deep-gong",
@@ -1049,7 +1051,8 @@
       "endTime": "20:00",
       "soldOut": true,
       "full": true,
-      "spots": 8
+      "spots": 8,
+      "booking": "https://EarthHarmony.as.me/?appointmentType=97625755"
     }
   ],
   "bgColor": "#0e1522",
