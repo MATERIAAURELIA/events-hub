@@ -1,11 +1,10 @@
 {
- "updated": "2026-09-19",
+ "updated": "2026-09-21",
  "dietary": [
   "allergic to coconut milk. but i am fine skipping out as i know it is a vegan  staple.",
   "gluten free",
   "gluten free preferred",
   "gluten free, lactose free",
-  "no allergies",
   "vegan"
  ],
  "dishes": [
@@ -15,12 +14,6 @@
    "cat": "Main",
    "diet": "vegan",
    "manual": true
-  },
-  {
-   "who": "Marcus",
-   "dish": "not sure yet...",
-   "cat": "Main",
-   "diet": "no allergies"
   },
   {
    "who": "Ashlii",
