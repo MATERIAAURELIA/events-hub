@@ -1,8 +1,7 @@
 {
- "updated": "2026-09-21",
+ "updated": "2026-09-22",
  "dietary": [
   "allergic to coconut milk. but i am fine skipping out as i know it is a vegan  staple.",
-  "gluten free",
   "gluten free preferred",
   "gluten free, lactose free",
   "vegan"
@@ -14,12 +13,6 @@
    "cat": "Main",
    "diet": "vegan",
    "manual": true
-  },
-  {
-   "who": "Ashlii",
-   "dish": "Some sort of vegetable salad , not sure yet",
-   "cat": "Side / salad",
-   "diet": "Gluten free"
   },
   {
    "who": "Desiree",
