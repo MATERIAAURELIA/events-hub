@@ -921,7 +921,9 @@
       "titleAlign": "center",
       "tint": "#b85c48",
       "booking": "https://earthharmony.as.me/schedule/a171f446/appointment/98023667/calendar/9783107",
-      "series": "community"
+      "series": "community",
+      "capacity": 34,
+      "spots": 9
     },
     {
       "id": "ev-oct2-pulseoflife",
