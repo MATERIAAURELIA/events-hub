@@ -1,7 +1,6 @@
 {
- "updated": "2026-09-25",
+ "updated": "2026-09-27",
  "dietary": [
-  "gluten free, lactose free",
   "vegan"
  ],
  "dishes": [
@@ -11,24 +10,6 @@
    "cat": "Main",
    "diet": "vegan",
    "manual": true
-  },
-  {
-   "who": "Farhaat",
-   "dish": "Drinks- assorted sparkling waters",
-   "cat": "Drinks",
-   "diet": "Gluten free, lactose free"
-  },
-  {
-   "who": "Ivan",
-   "dish": "Juice",
-   "cat": "Drinks",
-   "diet": ""
-  },
-  {
-   "who": "Clayton",
-   "dish": "Chicken pot pie",
-   "cat": "Main",
-   "diet": ""
   }
  ],
  "guests": [
