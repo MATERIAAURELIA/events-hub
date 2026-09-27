@@ -947,7 +947,9 @@
         "2026-11-20 19:00",
         "2026-12-11 19:00"
       ],
-      "imgCrop": "center top"
+      "imgCrop": "center top",
+      "capacity": 22,
+      "spots": 12
     },
     {
       "id": "ev-oct24-back2basics",
