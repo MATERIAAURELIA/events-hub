@@ -949,7 +949,7 @@
       ],
       "imgCrop": "center top",
       "capacity": 22,
-      "spots": 9
+      "spots": 7
     },
     {
       "id": "ev-oct24-back2basics",
@@ -1035,7 +1035,7 @@
       "img": "photos/harmonic-om-marcus-shruti-v2.jpg",
       "tint": "#7c5cd6",
       "archived": false,
-      "spots": 8,
+      "spots": 7,
       "booking": "https://EarthHarmony.as.me/?appointmentType=96658347",
       "capacity": 8
     },
