@@ -1081,7 +1081,11 @@
       "status": "published",
       "repeatable": false,
       "img": "photos/blank-templates/yoga-sound-blank.png",
-      "titleAlign": "center"
+      "titleAlign": "center",
+      "futureDates": [
+        "2026-11-28 18:00",
+        "2026-12-19 18:00"
+      ]
     },
     {
       "id": "ev-oct17-ekatra",
