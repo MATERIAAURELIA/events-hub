@@ -170,6 +170,10 @@
     "brandenburg": {
       "name": "Brandenburg Music",
       "area": "15907 100A Ave NW, Edmonton"
+    },
+    "ekatra": {
+      "name": "Ekatra Yoga",
+      "area": "Leduc"
     }
   },
   "photoLibrary": [
@@ -1060,6 +1064,43 @@
       "spots": 7,
       "booking": "https://EarthHarmony.as.me/?appointmentType=97625755",
       "capacity": 8
+    },
+    {
+      "id": "ev-oct23-yogawithin",
+      "type": "restorative",
+      "title": "Restorative Yoga\n& Healing Soundbath",
+      "date": "2026-10-23",
+      "time": "18:00",
+      "endTime": "19:30",
+      "venue": "yoga-within",
+      "price": 47.76,
+      "booking": "https://yogawithin.ca/restorative-yoga-soundbath",
+      "contactEmail": "earthharmonysoundhealing@gmail.com",
+      "contactPhone": "780-257-6428",
+      "desc": "With Melanie Checknita & Marcus Fung.\n\nA restorative yoga practice held in live sound — long, supported shapes while the bowls, gongs and voice carry the room into deep rest.\n\nRegistration through Yoga Within.",
+      "status": "published",
+      "repeatable": false,
+      "img": "photos/blank-templates/yoga-sound-blank.png",
+      "titleAlign": "center"
+    },
+    {
+      "id": "ev-oct17-ekatra",
+      "type": "sound-bath",
+      "title": "Chakra Sound Journey\nat Ekatra Yoga",
+      "date": "2026-10-17",
+      "time": "",
+      "endTime": "",
+      "timeLabel": "time & details coming soon",
+      "venue": "ekatra",
+      "price": "",
+      "booking": "",
+      "contactEmail": "earthharmonysoundhealing@gmail.com",
+      "contactPhone": "780-257-6428",
+      "desc": "A sound journey through the chakras at Ekatra Yoga in Leduc.\n\nTime, price and registration details coming soon.",
+      "status": "published",
+      "repeatable": false,
+      "img": "photos/plate-clearing-balance-jul17.jpg",
+      "titleAlign": "center"
     }
   ],
   "bgColor": "#0e1522",

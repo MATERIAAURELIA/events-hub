@@ -950,7 +950,7 @@ function renderList(){
     const isCtaDate=ev.pinned&&ev.date>='2090-01-01'; // unset CTA date → show a label, not "Dec 2099"
     const dateColHtml=isCtaDate
       ? `<div class="ev-day" style="font-size:1.6rem;line-height:1.7">✉️</div>`
-      : `<div class="ev-day">${dayName}</div><div class="ev-date">${monthDay}</div><div class="ev-time">${fTime(ev.time)}</div><div class="ev-price">$${ev.price}</div>`;
+      : `<div class="ev-day">${dayName}</div><div class="ev-date">${monthDay}</div><div class="ev-time">${fTime(ev.time)||'TBA'}</div><div class="ev-price">${ev.price?'$'+ev.price:''}</div>`;
     let monthHeader='';
     if(_grouped&&!ev.pinned){
       const _sr=seriesOf(ev);
@@ -1184,7 +1184,7 @@ function showDayPopup(ds){
       return`<div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #eee">
         <div style="font-size:0.62rem;color:${t.color};font-weight:700;text-transform:uppercase">${t.icon} ${t.name}</div>
         <div style="font-weight:600;margin:4px 0">${flatTitle(e.title)}</div>
-        <div style="font-size:0.72rem;color:#666">${fTime(e.time)}-${fTime(e.endTime)} · ${e.venueOverride||v.name} · $${e.price}</div>
+        <div style="font-size:0.72rem;color:#666">${fTime(e.time)}-${fTime(e.endTime)} · ${e.venueOverride||v.name}${e.price?' · $'+e.price:''}</div>
         ${e.booking?`<a href="${e.booking}" target="_blank" class="btn-book" style="display:inline-block;padding:8px 20px;font-size:0.72rem;margin-top:8px;border-radius:10px">Book</a>`:''}
       </div>`;}).join('');
   const pop=document.getElementById('popup');
