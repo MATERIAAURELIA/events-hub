@@ -79,17 +79,19 @@ input:focus,textarea:focus{outline:none;border-color:var(--gold)}
 
   <div class="step"><span>2</span>Your feedback</div>
 
-  <div class="card">
-    <h2>Your experience</h2>
+  <div class="card" id="expCard">
+    <h2>Your experience <span style="font-family:'Nunito Sans',sans-serif;font-size:.75rem;color:var(--mut);letter-spacing:.1em">(optional)</span></h2>
     <p class="hint">In a sentence or two: what did you feel, notice, or take home with you?<br><em>Why we ask:</em> your words help someone new understand what a session feels like.</p>
-    <textarea name="experience" id="experience" required placeholder="e.g. I felt a deep release, and slept better than I have in months…"></textarea>
+    <textarea name="experience" id="experience" placeholder="e.g. I felt a deep release, and slept better than I have in months…"></textarea>
     <div class="row">
       <div><label for="initials">Initials or first name</label><input id="initials" name="initials" placeholder="e.g. Karen Q."></div>
       <div><label for="vocation">Your vocation (optional)</label><input id="vocation" name="vocation" placeholder="e.g. nurse, freedom fighter"></div>
     </div>
     <p class="hint" style="margin-top:8px">Fun or serious, it's up to you: <em>freedom fighter</em>, <em>nurse</em>, <em>dog walker extraordinaire</em>. It shows newcomers that all kinds of people benefit from sound.</p>
-    <label class="check"><input type="checkbox" name="share_ok" value="yes" checked> You may share my words, with my initials and vocation, on the Earth Harmony website.</label>
+    <label class="check"><input type="checkbox" name="share_ok" id="share_ok" value="yes" checked> You may share my words, with my initials and vocation, on the Earth Harmony website.</label>
+    <p style="text-align:center;margin-top:14px"><a href="#" id="optout" style="color:var(--mut);font-size:.85rem">I'd rather not share about my experience →</a></p>
   </div>
+  <p id="optedout" style="display:none;text-align:center;margin-top:14px;font-size:.88rem;color:#b9ae95">No problem at all. 🙏 <a href="#" id="optin" style="color:var(--gold)">Changed your mind?</a></p>
 
   <div class="card">
     <h2>Help us grow</h2>
@@ -145,10 +147,14 @@ fetch('../site-config.json?cb='+Date.now()).then(r=>r.json()).then(d=>{
   o.onclick=()=>pick(o,'Other / private session','another session',true); tiles.appendChild(o);
   if(pre) pick(...pre,false);
 }).catch(()=>{tiles.innerHTML='<button type="button" class="tile other">✦ Tap to continue</button>';tiles.firstChild.onclick=function(){pick(this,'Unknown','your session',true)}});
+document.getElementById('optout').onclick=e=>{e.preventDefault();document.getElementById('expCard').style.display='none';document.getElementById('experience').value='';document.getElementById('share_ok').checked=false;document.getElementById('optedout').style.display='block'};
+document.getElementById('optin').onclick=e=>{e.preventDefault();document.getElementById('expCard').style.display='block';document.getElementById('share_ok').checked=true;document.getElementById('optedout').style.display='none'};
 document.getElementById('change').onclick=e=>{e.preventDefault();tiles.scrollIntoView({behavior:'smooth'})};
 document.getElementById('fb').addEventListener('submit',async ev=>{
   ev.preventDefault();
   if(!evIn.value){tiles.scrollIntoView({behavior:'smooth'});return}
+  const fx=ev.target.experience.value.trim(), fi=ev.target.improve.value.trim();
+  if(!fx&&!fi){alert('Add a few words about your experience, or a suggestion, before sending. Or simply close the page. No pressure at all.');return}
   const b=document.getElementById('send'); b.disabled=true; b.textContent='Sending…';
   document.getElementById('subj').value='💬 Feedback — '+evIn.value;
   const fd=new FormData(ev.target); if(!fd.get('share_ok')) fd.set('share_ok','no');
