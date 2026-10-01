@@ -1099,11 +1099,15 @@
       "booking": "https://www.ekatrayoga.com/programs-events",
       "contactEmail": "earthharmonysoundhealing@gmail.com",
       "contactPhone": "780-257-6428",
-      "desc": "A vocal sound journey through the chakras with Marcus Fung: crystal bowls, gongs and voice, moving through each energy centre from root to crown.\n\nPart of the Three Signature Journeys of Sound at Ekatra (Oct 17, Nov 7, Dec 12). Join one, or all three as a bundle. Registration through Ekatra Yoga.",
+      "desc": "Three Signature Journeys of Sound at Ekatra Yoga, one Saturday a month:\n\nOct 17 · Clearing & Balance: a sound journey through the chakras\nNov 7 · Held & Nurtured: the Divine Mother journey\nDec 12 · Return & Remember: the Harmonic OM\n\nJoin one, or all three as a bundle. Registration through Ekatra Yoga.",
       "status": "published",
       "repeatable": false,
       "img": "photos/plate-clearing-balance-jul17.jpg",
-      "titleAlign": "center"
+      "titleAlign": "center",
+      "futureDates": [
+        "2026-11-07 19:00",
+        "2026-12-12 19:00"
+      ]
     },
     {
       "id": "ev-nov7-ekatra",
@@ -1118,7 +1122,7 @@
       "contactEmail": "earthharmonysoundhealing@gmail.com",
       "contactPhone": "780-257-6428",
       "desc": "A sound journey of being held: soft resonance, voice and deep bowls in the spirit of the Divine Mother, for rest, comfort and renewal.\n\nPart of the Three Signature Journeys of Sound at Ekatra (Oct 17, Nov 7, Dec 12). Join one, or all three as a bundle. Registration through Ekatra Yoga.",
-      "status": "published",
+      "status": "draft",
       "repeatable": false,
       "img": "photos/plate-divine-mother-journey-jul24.jpg",
       "titleAlign": "center"
@@ -1136,7 +1140,7 @@
       "contactEmail": "earthharmonysoundhealing@gmail.com",
       "contactPhone": "780-257-6428",
       "desc": "A journey into one sound, OM: drones, layered tones and the perfect fifth, with shruti box, gong, deep singing bowls and the human voice.\n\nPart of the Three Signature Journeys of Sound at Ekatra (Oct 17, Nov 7, Dec 12). Join one, or all three as a bundle. Registration through Ekatra Yoga.",
-      "status": "published",
+      "status": "draft",
       "repeatable": false,
       "img": "photos/plate-return-remember-aug21.jpg",
       "titleAlign": "center"
