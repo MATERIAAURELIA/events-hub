@@ -23,16 +23,16 @@ h1{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:600;text-
 .why b{display:block;font-size:1.3rem;margin-bottom:4px}
 .step{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--gold);text-align:center;margin:30px 0 14px}
 .step span{display:inline-block;width:30px;height:30px;line-height:30px;border-radius:50%;border:1px solid var(--gold);font-size:1rem;margin-right:8px;vertical-align:2px;font-family:'Nunito Sans',sans-serif}
-.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.tile{position:relative;border-radius:14px;overflow:hidden;cursor:pointer;border:2px solid transparent;background:#141a24;transition:transform .15s,border-color .15s,box-shadow .15s;text-align:left;padding:0;font:inherit;color:inherit}
-.tile:hover{transform:translateY(-2px)}
-.tile img{display:block;width:100%;aspect-ratio:1/1;object-fit:cover;filter:saturate(.9) brightness(.8)}
-.tile .cap{position:absolute;inset:auto 0 0 0;padding:28px 10px 10px;background:linear-gradient(transparent,rgba(8,10,16,.92))}
-.tile .d{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold2)}
-.tile .t{font-family:'Cormorant Garamond',serif;font-size:1.05rem;line-height:1.15;margin-top:3px}
-.tile.on{border-color:var(--gold);box-shadow:0 0 0 4px rgba(210,164,78,.18),0 10px 30px rgba(0,0,0,.4)}
-.tile.on::after{content:'✓';position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:50%;background:var(--gold);color:#181207;font-weight:800;display:grid;place-items:center}
-.other{grid-column:1/-1;padding:14px;text-align:center;font-size:.9rem;color:#cfc4ab;background:rgba(255,253,247,.03);border:1px dashed rgba(210,164,78,.3)}
+.tiles{display:flex;flex-direction:column;gap:10px}
+.tile{position:relative;display:flex;align-items:center;gap:14px;width:100%;border-radius:12px;cursor:pointer;border:1.5px solid rgba(210,164,78,.2);background:rgba(255,253,247,.03);transition:border-color .15s,background .15s,box-shadow .15s;text-align:left;padding:10px 44px 10px 10px;font:inherit;color:inherit}
+.tile:hover{border-color:rgba(210,164,78,.55);background:rgba(255,253,247,.05)}
+.tile img{flex:0 0 64px;width:64px;height:64px;border-radius:9px;object-fit:cover}
+.tile .cap{min-width:0}
+.tile .d{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold2)}
+.tile .t{font-family:'Cormorant Garamond',serif;font-size:1.12rem;line-height:1.2;margin-top:2px}
+.tile.on{border-color:var(--gold);background:rgba(210,164,78,.08);box-shadow:0 0 0 3px rgba(210,164,78,.15)}
+.tile.on::after{content:'✓';position:absolute;top:50%;right:12px;transform:translateY(-50%);width:24px;height:24px;border-radius:50%;background:var(--gold);color:#181207;font-weight:800;display:grid;place-items:center;font-size:.8rem}
+.other{justify-content:center;padding:14px;font-size:.9rem;color:#cfc4ab;border-style:dashed}
 #rest{display:none;animation:rise .5s ease}
 @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 .chosen{text-align:center;font-size:.9rem;color:#cfc4ab;margin:6px 0 0}
