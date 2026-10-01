@@ -81,7 +81,8 @@ input:focus,textarea:focus{outline:none;border-color:var(--gold)}
 
   <div class="card" id="expCard">
     <h2>Your experience <span style="font-family:'Nunito Sans',sans-serif;font-size:.75rem;color:var(--mut);letter-spacing:.1em">(optional)</span></h2>
-    <p class="hint">In a sentence or two: what did you feel, notice, or take home with you?<br><em>Why we ask:</em> your words help someone new understand what a session feels like.</p>
+    <p class="hint"><em>Why we ask:</em> your words help someone new understand what a session feels like, so they can find what will truly serve them.</p>
+    <p class="hint">In a sentence or two: what did you feel, notice, or take home with you?</p>
     <textarea name="experience" id="experience" placeholder="e.g. I felt a deep release, and slept better than I have in months…"></textarea>
     <div class="row">
       <div><label for="initials">Initials or first name</label><input id="initials" name="initials" placeholder="e.g. Karen Q."></div>
@@ -123,6 +124,7 @@ input:focus,textarea:focus{outline:none;border-color:var(--gold)}
 <script>
 const tiles=document.getElementById('tiles'), evIn=document.getElementById('event'), rest=document.getElementById('rest');
 const want=new URLSearchParams(location.search).get('e');
+const SKIP=['ev-sep26-moondance'];
 const flat=t=>(t||'').replace(/\n/g,' ');
 const fmt=s=>new Date(s+'T12:00').toLocaleDateString('en-CA',{weekday:'short',month:'short',day:'numeric'});
 function pick(btn,val,name,scroll){
@@ -133,7 +135,7 @@ function pick(btn,val,name,scroll){
 }
 fetch('../site-config.json?cb='+Date.now()).then(r=>r.json()).then(d=>{
   const today=new Date().toISOString().slice(0,10), past=new Date(Date.now()-14*864e5).toISOString().slice(0,10);
-  const evs=(d.events||[]).filter(e=>e.status!=='draft'&&!/^private/i.test(e.title||'')&&e.date&&((e.date>=past&&e.date<=today)||e.id===want)).sort((a,b)=>b.date.localeCompare(a.date));
+  const evs=(d.events||[]).filter(e=>e.status!=='draft'&&!/^private/i.test(e.title||'')&&!SKIP.includes(e.id)&&e.date&&((e.date>=past&&e.date<=today)||e.id===want)).sort((a,b)=>b.date.localeCompare(a.date));
   let pre=null;
   evs.forEach(e=>{
     const b=document.createElement('button'); b.type='button'; b.className='tile';
