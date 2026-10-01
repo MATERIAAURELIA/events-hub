@@ -161,6 +161,8 @@ function pick(btn,val,name,scroll){
 }
 fetch('../site-config.json?cb='+Date.now()).then(r=>r.json()).then(d=>{
   const today=new Date().toISOString().slice(0,10), past=new Date(Date.now()-14*864e5).toISOString().slice(0,10);
+  const EXTRA={'carley-sep25':{id:'carley-sep25',title:"Carley's Group: Grief & Gratitude Journey",date:'2026-09-25',time:'18:30',img:'photos/equinox-grief-gratitude-sep21.jpg',status:'published'}};
+  if(EXTRA[want]) (d.events=d.events||[]).push(EXTRA[want]);
   const evs=(d.events||[]).filter(e=>e.status!=='draft'&&!/^private/i.test(e.title||'')&&!SKIP.includes(e.id)&&e.date&&((e.date>=past&&e.date<=today)||e.id===want)).sort((a,b)=>b.date.localeCompare(a.date));
   let pre=null;
   evs.forEach(e=>{
