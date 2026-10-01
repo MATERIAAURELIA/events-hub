@@ -24,14 +24,15 @@ h1{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:600;text-
 .step{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--gold);text-align:center;margin:30px 0 14px}
 .step span{display:inline-block;width:30px;height:30px;line-height:30px;border-radius:50%;border:1px solid var(--gold);font-size:1rem;margin-right:8px;vertical-align:2px;font-family:'Nunito Sans',sans-serif}
 .tiles{display:flex;flex-direction:column;gap:10px}
-.tile{position:relative;display:flex;align-items:center;gap:14px;width:100%;border-radius:12px;cursor:pointer;border:1.5px solid rgba(210,164,78,.2);background:rgba(255,253,247,.03);transition:border-color .15s,background .15s,box-shadow .15s;text-align:left;padding:10px 44px 10px 10px;font:inherit;color:inherit}
+.tile{position:relative;display:flex;align-items:center;gap:14px;width:100%;border-radius:12px;cursor:pointer;border:1.5px solid rgba(210,164,78,.2);background:rgba(255,253,247,.03);transition:border-color .15s,background .15s,box-shadow .15s;text-align:left;padding:10px 12px 10px 10px;font:inherit;color:inherit}
 .tile:hover{border-color:rgba(210,164,78,.55);background:rgba(255,253,247,.05)}
 .tile img{flex:0 0 64px;width:64px;height:64px;border-radius:9px;object-fit:cover}
 .tile .cap{min-width:0}
-.tile .d{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold2)}
-.tile .t{font-family:'Cormorant Garamond',serif;font-size:1.12rem;line-height:1.2;margin-top:2px}
+.tile .t{font-family:'Cormorant Garamond',serif;font-size:1.15rem;line-height:1.2}
+.tile .d{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold2);margin-top:4px}
+.tile .sel{margin-left:auto;flex:0 0 auto;padding:7px 14px;border-radius:999px;border:1px solid rgba(210,164,78,.55);color:var(--gold);font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.tile.on .sel{background:var(--gold);color:#181207;border-color:var(--gold)}
 .tile.on{border-color:var(--gold);background:rgba(210,164,78,.08);box-shadow:0 0 0 3px rgba(210,164,78,.15)}
-.tile.on::after{content:'✓';position:absolute;top:50%;right:12px;transform:translateY(-50%);width:24px;height:24px;border-radius:50%;background:var(--gold);color:#181207;font-weight:800;display:grid;place-items:center;font-size:.8rem}
 .other{justify-content:center;padding:14px;font-size:.9rem;color:#cfc4ab;border-style:dashed}
 #rest{display:none;animation:rise .5s ease}
 @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
@@ -96,8 +97,11 @@ input:focus,textarea:focus{outline:none;border-color:var(--gold)}
 
   <div class="card">
     <h2>Help us grow</h2>
-    <p class="hint">Anything we could do better: the room, the sound, the timing, anything at all. This stays private, just for Marcus.</p>
-    <textarea name="improve" placeholder="Honest suggestions are a gift."></textarea>
+    <p class="hint">This part stays private, just for Marcus.</p>
+    <label for="well">What did we do well?</label>
+    <textarea name="did_well" id="well" style="min-height:80px" placeholder="What worked for you: the sound, the space, the welcome…"></textarea>
+    <label for="improve">What could we do better?</label>
+    <textarea name="improve" id="improve" placeholder="The room, the sound, the timing, anything at all. Honest suggestions are a gift."></textarea>
   </div>
 
   <div class="card" style="text-align:center">
@@ -125,11 +129,12 @@ input:focus,textarea:focus{outline:none;border-color:var(--gold)}
 const tiles=document.getElementById('tiles'), evIn=document.getElementById('event'), rest=document.getElementById('rest');
 const want=new URLSearchParams(location.search).get('e');
 const SKIP=['ev-sep26-moondance'];
+const fTime=t=>{const[h,m]=(t||'').split(':').map(Number);return isNaN(h)?'':`${h%12||12}:${String(m||0).padStart(2,'0')}${h>=12?'pm':'am'}`};
 const flat=t=>(t||'').replace(/\n/g,' ');
 const fmt=s=>new Date(s+'T12:00').toLocaleDateString('en-CA',{weekday:'short',month:'short',day:'numeric'});
 function pick(btn,val,name,scroll){
-  document.querySelectorAll('.tile').forEach(t=>t.classList.remove('on'));
-  btn.classList.add('on'); evIn.value=val; document.getElementById('chosenName').textContent=name;
+  document.querySelectorAll('.tile').forEach(t=>{t.classList.remove('on');const x=t.querySelector('.sel');if(x)x.textContent='Select'});
+  btn.classList.add('on');const sx=btn.querySelector('.sel');if(sx)sx.textContent='✓ Selected'; evIn.value=val; document.getElementById('chosenName').textContent=name;
   rest.style.display='block';
   if(scroll) setTimeout(()=>rest.scrollIntoView({behavior:'smooth',block:'start'}),60);
 }
@@ -140,7 +145,7 @@ fetch('../site-config.json?cb='+Date.now()).then(r=>r.json()).then(d=>{
   evs.forEach(e=>{
     const b=document.createElement('button'); b.type='button'; b.className='tile';
     const img=e.img?(/^https?:/.test(e.img)?e.img:'../'+e.img):'../photos/plate-clearing-balance-jul17.jpg';
-    b.innerHTML=`<img src="${img}" alt="" loading="lazy"><div class="cap"><div class="d">${fmt(e.date)}</div><div class="t">${flat(e.title)}</div></div>`;
+    b.innerHTML=`<img src="${img}" alt="" loading="lazy"><div class="cap"><div class="t">${flat(e.title)}</div><div class="d">${fmt(e.date)}${e.time?' · '+fTime(e.time):''}</div></div><span class="sel">Select</span>`;
     const val=flat(e.title)+' — '+e.date;
     b.onclick=()=>pick(b,val,flat(e.title)+' · '+fmt(e.date),true);
     tiles.appendChild(b); if(e.id===want) pre=[b,val,flat(e.title)+' · '+fmt(e.date)];
@@ -155,8 +160,8 @@ document.getElementById('change').onclick=e=>{e.preventDefault();tiles.scrollInt
 document.getElementById('fb').addEventListener('submit',async ev=>{
   ev.preventDefault();
   if(!evIn.value){tiles.scrollIntoView({behavior:'smooth'});return}
-  const fx=ev.target.experience.value.trim(), fi=ev.target.improve.value.trim();
-  if(!fx&&!fi){alert('Add a few words about your experience, or a suggestion, before sending. Or simply close the page. No pressure at all.');return}
+  const fx=ev.target.experience.value.trim(), fi=ev.target.improve.value.trim(), fw=ev.target.did_well.value.trim();
+  if(!fx&&!fi&&!fw){alert('Add a few words about your experience, or a suggestion, before sending. Or simply close the page. No pressure at all.');return}
   const b=document.getElementById('send'); b.disabled=true; b.textContent='Sending…';
   document.getElementById('subj').value='💬 Feedback — '+evIn.value;
   const fd=new FormData(ev.target); if(!fd.get('share_ok')) fd.set('share_ok','no');
