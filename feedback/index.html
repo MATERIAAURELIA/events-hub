@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Share Your Experience | Earth Harmony Sound & Wellness</title>
+<meta name="robots" content="noindex">
+<meta property="og:title" content="Share your experience — Earth Harmony">
+<meta property="og:description" content="A few words about your session. Thank you for being part of the circle.">
+<meta property="og:image" content="https://www.earthharmonysoundwellness.com/images/og-gong-cymatics.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#d2a44e;--ink:#efe6d6;--mut:#8d7d61;--bg:#0d1117}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:radial-gradient(ellipse at 50% -10%, #1c2333 0%, #0d1117 55%);color:var(--ink);font-family:'Nunito Sans',sans-serif;min-height:100vh}
+.wrap{max-width:560px;margin:0 auto;padding:40px 20px 80px}
+.kicker{text-align:center;font-size:12px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold)}
+h1{font-family:'Cormorant Garamond',serif;font-size:2.3rem;font-weight:600;text-align:center;line-height:1.12;margin:10px 0 6px}
+.sub{text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;color:#cfc4ab;margin-bottom:8px}
+.card{background:rgba(255,253,247,.035);border:1px solid rgba(210,164,78,.25);border-radius:16px;padding:24px 22px;margin-top:22px}
+.card h2{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.35rem;color:var(--gold);margin-bottom:4px}
+.hint{font-size:.85rem;color:#b9ae95;line-height:1.6;margin-bottom:6px}
+label{display:block;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--mut);margin:14px 0 5px}
+input,select,textarea{width:100%;background:rgba(13,17,23,.6);border:1px solid rgba(210,164,78,.3);border-radius:10px;color:var(--ink);font:inherit;font-size:.95rem;padding:11px 12px}
+textarea{min-height:110px;resize:vertical;line-height:1.55}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
+.row{display:flex;gap:12px}.row>div{flex:1}
+.check{display:flex;gap:10px;align-items:flex-start;margin-top:14px;font-size:.9rem;color:#ddd3bd;line-height:1.5;text-transform:none;letter-spacing:0}
+.check input{width:auto;margin-top:4px}
+button{width:100%;margin-top:22px;background:linear-gradient(180deg,#e0b568,#c89a44);color:#181207;font-weight:800;font-size:.95rem;letter-spacing:.12em;text-transform:uppercase;border:none;border-radius:12px;padding:15px;cursor:pointer}
+button:disabled{opacity:.6;cursor:default}
+.fine{font-size:.78rem;color:var(--mut);text-align:center;margin-top:14px;line-height:1.6}
+#thanks{display:none;text-align:center}
+#thanks p{font-size:1rem;line-height:1.75;color:#ddd3bd;margin:10px 0}
+.gbtn{display:inline-block;margin-top:14px;padding:12px 22px;border:1px solid rgba(210,164,78,.5);border-radius:999px;color:var(--gold);text-decoration:none;font-weight:700;font-size:.9rem}
+@media (max-width:420px){.row{flex-direction:column;gap:0}}
+</style></head>
+<body><div class="wrap">
+<div class="kicker">Earth Harmony Sound &amp; Wellness</div>
+<h1>Share your experience</h1>
+<div class="sub">thank you for being part of the circle</div>
+
+<form id="fb">
+<div class="card">
+  <label for="event">Which session?</label>
+  <select id="event" name="event" required><option value="">Choose your session…</option></select>
+
+  <h2 style="margin-top:20px">Your experience</h2>
+  <p class="hint">In a sentence or two: what did you feel, notice, or take home with you?</p>
+  <textarea name="experience" id="experience" required placeholder="e.g. I felt a deep release, and slept better than I have in months…"></textarea>
+
+  <div class="row">
+    <div><label for="initials">Initials or first name <span style="text-transform:none;letter-spacing:0">(optional)</span></label>
+      <input id="initials" name="initials" placeholder="e.g. Karen Q."></div>
+    <div><label for="vocation">What you do <span style="text-transform:none;letter-spacing:0">(optional)</span></label>
+      <input id="vocation" name="vocation" placeholder="e.g. nurse, teacher, student"></div>
+  </div>
+  <p class="hint" style="margin-top:8px">Why we ask what you do: it helps newcomers see that all kinds of people, in all walks of life, benefit from sound.</p>
+
+  <label class="check"><input type="checkbox" name="share_ok" value="yes" checked> You may share my words (with my initials and what I do) on the Earth Harmony website.</label>
+</div>
+
+<div class="card">
+  <h2>Help us grow</h2>
+  <p class="hint">Anything we could do better: the room, the sound, the timing, anything at all. This stays private, just for Marcus.</p>
+  <textarea name="improve" placeholder="Honest suggestions are a gift."></textarea>
+</div>
+
+<input type="hidden" name="_subject" id="subj" value="💬 Feedback">
+<input type="hidden" name="_template" value="table">
+<input type="text" name="_honey" style="display:none">
+<button type="submit" id="send">Send my feedback</button>
+<div class="fine">Goes only to Marcus. Nothing is ever posted without your permission.</div>
+</form>
+
+<div id="thanks" class="card">
+  <h2>Thank you 🙏</h2>
+  <p>Your words help others find their way to the circle, and your suggestions help us make every session better.</p>
+  <p style="font-size:.92rem;color:#b9ae95">If you'd ever like to share your experience more widely, a Google review makes a real difference for a small practice like ours.</p>
+  <a class="gbtn" href="https://g.page/r/CeK7fPWpwspuEAE/review" target="_blank" rel="noopener">Leave a Google review</a>
+  <p style="margin-top:22px"><a href="https://events.earthharmonysoundwellness.com" style="color:var(--gold)">See upcoming sessions →</a></p>
+</div>
+
+<script>
+const sel=document.getElementById('event'), want=new URLSearchParams(location.search).get('e');
+fetch('../site-config.json?cb='+Date.now()).then(r=>r.json()).then(d=>{
+  const today=new Date().toISOString().slice(0,10);
+  const past=new Date(Date.now()-75*864e5).toISOString().slice(0,10);
+  const evs=(d.events||[]).filter(e=>e.status!=='draft'&&!/^private/i.test(e.title||'')&&e.date&&e.date>=past&&e.date<=today).sort((a,b)=>b.date.localeCompare(a.date));
+  const fmt=s=>new Date(s+'T12:00').toLocaleDateString('en-CA',{weekday:'short',month:'short',day:'numeric'});
+  evs.forEach(e=>{const o=document.createElement('option');o.value=e.title.replace(/\n/g,' ')+' — '+e.date;o.textContent=fmt(e.date)+' · '+e.title.replace(/\n/g,' ');if(e.id===want)o.selected=true;sel.appendChild(o)});
+  const o=document.createElement('option');o.value='Other / private session';o.textContent='Other / private session';sel.appendChild(o);
+}).catch(()=>{const o=document.createElement('option');o.value='Other';o.textContent='Other / private session';sel.appendChild(o)});
+document.getElementById('fb').addEventListener('submit',async ev=>{
+  ev.preventDefault();
+  const b=document.getElementById('send'); b.disabled=true; b.textContent='Sending…';
+  document.getElementById('subj').value='💬 Feedback — '+(sel.value||'session');
+  const fd=new FormData(ev.target); if(!fd.get('share_ok')) fd.set('share_ok','no');
+  try{
+    const r=await fetch('https://formsubmit.co/ajax/68bf44fd6c680760a90740f0fc752510',{method:'POST',headers:{'Accept':'application/json'},body:fd});
+    if(!r.ok) throw 0;
+    ev.target.style.display='none'; document.getElementById('thanks').style.display='block'; window.scrollTo(0,0);
+  }catch(e){ b.disabled=false; b.textContent='Send my feedback'; alert('Hmm, that did not send. Please try again, or email earthharmonysoundhealing@gmail.com'); }
+});
+</script>
+</div><script data-goatcounter="https://earthharmony.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body></html>
