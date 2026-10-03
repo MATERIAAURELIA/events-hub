@@ -12,7 +12,9 @@ p{color:#c6c2b2;line-height:1.6}a.b{display:inline-block;margin-top:14px;padding
 <h1>Thank you! 🥁</h1>
 <div class="v" id="v">Your vote is in.</div>
 <p>Your voice helps shape the next Pulse of Life.</p>
-<a class="b" href="https://events.earthharmonysoundwellness.com/">See upcoming events →</a>
+<p style="margin-top:18px;color:#f3ebdd">✓ All done. <b>Close this tab</b> to return to your email.</p>
+<a class="b" href="#" onclick="if(history.length>1){history.back()}else{window.close()};return false">← Back to the email</a>
+<p style="margin-top:22px"><a href="https://events.earthharmonysoundwellness.com/" style="color:#d2a44e;font-size:.9rem">or see upcoming events</a></p>
 </div>
 <script>
 const q=new URLSearchParams(location.search), a=q.get('a')||'', poll=q.get('p')||'pulse';
