@@ -1,0 +1,25 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex"><title>Thanks for voting · Earth Harmony</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% -10%,#1c2a42,#0e1522 60%);color:#f3ebdd;font-family:'Nunito Sans',sans-serif;text-align:center;padding:24px;box-sizing:border-box}
+.c{max-width:440px}.k{font-size:12px;letter-spacing:.35em;color:#d2a44e}
+h1{font-family:'Cormorant Garamond',serif;font-size:2.4rem;margin:12px 0 6px}
+.v{display:inline-block;margin:14px 0 22px;padding:12px 20px;border:1px solid rgba(210,164,78,.5);border-radius:14px;font-size:1.05rem}
+p{color:#c6c2b2;line-height:1.6}a.b{display:inline-block;margin-top:14px;padding:12px 24px;border-radius:30px;background:#F5B041;color:#14202E;font-weight:700;text-decoration:none}
+</style></head><body><div class="c">
+<div class="k">EARTH HARMONY SOUND &amp; WELLNESS</div>
+<h1>Thank you! 🥁</h1>
+<div class="v" id="v">Your vote is in.</div>
+<p>Your voice helps shape the next Pulse of Life.<br>Want to tell us more? Just reply to the email.</p>
+<a class="b" href="https://events.earthharmonysoundwellness.com/">See upcoming events →</a>
+</div>
+<script>
+const q=new URLSearchParams(location.search), a=q.get('a')||'', poll=q.get('p')||'pulse';
+const L={dance:'More Dancing / No Rhythm Cradle',mix:'10 min Movement · Drumming · Rhythm Cradle',original:'Drumming · Rhythm Cradle (original format)'};
+if(L[a]) document.getElementById('v').textContent='Your vote: '+L[a];
+window.goatcounter={no_onload:true};
+</script>
+<script data-goatcounter="https://earthharmony.goatcounter.com/count" async src="//gc.zgo.at/count.js"
+ onload="if(window.goatcounter&&goatcounter.count){var q=new URLSearchParams(location.search);goatcounter.count({path:'vote-'+(q.get('p')||'pulse')+'-'+(q.get('a')||'none'),title:'Poll vote',event:true})}"></script>
+</body></html>
