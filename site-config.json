@@ -957,6 +957,30 @@
       "full": true
     },
     {
+      "id": "ev-nov20-pulseoflife",
+      "type": "drumming",
+      "title": "Pulse of Life\nDrum Circle & Rhythm Cradle",
+      "date": "2026-11-20",
+      "time": "19:00",
+      "endTime": "22:00",
+      "venue": "",
+      "venueOverride": "Integr8 Massage · Sherwood Park",
+      "price": 26,
+      "booking": "https://EarthHarmony.as.me/?appointmentType=93243634",
+      "contactEmail": "earthharmonysoundhealing@gmail.com",
+      "contactPhone": "780-257-6428",
+      "desc": "An evening of shared rhythm in Sherwood Park. We open with a community drum circle — every drum provided, no experience needed — and deepen into the Rhythm Cradle, a participant-driven sound experience of connection, trust and play.\n\nHosted at a private home studio — the exact address comes with your registration.",
+      "img": "photos/blank-templates/pulse-of-life-blank.png",
+      "status": "published",
+      "repeatable": false,
+      "series": "community",
+      "futureDates": [
+        "2026-12-11 19:00"
+      ],
+      "imgCrop": "center top",
+      "capacity": 22
+    },
+    {
       "id": "ev-oct24-back2basics",
       "type": "sound-bath",
       "series": "community",
