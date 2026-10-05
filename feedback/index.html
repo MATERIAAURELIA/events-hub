@@ -53,6 +53,7 @@ input:focus,textarea:focus{outline:none;border-color:var(--gold)}
 .send{width:100%;margin-top:22px;background:linear-gradient(180deg,#e0b568,#c89a44);color:#181207;font-weight:800;font-size:.95rem;letter-spacing:.12em;text-transform:uppercase;border:none;border-radius:12px;padding:16px;cursor:pointer}
 .send:disabled{opacity:.6;cursor:default}
 .fine{font-size:.78rem;color:var(--mut);text-align:center;margin-top:14px;line-height:1.6}
+.gnote{display:none;margin:10px auto 0;max-width:340px;font-size:.85rem;color:var(--gold);line-height:1.5}.gnote.on{display:block}
 .gbtn{display:inline-block;margin-top:12px;padding:12px 22px;border:1px solid rgba(210,164,78,.5);border-radius:999px;color:var(--gold);text-decoration:none;font-weight:700;font-size:.9rem}
 #thanks{display:none;text-align:center}
 #thanks p{font-size:1rem;line-height:1.75;color:#ddd3bd;margin:10px 0}
@@ -126,6 +127,7 @@ input:focus,textarea:focus{outline:none;border-color:var(--gold)}
     <h2>Really happy?</h2>
     <p class="hint">Leave us a Google review and help us serve more people. It takes a minute, and it's how most newcomers find us.</p>
     <a class="gbtn" href="https://g.page/r/CeK7fPWpwspuEAE/review" target="_blank" rel="noopener">⭐ Leave a Google review</a>
+    <div class="gnote"></div>
   </div>
 
   <input type="hidden" name="_subject" id="subj" value="💬 Feedback">
@@ -140,6 +142,7 @@ input:focus,textarea:focus{outline:none;border-color:var(--gold)}
   <h2>Thank you 🙏</h2>
   <p>Your words help others find their way to the circle, and your suggestions help us make every session better.</p>
   <a class="gbtn" href="https://g.page/r/CeK7fPWpwspuEAE/review" target="_blank" rel="noopener">⭐ Leave a Google review</a>
+  <div class="gnote"></div>
   <p style="margin-top:22px"><a href="https://events.earthharmonysoundwellness.com" style="color:var(--gold)">See upcoming sessions →</a></p>
 </div>
 
@@ -192,4 +195,16 @@ document.getElementById('fb').addEventListener('submit',async ev=>{
 });
 </script>
 </div><script data-goatcounter="https://earthharmony.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script>
+// ⭐ Copy-and-paste review: if they've written about their experience, copy it so Google is just "paste".
+(function(){const ex=document.getElementById('experience');
+ const label=()=>{const has=ex&&ex.value.trim().length>15;document.querySelectorAll('.gbtn').forEach(b=>b.textContent=has?'⭐ Copy my words & open Google':'⭐ Leave a Google review')};
+ if(ex){ex.addEventListener('input',label)}
+ document.querySelectorAll('.gbtn').forEach(b=>b.addEventListener('click',()=>{const txt=ex?ex.value.trim():'';if(txt.length<=15)return;
+  const note=b.parentElement.querySelector('.gnote');
+  const ok=()=>{if(note){note.textContent='✓ Your words are copied. On Google, tap the review box, then Paste (long-press on a phone).';note.classList.add('on')}};
+  try{navigator.clipboard.writeText(txt).then(ok).catch(()=>{fallback(txt);ok()})}catch(e){fallback(txt);ok()}}));
+ function fallback(s){const a=document.createElement('textarea');a.value=s;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(e){}a.remove()}
+})();
+</script>
 </body></html>
