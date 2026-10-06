@@ -1113,7 +1113,7 @@ function showPopup(id){
           ? `<a class="btn-book" href="tel:${ev.contactPhone}">Call to Register →</a>`
           : ''
     }
-    <button class="btn-share-popup" onclick="shareEvById('${ev.id}')">Share Event</button>${isEdit?`<button class="pv-done" onclick="closePopup()">✓ Done editing</button>`:''}`;
+    ${ev.video?`<button class="btn-share-popup btn-play-video" onclick="playEvVideo('${ev.id}')">▶ Play video</button>`:''}<button class="btn-share-popup" onclick="shareEvById('${ev.id}')">Share Event</button>${isEdit?`<button class="pv-done" onclick="closePopup()">✓ Done editing</button>`:''}`;
   const pop=document.getElementById('popup');
   pop.classList.add('show');
   document.getElementById('overlay').classList.add('show');
@@ -1148,6 +1148,7 @@ async function capSubmit(e,id){
   }catch(_){btn.disabled=false;btn.textContent='Keep me posted ✨';alert('Hmm, that did not go through — try again or email earthharmonysoundhealing@gmail.com');}
   return false;
 }
+function playEvVideo(id){const e=EVENTS.find(x=>x.id===id);if(!e||!e.video)return;const pc=document.getElementById('popup-content');const w=pc.querySelector('.p-img-wrap');const v=`<div class="p-img-wrap"><video class="p-img" src="${e.video}" controls autoplay playsinline style="max-height:none"></video></div>`;if(w)w.outerHTML=v;else pc.insertAdjacentHTML('afterbegin',v);const b=pc.querySelector('.btn-play-video');if(b)b.remove();pc.scrollTop=0;document.getElementById('popup').scrollTop=0;try{trackClickById&&0}catch(_){}}
 function shareEvById(id){const e=EVENTS.find(x=>x.id===id);if(e)shareEv(flatTitle(e.title),e.date,e.booking);}
 function trackClickById(id){const e=EVENTS.find(x=>x.id===id);if(e)trackClick(e.id,flatTitle(e.title),e.booking);}
 function showToast(msg){const t=document.createElement('div');t.textContent=msg;Object.assign(t.style,{position:'fixed',bottom:'80px',left:'50%',transform:'translateX(-50%)',background:'#333',color:'#fff',padding:'8px 20px',borderRadius:'20px',fontSize:'0.78rem',fontFamily:'Inter,sans-serif',fontWeight:'600',zIndex:'999',opacity:'0',transition:'opacity 0.3s'});document.body.appendChild(t);requestAnimationFrame(()=>t.style.opacity='1');setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),300);},1800);}
