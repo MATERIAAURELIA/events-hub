@@ -1196,6 +1196,26 @@
       "repeatable": false,
       "img": "photos/plate-return-remember-aug21.jpg",
       "titleAlign": "center"
+    },
+    {
+      "id": "ev-nov17-galactic-gong",
+      "type": "deep-gong",
+      "title": "★ The Galactic Gong Activation\nIntensity",
+      "date": "2026-11-17",
+      "time": "19:00",
+      "endTime": "20:30",
+      "venue": "home",
+      "venueOverride": "Terwillegar Home Studio",
+      "price": "62.50",
+      "full": true,
+      "spots": 0,
+      "status": "published",
+      "booking": "https://EarthHarmony.as.me/?appointmentType=99174444",
+      "contactEmail": "earthharmonysoundhealing@gmail.com",
+      "contactPhone": "780-257-6428",
+      "desc": "By request: a more intensified gong journey for people who already know the gongs. Longer, deeper, more of the big waves, in an intimate room of 8.\n\nThis one filled within an hour of the invite. Leave your email below to hear first when the next one opens.",
+      "img": "photos/galactic-gong-grotto.jpg",
+      "tint": "#c98a3f"
     }
   ],
   "bgColor": "#0e1522",
