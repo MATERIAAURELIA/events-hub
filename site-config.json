@@ -1152,14 +1152,15 @@
       "contactEmail": "earthharmonysoundhealing@gmail.com",
       "contactPhone": "780-257-6428",
       "desc": "Three Signature Journeys at Ekatra Yoga, Leduc: chakras (Oct 17), Divine Mother (Nov 7), Harmonic OM (Dec 12).\n\nJoin one, or all three and save $30.",
-      "status": "published",
+      "status": "draft",
       "repeatable": false,
       "img": "photos/plate-clearing-balance-jul17.jpg",
       "titleAlign": "center",
       "futureDates": [
         "2026-11-07 19:00",
         "2026-12-12 19:00"
-      ]
+      ],
+      "cancelled": true
     },
     {
       "id": "ev-nov7-ekatra",
