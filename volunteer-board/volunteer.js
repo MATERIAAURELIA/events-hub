@@ -55,6 +55,7 @@
     .vh-strip{margin:0 0 calc(var(--btn-gap,12px) + 14px);background:radial-gradient(120% 90% at 50% 0%, rgba(232,190,100,.20) 0%, rgba(232,190,100,.06) 45%, rgba(232,190,100,0) 75%), var(--vh-panel);box-shadow:0 0 0 1px rgba(210,164,78,.35), 0 0 22px -2px rgba(232,190,100,.28), 0 14px 30px -10px rgba(232,190,100,.45), inset 0 1px 0 rgba(255,225,160,.25);border:1px solid var(--vh-gold-soft);border-top:2px solid var(--vh-gold);border-radius:0 0 14px 14px;padding:10px 12px;display:flex;flex-wrap:wrap;gap:7px;align-items:center;color:var(--vh-ink);font-size:14px;}
     .vh-pill{display:inline-flex;align-items:center;gap:4px;background:transparent;border:1px solid var(--vh-gold-soft);border-radius:999px;padding:5px 11px;font-size:13.5px;color:var(--vh-ink);}
     .vh-need{font-weight:700;color:var(--vh-gold);border-color:var(--vh-gold);}
+    .vh-filled{background:linear-gradient(180deg,#76a86d,#5a8c52);color:#fff;border-color:transparent;padding:7px 16px;box-shadow:0 4px 14px -6px rgba(118,168,109,.7);}
     .vh-who{background:rgba(210,164,78,.14);border-color:transparent;color:var(--vh-gold);}
     .vh-more{background:transparent;border:1px solid var(--vh-gold-soft);border-radius:999px;padding:5px 12px;font-size:13px;color:var(--vh-dim);cursor:pointer;}
     .vh-row{flex-basis:100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
@@ -164,7 +165,7 @@
       };
       s.querySelectorAll('input').forEach(el => el.addEventListener('change', store));
     } else {
-      s.innerHTML = `<span class="vh-pill vh-need">${I.full ? '✓ ' : '🙋 '}${I.need ? (I.full ? FULL_WORD : `${I.people.length} / ${I.need} helpers`) : (I.people.length ? `${I.people.length} helping` : 'Helpers welcome')}</span>
+      s.innerHTML = `<span class="vh-pill vh-need${I.full ? ' vh-filled' : ''}">${I.full ? '✓ ' : '🙋 '}${I.need ? (I.full ? FULL_WORD : `${I.people.length} / ${I.need} helpers`) : (I.people.length ? `${I.people.length} helping` : 'Helpers welcome')}</span>
         <button class="vh-more">Show role description ▾</button>
         <div class="vh-details"><div><b>🧹 Role:</b> ${esc(I.role) || 'TBA'}</div><div><b>⭐ Exchange:</b> ${esc(I.exchange) || 'TBA'}</div>${I.notes ? `<div><b>📝</b> ${esc(I.notes)}</div>` : ''}</div>
         <div class="vh-row">${I.people.map(p => `<span class="vh-pill vh-who">✅ ${esc(p)}</span>`).join('')}${I.full ? '' : '<button class="vh-btn vh-go">Sign up to help</button>'}</div>`;
