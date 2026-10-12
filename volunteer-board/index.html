@@ -239,6 +239,16 @@
   .vol-line { margin-top:8px; display:flex; flex-wrap:wrap; gap:6px 12px; align-items:center; font-size:13px; color:#5a4a32; background:#fff8e7; border-radius:6px; padding:8px 10px; }
   .vol-line .pill { display:inline-flex; align-items:center; gap:4px; background:#fff; border:1px solid #ecdcb8; border-radius:999px; padding:4px 10px; font-size:12.5px; }
   .vol-line .p-need { font-weight:700; color:#b8502b; border-color:#f0c9a8; }
+  .vol-line.editing .pill input { border:0; background:transparent; font:inherit; color:inherit; outline:none; min-width:0; }
+  .vol-line.editing .pill { background:#fffdf3; border-style:dashed; }
+  .vol-line.editing .pill.grow { flex:1 1 200px; } .vol-line.editing .pill.grow input { width:100%; }
+  .vol-line.editing .pi-need { width:34px; text-align:center; }
+  .vol-line.editing .pi-notes { flex-basis:100%; border:1px dashed #ecdcb8; border-radius:6px; padding:5px 9px; font:13px inherit; background:#fffdf3; }
+  #defaults-panel { background:#fff8e7; border:1px dashed var(--yellow); border-radius:8px; padding:10px 12px; margin:0 0 12px; font-size:13px; }
+  #defaults-panel .dp-head { font-weight:700; color:var(--warm); margin-bottom:6px; }
+  #defaults-panel .dp-row { display:grid; grid-template-columns: 170px 44px 1fr 1fr; gap:6px; align-items:center; margin:4px 0; }
+  #defaults-panel input { padding:5px 7px; border:1px solid #d4d0bf; border-radius:4px; font:13px inherit; background:#fff; min-width:0; }
+  @media (max-width:640px){ #defaults-panel .dp-row { grid-template-columns: 1fr 50px; } #defaults-panel .dp-row .d-role, #defaults-panel .dp-row .d-ex { grid-column: 1 / -1; } }
   .vol-line .p-who { background:#eef6ea; border-color:#cfe3c4; color:#2f5d22; }
   .vol-line .vl-notes { flex-basis:100%; }
   .vol-line .vl-signup { margin-left:auto; background:#e8871e; color:#fff; border:0; border-radius:999px; padding:6px 14px; font:700 12px inherit; cursor:pointer; }
@@ -432,7 +442,7 @@
   </header>
 
   <div class="intro-wrap">
-    <img class="intro-face" src="../photos/marcus-face-circle.jpg" alt="Marcus">
+    <img class="intro-face" src="https://events.earthharmonysoundwellness.com/photos/marcus-face-circle.jpg" alt="Marcus">
     <div class="intro" id="intro-blurb"></div>
   </div>
   <div class="legend top-legend">
@@ -459,6 +469,7 @@
   <div class="col-list">
   <div class="list-section">
     <h3>Upcoming events <span id="event-count" style="color:var(--warm); font-weight:400; text-transform:none; letter-spacing:0; font-style:italic; margin-left:6px;"></span></h3>
+    <div id="defaults-panel" style="display:none"></div>
     <div id="event-list"></div>
   </div>
 
@@ -621,7 +632,41 @@ function eventsByDay() {
   return map;
 }
 
+const TYPE_LABEL = {drum:'🥁 Drumming', sound:'🔔 Public Sound Bath', home:'🏠 Home Studio Session', plant:'🌿 Plant / Nature', other:'✨ Other'};
+const ROLE_PRESETS = ['Welcome people at the door', 'Set up + tear down chairs/mats', 'Help carry + set up instruments', 'Photos + short video', 'Hand out drums + percussion', 'Tidy up + reset the space'];
+const EX_PRESETS = ['Free seat at a sound journey', 'Free seat at this event', 'Guest pass for a friend', 'Shadow + learn the setup'];
+function renderDefaults() {
+  const box = document.getElementById('defaults-panel');
+  const isAdmin = document.body.classList.contains('admin');
+  const used = Object.values(meta).filter(m => m && typeof m === 'object');
+  const roles = [...new Set([...ROLE_PRESETS, ...used.map(m => m.role).filter(Boolean)])];
+  const exs = [...new Set([...EX_PRESETS, ...used.map(m => m.exchange).filter(Boolean)])];
+  const dl = id => document.getElementById(id) || document.body.appendChild(Object.assign(document.createElement('datalist'), {id}));
+  dl('role-list').innerHTML = roles.map(r => `<option value="${r.replace(/"/g,'&quot;')}">`).join('');
+  dl('ex-list').innerHTML = exs.map(r => `<option value="${r.replace(/"/g,'&quot;')}">`).join('');
+  if (!isAdmin) { box.style.display = 'none'; box.dataset.built = ''; return; }
+  box.style.display = '';
+  if (box.dataset.built) return;   // build once, so saving never wipes what you're typing
+  box.dataset.built = '1';
+  const d = meta.__defaults || {};
+  box.innerHTML = `<div class="dp-head">⚙ Default roles — set once per type, every event of that type uses it (override any event below)</div>` +
+    Object.keys(TYPE_LABEL).map(k => `<div class="dp-row" data-k="${k}"><span class="dp-type">${TYPE_LABEL[k]}</span>
+      <input type="number" min="0" class="d-need" value="${d[k]?.need ?? ''}" placeholder="#">
+      <input class="d-role" list="role-list" value="${(d[k]?.role || '').replace(/"/g,'&quot;')}" placeholder="🧹 role">
+      <input class="d-ex" list="ex-list" value="${(d[k]?.exchange || '').replace(/"/g,'&quot;')}" placeholder="⭐ exchange"></div>`).join('');
+  box.querySelectorAll('input').forEach(el => el.addEventListener('change', async () => {
+    const row = el.closest('.dp-row'), k = row.dataset.k;
+    meta.__defaults = { ...(meta.__defaults || {}), [k]: {
+      need: row.querySelector('.d-need').value === '' ? undefined : parseInt(row.querySelector('.d-need').value),
+      role: row.querySelector('.d-role').value.trim(), exchange: row.querySelector('.d-ex').value.trim() } };
+    await saveStore(META_KEY, meta);
+    if (!box.contains(document.activeElement)) renderCalendar();
+  }));
+  box.addEventListener('focusout', e => { if (!box.contains(e.relatedTarget)) renderCalendar(); });
+}
+
 function renderList() {
+  renderDefaults();
   const container = document.getElementById('event-list');
   container.innerHTML = '';
   const isAdmin = document.body.classList.contains('admin');
@@ -693,41 +738,47 @@ function renderList() {
         await saveStore(META_KEY, meta); renderCalendar();
       });
       div.appendChild(ctl);
-      const ed = document.createElement('div');
-      ed.className = 'vol-edit';
-      ed.innerHTML = `<div class="ve-row">
-          <label>🙋 Needed <input type="number" min="0" class="ve-need" value="${evMeta.need || ''}" placeholder="0"></label>
-          <label class="grow">Role <input type="text" class="ve-role" value="${(evMeta.role || '').replace(/"/g,'&quot;')}" placeholder="e.g. welcome people, set up chairs"></label>
-        </div>
-        <label class="grow">🎁 Exchange <input type="text" class="ve-ex" value="${(evMeta.exchange || '').replace(/"/g,'&quot;')}" placeholder="e.g. free seat at a sound journey"></label>
-        <textarea class="quick-note" placeholder="+ notes (e.g. arrive 5:45)">${evMeta.notes || ''}</textarea>`;
-      ed.addEventListener('click', e => e.stopPropagation());
-      const save = async () => {
-        meta[ev.id] = { ...(meta[ev.id] || {}),
-          need: parseInt(ed.querySelector('.ve-need').value) || 0,
-          role: ed.querySelector('.ve-role').value.trim(),
-          exchange: ed.querySelector('.ve-ex').value.trim(),
-          notes: ed.querySelector('.quick-note').value.trim() };
-        await saveStore(META_KEY, meta); renderCalendar();
-      };
-      ed.querySelectorAll('input,textarea').forEach(el => el.addEventListener('change', save));
-      div.querySelector('.body').appendChild(ed);
     }
     {
       const people = (signups[ev.id] || []).map(s => s.name).filter(Boolean);
       const filled = people.length;
-      const esc = s => String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
-      const full = evMeta.need && filled >= evMeta.need;
+      const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+      const def = (meta.__defaults || {})[type] || {};
+      const need = evMeta.need ?? def.need ?? 0;
+      const role = evMeta.role || def.role || '';
+      const exchange = evMeta.exchange || def.exchange || '';
+      const full = need && filled >= need;
       const v = document.createElement('div'); v.className = 'vol-line';
-      v.innerHTML = `
-        <span class="pill p-need">🙋 ${evMeta.need ? (full ? 'Team full' : `${filled} / ${evMeta.need} helpers`) : (filled ? `${filled} helping` : 'Helpers welcome')}</span>
-        <span class="pill p-role">🧹 ${evMeta.role ? esc(evMeta.role) : 'Role: TBA'}</span>
-        <span class="pill p-ex">🎁 ${evMeta.exchange ? esc(evMeta.exchange) : 'Exchange: TBA'}</span>
-        ${people.length ? `<span class="pill p-who">✅ ${people.map(esc).join(', ')}</span>` : ''}
-        ${evMeta.notes ? `<span class="vl-notes">📝 ${esc(evMeta.notes)}</span>` : ''}
-        ${full ? '' : `<button class="vl-signup">Sign up to help</button>`}`;
-      const b = v.querySelector('.vl-signup');
-      if (b) b.addEventListener('click', e => { e.stopPropagation(); openModal(ev); });
+      if (isAdmin) {
+        v.classList.add('editing');
+        v.innerHTML = `
+          <span class="pill p-need">🙋 <input type="number" min="0" class="pi-need" value="${need || ''}" placeholder="#"> helpers</span>
+          <span class="pill p-role grow">🧹 <input class="pi-role" list="role-list" value="${esc(role)}" placeholder="role, e.g. welcome + chairs"></span>
+          <span class="pill p-ex grow">⭐ <input class="pi-ex" list="ex-list" value="${esc(exchange)}" placeholder="exchange, e.g. free seat"></span>
+          ${people.length ? `<span class="pill p-who">✅ ${people.map(esc).join(', ')}</span>` : ''}
+          <input class="pi-notes" value="${esc(evMeta.notes || '')}" placeholder="📝 notes (e.g. arrive 5:45)">`;
+        v.addEventListener('click', e => e.stopPropagation());
+        const save = async () => {
+          const n = v.querySelector('.pi-need').value, r = v.querySelector('.pi-role').value.trim(), x = v.querySelector('.pi-ex').value.trim();
+          meta[ev.id] = { ...(meta[ev.id] || {}),
+            need: n === '' ? undefined : parseInt(n),
+            role: r && r !== def.role ? r : undefined,
+            exchange: x && x !== def.exchange ? x : undefined,
+            notes: v.querySelector('.pi-notes').value.trim() };
+          await saveStore(META_KEY, meta);
+        };
+        v.querySelectorAll('input').forEach(el => el.addEventListener('change', save));
+      } else {
+        v.innerHTML = `
+          <span class="pill p-need">🙋 ${need ? (full ? 'Team full' : `${filled} / ${need} helpers`) : (filled ? `${filled} helping` : 'Helpers welcome')}</span>
+          <span class="pill p-role">🧹 ${role ? esc(role) : 'Role: TBA'}</span>
+          <span class="pill p-ex">⭐ ${exchange ? esc(exchange) : 'Exchange: TBA'}</span>
+          ${people.length ? `<span class="pill p-who">✅ ${people.map(esc).join(', ')}</span>` : ''}
+          ${evMeta.notes ? `<span class="vl-notes">📝 ${esc(evMeta.notes)}</span>` : ''}
+          ${full ? '' : `<button class="vl-signup">Sign up to help</button>`}`;
+        const b = v.querySelector('.vl-signup');
+        if (b) b.addEventListener('click', e => { e.stopPropagation(); openModal(ev); });
+      }
       div.querySelector('.body').appendChild(v);
     }
     div.addEventListener('click', () => openModal(ev));
@@ -992,6 +1043,7 @@ async function saveBlurb() {
 const params = new URLSearchParams(location.search);
 if (params.get('admin') === '1') {
   document.getElementById('admin-toggle-wrap').style.display = '';
+  document.body.classList.add('admin');
 }
 
 (async () => {
