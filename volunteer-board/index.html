@@ -455,15 +455,16 @@
   .signup-done .sd-btns a { background:#fff; border:1px solid #cfe3c4; border-radius:999px; padding:7px 14px; font:600 13px inherit; color:#2f5d22; text-decoration:none; cursor:pointer; }
   .m-duties { background:#fff8e7; border-radius:8px; padding:10px 12px; margin:10px 0; font-size:14px; line-height:1.55; }
   .m-duties > div + div { margin-top:3px; }
-  /* card grid: [date | title+time]  /  [photo | helper bubble] */
-  .list-event { display:grid !important; grid-template-columns: 96px 1fr; column-gap:14px; row-gap:6px; align-items:start; }
+  /* card grid: [date tile | title + time + place]  /  [photo | helper bubble] */
+  .list-event { display:grid !important; grid-template-columns: 72px 1fr; column-gap:14px; row-gap:8px; align-items:start; }
   .list-event .ev-media, .list-event .body { display: contents; }
-  .list-event .ev-date { grid-column:1; grid-row:1 / span 2; align-self:stretch; background:var(--c); color:#fff; border-radius:10px; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:3px; padding:8px 4px; text-transform:uppercase; line-height:1; }
-  .list-event .ev-date b { font-size:15px; font-weight:700; letter-spacing:.02em; white-space:nowrap; }
-  .list-event .ev-date span { font-size:10.5px; letter-spacing:.12em; opacity:.88; }
-  .list-event .ev-thumb { grid-column:1; grid-row:3; width:96px; height:96px; object-fit:cover; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,.14); align-self:start; }
+  .list-event .ev-date { grid-column:1; grid-row:1 / span 2; align-self:start; background:var(--c); color:#fff; border-radius:12px; display:flex; flex-direction:column; align-items:center; padding:7px 0 8px; text-transform:uppercase; line-height:1; box-shadow:0 2px 6px rgba(0,0,0,.15); }
+  .list-event .ev-date .w { font-size:11px; font-weight:700; letter-spacing:.12em; opacity:.9; }
+  .list-event .ev-date b { font-size:30px; font-weight:800; margin:3px 0 2px; }
+  .list-event .ev-date .m { font-size:11px; font-weight:700; letter-spacing:.12em; opacity:.9; }
+  .list-event .ev-thumb { grid-column:1; grid-row:3; width:72px; height:100%; min-height:72px; align-self:stretch; object-fit:cover; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,.14); }
   .list-event .ev-thumb.ph { background: linear-gradient(135deg, var(--c), #f4e9da); }
-  .list-event .body .title { grid-column:2; grid-row:1; align-self:end; }
+  .list-event .body .title { grid-column:2; grid-row:1; }
   .list-event .body .meta { grid-column:2; grid-row:2; align-self:start; }
   .list-event .vol-line { grid-column:2; grid-row:3; margin-top:0 !important; }
   .list-event .quick-ctl { grid-column:1 / -1; grid-row:4; margin-left:0; }
@@ -473,9 +474,9 @@
   @media (max-width:600px){
     .list-event .title br.mbr { display:inline; }
     .list-event { gap:12px; }
-    .list-event { grid-template-columns: 76px 1fr; column-gap:10px; }
-    .list-event .ev-thumb { width:76px; height:76px; }
-    .list-event .ev-date b { font-size:13px; }
+    .list-event { grid-template-columns: 62px 1fr; column-gap:12px; }
+    .list-event .ev-thumb { width:62px; min-height:62px; }
+    .list-event .ev-date b { font-size:26px; }
   }
   .ask-box { max-width:520px; margin:6px auto 4px; text-align:center; }
   .ask-box summary { display:inline-block; cursor:pointer; list-style:none; background:#fff; border:1px solid #ecdcb8; border-radius:999px; padding:6px 16px; font:600 13px inherit; color:var(--warm); }
@@ -812,7 +813,7 @@ function renderList() {
     div.innerHTML = `
       <div class="ev-media" style="--c:${typeColors[type]}">
         ${ev.img ? `<img class="ev-thumb" src="${ev.img}" alt="">` : `<div class="ev-thumb ph"></div>`}
-        <div class="ev-date"><b>${monthNames[d.getMonth()]} ${d.getDate()}</b><span>${weekdays[d.getDay()]}</span></div>
+        <div class="ev-date"><span class="w">${weekdays[d.getDay()]}</span><b>${d.getDate()}</b><span class="m">${monthNames[d.getMonth()]}</span></div>
       </div>
       <div class="body">
         <div class="title">${eff.title.replace(/:\s+/, ':<br class="mbr"> ')}${evMeta.hidden ? ' <span style="color:#a85a4a; font-size:11px;">🚫 hidden</span>' : ''}</div>
