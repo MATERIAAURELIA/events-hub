@@ -440,6 +440,11 @@
     .intro-face { width:54px; height:54px; }
     .top-legend .lg { font-size:12px; padding:5px 10px; }
   }
+  .vol-line .vl-more { background:#fff; border:1px solid #ecdcb8; border-radius:999px; padding:4px 12px; font:600 12px inherit; color:var(--warm); cursor:pointer; }
+  .vol-line .vl-details { display:none; flex-basis:100%; background:#fff; border-radius:6px; padding:8px 10px; font-size:13px; line-height:1.5; }
+  .vol-line.open .vl-details { display:block; }
+  .vol-line .vl-details > div + div { margin-top:4px; }
+  .vol-line .vl-desc { color:#7a6a58; font-style:italic; margin-top:6px !important; }
   #mode-switch { position:fixed; right:16px; bottom:16px; z-index:50; background:var(--moss-deep); color:var(--cream); border:0; border-radius:999px; padding:11px 18px; font:600 14px inherit; box-shadow:0 6px 20px rgba(0,0,0,.25); cursor:pointer; }
 </style>
 </head>
@@ -781,13 +786,19 @@ function renderList() {
       } else {
         v.innerHTML = `
           <span class="pill p-need">🙋 ${need ? (full ? 'Team full' : `${filled} / ${need} helpers`) : (filled ? `${filled} helping` : 'Helpers welcome')}</span>
-          <span class="pill p-role">🧹 ${role ? esc(role) : 'Role: TBA'}</span>
-          <span class="pill p-ex">⭐ ${exchange ? esc(exchange) : 'Exchange: TBA'}</span>
           ${people.length ? `<span class="pill p-who">✅ ${people.map(esc).join(', ')}</span>` : ''}
-          ${evMeta.notes ? `<span class="vl-notes">📝 ${esc(evMeta.notes)}</span>` : ''}
-          ${full ? '' : `<button class="vl-signup">Sign up to help</button>`}`;
+          <button class="vl-more">Show description ▾</button>
+          ${full ? '' : `<button class="vl-signup">Sign up to help</button>`}
+          <div class="vl-details">
+            <div><b>🧹 Role:</b> ${role ? esc(role) : 'TBA'}</div>
+            <div><b>⭐ Exchange:</b> ${exchange ? esc(exchange) : 'TBA'}</div>
+            ${evMeta.notes ? `<div><b>📝</b> ${esc(evMeta.notes)}</div>` : ''}
+            ${ev.description && ev.description !== evMeta.notes ? `<div class="vl-desc">${esc(ev.description)}</div>` : ''}
+          </div>`;
         const b = v.querySelector('.vl-signup');
         if (b) b.addEventListener('click', e => { e.stopPropagation(); openModal(ev); });
+        const more = v.querySelector('.vl-more');
+        more.addEventListener('click', e => { e.stopPropagation(); const open = v.classList.toggle('open'); more.textContent = open ? 'Hide description ▴' : 'Show description ▾'; });
       }
       div.querySelector('.body').appendChild(v);
     }
