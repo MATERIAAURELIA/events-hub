@@ -132,11 +132,11 @@
     transition: filter 0.15s;
   }
   .day .ev:hover { filter: brightness(1.15); }
-  .day .ev.type-drum { background: #a85a4a; }    /* terra cotta — drumming */
-  .day .ev.type-sound { background: #4a5d3a; }   /* moss — sound bath */
-  .day .ev.type-disco { background: #6b5a8e; }   /* purple — silent disco / movement */
-  .day .ev.type-plant { background: #5d7a3a; }   /* fresh green — plant / nature */
-  .day .ev.type-other { background: #8b7355; }   /* warm brown — other */
+  .day .ev.type-drum { background: #c0392b; }    /* terra cotta — drumming */
+  .day .ev.type-sound { background: #2e6da4; }   /* moss — sound bath */
+  .day .ev.type-disco { background: #7b4fb0; }   /* purple — silent disco / movement */
+  .day .ev.type-plant { background: #3f8f3a; }   /* fresh green — plant / nature */
+  .day .ev.type-other { background: #e8871e; }   /* warm brown — other */
   .day .ev.hidden-event { background: #b8b0a0 !important; }
 
   /* Legend */
@@ -223,6 +223,11 @@
     font-weight: 600;
   }
   .list-event.hidden-event { opacity: 0.45; }
+  .quick-ctl { display:flex; gap:6px; align-items:center; margin-left:auto; flex-shrink:0; }
+  .list-event.hidden-event .quick-ctl { opacity: 1; }
+  .quick-ctl .qt { border:0; border-radius:999px; padding:5px 12px; font:700 11px/1 inherit; letter-spacing:.06em; color:#fff; cursor:pointer; }
+  .quick-ctl .qt.on { background:#3f8f3a; } .quick-ctl .qt.off { background:#9a9187; }
+  .quick-ctl .qtype { font-size:12px; padding:4px 6px; border:1px solid #d4d0bf; border-radius:4px; background:#fff; }
   .list-empty { color: var(--warm); font-style: italic; padding: 12px 0; text-align: center; }
   .list-signups { margin-top: 6px; }
   .person-tag {
@@ -419,10 +424,10 @@
     </div>
     <div class="days" id="days"></div>
     <div class="legend">
-      <div class="legend-item"><span class="legend-dot" style="background:#a85a4a;"></span>Drumming</div>
-      <div class="legend-item"><span class="legend-dot" style="background:#4a5d3a;"></span>Sound Bath</div>
-      <div class="legend-item"><span class="legend-dot" style="background:#5d7a3a;"></span>Plant / Nature</div>
-      <div class="legend-item"><span class="legend-dot" style="background:#8b7355;"></span>Other</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#c0392b;"></span>Drumming</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#2e6da4;"></span>Sound Bath</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#3f8f3a;"></span>Plant / Nature</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#e8871e;"></span>Other</div>
     </div>
   </div>
 
@@ -597,9 +602,9 @@ function renderList() {
   upcoming.forEach(ev => {
     const eff = effectiveEvent(ev);
     const evMeta = meta[ev.id] || {};
-    const type = eventType(eff.title);
+    const type = evMeta.type || eventType(eff.title);
     const typeColors = {
-      drum: '#a85a4a', sound: '#4a5d3a', disco: '#6b5a8e', plant: '#5d7a3a', other: '#8b7355'
+      drum: '#c0392b', sound: '#2e6da4', disco: '#7b4fb0', plant: '#3f8f3a', other: '#e8871e'
     };
     const d = new Date(eff.start);
     const count = (signups[ev.id] || []).length;
@@ -625,6 +630,22 @@ function renderList() {
         ${namesHtml}
       </div>
     `;
+    if (isAdmin) {
+      const ctl = document.createElement('div');
+      ctl.className = 'quick-ctl';
+      ctl.innerHTML = `<button class="qt ${evMeta.hidden ? 'off' : 'on'}" title="Show / hide on the public board">${evMeta.hidden ? 'OFF' : 'ON'}</button>
+        <select class="qtype" title="Category">${['drum','sound','plant','other'].map(k => `<option value="${k}" ${k === type ? 'selected' : ''}>${{drum:'Drumming',sound:'Sound Bath',plant:'Plant / Nature',other:'Other'}[k]}</option>`).join('')}</select>`;
+      ctl.addEventListener('click', e => e.stopPropagation());
+      ctl.querySelector('.qt').addEventListener('click', async () => {
+        meta[ev.id] = { ...(meta[ev.id] || {}), hidden: !(meta[ev.id]?.hidden) };
+        await saveStore(META_KEY, meta); renderCalendar();
+      });
+      ctl.querySelector('.qtype').addEventListener('change', async e => {
+        meta[ev.id] = { ...(meta[ev.id] || {}), type: e.target.value };
+        await saveStore(META_KEY, meta); renderCalendar();
+      });
+      div.appendChild(ctl);
+    }
     div.addEventListener('click', () => openModal(ev));
     container.appendChild(div);
   });
@@ -677,7 +698,7 @@ function renderCalendar() {
       const signupCount = (signups[ev.id] || []).length;
       const evDiv = document.createElement('div');
       const eff = effectiveEvent(ev);
-      const type = eventType(eff.title);
+      const type = evMeta.type || eventType(eff.title);
       evDiv.className = 'ev type-' + type + (evMeta.hidden ? ' hidden-event' : '');
       const time = formatTime(eff.start);
       const label = time ? `${time} · ${eff.title}` : eff.title;

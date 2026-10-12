@@ -1,67 +1,85 @@
-// Auto-generated 2026-05-13T12:51:00.848023
-// 7 sound-related events found in next 90 days
+// Auto-generated 2026-10-12T13:05:26.675203 from the Events Hub (public events only)
+// 9 public events in the next 90 days
 const VOLUNTEER_EVENTS = [
   {
-    "id": "80bbe9v87q921grioih67dhbcg",
-    "title": "Mel \u2014 Yoga Within (meeting)",
-    "start": "2026-05-14T10:45:00-06:00",
-    "end": "2026-05-14T11:30:00-06:00",
-    "description": "Meeting with Mel from Yoga Within",
-    "location": "",
-    "source": "drumadrumdrum"
+    "id": "ev-oct15-om",
+    "title": "Return & Remember: The Harmonic OM",
+    "start": "2026-10-15T18:30:00-06:00",
+    "end": "2026-10-15T20:00:00-06:00",
+    "description": "This sound journey is unique from the others. Instead of melody, it focuses on drones, layered sounds, and the perfect fifth \u2014 going deeper and deeper into one sound: OM. The sound said to be contained in all sounds.",
+    "location": "Private Home Studio \u00b7 Terwillegar (address on registration)",
+    "source": "hub"
   },
   {
-    "id": "3u6l2mpedo1j43ini2cjdic8rg",
-    "title": "Howies soundbath",
-    "start": "2026-05-15T11:30:00-06:00",
-    "end": "2026-05-15T12:30:00-06:00",
-    "description": "",
-    "location": "",
-    "source": "drumadrumdrum"
+    "id": "ev-oct16-brandenburg",
+    "title": "Express Yourself! Our Sound Therapy Open House",
+    "start": "2026-10-16T18:15:00-06:00",
+    "end": "2026-10-16T21:15:00-06:00",
+    "description": "A free drop-in evening of sound at Brandenburg Music. Six 30-minute tastings \u2014 come for one, stay for all of it. New people meet the instruments; regulars try things they've never done.",
+    "location": "Brandenburg Music \u00b7 15907 100A Ave NW, Edmonton",
+    "source": "hub"
   },
   {
-    "id": "81qkv34377vfndfsk7mdpnbneg",
-    "title": "Sound foundations",
-    "start": "2026-05-17T10:00:00-06:00",
-    "end": "2026-05-17T12:00:00-06:00",
-    "description": "",
-    "location": "",
-    "source": "highercallingmusic1"
-  },
-  {
-    "id": "1c3ba1vell76rb522sd336esos",
-    "title": "Hospice Care \u2014 Singing Bowls",
-    "start": "2026-05-19T13:30:00-06:00",
-    "end": "2026-05-19T14:30:00-06:00",
-    "description": "",
-    "location": "",
-    "source": "drumadrumdrum"
-  },
-  {
-    "id": "b5u5k6uids41r06m4ri1eakhm4",
-    "title": "Community SoundBath",
-    "start": "2026-05-23T16:00:00-06:00",
-    "end": "2026-05-23T17:00:00-06:00",
-    "description": "",
-    "location": "",
-    "source": "highercallingmusic1"
-  },
-  {
-    "id": "1apc5pn11ej64n2j1a2lbfqolc",
-    "title": "Yoga Within \u2013 Sound & Yoga",
-    "start": "2026-06-12T18:30:00-06:00",
-    "end": "2026-06-12T20:00:00-06:00",
-    "description": "",
+    "id": "ev-oct23-yogawithin",
+    "title": "Restorative Yoga & Healing Soundbath",
+    "start": "2026-10-23T18:00:00-06:00",
+    "end": "2026-10-23T19:30:00-06:00",
+    "description": "With Melanie Checknita & Marcus Fung.",
     "location": "Yoga Within",
-    "source": "drumadrumdrum"
+    "source": "hub"
   },
   {
-    "id": "u91c2gigvhqf59u5ideu9d3jqk",
-    "title": "1 to 1 Eden House Sound Therapy $200",
-    "start": "2026-07-08T13:30:00-06:00",
-    "end": "2026-07-08T14:30:00-06:00",
-    "description": "",
+    "id": "ev-oct24-back2basics",
+    "title": "Back 2 Basics Community Sound Bath \u00b7 Session 1",
+    "start": "2026-10-24T16:00:00-06:00",
+    "end": "2026-10-24T17:00:00-06:00",
+    "description": "An elegant, effective community sound bath at an accessible cost \u2014 a spacious venue, a small team guiding the experience, and room to simply rest.",
+    "location": "Roots on Whyte \u00b7 3rd Floor",
+    "source": "hub"
+  },
+  {
+    "id": "ev-oct24-back2basics-2",
+    "title": "Back 2 Basics Community Sound Bath \u00b7 Session 2",
+    "start": "2026-10-24T17:30:00-06:00",
+    "end": "2026-10-24T18:30:00-06:00",
+    "description": "An elegant, effective community sound bath at an accessible cost \u2014 a spacious venue, a small team guiding the experience, and room to simply rest.",
+    "location": "Roots on Whyte \u00b7 3rd Floor",
+    "source": "hub"
+  },
+  {
+    "id": "ev-oct30-gong",
+    "title": "Stillness & Release: Planetary Gong Immersion",
+    "start": "2026-10-30T18:30:00-06:00",
+    "end": "2026-10-30T20:00:00-06:00",
+    "description": "6 Large planetary gongs, deep vibrations and resonance felt in an intimate room \u2014 thick mats, sheepskins, blankets, bolsters and tea all provided.",
+    "location": "Private Home Studio \u00b7 Terwillegar (address on registration)",
+    "source": "hub"
+  },
+  {
+    "id": "ev-nov10-galactic-gong",
+    "title": "\u2605 The Galactic Gong Activation Intensity",
+    "start": "2026-11-10T19:00:00-06:00",
+    "end": "2026-11-10T20:30:00-06:00",
+    "description": "By request: a more intensified gong journey for people who already know the gongs. Longer, deeper, more of the big waves, in an intimate room of 8.",
+    "location": "Private Home Studio \u00b7 Terwillegar (address on registration)",
+    "source": "hub"
+  },
+  {
+    "id": "ev-nov17-galactic-gong",
+    "title": "\u2605 The Galactic Gong Activation Intensity",
+    "start": "2026-11-17T19:00:00-06:00",
+    "end": "2026-11-17T20:30:00-06:00",
+    "description": "By request: a more intensified gong journey for people who already know the gongs. Longer, deeper, more of the big waves, in an intimate room of 8.",
+    "location": "Private Home Studio \u00b7 Terwillegar (address on registration)",
+    "source": "hub"
+  },
+  {
+    "id": "ev-nov20-pulseoflife",
+    "title": "Pulse of Life Drum Circle & Rhythm Cradle",
+    "start": "2026-11-20T19:00:00-06:00",
+    "end": "2026-11-20T22:00:00-06:00",
+    "description": "An evening of shared rhythm in Sherwood Park. We open with a community drum circle \u2014 every drum provided, no experience needed \u2014 and deepen into the Rhythm Cradle, a participant-driven sound experience of connection, trust and play.",
     "location": "",
-    "source": "drumadrumdrum"
+    "source": "hub"
   }
 ];
