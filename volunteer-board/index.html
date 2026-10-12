@@ -237,7 +237,9 @@
   .vol-edit .ve-need { width:56px; }
   .vol-edit .quick-note { margin-top:0; border-style:solid; border-color:#d4d0bf; }
   .vol-line { margin-top:8px; display:flex; flex-wrap:wrap; gap:6px 12px; align-items:center; font-size:13px; color:#5a4a32; background:#fff8e7; border-radius:6px; padding:8px 10px; }
-  .vol-line .vl-need { font-weight:700; color:#b8502b; }
+  .vol-line .pill { display:inline-flex; align-items:center; gap:4px; background:#fff; border:1px solid #ecdcb8; border-radius:999px; padding:4px 10px; font-size:12.5px; }
+  .vol-line .p-need { font-weight:700; color:#b8502b; border-color:#f0c9a8; }
+  .vol-line .p-who { background:#eef6ea; border-color:#cfe3c4; color:#2f5d22; }
   .vol-line .vl-notes { flex-basis:100%; }
   .vol-line .vl-signup { margin-left:auto; background:#e8871e; color:#fff; border:0; border-radius:999px; padding:6px 14px; font:700 12px inherit; cursor:pointer; }
   .vol-note { margin-top:6px; font-size:13px; color:#6b5a3a; background:#fff8e7; border-radius:4px; padding:4px 8px; }
@@ -673,7 +675,7 @@ function renderList() {
       <div class="body">
         <div class="title">${eff.title}${evMeta.hidden ? ' <span style="color:#a85a4a; font-size:11px;">🚫 hidden</span>' : ''}</div>
         <div class="meta">${meta_str}</div>
-        ${namesHtml}
+        
       </div>
     `;
     if (isAdmin) {
@@ -711,15 +713,19 @@ function renderList() {
       ed.querySelectorAll('input,textarea').forEach(el => el.addEventListener('change', save));
       div.querySelector('.body').appendChild(ed);
     }
-    if (!isAdmin && (evMeta.need || evMeta.role || evMeta.exchange || evMeta.notes)) {
-      const filled = (signups[ev.id] || []).length;
-      const v = document.createElement('div'); v.className = 'vol-line';
+    {
+      const people = (signups[ev.id] || []).map(s => s.name).filter(Boolean);
+      const filled = people.length;
       const esc = s => String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
-      v.innerHTML = `${evMeta.need ? `<span class="vl-need">🙋 ${filled >= evMeta.need ? 'Team full' : `${evMeta.need - filled} of ${evMeta.need} helpers needed`}</span>` : ''}
-        ${evMeta.role ? `<span><b>Role:</b> ${esc(evMeta.role)}</span>` : ''}
-        ${evMeta.exchange ? `<span><b>Exchange:</b> ${esc(evMeta.exchange)}</span>` : ''}
+      const full = evMeta.need && filled >= evMeta.need;
+      const v = document.createElement('div'); v.className = 'vol-line';
+      v.innerHTML = `
+        <span class="pill p-need">🙋 ${evMeta.need ? (full ? 'Team full' : `${filled} / ${evMeta.need} helpers`) : (filled ? `${filled} helping` : 'Helpers welcome')}</span>
+        <span class="pill p-role">🧹 ${evMeta.role ? esc(evMeta.role) : 'Role: TBA'}</span>
+        <span class="pill p-ex">🎁 ${evMeta.exchange ? esc(evMeta.exchange) : 'Exchange: TBA'}</span>
+        ${people.length ? `<span class="pill p-who">✅ ${people.map(esc).join(', ')}</span>` : ''}
         ${evMeta.notes ? `<span class="vl-notes">📝 ${esc(evMeta.notes)}</span>` : ''}
-        ${!evMeta.need || filled < evMeta.need ? `<button class="vl-signup">Sign up to help</button>` : ''}`;
+        ${full ? '' : `<button class="vl-signup">Sign up to help</button>`}`;
       const b = v.querySelector('.vl-signup');
       if (b) b.addEventListener('click', e => { e.stopPropagation(); openModal(ev); });
       div.querySelector('.body').appendChild(v);
