@@ -7,7 +7,7 @@
   const API_URL = 'https://script.google.com/macros/s/AKfycbzzu1jXVtwDuHyBThe62Ipc10UzBJkDQDACGZfe5oEF9jXIUl3qtGjbJD2c3IW_q4EjKQ/exec';
   const FORM = 'https://formsubmit.co/ajax/68bf44fd6c680760a90740f0fc752510';
   const META_KEY = 'volunteer-events-meta', SIGNUPS_KEY = 'volunteer-signups', BLURB_KEY = 'volunteer-board-blurb';
-  const FACE = 'https://events.earthharmonysoundwellness.com/photos/marcus-face-circle.jpg';
+  const FACE = 'https://events.earthharmonysoundwellness.com/photos/marcus-face-gong-halo.jpg';
   const DEFAULT_BLURB = 'Hi friends — these are the next gigs where I welcome support. Come give your gift of presence. Exchange for a session, <em>learn</em>, <em>assist</em>, and <em>shadow</em> the work. 🌹';
   const ROLE_PRESETS = ['Host: sweep, set up mats & blankets, welcome guests', 'Welcome hosts · move + set up equipment', 'Greet + welcome guests', 'Room setup: candles, mats, blankets', 'Roving / small percussion', 'Snore patrol', 'Load drums in + out'];
   const EX_PRESETS = ['A spot in the session', 'Sound therapy mentoring: serve one session, sit the other', 'Community Sound Bath pass', 'A session trade: a Harmonic OM or Community Sound Bath spot'];
@@ -37,7 +37,7 @@
     /* palette: hub navy + gold (gold = service as a gift) */
     :root{--vh-gold:#d2a44e;--vh-gold-soft:rgba(210,164,78,.38);--vh-panel:#18213a;--vh-ink:#f3ebdd;--vh-dim:rgba(243,235,221,.7);}
     .vh-head{max-width:640px;margin:0 auto 14px;display:flex;gap:12px;align-items:center;}
-    .vh-face{width:58px;height:58px;border-radius:50%;object-fit:cover;flex-shrink:0;box-shadow:0 0 0 2px #0e1522,0 0 0 3px var(--vh-gold);}
+    .vh-face{width:92px;height:92px;border-radius:50%;object-fit:cover;flex-shrink:0;box-shadow:0 0 0 2px #0e1522,0 0 0 3px var(--vh-gold);}
     .vh-blurb{flex:1;background:var(--vh-panel);color:var(--vh-ink);border:1px solid var(--vh-gold-soft);border-radius:14px;padding:14px 16px;font-size:15px;line-height:1.6;}
     .vh-blurb em{color:var(--vh-gold);}
     .vh-blurb [style*="text-align:center"]{color:var(--vh-gold);}
@@ -74,7 +74,7 @@
     .vh-defaults b{color:var(--vh-gold);}
     .vh-defaults .dr{display:grid;grid-template-columns:140px 56px 1fr 1fr;gap:6px;align-items:center;margin-top:5px;}
     .vh-defaults input{padding:6px 8px;font-size:14px;}
-    @media(max-width:600px){.vh-head{flex-direction:column;text-align:left}.vh-face{width:64px;height:64px}}
+    @media(max-width:600px){.vh-head{flex-direction:column;text-align:left}.vh-face{width:104px;height:104px}}
     @media(max-width:600px){.vh-defaults .dr{grid-template-columns:1fr 56px}.vh-defaults .dr .full{grid-column:1/-1}}
     .vh-modal{position:fixed;inset:0;background:rgba(4,8,16,.72);display:flex;align-items:center;justify-content:center;z-index:200;padding:16px;}
     .vh-modal .box{background:#141c2e;color:var(--vh-ink);border:1px solid var(--vh-gold-soft);border-radius:16px;max-width:460px;width:100%;padding:18px;max-height:90vh;overflow:auto;box-shadow:0 30px 60px -20px rgba(0,0,0,.7);}
@@ -236,6 +236,23 @@
       decorate(true);
     });
   }
+
+  /* ---------- calendar view: tapping a day shows the helper info, not "Book" ---------- */
+  window.showDayPopup = ds => {
+    const evs = (typeof EVENTS !== 'undefined' ? EVENTS : []).filter(e => e.date === ds && e.vis === 'public' && !(meta[e.id] || {}).hidden);
+    if (!evs.length) return;
+    const w = document.createElement('div'); w.className = 'vh-modal';
+    w.innerHTML = `<div class="box"><button class="x">×</button>` + evs.map(ev => {
+      const I = info(ev);
+      return `<div style="margin-bottom:14px"><h3>${esc(ev.title)}</h3><div class="when">${ev.time ? (typeof fTime === 'function' ? fTime(ev.time) : ev.time) : ''}${(typeof VENUES !== 'undefined' && VENUES[ev.venue]?.name) ? ' · ' + esc(VENUES[ev.venue].name) : ''}</div>
+        <div class="duties"><div><b>🙋 Helpers:</b> ${I.need ? (I.full ? FULL_WORD : `${I.people.length} of ${I.need}`) : 'welcome'}</div><div><b>🧹 Role:</b> ${esc(I.role) || 'TBA'}</div>
+        <div><b>⭐ Exchange:</b> ${esc(I.exchange) || 'TBA'}</div>${I.notes ? `<div><b>📝</b> ${esc(I.notes)}</div>` : ''}${I.people.length ? `<div><b>✓ Team:</b> ${I.people.map(esc).join(', ')}</div>` : ''}</div>
+        ${I.full ? '' : `<button class="vh-btn" data-id="${ev.id}" style="float:right">Sign up to help</button>`}<div style="clear:both"></div></div>`;
+    }).join('') + '</div>';
+    document.body.appendChild(w);
+    w.querySelector('.x').onclick = () => w.remove(); w.addEventListener('click', e => { if (e.target === w) w.remove(); });
+    w.querySelectorAll('.vh-btn[data-id]').forEach(b => b.onclick = () => { w.remove(); openSignup(evById(b.dataset.id)); });
+  };
 
   /* ---------- admin: edit / guest-view switch ---------- */
   if (urlAdmin) {
