@@ -445,6 +445,15 @@
   .vol-line.open .vl-details { display:block; }
   .vol-line .vl-details > div + div { margin-top:4px; }
   .vol-line .vl-desc { color:#7a6a58; font-style:italic; margin-top:6px !important; }
+  .signup-form .privacy-note { flex-basis:100%; font-size:11px; color:#9a8a76; font-style:italic; }
+  .signup-form { flex-wrap: wrap; }
+  .signup-done { background:#eef6ea; border:1px solid #cfe3c4; border-radius:8px; padding:14px; margin-top:10px; text-align:center; }
+  .signup-done .sd-head { font-weight:700; font-size:16px; color:#2f5d22; }
+  .signup-done .sd-sub { font-size:13px; color:#4a5d3a; margin:4px 0 10px; }
+  .signup-done .sd-btns { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
+  .signup-done .sd-btns a { background:#fff; border:1px solid #cfe3c4; border-radius:999px; padding:7px 14px; font:600 13px inherit; color:#2f5d22; text-decoration:none; cursor:pointer; }
+  .m-duties { background:#fff8e7; border-radius:8px; padding:10px 12px; margin:10px 0; font-size:14px; line-height:1.55; }
+  .m-duties > div + div { margin-top:3px; }
   #mode-switch { position:fixed; right:16px; bottom:16px; z-index:50; background:var(--moss-deep); color:var(--cream); border:0; border-radius:999px; padding:11px 18px; font:600 14px inherit; box-shadow:0 6px 20px rgba(0,0,0,.25); cursor:pointer; }
 </style>
 </head>
@@ -539,6 +548,7 @@
     <div class="date" id="m-date"></div>
     <h2 id="m-title"></h2>
     <div class="meta" id="m-meta"></div>
+    <div class="m-duties" id="m-duties"></div>
     <div class="notes" id="m-notes"></div>
 
     <div class="signups-label">Signed up to help</div>
@@ -546,8 +556,16 @@
 
     <form class="signup-form" id="m-form">
       <input type="text" name="name" placeholder="Your name" required>
+      <input type="email" name="email" placeholder="Email (for your reminder)" required>
+      <input type="tel" name="phone" placeholder="Phone (optional)">
       <button type="submit">Sign up</button>
+      <div class="privacy-note">Only your first name shows on the board. Your email goes privately to Marcus.</div>
     </form>
+    <div class="signup-done" id="m-done" style="display:none">
+      <div class="sd-head">🙏 You're on the team!</div>
+      <div class="sd-sub">You'll get a reminder email the day before. Add it to your calendar:</div>
+      <div class="sd-btns"><a id="m-gcal" target="_blank" rel="noopener">📅 Google Calendar</a><a id="m-ics">🍎 Apple / Outlook (.ics)</a></div>
+    </div>
 
     <div class="admin-controls" id="m-admin">
       <label>Title</label>
@@ -617,6 +635,24 @@ async function saveStore(key, value) {
       body: JSON.stringify({ key, value }),
     });
   } catch {}
+}
+
+function icsStamp(iso) { const d = new Date(iso); return d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, ''); }
+function showCalendarLinks(ev) {
+  const eff = effectiveEvent(ev), m = meta[ev.id] || {};
+  const start = icsStamp(eff.start), end = icsStamp(eff.end && eff.end > eff.start ? eff.end : new Date(new Date(eff.start).getTime() + 90 * 60000).toISOString());
+  const title = `Helping: ${eff.title}`;
+  const details = [m.role && `Role: ${m.role}`, m.exchange && `Exchange: ${m.exchange}`, m.notes].filter(Boolean).join('\n');
+  document.getElementById('m-gcal').href = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent(title) +
+    '&dates=' + start + '/' + end + '&details=' + encodeURIComponent(details) + '&location=' + encodeURIComponent(eff.location || '');
+  const ics = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Earth Harmony//Team Service//EN','BEGIN:VEVENT',
+    'UID:' + ev.id + '-' + Date.now() + '@earthharmony', 'DTSTAMP:' + icsStamp(new Date().toISOString()),
+    'DTSTART:' + start, 'DTEND:' + end, 'SUMMARY:' + title, 'LOCATION:' + (eff.location || '').replace(/[,;]/g, '\\$&'),
+    'DESCRIPTION:' + details.replace(/\n/g, '\\n'), 'BEGIN:VALARM','TRIGGER:-PT2H','ACTION:DISPLAY','DESCRIPTION:Reminder','END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');
+  const a = document.getElementById('m-ics');
+  a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' })); a.download = 'earth-harmony-helping.ics';
+  document.getElementById('m-form').style.display = 'none';
+  document.getElementById('m-done').style.display = '';
 }
 
 function formatTime(iso) {
@@ -913,8 +949,24 @@ function openModal(ev) {
   document.getElementById('m-date').textContent = formatDate(eff.start) + (eff.start.includes('T') ? ` · ${formatTime(eff.start)}` : '') + durLabel;
   document.getElementById('m-title').textContent = eff.title;
   document.getElementById('m-meta').textContent = eff.location || '';
-  document.getElementById('m-notes').textContent = eff.description;
+  {
+    const m = meta[ev.id] || {}, typ = m.type || (/home studio/i.test(eff.location || '') ? 'home' : eventType(eff.title));
+    const def = (meta.__defaults || {})[typ] || {};
+    const need = m.need ?? def.need ?? 0, role = m.role || def.role || '', ex = m.exchange || def.exchange || '';
+    const filled = (signups[ev.id] || []).length;
+    const esc = s => String(s ?? '').replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+    document.getElementById('m-duties').innerHTML = `
+      <div><b>🙋 Helpers:</b> ${need ? `${filled} of ${need}` : 'welcome'}</div>
+      <div><b>🧹 Role:</b> ${role ? esc(role) : 'TBA'}</div>
+      <div><b>⭐ Exchange:</b> ${ex ? esc(ex) : 'TBA'}</div>
+      ${m.notes ? `<div><b>📝</b> ${esc(m.notes)}</div>` : ''}`;
+    document.getElementById('m-notes').textContent = ev.description && ev.description !== m.notes ? ev.description : '';
+  }
 
+  document.getElementById('m-form').style.display = '';
+  document.getElementById('m-done').style.display = 'none';
+  try { const me = JSON.parse(localStorage.getItem('eh-volunteer') || 'null'); const f = document.getElementById('m-form');
+    if (me) { f.name.value = me.name || ''; f.email.value = me.email || ''; f.phone.value = me.phone || ''; } } catch {}
   const evSignups = signups[ev.id] || [];
   const signupsEl = document.getElementById('m-signups');
   signupsEl.innerHTML = evSignups.length
@@ -947,17 +999,27 @@ document.getElementById('modal-overlay').addEventListener('click', (e) => {
 document.getElementById('m-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   if (!activeEvent) return;
-  const input = e.target.querySelector('input[name="name"]');
-  const name = input.value.trim();
-  if (!name) return;
-  const btn = e.target.querySelector('button');
+  const f = e.target;
+  const full = f.name.value.trim(), email = f.email.value.trim(), phone = f.phone.value.trim();
+  if (!full || !email) return;
+  const name = full.split(/\s+/)[0];               // public board shows first name only
+  const btn = f.querySelector('button');
   btn.disabled = true; btn.textContent = '...';
-  if (!signups[activeEvent.id]) signups[activeEvent.id] = [];
-  signups[activeEvent.id].push({ name, ts: new Date().toISOString() });
+  const ev = activeEvent, eff = effectiveEvent(ev), m = meta[ev.id] || {};
+  if (!signups[ev.id]) signups[ev.id] = [];
+  signups[ev.id].push({ name, ts: new Date().toISOString() });
   await saveStore(SIGNUPS_KEY, signups);
-  input.value = '';
-  btn.disabled = false; btn.textContent = 'Sign up';
-  closeModal();
+  // private details → Marcus's inbox (never the public store)
+  try {
+    await fetch('https://formsubmit.co/ajax/68bf44fd6c680760a90740f0fc752510', {
+      method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ _subject: `🙋 Volunteer sign-up — ${eff.title} — ${eff.start.slice(0,10)}`, _template: 'table', _captcha: 'false',
+        name: full, email, phone, event: eff.title, event_id: ev.id, start: eff.start, location: eff.location || '',
+        role: m.role || '', exchange: m.exchange || '', notes: m.notes || '' }) });
+  } catch {}
+  try { localStorage.setItem('eh-volunteer', JSON.stringify({ name: full, email, phone })); } catch {}
+  f.reset(); btn.disabled = false; btn.textContent = 'Sign up';
+  showCalendarLinks(ev);
   renderCalendar();
 });
 
