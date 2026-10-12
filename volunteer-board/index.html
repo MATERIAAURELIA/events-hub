@@ -132,6 +132,14 @@
     transition: filter 0.15s;
   }
   .day .ev:hover { filter: brightness(1.15); }
+  .day .ev .ev-t { font-weight:700; opacity:.85; }
+  .mt-wrap { display:flex; flex-direction:column; align-items:center; gap:4px; }
+  .cal-mode { display:inline-flex; border:1px solid #d4d0bf; border-radius:999px; overflow:hidden; }
+  .cal-mode button { border:0; background:#fff; padding:3px 12px; font:600 12px inherit; color:var(--warm); cursor:pointer; }
+  .cal-mode button.on { background:var(--moss-deep); color:var(--cream); }
+  .calendar.week-mode .day { min-height: 260px !important; }
+  .calendar.week-mode .day .ev { -webkit-line-clamp: unset; display:block; text-overflow:clip; overflow:visible; hyphens:auto; overflow-wrap:anywhere; font-size:12px; padding:6px 7px; margin-bottom:5px; white-space:normal; }
+  .calendar.week-mode .ev-loc { opacity:.85; font-size:11px; }
   .day .ev.type-drum { background: #c0392b; }    /* terra cotta — drumming */
   .day .ev.type-sound { background: #2e6da4; }   /* moss — sound bath */
   .day .ev.type-disco { background: #7b4fb0; }   /* purple — silent disco / movement */
@@ -477,7 +485,8 @@
   <div class="col-cal">
   <div class="month-nav">
     <button id="prev-month">← Prev</button>
-    <h2 id="month-title">—</h2>
+    <div class="mt-wrap"><h2 id="month-title">—</h2>
+      <div class="cal-mode"><button data-m="month" class="on">Month</button><button data-m="week">Week</button></div></div>
     <button id="next-month">Next →</button>
   </div>
   <div class="calendar">
@@ -786,8 +795,19 @@ function renderList() {
   });
 }
 
+let calMode = 'month';
+let weekStart = (() => { const d = new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate() - d.getDay()); return d; })();
 function renderCalendar() {
-  const title = new Date(viewYear, viewMonth, 1).toLocaleDateString('en-CA', { month: 'long', year: 'numeric' });
+  document.querySelector('.calendar').classList.toggle('week-mode', calMode === 'week');
+  document.querySelectorAll('.cal-mode button').forEach(b => b.classList.toggle('on', b.dataset.m === calMode));
+  let title;
+  if (calMode === 'week') {
+    const end = new Date(weekStart); end.setDate(end.getDate() + 6);
+    const f = d => d.toLocaleDateString('en-CA', { month: 'short', day: 'numeric' });
+    title = `${f(weekStart)} – ${f(end)}`;
+  } else {
+    title = new Date(viewYear, viewMonth, 1).toLocaleDateString('en-CA', { month: 'long', year: 'numeric' });
+  }
   document.getElementById('month-title').textContent = title;
 
   const firstDay = new Date(viewYear, viewMonth, 1);
@@ -803,14 +823,17 @@ function renderCalendar() {
   const container = document.getElementById('days');
   container.innerHTML = '';
 
-  const totalCells = Math.ceil((startOffset + daysInMonth) / 7) * 7;
+  const totalCells = calMode === 'week' ? 7 : Math.ceil((startOffset + daysInMonth) / 7) * 7;
   for (let i = 0; i < totalCells; i++) {
     const dayDiv = document.createElement('div');
     dayDiv.className = 'day';
 
     let cellDate;
     let dayNum;
-    if (i < startOffset) {
+    if (calMode === 'week') {
+      cellDate = new Date(weekStart); cellDate.setDate(cellDate.getDate() + i);
+      dayNum = cellDate.getDate();
+    } else if (i < startOffset) {
       dayNum = prevMonthDays - startOffset + i + 1;
       cellDate = new Date(viewYear, viewMonth - 1, dayNum);
       dayDiv.classList.add('other-month');
@@ -836,8 +859,11 @@ function renderCalendar() {
       const type = evMeta.type || (/home studio/i.test(eff.location || '') ? 'home' : eventType(eff.title));
       evDiv.className = 'ev type-' + type + (evMeta.hidden ? ' hidden-event' : '');
       const time = formatTime(eff.start);
-      const label = time ? `${time} · ${eff.title}` : eff.title;
-      evDiv.innerHTML = ({drum:'🥁',sound:'🔔',home:'🏠',plant:'🌿',other:'✨'}[type] || '') + ' ' + label;
+      const shortT = time.replace(/:00/, '').replace(/\s?([ap])\.?m\.?/i, (m, a) => a.toLowerCase());
+      const esc = s => String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+      evDiv.innerHTML = calMode === 'week'
+        ? `<b>${esc(time)}</b><br>${esc(eff.title)}${eff.location ? `<br><span class="ev-loc">${esc(eff.location.split(' (')[0])}</span>` : ''}`
+        : `<span class="ev-t">${esc(shortT)}</span> ${esc(eff.title)}`;
       evDiv.addEventListener('click', () => openModal(ev));
       dayDiv.appendChild(evDiv);
     });
@@ -976,11 +1002,13 @@ document.getElementById('m-hide-btn').addEventListener('click', async () => {
 });
 
 document.getElementById('prev-month').addEventListener('click', () => {
+  if (calMode === 'week') { weekStart.setDate(weekStart.getDate() - 7); return renderCalendar(); }
   viewMonth--;
   if (viewMonth < 0) { viewMonth = 11; viewYear--; }
   renderCalendar();
 });
 document.getElementById('next-month').addEventListener('click', () => {
+  if (calMode === 'week') { weekStart.setDate(weekStart.getDate() + 7); return renderCalendar(); }
   viewMonth++;
   if (viewMonth > 11) { viewMonth = 0; viewYear++; }
   renderCalendar();
@@ -1073,6 +1101,11 @@ document.querySelectorAll('.view-tabs .vt').forEach(b => b.addEventListener('cli
   document.querySelectorAll('.view-tabs .vt').forEach(x => x.classList.toggle('on', x === b));
   document.body.classList.toggle('v-list', b.dataset.v === 'list');
   document.body.classList.toggle('v-cal', b.dataset.v === 'cal');
+}));
+document.querySelectorAll('.cal-mode button').forEach(b => b.addEventListener('click', () => {
+  calMode = b.dataset.m;
+  if (calMode === 'month') { viewYear = weekStart.getFullYear(); viewMonth = weekStart.getMonth(); }
+  renderCalendar();
 }));
 </script>
 </body>
