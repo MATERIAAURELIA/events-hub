@@ -226,7 +226,16 @@
   .quick-ctl { display:flex; gap:6px; align-items:center; margin-left:auto; flex-shrink:0; }
   .list-event.hidden-event .quick-ctl { opacity: 1; }
   .quick-ctl .qt { border:0; border-radius:999px; padding:5px 12px; font:700 11px/1 inherit; letter-spacing:.06em; color:#fff; cursor:pointer; }
-  .quick-ctl .qt.on { background:#3f8f3a; } .quick-ctl .qt.off { background:#9a9187; }
+  .quick-ctl .qt.on { background:#8b7355; } .quick-ctl .qt.off { background:#3f8f3a; }
+  .quick-note { width:100%; margin-top:8px; min-height:34px; padding:6px 8px; border:1px dashed #d4c79e; border-radius:4px; font:13px/1.4 inherit; background:#fffdf6; resize:vertical; }
+  .vol-note { margin-top:6px; font-size:13px; color:#6b5a3a; background:#fff8e7; border-radius:4px; padding:4px 8px; }
+  /* two columns: list | calendar */
+  @media (min-width: 1000px) {
+    .container { max-width: 1320px; }
+    .two-col { display:grid; grid-template-columns: 1fr 1fr; gap:22px; align-items:start; }
+    .col-cal { position: sticky; top: 16px; margin-top: 18px; }
+    .col-cal .day { min-height: 74px; }
+  }
   .quick-ctl .qtype { font-size:12px; padding:4px 6px; border:1px solid #d4d0bf; border-radius:4px; background:#fff; }
   .list-empty { color: var(--warm); font-style: italic; padding: 12px 0; text-align: center; }
   .list-signups { margin-top: 6px; }
@@ -404,15 +413,15 @@
     </form>
   </div>
 
+  <div class="two-col">
+  <div class="col-list">
   <div class="list-section">
     <h3>Upcoming events <span id="event-count" style="color:var(--warm); font-weight:400; text-transform:none; letter-spacing:0; font-style:italic; margin-left:6px;"></span></h3>
     <div id="event-list"></div>
   </div>
 
-  <div style="text-align:center; margin:18px 0 8px; font-size:12px; color:var(--warm); font-style:italic;">
-    ↓ scroll down for calendar view ↓
   </div>
-
+  <div class="col-cal">
   <div class="month-nav">
     <button id="prev-month">← Prev</button>
     <h2 id="month-title">—</h2>
@@ -429,6 +438,9 @@
       <div class="legend-item"><span class="legend-dot" style="background:#3f8f3a;"></span>Plant / Nature</div>
       <div class="legend-item"><span class="legend-dot" style="background:#e8871e;"></span>Other</div>
     </div>
+  </div>
+
+  </div>
   </div>
 
   <div class="admin-toggle" id="admin-toggle-wrap" style="display:none;">
@@ -633,7 +645,7 @@ function renderList() {
     if (isAdmin) {
       const ctl = document.createElement('div');
       ctl.className = 'quick-ctl';
-      ctl.innerHTML = `<button class="qt ${evMeta.hidden ? 'off' : 'on'}" title="Show / hide on the public board">${evMeta.hidden ? 'OFF' : 'ON'}</button>
+      ctl.innerHTML = `<button class="qt ${evMeta.hidden ? 'off' : 'on'}" title="Show / hide on the public board">${evMeta.hidden ? 'Hidden · show' : 'Hide'}</button>
         <select class="qtype" title="Category">${['drum','sound','plant','other'].map(k => `<option value="${k}" ${k === type ? 'selected' : ''}>${{drum:'Drumming',sound:'Sound Bath',plant:'Plant / Nature',other:'Other'}[k]}</option>`).join('')}</select>`;
       ctl.addEventListener('click', e => e.stopPropagation());
       ctl.querySelector('.qt').addEventListener('click', async () => {
@@ -645,6 +657,18 @@ function renderList() {
         await saveStore(META_KEY, meta); renderCalendar();
       });
       div.appendChild(ctl);
+      const nb = document.createElement('textarea');
+      nb.className = 'quick-note'; nb.placeholder = '+ note for volunteers (e.g. arrive 5:45, help with chairs)';
+      nb.value = evMeta.notes || '';
+      nb.addEventListener('click', e => e.stopPropagation());
+      nb.addEventListener('change', async () => {
+        meta[ev.id] = { ...(meta[ev.id] || {}), notes: nb.value.trim() };
+        await saveStore(META_KEY, meta); renderCalendar();
+      });
+      div.querySelector('.body').appendChild(nb);
+    } else if (evMeta.notes) {
+      const n = document.createElement('div'); n.className = 'vol-note'; n.textContent = '📝 ' + evMeta.notes;
+      div.querySelector('.body').appendChild(n);
     }
     div.addEventListener('click', () => openModal(ev));
     container.appendChild(div);
