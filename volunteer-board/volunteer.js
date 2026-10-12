@@ -157,10 +157,10 @@
       s.querySelectorAll('input').forEach(el => el.addEventListener('change', store));
     } else {
       s.innerHTML = `<span class="vh-pill vh-need">${I.full ? '🙏 ' : '🙋 '}${I.need ? (I.full ? FULL_WORD : `${I.people.length} / ${I.need} helpers`) : (I.people.length ? `${I.people.length} helping` : 'Helpers welcome')}</span>
-        <button class="vh-more">Show description ▾</button>
+        <button class="vh-more">Show role description ▾</button>
         <div class="vh-details"><div><b>🧹 Role:</b> ${esc(I.role) || 'TBA'}</div><div><b>⭐ Exchange:</b> ${esc(I.exchange) || 'TBA'}</div>${I.notes ? `<div><b>📝</b> ${esc(I.notes)}</div>` : ''}</div>
         <div class="vh-row">${I.people.map(p => `<span class="vh-pill vh-who">✅ ${esc(p)}</span>`).join('')}${I.full ? '' : '<button class="vh-btn vh-go">Sign up to help</button>'}</div>`;
-      s.querySelector('.vh-more').onclick = () => { const o = s.classList.toggle('open'); s.querySelector('.vh-more').textContent = o ? 'Hide description ▴' : 'Show description ▾'; };
+      s.querySelector('.vh-more').onclick = () => { const o = s.classList.toggle('open'); s.querySelector('.vh-more').textContent = o ? 'Hide role description ▴' : 'Show role description ▾'; };
       const go = s.querySelector('.vh-go'); if (go) go.onclick = () => openSignup(ev);
     }
     return s;
