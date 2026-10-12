@@ -454,20 +454,32 @@
   .signup-done .sd-btns a { background:#fff; border:1px solid #cfe3c4; border-radius:999px; padding:7px 14px; font:600 13px inherit; color:#2f5d22; text-decoration:none; cursor:pointer; }
   .m-duties { background:#fff8e7; border-radius:8px; padding:10px 12px; margin:10px 0; font-size:14px; line-height:1.55; }
   .m-duties > div + div { margin-top:3px; }
-  .list-event .ev-thumb { width:64px; height:64px; object-fit:cover; border-radius:8px; flex-shrink:0; margin-top:2px; box-shadow:0 1px 4px rgba(0,0,0,.12); }
-  @media (max-width:600px){ .list-event .ev-thumb { width:52px; height:52px; } }
+  .list-event .ev-media { position:relative; flex-shrink:0; width:96px; }
+  .list-event .ev-thumb { display:block; width:96px; height:96px; object-fit:cover; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,.14); border-bottom:4px solid var(--c); }
+  .list-event .ev-thumb.ph { background: linear-gradient(135deg, var(--c), #f4e9da); }
+  .list-event .ev-date { position:absolute; left:6px; top:6px; background:var(--c); color:#fff; border-radius:8px; padding:3px 7px 4px; text-align:center; line-height:1; box-shadow:0 2px 6px rgba(0,0,0,.25); }
+  .list-event .ev-date span { display:block; }
+  .list-event .ev-date .m { font-size:9px; letter-spacing:.12em; text-transform:uppercase; opacity:.9; }
+  .list-event .ev-date .dn { font-size:18px; font-weight:700; margin:1px 0; }
+  .list-event .ev-date .w { font-size:8.5px; letter-spacing:.1em; text-transform:uppercase; opacity:.85; }
   .vol-line .vl-who-row { flex-basis:100%; display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
   .vol-line .vl-who-row .vl-signup { margin-left:auto; }
   .list-event .title br.mbr { display:none; }
   @media (max-width:600px){
     .list-event .title br.mbr { display:inline; }
-    .list-event { flex-wrap:wrap; align-items:center; column-gap:12px; row-gap:10px; }
-    .list-event .body { flex-basis:100%; }
-    .list-event .date-block { width:auto; display:flex; align-items:baseline; gap:6px; padding-top:0; }
-    .list-event .date-block .day-num { font-size:22px; }
-    .list-event .ev-thumb { order:-1; width:56px; height:56px; }
-    .list-event .type-dot { order:-2; align-self:stretch; }
+    .list-event { gap:12px; }
+    .list-event .ev-media, .list-event .ev-thumb { width:74px; }
+    .list-event .ev-thumb { height:74px; }
+    .list-event .ev-date .dn { font-size:15px; }
   }
+  .ask-box { max-width:520px; margin:6px auto 4px; text-align:center; }
+  .ask-box summary { display:inline-block; cursor:pointer; list-style:none; background:#fff; border:1px solid #ecdcb8; border-radius:999px; padding:6px 16px; font:600 13px inherit; color:var(--warm); }
+  .ask-box summary::-webkit-details-marker { display:none; }
+  .ask-box form { display:flex; flex-direction:column; gap:6px; margin-top:8px; background:#fff; border:1px solid #ecdcb8; border-radius:10px; padding:12px; text-align:left; }
+  .ask-box input, .ask-box textarea { padding:8px 10px; border:1px solid #d4d0bf; border-radius:6px; font:14px inherit; }
+  .ask-box textarea { min-height:70px; resize:vertical; }
+  .ask-box button { align-self:flex-end; background:#e8871e; color:#fff; border:0; border-radius:999px; padding:7px 16px; font:600 13px inherit; cursor:pointer; }
+  .ask-box .ask-ok { color:#2f5d22; font-size:13px; }
   #mode-switch { position:fixed; right:16px; bottom:16px; z-index:50; background:var(--moss-deep); color:var(--cream); border:0; border-radius:999px; padding:11px 18px; font:600 14px inherit; box-shadow:0 6px 20px rgba(0,0,0,.25); cursor:pointer; }
 </style>
 </head>
@@ -489,6 +501,16 @@
     <span class="lg" style="--c:#3f8f3a">🌿 Plant / Nature</span>
     <span class="lg" style="--c:#e8871e">✨ Other</span>
   </div>
+  <details class="ask-box">
+    <summary>❓ Ask Marcus a question</summary>
+    <form id="ask-form">
+      <input name="name" placeholder="Your name" required>
+      <input name="email" type="email" placeholder="Your email (so he can reply)" required>
+      <textarea name="question" placeholder="Your question…" required></textarea>
+      <button type="submit">Send question</button>
+      <div class="ask-ok" style="display:none">🙏 Sent! Marcus will get back to you.</div>
+    </form>
+  </details>
   <div class="view-tabs"><button class="vt on" data-v="list">📋 Events</button><button class="vt" data-v="cal">📅 Calendar</button></div>
 
   <div id="admin-add-bar" style="display:none; background:#fff8e7; padding:12px 14px; border:1px dashed var(--yellow); border-radius:8px; margin-bottom:12px;">
@@ -776,13 +798,10 @@ function renderList() {
       ? `<div class="list-signups">${evSignups.map(s => `<span class="person-tag">${s.name}</span>`).join('')}</div>`
       : '';
     div.innerHTML = `
-      <div class="type-dot" style="background:${typeColors[type]}"></div>
-      <div class="date-block">
-        <div class="month">${monthNames[d.getMonth()]}</div>
-        <div class="day-num">${d.getDate()}</div>
-        <div class="weekday">${weekdays[d.getDay()]}</div>
+      <div class="ev-media" style="--c:${typeColors[type]}">
+        ${ev.img ? `<img class="ev-thumb" src="${ev.img}" alt="" loading="lazy">` : `<div class="ev-thumb ph"></div>`}
+        <div class="ev-date"><span class="m">${monthNames[d.getMonth()]}</span><span class="dn">${d.getDate()}</span><span class="w">${weekdays[d.getDay()]}</span></div>
       </div>
-      ${ev.img ? `<img class="ev-thumb" src="${ev.img}" alt="" loading="lazy">` : ''}
       <div class="body">
         <div class="title">${eff.title.replace(/:\s+/, ':<br class="mbr"> ')}${evMeta.hidden ? ' <span style="color:#a85a4a; font-size:11px;">🚫 hidden</span>' : ''}</div>
         <div class="meta">${meta_str}</div>
@@ -1209,6 +1228,22 @@ if (new URLSearchParams(location.search).get('admin') === '1') {
   });
   paint(); document.body.appendChild(sw);
 }
+document.getElementById('ask-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const f = e.target, btn = f.querySelector('button');
+  btn.disabled = true; btn.textContent = '…';
+  try { localStorage.setItem('eh-volunteer', JSON.stringify({ ...(JSON.parse(localStorage.getItem('eh-volunteer') || '{}')), name: f.name.value.trim(), email: f.email.value.trim() })); } catch {}
+  try {
+    await fetch('https://formsubmit.co/ajax/68bf44fd6c680760a90740f0fc752510', { method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ _subject: `❓ Volunteer question from ${f.name.value.trim()}`, _template: 'table', _captcha: 'false', _replyto: f.email.value.trim(),
+        name: f.name.value.trim(), email: f.email.value.trim(), question: f.question.value.trim() }) });
+  } catch {}
+  f.question.value = ''; btn.disabled = false; btn.textContent = 'Send question';
+  f.querySelector('.ask-ok').style.display = '';
+});
+try { const me = JSON.parse(localStorage.getItem('eh-volunteer') || 'null'); const f = document.getElementById('ask-form');
+  if (me) { f.name.value = me.name || ''; f.email.value = me.email || ''; } } catch {}
 </script>
 </body>
 </html>
