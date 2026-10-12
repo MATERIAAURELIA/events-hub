@@ -7,7 +7,7 @@
   const API_URL = 'https://script.google.com/macros/s/AKfycbzzu1jXVtwDuHyBThe62Ipc10UzBJkDQDACGZfe5oEF9jXIUl3qtGjbJD2c3IW_q4EjKQ/exec';
   const FORM = 'https://formsubmit.co/ajax/68bf44fd6c680760a90740f0fc752510';
   const META_KEY = 'volunteer-events-meta', SIGNUPS_KEY = 'volunteer-signups', BLURB_KEY = 'volunteer-board-blurb';
-  const FACE = 'https://events.earthharmonysoundwellness.com/photos/marcus-face-gong-halo.jpg';
+  const FACE = 'https://events.earthharmonysoundwellness.com/photos/marcus-face-gong-halo.jpg?v=2';
   const DEFAULT_BLURB = 'Hi friends — these are the next gigs where I welcome support. Come give your gift of presence. Exchange for a session, <em>learn</em>, <em>assist</em>, and <em>shadow</em> the work. 🌹';
   const ROLE_PRESETS = ['Host: sweep, set up mats & blankets, welcome guests', 'Welcome hosts · move + set up equipment', 'Greet + welcome guests', 'Room setup: candles, mats, blankets', 'Roving / small percussion', 'Snore patrol', 'Load drums in + out'];
   const EX_PRESETS = ['A spot in the session', 'Sound therapy mentoring: serve one session, sit the other', 'Community Sound Bath pass', 'A session trade: a Harmonic OM or Community Sound Bath spot'];
