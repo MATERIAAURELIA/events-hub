@@ -458,6 +458,16 @@
   @media (max-width:600px){ .list-event .ev-thumb { width:52px; height:52px; } }
   .vol-line .vl-who-row { flex-basis:100%; display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
   .vol-line .vl-who-row .vl-signup { margin-left:auto; }
+  .list-event .title br.mbr { display:none; }
+  @media (max-width:600px){
+    .list-event .title br.mbr { display:inline; }
+    .list-event { flex-wrap:wrap; align-items:center; column-gap:12px; row-gap:10px; }
+    .list-event .body { flex-basis:100%; }
+    .list-event .date-block { width:auto; display:flex; align-items:baseline; gap:6px; padding-top:0; }
+    .list-event .date-block .day-num { font-size:22px; }
+    .list-event .ev-thumb { order:-1; width:56px; height:56px; }
+    .list-event .type-dot { order:-2; align-self:stretch; }
+  }
   #mode-switch { position:fixed; right:16px; bottom:16px; z-index:50; background:var(--moss-deep); color:var(--cream); border:0; border-radius:999px; padding:11px 18px; font:600 14px inherit; box-shadow:0 6px 20px rgba(0,0,0,.25); cursor:pointer; }
 </style>
 </head>
@@ -774,7 +784,7 @@ function renderList() {
       </div>
       ${ev.img ? `<img class="ev-thumb" src="${ev.img}" alt="" loading="lazy">` : ''}
       <div class="body">
-        <div class="title">${eff.title}${evMeta.hidden ? ' <span style="color:#a85a4a; font-size:11px;">🚫 hidden</span>' : ''}</div>
+        <div class="title">${eff.title.replace(/:\s+/, ':<br class="mbr"> ')}${evMeta.hidden ? ' <span style="color:#a85a4a; font-size:11px;">🚫 hidden</span>' : ''}</div>
         <div class="meta">${meta_str}</div>
         
       </div>
