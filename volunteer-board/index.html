@@ -642,8 +642,8 @@ function eventsByDay() {
 }
 
 const TYPE_LABEL = {drum:'🥁 Drumming', sound:'🔔 Public Sound Bath', home:'🏠 Home Studio Session', plant:'🌿 Plant / Nature', other:'✨ Other'};
-const ROLE_PRESETS = ['Welcome people at the door', 'Set up + tear down chairs/mats', 'Help carry + set up instruments', 'Photos + short video', 'Hand out drums + percussion', 'Tidy up + reset the space'];
-const EX_PRESETS = ['Free seat at a sound journey', 'Free seat at this event', 'Guest pass for a friend', 'Shadow + learn the setup'];
+const ROLE_PRESETS = ['Host: sweep, set up mats & blankets, welcome guests', 'Welcome hosts · move + set up equipment', 'Greet + welcome guests', 'Room setup: candles, mats, blankets', 'Roving / small percussion', 'Snore patrol', 'Load drums in + out'];
+const EX_PRESETS = ['A spot in the session', 'Sound therapy mentoring: serve one session, sit the other', 'Community Sound Bath pass', "A session trade: a Harmonic OM or Community Sound Bath spot"];
 function renderDefaults() {
   const box = document.getElementById('defaults-panel');
   const isAdmin = document.body.classList.contains('admin');
