@@ -403,6 +403,23 @@
     font-style: italic;
   }
   .rose { color: var(--yellow); }
+
+  /* v0.03: face + legend + mobile tabs */
+  .intro-wrap { display:flex; gap:14px; align-items:center; margin-bottom:12px; }
+  .intro-wrap .intro { margin-bottom:0; flex:1; }
+  .intro-face { width:68px; height:68px; border-radius:50%; object-fit:cover; flex-shrink:0; box-shadow:0 0 0 3px #fff, 0 0 0 4px var(--yellow); }
+  .top-legend { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:0 0 6px; padding:0; }
+  .top-legend .lg { display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:600; color:#fff; background:var(--c); padding:6px 12px; border-radius:999px; }
+  .view-tabs { display:none; }
+  @media (max-width: 999px) {
+    .view-tabs { display:flex; gap:6px; justify-content:center; margin:10px 0 4px; position:sticky; top:0; z-index:5; background:var(--cream); padding:6px 0; }
+    .view-tabs .vt { flex:1; max-width:200px; padding:9px 0; border:1px solid #d4d0bf; border-radius:999px; background:#fff; font:600 14px inherit; color:var(--warm); }
+    .view-tabs .vt.on { background:var(--moss-deep); color:var(--cream); border-color:var(--moss-deep); }
+    body.v-list .col-cal { display:none; }
+    body.v-cal .col-list { display:none; }
+    .intro-face { width:54px; height:54px; }
+    .top-legend .lg { font-size:12px; padding:5px 10px; }
+  }
 </style>
 </head>
 <body>
@@ -412,7 +429,18 @@
     <div class="subtitle">sign up to learn, assist, shadow</div>
   </header>
 
-  <div class="intro" id="intro-blurb"></div>
+  <div class="intro-wrap">
+    <img class="intro-face" src="../photos/marcus-face-circle.jpg" alt="Marcus">
+    <div class="intro" id="intro-blurb"></div>
+  </div>
+  <div class="legend top-legend">
+    <span class="lg" style="--c:#c0392b">🥁 Drumming</span>
+    <span class="lg" style="--c:#2e6da4">🔔 Public Sound Bath</span>
+    <span class="lg" style="--c:#8e44ad">🏠 Home Studio Session</span>
+    <span class="lg" style="--c:#3f8f3a">🌿 Plant / Nature</span>
+    <span class="lg" style="--c:#e8871e">✨ Other</span>
+  </div>
+  <div class="view-tabs"><button class="vt on" data-v="list">📋 Events</button><button class="vt" data-v="cal">📅 Calendar</button></div>
 
   <div id="admin-add-bar" style="display:none; background:#fff8e7; padding:12px 14px; border:1px dashed var(--yellow); border-radius:8px; margin-bottom:12px;">
     <form id="add-event-form-inline" style="display:flex; flex-wrap:wrap; gap:6px; align-items:center;">
@@ -444,13 +472,6 @@
       <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
     </div>
     <div class="days" id="days"></div>
-    <div class="legend">
-      <div class="legend-item"><span class="legend-dot" style="background:#c0392b;"></span>Drumming</div>
-      <div class="legend-item"><span class="legend-dot" style="background:#2e6da4;"></span>Public Sound Bath</div>
-      <div class="legend-item"><span class="legend-dot" style="background:#8e44ad;"></span>Home Studio Session</div>
-      <div class="legend-item"><span class="legend-dot" style="background:#3f8f3a;"></span>Plant / Nature</div>
-      <div class="legend-item"><span class="legend-dot" style="background:#e8871e;"></span>Other</div>
-    </div>
   </div>
 
   </div>
@@ -759,7 +780,7 @@ function renderCalendar() {
       evDiv.className = 'ev type-' + type + (evMeta.hidden ? ' hidden-event' : '');
       const time = formatTime(eff.start);
       const label = time ? `${time} · ${eff.title}` : eff.title;
-      evDiv.innerHTML = label;
+      evDiv.innerHTML = ({drum:'🥁',sound:'🔔',home:'🏠',plant:'🌿',other:'✨'}[type] || '') + ' ' + label;
       evDiv.addEventListener('click', () => openModal(ev));
       dayDiv.appendChild(evDiv);
     });
@@ -950,6 +971,7 @@ function renderBlurb(blurb) {
   el.contentEditable = isAdmin ? 'true' : 'false';
   el.style.outline = isAdmin ? '1px dashed var(--yellow)' : 'none';
   el.style.cursor = isAdmin ? 'text' : 'default';
+  el.title = isAdmin ? 'Click to edit — saves when you click away' : '';
 }
 
 let currentBlurb = '';
@@ -987,6 +1009,13 @@ if (params.get('admin') === '1') {
 
   renderCalendar();
 })();
+// v0.03 mobile tabs
+document.body.classList.add('v-list');
+document.querySelectorAll('.view-tabs .vt').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('.view-tabs .vt').forEach(x => x.classList.toggle('on', x === b));
+  document.body.classList.toggle('v-list', b.dataset.v === 'list');
+  document.body.classList.toggle('v-cal', b.dataset.v === 'cal');
+}));
 </script>
 </body>
 </html>
