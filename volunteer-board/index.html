@@ -136,6 +136,7 @@
   .day .ev.type-sound { background: #2e6da4; }   /* moss — sound bath */
   .day .ev.type-disco { background: #7b4fb0; }   /* purple — silent disco / movement */
   .day .ev.type-plant { background: #3f8f3a; }   /* fresh green — plant / nature */
+  .day .ev.type-home { background: #8e44ad; }   /* purple — home studio */
   .day .ev.type-other { background: #e8871e; }   /* warm brown — other */
   .day .ev.hidden-event { background: #b8b0a0 !important; }
 
@@ -228,6 +229,17 @@
   .quick-ctl .qt { border:0; border-radius:999px; padding:5px 12px; font:700 11px/1 inherit; letter-spacing:.06em; color:#fff; cursor:pointer; }
   .quick-ctl .qt.on { background:#8b7355; } .quick-ctl .qt.off { background:#3f8f3a; }
   .quick-note { width:100%; margin-top:8px; min-height:34px; padding:6px 8px; border:1px dashed #d4c79e; border-radius:4px; font:13px/1.4 inherit; background:#fffdf6; resize:vertical; }
+  .vol-edit { margin-top:8px; display:flex; flex-direction:column; gap:6px; background:#fffdf6; border:1px dashed #d4c79e; border-radius:6px; padding:8px; }
+  .vol-edit .ve-row { display:flex; gap:8px; }
+  .vol-edit label { font-size:12px; color:var(--warm); display:flex; align-items:center; gap:6px; white-space:nowrap; }
+  .vol-edit label.grow { flex:1; } .vol-edit label.grow input { flex:1; }
+  .vol-edit input { padding:5px 7px; border:1px solid #d4d0bf; border-radius:4px; font:13px inherit; background:#fff; }
+  .vol-edit .ve-need { width:56px; }
+  .vol-edit .quick-note { margin-top:0; border-style:solid; border-color:#d4d0bf; }
+  .vol-line { margin-top:8px; display:flex; flex-wrap:wrap; gap:6px 12px; align-items:center; font-size:13px; color:#5a4a32; background:#fff8e7; border-radius:6px; padding:8px 10px; }
+  .vol-line .vl-need { font-weight:700; color:#b8502b; }
+  .vol-line .vl-notes { flex-basis:100%; }
+  .vol-line .vl-signup { margin-left:auto; background:#e8871e; color:#fff; border:0; border-radius:999px; padding:6px 14px; font:700 12px inherit; cursor:pointer; }
   .vol-note { margin-top:6px; font-size:13px; color:#6b5a3a; background:#fff8e7; border-radius:4px; padding:4px 8px; }
   /* two columns: list | calendar */
   @media (min-width: 1000px) {
@@ -434,7 +446,8 @@
     <div class="days" id="days"></div>
     <div class="legend">
       <div class="legend-item"><span class="legend-dot" style="background:#c0392b;"></span>Drumming</div>
-      <div class="legend-item"><span class="legend-dot" style="background:#2e6da4;"></span>Sound Bath</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#2e6da4;"></span>Public Sound Bath</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#8e44ad;"></span>Home Studio Session</div>
       <div class="legend-item"><span class="legend-dot" style="background:#3f8f3a;"></span>Plant / Nature</div>
       <div class="legend-item"><span class="legend-dot" style="background:#e8871e;"></span>Other</div>
     </div>
@@ -614,9 +627,9 @@ function renderList() {
   upcoming.forEach(ev => {
     const eff = effectiveEvent(ev);
     const evMeta = meta[ev.id] || {};
-    const type = evMeta.type || eventType(eff.title);
+    const type = evMeta.type || (/home studio/i.test(eff.location || '') ? 'home' : eventType(eff.title));
     const typeColors = {
-      drum: '#c0392b', sound: '#2e6da4', disco: '#7b4fb0', plant: '#3f8f3a', other: '#e8871e'
+      drum: '#c0392b', home: '#8e44ad', sound: '#2e6da4', disco: '#7b4fb0', plant: '#3f8f3a', other: '#e8871e'
     };
     const d = new Date(eff.start);
     const count = (signups[ev.id] || []).length;
@@ -646,7 +659,7 @@ function renderList() {
       const ctl = document.createElement('div');
       ctl.className = 'quick-ctl';
       ctl.innerHTML = `<button class="qt ${evMeta.hidden ? 'off' : 'on'}" title="Show / hide on the public board">${evMeta.hidden ? 'Hidden · show' : 'Hide'}</button>
-        <select class="qtype" title="Category">${['drum','sound','plant','other'].map(k => `<option value="${k}" ${k === type ? 'selected' : ''}>${{drum:'Drumming',sound:'Sound Bath',plant:'Plant / Nature',other:'Other'}[k]}</option>`).join('')}</select>`;
+        <select class="qtype" title="Category">${['drum','sound','home','plant','other'].map(k => `<option value="${k}" ${k === type ? 'selected' : ''}>${{drum:'Drumming',sound:'Public Sound Bath',home:'Home Studio Session',plant:'Plant / Nature',other:'Other'}[k]}</option>`).join('')}</select>`;
       ctl.addEventListener('click', e => e.stopPropagation());
       ctl.querySelector('.qt').addEventListener('click', async () => {
         meta[ev.id] = { ...(meta[ev.id] || {}), hidden: !(meta[ev.id]?.hidden) };
@@ -657,18 +670,38 @@ function renderList() {
         await saveStore(META_KEY, meta); renderCalendar();
       });
       div.appendChild(ctl);
-      const nb = document.createElement('textarea');
-      nb.className = 'quick-note'; nb.placeholder = '+ note for volunteers (e.g. arrive 5:45, help with chairs)';
-      nb.value = evMeta.notes || '';
-      nb.addEventListener('click', e => e.stopPropagation());
-      nb.addEventListener('change', async () => {
-        meta[ev.id] = { ...(meta[ev.id] || {}), notes: nb.value.trim() };
+      const ed = document.createElement('div');
+      ed.className = 'vol-edit';
+      ed.innerHTML = `<div class="ve-row">
+          <label>🙋 Needed <input type="number" min="0" class="ve-need" value="${evMeta.need || ''}" placeholder="0"></label>
+          <label class="grow">Role <input type="text" class="ve-role" value="${(evMeta.role || '').replace(/"/g,'&quot;')}" placeholder="e.g. welcome people, set up chairs"></label>
+        </div>
+        <label class="grow">🎁 Exchange <input type="text" class="ve-ex" value="${(evMeta.exchange || '').replace(/"/g,'&quot;')}" placeholder="e.g. free seat at a sound journey"></label>
+        <textarea class="quick-note" placeholder="+ notes (e.g. arrive 5:45)">${evMeta.notes || ''}</textarea>`;
+      ed.addEventListener('click', e => e.stopPropagation());
+      const save = async () => {
+        meta[ev.id] = { ...(meta[ev.id] || {}),
+          need: parseInt(ed.querySelector('.ve-need').value) || 0,
+          role: ed.querySelector('.ve-role').value.trim(),
+          exchange: ed.querySelector('.ve-ex').value.trim(),
+          notes: ed.querySelector('.quick-note').value.trim() };
         await saveStore(META_KEY, meta); renderCalendar();
-      });
-      div.querySelector('.body').appendChild(nb);
-    } else if (evMeta.notes) {
-      const n = document.createElement('div'); n.className = 'vol-note'; n.textContent = '📝 ' + evMeta.notes;
-      div.querySelector('.body').appendChild(n);
+      };
+      ed.querySelectorAll('input,textarea').forEach(el => el.addEventListener('change', save));
+      div.querySelector('.body').appendChild(ed);
+    }
+    if (!isAdmin && (evMeta.need || evMeta.role || evMeta.exchange || evMeta.notes)) {
+      const filled = (signups[ev.id] || []).length;
+      const v = document.createElement('div'); v.className = 'vol-line';
+      const esc = s => String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+      v.innerHTML = `${evMeta.need ? `<span class="vl-need">🙋 ${filled >= evMeta.need ? 'Team full' : `${evMeta.need - filled} of ${evMeta.need} helpers needed`}</span>` : ''}
+        ${evMeta.role ? `<span><b>Role:</b> ${esc(evMeta.role)}</span>` : ''}
+        ${evMeta.exchange ? `<span><b>Exchange:</b> ${esc(evMeta.exchange)}</span>` : ''}
+        ${evMeta.notes ? `<span class="vl-notes">📝 ${esc(evMeta.notes)}</span>` : ''}
+        ${!evMeta.need || filled < evMeta.need ? `<button class="vl-signup">Sign up to help</button>` : ''}`;
+      const b = v.querySelector('.vl-signup');
+      if (b) b.addEventListener('click', e => { e.stopPropagation(); openModal(ev); });
+      div.querySelector('.body').appendChild(v);
     }
     div.addEventListener('click', () => openModal(ev));
     container.appendChild(div);
@@ -722,7 +755,7 @@ function renderCalendar() {
       const signupCount = (signups[ev.id] || []).length;
       const evDiv = document.createElement('div');
       const eff = effectiveEvent(ev);
-      const type = evMeta.type || eventType(eff.title);
+      const type = evMeta.type || (/home studio/i.test(eff.location || '') ? 'home' : eventType(eff.title));
       evDiv.className = 'ev type-' + type + (evMeta.hidden ? ' hidden-event' : '');
       const time = formatTime(eff.start);
       const label = time ? `${time} · ${eff.title}` : eff.title;
