@@ -440,6 +440,7 @@
     .intro-face { width:54px; height:54px; }
     .top-legend .lg { font-size:12px; padding:5px 10px; }
   }
+  #mode-switch { position:fixed; right:16px; bottom:16px; z-index:50; background:var(--moss-deep); color:var(--cream); border:0; border-radius:999px; padding:11px 18px; font:600 14px inherit; box-shadow:0 6px 20px rgba(0,0,0,.25); cursor:pointer; }
 </style>
 </head>
 <body>
@@ -1107,6 +1108,17 @@ document.querySelectorAll('.cal-mode button').forEach(b => b.addEventListener('c
   if (calMode === 'month') { viewYear = weekStart.getFullYear(); viewMonth = weekStart.getMonth(); }
   renderCalendar();
 }));
+// floating Edit / Guest-view switch (only when opened with ?admin=1)
+if (new URLSearchParams(location.search).get('admin') === '1') {
+  const sw = document.createElement('button');
+  sw.id = 'mode-switch';
+  const paint = () => { sw.textContent = document.body.classList.contains('admin') ? '👁 See guest view' : '✏️ Back to editing'; };
+  sw.addEventListener('click', () => {
+    document.body.classList.toggle('admin');
+    renderBlurb(currentBlurb); renderCalendar(); paint();
+  });
+  paint(); document.body.appendChild(sw);
+}
 </script>
 </body>
 </html>
