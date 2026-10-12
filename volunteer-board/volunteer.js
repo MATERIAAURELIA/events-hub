@@ -1,0 +1,246 @@
+/* Volunteer layer for the Events Hub — loads only with ?volunteer in the URL.
+   Same cards as the public hub; adds a helper strip under each card.
+   Back end is shared with the old board: Apps Script store (meta / signups / blurb),
+   FormSubmit → Marcus's inbox for private details, launchd reminders on the Mac mini.
+   Admin: ?volunteer&admin=1  (Marcus, Oct 12 2026: "use the events hub format") */
+(() => {
+  const API_URL = 'https://script.google.com/macros/s/AKfycbzzu1jXVtwDuHyBThe62Ipc10UzBJkDQDACGZfe5oEF9jXIUl3qtGjbJD2c3IW_q4EjKQ/exec';
+  const FORM = 'https://formsubmit.co/ajax/68bf44fd6c680760a90740f0fc752510';
+  const META_KEY = 'volunteer-events-meta', SIGNUPS_KEY = 'volunteer-signups', BLURB_KEY = 'volunteer-board-blurb';
+  const FACE = 'https://events.earthharmonysoundwellness.com/photos/marcus-face-circle.jpg';
+  const DEFAULT_BLURB = 'Hi friends — these are the next gigs where I welcome support. Come give your gift of presence. Exchange for a session, <em>learn</em>, <em>assist</em>, and <em>shadow</em> the work. 🌹';
+  const ROLE_PRESETS = ['Host: sweep, set up mats & blankets, welcome guests', 'Welcome hosts · move + set up equipment', 'Greet + welcome guests', 'Room setup: candles, mats, blankets', 'Roving / small percussion', 'Snore patrol', 'Load drums in + out'];
+  const EX_PRESETS = ['A spot in the session', 'Sound therapy mentoring: serve one session, sit the other', 'Community Sound Bath pass', 'A session trade: a Harmonic OM or Community Sound Bath spot'];
+  const TYPE_LABEL = { home: '🏠 Home studio', sound: '🔔 Public sound bath', drum: '🥁 Drumming', other: '✨ Other' };
+  const FULL_WORD = 'Circle complete';
+
+  const urlAdmin = new URLSearchParams(location.search).get('admin') === '1';
+  let admin = urlAdmin;
+  let meta = {}, signups = {}, blurb = '';
+  const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const load = async k => { try { const r = await fetch(`${API_URL}?key=${encodeURIComponent(k)}`); return r.ok ? await r.json() : {}; } catch { return {}; } };
+  const save = async (k, v) => { try { await fetch(API_URL, { method: 'POST', body: JSON.stringify({ key: k, value: v }) }); } catch {} };
+  const evById = id => (typeof EVENTS !== 'undefined' ? EVENTS : []).find(e => e.id === id);
+  const typeOf = ev => (meta[ev.id] || {}).type || (ev.venue === 'home' ? 'home'
+    : /drum|circle|rhythm|pulse/i.test(ev.title) ? 'drum' : /sound|bath|gong|bowl/i.test(ev.title) ? 'sound' : 'other');
+  const info = ev => {
+    const m = meta[ev.id] || {}, d = (meta.__defaults || {})[typeOf(ev)] || {};
+    const people = (signups[ev.id] || []).map(s => s.name).filter(Boolean);
+    const need = m.need ?? d.need ?? 0;
+    return { m, d, people, need, role: m.role || d.role || '', exchange: m.exchange || d.exchange || '', notes: m.notes || '', full: need && people.length >= need };
+  };
+  const startISO = ev => `${ev.date}T${ev.time || '00:00'}:00`;
+
+  /* ---------- styles (hub is dark navy + gold; strip is warm cream) ---------- */
+  const css = document.createElement('style');
+  css.textContent = `
+    .vh-head{max-width:640px;margin:0 auto 14px;display:flex;gap:12px;align-items:center;}
+    .vh-face{width:58px;height:58px;border-radius:50%;object-fit:cover;flex-shrink:0;box-shadow:0 0 0 2px #0e1522,0 0 0 3px #d2a44e;}
+    .vh-blurb{flex:1;background:#f6eedd;color:#4a3a28;border-radius:12px;padding:12px 14px;font-size:15px;line-height:1.5;}
+    .vh-blurb[contenteditable=true]{outline:1px dashed #d2a44e;cursor:text;}
+    .vh-title{text-align:center;color:#d2a44e;font-family:var(--heading-font);font-size:1.5rem;margin:6px 0 10px;letter-spacing:.02em;}
+    .vh-ask{max-width:640px;margin:0 auto 16px;text-align:center;}
+    .vh-ask summary{display:inline-block;list-style:none;cursor:pointer;background:rgba(246,238,221,.1);color:#f3ebdd;border:1px solid rgba(210,164,78,.5);border-radius:999px;padding:7px 16px;font-size:14px;}
+    .vh-ask summary::-webkit-details-marker{display:none;}
+    .vh-ask form,.vh-modal form{display:flex;flex-direction:column;gap:7px;margin-top:8px;background:#f6eedd;border-radius:12px;padding:12px;text-align:left;}
+    .vh-ask input,.vh-ask textarea,.vh-modal input,.vh-strip input{padding:9px 11px;border:1px solid #d9cba9;border-radius:8px;font-size:16px;font-family:inherit;background:#fff;color:#2b1d14;min-width:0;}
+    .vh-ask textarea{min-height:70px;}
+    .vh-btn{background:#e8871e;color:#fff;border:0;border-radius:999px;padding:8px 16px;font-weight:700;font-size:14px;cursor:pointer;align-self:flex-end;}
+    .link-btn:has(+ .vh-strip){margin-bottom:0 !important;border-bottom-left-radius:0 !important;border-bottom-right-radius:0 !important;}
+    .vh-strip{margin:0 0 calc(var(--btn-gap,12px) + 6px);background:#f6eedd;border-radius:0 0 14px 14px;padding:10px 12px;display:flex;flex-wrap:wrap;gap:7px;align-items:center;color:#3e2f20;font-size:14px;}
+    .vh-pill{display:inline-flex;align-items:center;gap:4px;background:#fff;border:1px solid #e8d8b4;border-radius:999px;padding:5px 11px;font-size:13.5px;}
+    .vh-need{font-weight:700;color:#b8502b;}
+    .vh-who{background:#eef6ea;border-color:#cfe3c4;color:#2f5d22;}
+    .vh-more{background:#fff;border:1px solid #e8d8b4;border-radius:999px;padding:5px 12px;font-size:13px;color:#6b5a44;cursor:pointer;}
+    .vh-row{flex-basis:100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
+    .vh-row .vh-btn{margin-left:auto;}
+    .vh-details{display:none;flex-basis:100%;background:#fff;border-radius:10px;padding:9px 11px;line-height:1.55;}
+    .vh-strip.open .vh-details{display:block;}
+    .vh-strip.edit{border:1px dashed #d2a44e;}
+    .vh-strip.edit .vh-grow{flex:1 1 220px;}
+    .vh-strip.edit .vh-n{width:64px;}
+    .vh-strip.edit .vh-notes{flex-basis:100%;}
+    .vh-hide{border:0;border-radius:999px;padding:6px 12px;font-weight:700;font-size:12px;color:#fff;cursor:pointer;background:#8b7355;}
+    .vh-hide.off{background:#3f8f3a;}
+    .link-btn.vh-hidden{opacity:.35;}
+    body.vh-guest .link-btn.vh-hidden,body.vh-guest .vh-strip.vh-hidden,.vh-gone{display:none !important;}
+    .vh-defaults{max-width:640px;margin:0 auto 14px;background:#f6eedd;border-radius:12px;padding:10px 12px;color:#4a3a28;font-size:13px;}
+    .vh-defaults .dr{display:grid;grid-template-columns:140px 56px 1fr 1fr;gap:6px;align-items:center;margin-top:5px;}
+    .vh-defaults input{padding:6px 8px;border:1px solid #d9cba9;border-radius:6px;font-size:14px;min-width:0;}
+    @media(max-width:600px){.vh-head{flex-direction:column;text-align:left}.vh-face{width:64px;height:64px}}
+    @media(max-width:600px){.vh-defaults .dr{grid-template-columns:1fr 56px}.vh-defaults .dr .full{grid-column:1/-1}}
+    .vh-modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:200;padding:16px;}
+    .vh-modal .box{background:#f6eedd;color:#2b1d14;border-radius:16px;max-width:460px;width:100%;padding:18px;max-height:90vh;overflow:auto;}
+    .vh-modal h3{margin:0 0 4px;font-family:var(--heading-font);font-size:1.25rem;}
+    .vh-modal .when{font-weight:700;margin-bottom:8px;}
+    .vh-modal .duties{background:#fff;border-radius:10px;padding:10px 12px;line-height:1.55;margin-bottom:6px;font-size:14px;}
+    .vh-modal form{padding:0;background:none;}
+    .vh-modal .note{font-size:11.5px;color:#8a7a66;font-style:italic;}
+    .vh-modal .cal a{display:inline-block;margin:4px;background:#fff;border:1px solid #cfe3c4;border-radius:999px;padding:7px 14px;color:#2f5d22;font-weight:700;text-decoration:none;cursor:pointer;}
+    .vh-modal .x{float:right;background:none;border:0;font-size:22px;cursor:pointer;color:#6b5a44;}
+    #vh-switch{position:fixed;left:16px;bottom:16px;z-index:150;background:#d2a44e;color:#0e1522;border:0;border-radius:999px;padding:11px 18px;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,.4);cursor:pointer;}
+  `;
+  document.head.appendChild(css);
+  document.title = 'Earth Harmony · Team Service Exchange';
+
+  /* ---------- header: title, face + editable intro, ask box, defaults ---------- */
+  const list = document.getElementById('view-list');
+  const head = document.createElement('div');
+  head.innerHTML = `<div class="vh-title">Team Service Exchange</div>
+    <div class="vh-head"><img class="vh-face" src="${FACE}" alt="Marcus"><div class="vh-blurb" id="vh-blurb"></div></div>
+    <details class="vh-ask"><summary>❓ Ask Marcus a question</summary>
+      <form id="vh-ask"><input name="name" placeholder="Your name" required><input name="email" type="email" placeholder="Your email (so he can reply)" required>
+      <textarea name="q" placeholder="Your question…" required></textarea><button class="vh-btn">Send question</button><div class="vh-ok" style="display:none;color:#2f5d22">🙏 Sent! Marcus will get back to you.</div></form></details>
+    <div class="vh-defaults" id="vh-defaults" style="display:none"></div>`;
+  const label = document.querySelector('.section-label');
+  if (label) { label.replaceWith(head); } else { list.parentNode.insertBefore(head, list); }
+  const tl = document.getElementById('top-links'); if (tl) tl.style.display = 'none';
+  const me = (() => { try { return JSON.parse(localStorage.getItem('eh-volunteer') || 'null') || {}; } catch { return {}; } })();
+  const remember = o => { try { localStorage.setItem('eh-volunteer', JSON.stringify({ ...me, ...o })); Object.assign(me, o); } catch {} };
+  const ask = head.querySelector('#vh-ask');
+  ask.name.value = me.name || ''; ask.email.value = me.email || '';
+  ask.addEventListener('submit', async e => {
+    e.preventDefault(); remember({ name: ask.name.value.trim(), email: ask.email.value.trim() });
+    try { await fetch(FORM, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({ _subject: `❓ Volunteer question from ${ask.name.value.trim()}`, _template: 'table', _captcha: 'false', _replyto: ask.email.value.trim(),
+        name: ask.name.value.trim(), email: ask.email.value.trim(), question: ask.q.value.trim() }) }); } catch {}
+    ask.q.value = ''; ask.querySelector('.vh-ok').style.display = '';
+  });
+
+  function paintHeader() {
+    const b = document.getElementById('vh-blurb');
+    if (document.activeElement !== b) b.innerHTML = blurb || DEFAULT_BLURB;
+    b.contentEditable = admin ? 'true' : 'false';
+    const dp = document.getElementById('vh-defaults');
+    dp.style.display = admin ? '' : 'none';
+    if (admin && !dp.dataset.built) {
+      dp.dataset.built = '1';
+      const d = meta.__defaults || {};
+      dp.innerHTML = `<b>⚙ Default helpers by type</b> — set once, every event of that type uses it (override any card below)` +
+        Object.keys(TYPE_LABEL).map(k => `<div class="dr" data-k="${k}"><span>${TYPE_LABEL[k]}</span>
+          <input class="n" type="number" min="0" value="${d[k]?.need ?? ''}" placeholder="#">
+          <input class="r full" list="vh-roles" value="${esc(d[k]?.role)}" placeholder="🧹 role">
+          <input class="x full" list="vh-ex" value="${esc(d[k]?.exchange)}" placeholder="⭐ exchange"></div>`).join('');
+      dp.querySelectorAll('input').forEach(el => el.addEventListener('change', async () => {
+        const row = el.closest('.dr'), n = row.querySelector('.n').value;
+        meta.__defaults = { ...(meta.__defaults || {}), [row.dataset.k]: { need: n === '' ? undefined : +n, role: row.querySelector('.r').value.trim(), exchange: row.querySelector('.x').value.trim() } };
+        await save(META_KEY, meta);
+      }));
+      dp.addEventListener('focusout', e => { if (!dp.contains(e.relatedTarget)) decorate(true); });
+    }
+  }
+  document.getElementById('vh-blurb').addEventListener('blur', async e => { if (!admin) return; blurb = e.target.innerHTML.trim(); await save(BLURB_KEY, { html: blurb }); });
+
+  const dl = (id, items) => { const x = document.getElementById(id) || document.body.appendChild(Object.assign(document.createElement('datalist'), { id })); x.innerHTML = items.map(v => `<option value="${esc(v)}">`).join(''); };
+
+  /* ---------- strip under every hub card ---------- */
+  function stripFor(ev) {
+    const s = document.createElement('div');
+    s.className = 'vh-strip'; s.dataset.id = ev.id;
+    const I = info(ev);
+    if (I.m.hidden) s.classList.add('vh-hidden');
+    if (admin) {
+      s.classList.add('edit');
+      s.innerHTML = `<button class="vh-hide ${I.m.hidden ? 'off' : ''}">${I.m.hidden ? 'Hidden · show' : 'Hide'}</button>
+        <span class="vh-pill">🙋 <input class="vh-n" type="number" min="0" value="${I.need || ''}" placeholder="#"> helpers</span>
+        <input class="vh-grow r" list="vh-roles" value="${esc(I.role)}" placeholder="🧹 role">
+        <input class="vh-grow x" list="vh-ex" value="${esc(I.exchange)}" placeholder="⭐ exchange">
+        <input class="vh-notes" value="${esc(I.notes)}" placeholder="📝 notes (e.g. arrive 5:45)">
+        ${I.people.length ? `<div class="vh-row">${I.people.map(p => `<span class="vh-pill vh-who">✅ ${esc(p)}</span>`).join('')}</div>` : ''}`;
+      s.querySelector('.vh-hide').onclick = async () => { meta[ev.id] = { ...(meta[ev.id] || {}), hidden: !I.m.hidden }; await save(META_KEY, meta); decorate(true); };
+      const store = async () => {
+        const n = s.querySelector('.vh-n').value, r = s.querySelector('.r').value.trim(), x = s.querySelector('.x').value.trim();
+        meta[ev.id] = { ...(meta[ev.id] || {}), need: n === '' ? undefined : +n,
+          role: r && r !== I.d.role ? r : undefined, exchange: x && x !== I.d.exchange ? x : undefined, notes: s.querySelector('.vh-notes').value.trim() };
+        await save(META_KEY, meta);
+      };
+      s.querySelectorAll('input').forEach(el => el.addEventListener('change', store));
+    } else {
+      s.innerHTML = `<span class="vh-pill vh-need">${I.full ? '🙏 ' : '🙋 '}${I.need ? (I.full ? FULL_WORD : `${I.people.length} / ${I.need} helpers`) : (I.people.length ? `${I.people.length} helping` : 'Helpers welcome')}</span>
+        <button class="vh-more">Show description ▾</button>
+        <div class="vh-details"><div><b>🧹 Role:</b> ${esc(I.role) || 'TBA'}</div><div><b>⭐ Exchange:</b> ${esc(I.exchange) || 'TBA'}</div>${I.notes ? `<div><b>📝</b> ${esc(I.notes)}</div>` : ''}</div>
+        <div class="vh-row">${I.people.map(p => `<span class="vh-pill vh-who">✅ ${esc(p)}</span>`).join('')}${I.full ? '' : '<button class="vh-btn vh-go">Sign up to help</button>'}</div>`;
+      s.querySelector('.vh-more').onclick = () => { const o = s.classList.toggle('open'); s.querySelector('.vh-more').textContent = o ? 'Hide description ▴' : 'Show description ▾'; };
+      const go = s.querySelector('.vh-go'); if (go) go.onclick = () => openSignup(ev);
+    }
+    return s;
+  }
+
+  let busy = false;
+  function decorate(force) {
+    if (busy) return; busy = true;
+    try {
+      document.body.classList.toggle('vh-guest', !admin);
+      const used = Object.values(meta).filter(m => m && typeof m === 'object');
+      dl('vh-roles', [...new Set([...ROLE_PRESETS, ...used.map(m => m.role).filter(Boolean)])]);
+      dl('vh-ex', [...new Set([...EX_PRESETS, ...used.map(m => m.exchange).filter(Boolean)])]);
+      list.querySelectorAll('.link-btn').forEach(card => {
+        const id = ((card.getAttribute('onclick') || '').match(/showPopup\('([^']+)'\)/) || [])[1];
+        const ev = id && evById(id);
+        let next = card.nextElementSibling;
+        if (!ev || card.classList.contains('cta-event')) { card.classList.add('vh-gone'); return; }
+        card.classList.toggle('vh-hidden', !!(meta[id] || {}).hidden);
+        if (next && next.classList.contains('vh-strip')) { if (!force && next.dataset.id === id) return; next.remove(); }
+        card.after(stripFor(ev));
+      });
+      paintHeader();
+    } finally { busy = false; }
+  }
+  new MutationObserver(() => decorate(false)).observe(list, { childList: true });
+
+  /* ---------- sign-up pop-up ---------- */
+  function openSignup(ev) {
+    const I = info(ev), d = new Date(ev.date + 'T00:00:00');
+    const when = `${d.toLocaleDateString('en-CA', { weekday: 'long', month: 'long', day: 'numeric' })}${ev.time ? ' · ' + (typeof fTime === 'function' ? fTime(ev.time) : ev.time) : ''}`;
+    const w = document.createElement('div'); w.className = 'vh-modal';
+    w.innerHTML = `<div class="box"><button class="x">×</button><h3>${esc(ev.title)}</h3><div class="when">${when}</div>
+      <div class="duties"><div><b>🙋 Helpers:</b> ${I.need ? `${I.people.length} of ${I.need}` : 'welcome'}</div><div><b>🧹 Role:</b> ${esc(I.role) || 'TBA'}</div>
+      <div><b>⭐ Exchange:</b> ${esc(I.exchange) || 'TBA'}</div>${I.notes ? `<div><b>📝</b> ${esc(I.notes)}</div>` : ''}</div>
+      <form><input name="name" placeholder="Your name" required value="${esc(me.name)}"><input name="email" type="email" placeholder="Email (for your reminder)" required value="${esc(me.email)}">
+      <input name="phone" type="tel" placeholder="Phone (optional)" value="${esc(me.phone)}"><button class="vh-btn">Sign up</button>
+      <div class="note">Only your first name shows on the board. Your email goes privately to Marcus.</div></form></div>`;
+    document.body.appendChild(w);
+    const close = () => w.remove();
+    w.querySelector('.x').onclick = close; w.addEventListener('click', e => { if (e.target === w) close(); });
+    const f = w.querySelector('form');
+    f.addEventListener('submit', async e => {
+      e.preventDefault();
+      const full = f.name.value.trim(), email = f.email.value.trim(), phone = f.phone.value.trim();
+      const btn = f.querySelector('button'); btn.disabled = true; btn.textContent = '…';
+      remember({ name: full, email, phone });
+      signups = await load(SIGNUPS_KEY) || {};               // re-read so we never overwrite someone else
+      (signups[ev.id] = signups[ev.id] || []).push({ name: full.split(/\s+/)[0], ts: new Date().toISOString() });
+      await save(SIGNUPS_KEY, signups);
+      try { await fetch(FORM, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ _subject: `🙋 Volunteer sign-up — ${ev.title} — ${ev.date}`, _template: 'table', _captcha: 'false',
+          name: full, email, phone, event: ev.title, event_id: ev.id, start: startISO(ev), location: (typeof VENUES !== 'undefined' && VENUES[ev.venue]?.name) || '',
+          role: I.role, exchange: I.exchange, notes: I.notes }) }); } catch {}
+      const st = new Date(startISO(ev)), en = new Date(st.getTime() + 90 * 60000);
+      const z = x => x.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+      const det = [I.role && 'Role: ' + I.role, I.exchange && 'Exchange: ' + I.exchange, I.notes].filter(Boolean).join('\n');
+      const g = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent('Helping: ' + ev.title) + '&dates=' + z(st) + '/' + z(en) + '&details=' + encodeURIComponent(det);
+      const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Earth Harmony//Team Service//EN', 'BEGIN:VEVENT', 'UID:' + ev.id + '-' + Date.now() + '@earthharmony',
+        'DTSTAMP:' + z(new Date()), 'DTSTART:' + z(st), 'DTEND:' + z(en), 'SUMMARY:Helping: ' + ev.title, 'DESCRIPTION:' + det.replace(/\n/g, '\\n'),
+        'BEGIN:VALARM', 'TRIGGER:-PT2H', 'ACTION:DISPLAY', 'DESCRIPTION:Reminder', 'END:VALARM', 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+      f.outerHTML = `<div style="text-align:center;margin-top:8px"><b style="color:#2f5d22;font-size:1.1rem">🙏 You're on the team!</b>
+        <div style="margin:4px 0 8px;font-size:14px">You'll get a reminder email the day before. Add it to your calendar:</div>
+        <div class="cal"><a href="${g}" target="_blank" rel="noopener">📅 Google Calendar</a><a href="${URL.createObjectURL(new Blob([ics], { type: 'text/calendar' }))}" download="earth-harmony-helping.ics">🍎 Apple / Outlook</a></div></div>`;
+      decorate(true);
+    });
+  }
+
+  /* ---------- admin: edit / guest-view switch ---------- */
+  if (urlAdmin) {
+    const sw = document.createElement('button'); sw.id = 'vh-switch';
+    const paint = () => sw.textContent = admin ? '👁 See guest view' : '✏️ Back to editing';
+    sw.onclick = () => { admin = !admin; paint(); decorate(true); }; paint();
+    document.body.appendChild(sw);
+  }
+
+  (async () => {
+    const [m, s, b] = await Promise.all([load(META_KEY), load(SIGNUPS_KEY), load(BLURB_KEY)]);
+    meta = m || {}; signups = s || {}; blurb = (b && b.html) || '';
+    decorate(true);
+  })();
+  decorate(true);
+})();
