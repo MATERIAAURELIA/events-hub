@@ -454,6 +454,10 @@
   .signup-done .sd-btns a { background:#fff; border:1px solid #cfe3c4; border-radius:999px; padding:7px 14px; font:600 13px inherit; color:#2f5d22; text-decoration:none; cursor:pointer; }
   .m-duties { background:#fff8e7; border-radius:8px; padding:10px 12px; margin:10px 0; font-size:14px; line-height:1.55; }
   .m-duties > div + div { margin-top:3px; }
+  .list-event .ev-thumb { width:64px; height:64px; object-fit:cover; border-radius:8px; flex-shrink:0; margin-top:2px; box-shadow:0 1px 4px rgba(0,0,0,.12); }
+  @media (max-width:600px){ .list-event .ev-thumb { width:52px; height:52px; } }
+  .vol-line .vl-who-row { flex-basis:100%; display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+  .vol-line .vl-who-row .vl-signup { margin-left:auto; }
   #mode-switch { position:fixed; right:16px; bottom:16px; z-index:50; background:var(--moss-deep); color:var(--cream); border:0; border-radius:999px; padding:11px 18px; font:600 14px inherit; box-shadow:0 6px 20px rgba(0,0,0,.25); cursor:pointer; }
 </style>
 </head>
@@ -768,6 +772,7 @@ function renderList() {
         <div class="day-num">${d.getDate()}</div>
         <div class="weekday">${weekdays[d.getDay()]}</div>
       </div>
+      ${ev.img ? `<img class="ev-thumb" src="${ev.img}" alt="" loading="lazy">` : ''}
       <div class="body">
         <div class="title">${eff.title}${evMeta.hidden ? ' <span style="color:#a85a4a; font-size:11px;">🚫 hidden</span>' : ''}</div>
         <div class="meta">${meta_str}</div>
@@ -822,9 +827,11 @@ function renderList() {
       } else {
         v.innerHTML = `
           <span class="pill p-need">🙋 ${need ? (full ? 'Team full' : `${filled} / ${need} helpers`) : (filled ? `${filled} helping` : 'Helpers welcome')}</span>
-          ${people.length ? `<span class="pill p-who">✅ ${people.map(esc).join(', ')}</span>` : ''}
           <button class="vl-more">Show description ▾</button>
-          ${full ? '' : `<button class="vl-signup">Sign up to help</button>`}
+          <div class="vl-who-row">
+            ${people.map(x => `<span class="pill p-who">✅ ${esc(x)}</span>`).join('')}
+            ${full ? '' : `<button class="vl-signup">Sign up to help</button>`}
+          </div>
           <div class="vl-details">
             <div><b>🧹 Role:</b> ${role ? esc(role) : 'TBA'}</div>
             <div><b>⭐ Exchange:</b> ${exchange ? esc(exchange) : 'TBA'}</div>
