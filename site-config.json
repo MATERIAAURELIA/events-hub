@@ -1113,9 +1113,10 @@
       "id": "ev-oct30-gong",
       "time": "18:30",
       "endTime": "20:00",
-      "spots": 1,
+      "spots": 0,
       "booking": "https://EarthHarmony.as.me/?appointmentType=97625755",
-      "capacity": 8
+      "capacity": 8,
+      "full": true
     },
     {
       "id": "ev-oct23-yogawithin",
