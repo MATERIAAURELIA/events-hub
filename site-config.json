@@ -1284,7 +1284,8 @@
       "spots": 8,
       "booking": "https://EarthHarmony.as.me/?appointmentType=93995396",
       "capacity": 8,
-      "full": false
+      "full": false,
+      "video": "videos/featured-clearing-balancing.mp4"
     }
   ],
   "bgColor": "#0e1522",
