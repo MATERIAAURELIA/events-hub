@@ -78,6 +78,7 @@ h1,h2,.sub,.res-sub,.fine,.rcard p,.rcard div,.check{text-wrap:balance}
 .evdate{font-weight:600;opacity:.8}
 .shiftwrap{text-align:center;margin:18px 0 4px}.shift{display:inline-block;padding:13px 24px;border-radius:999px;color:#2a2210;font-weight:800;text-decoration:none;background:linear-gradient(135deg,#fff8e6,#f3dfae);box-shadow:0 0 0 6px rgba(255,240,200,.08),0 6px 22px rgba(255,236,190,.22)}
 #change,#pickwrap,.pickwrap{display:none!important}
+.tri{display:inline-block;width:0;height:0;border-style:solid;border-width:5px 0 5px 8px;border-color:transparent transparent transparent var(--gold);margin-right:6px;vertical-align:0}
 @media (max-width:480px){
   .choice{grid-template-columns:1fr}
   h1{font-size:2rem}
@@ -258,12 +259,12 @@ for(const n of [1,2,3]){const u=safeUrl(Q.get('r'+n)||''); if(u) res.push({u,t:(
 if(!res.length) res.push({u:'https://www.earthharmonysoundwellness.com/articles/so-how-was-your-first-sound-bath.html',t:'So, how was your sound bath?',d:'What people notice the day after.',l:'2 min read'});
 const list=$('resList');
 res.forEach(r=>{
-  const kind=/youtu\.?be/i.test(r.u)?['Video','\u25B6 Video']:/\.(mp3|m4a|wav)(\?|$)/i.test(r.u)?['Audio','\u25B6 Audio']:/sdz\.sh|soundiiz|spotify|playlist/i.test(r.u)?['Playlist','\u25B6 Playlist']:['Article','Article'];
+  const kind=/youtu\.?be/i.test(r.u)?['Video','Video']:/\.(mp3|m4a|wav)(\?|$)/i.test(r.u)?['Audio','Audio']:/sdz\.sh|soundiiz|spotify|playlist/i.test(r.u)?['Playlist','Playlist']:['Article','Article'];
   const a=document.createElement('a');a.className='rcard';a.href=r.u;a.target='_blank';a.rel='noopener';
   const txt=document.createElement('div');txt.className='rtxt';
   const t=document.createElement('div');t.className='rt';t.textContent=r.t;txt.appendChild(t);
   const m=document.createElement('div');m.className='rm';m.textContent=r.d||'';if(!r.d)m.hidden=true;txt.appendChild(m);
-  const i=document.createElement('span');i.className='ri';i.textContent=kind[1]+(r.l?' \u00b7 '+r.l.replace(/ read$/,''):'')+(kind[0]==='Article'?' \u2192':'');
+  const i=document.createElement('span');i.className='ri';if(kind[0]!=='Article'){const tri=document.createElement('span');tri.className='tri';i.appendChild(tri)} i.appendChild(document.createTextNode(kind[1]+(r.l?' \u00b7 '+r.l.replace(/ read$/,''):'')+(kind[0]==='Article'?' \u2192':'')));
   a.appendChild(txt);a.appendChild(i);list.appendChild(a);
 });
 })();
