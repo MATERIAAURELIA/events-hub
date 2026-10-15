@@ -198,6 +198,15 @@ function setRate(){
   const q=$('quick'); if(v<=8&&!q.classList.contains('on')){q.classList.add('on');$('openQuick').setAttribute('aria-expanded',true)}
 }
 ['input','change','pointerup','keyup'].forEach(t=>rate.addEventListener(t,setRate));
+/* ---- silent rating save (no email): Apps Script store, key feedback-ratings; one row per visit, updated if they move it ---- */
+const STORE='https://script.google.com/macros/s/AKfycbzzu1jXVtwDuHyBThe62Ipc10UzBJkDQDACGZfe5oEF9jXIUl3qtGjbJD2c3IW_q4EjKQ/exec';
+const SID=Math.random().toString(36).slice(2,10);let saveT=null;
+function saveRating(){clearTimeout(saveT);saveT=setTimeout(async()=>{try{
+  const r=await fetch(STORE+'?key=feedback-ratings&cb='+Date.now());let list=[];try{const j=await r.json();list=Array.isArray(j)?j:(Array.isArray(j&&j.value)?j.value:[])}catch(e){}
+  list=list.filter(x=>x&&x.sid!==SID);list.push({sid:SID,event:evIn.value||'',rating:+rate.value,at:new Date().toISOString()});
+  await fetch(STORE,{method:'POST',body:JSON.stringify({key:'feedback-ratings',value:list.slice(-1000)})});
+}catch(e){}},1500)}
+['change','pointerup','keyup'].forEach(t=>rate.addEventListener(t,saveRating));
 
 /* ---- reveal quick feedback ---- */
 $('openQuick').addEventListener('click',function(){
