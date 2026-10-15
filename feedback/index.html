@@ -108,7 +108,7 @@ h1,h2,.sub,.res-sub,.fine,.rcard p,.rcard div,.check{text-wrap:balance}
 
   <h2 class="grow-h">🌱 Help us grow!</h2>
   <div class="choice">
-    <a class="big g gbtn" id="gbtn" href="https://g.page/r/CeK7fPWpwspuEAE/review" target="_blank" rel="noopener">⭐ Leave a Google review</a>
+    <a class="big g gbtn" id="gbtn" href="https://g.page/r/CeK7fPWpwspuEAE/review" target="_blank" rel="noopener">⭐ Loved it? Leave a Google review</a>
     <button type="button" class="big f" id="openQuick" aria-expanded="false" aria-controls="quick">💬 Share quick feedback</button>
   </div>
   <div class="gnote" id="gnote"></div>
@@ -140,7 +140,7 @@ h1,h2,.sub,.res-sub,.fine,.rcard p,.rcard div,.check{text-wrap:balance}
 <div id="thanks" class="card center">
   <h2>Thank you 🙏</h2>
   <p>Got it. Marcus reads every one.</p>
-  <a class="gbtn gbtn2" href="https://g.page/r/CeK7fPWpwspuEAE/review" target="_blank" rel="noopener">⭐ Leave a Google review</a>
+  <a class="gbtn gbtn2" href="https://g.page/r/CeK7fPWpwspuEAE/review" target="_blank" rel="noopener">⭐ Loved it? Leave a Google review</a>
   <div class="gnote"></div>
   <div><a class="upcoming" href="https://events.earthharmonysoundwellness.com">See upcoming sessions →</a></div>
 </div>
@@ -234,7 +234,7 @@ $('fb').addEventListener('submit',async ev=>{
 
 /* ---- Google review: if they wrote what we did well, copy it so Google is just "paste" ---- */
 const well=$('well');
-const glabel=()=>{const has=well.value.trim().length>15;document.querySelectorAll('.gbtn').forEach(b=>b.textContent=has?'⭐ Copy my words & open Google':'⭐ Leave a Google review')};
+const glabel=()=>{const has=well.value.trim().length>15;document.querySelectorAll('.gbtn').forEach(b=>b.textContent=has?'⭐ Copy my words & open Google':'⭐ Loved it? Leave a Google review')};
 well.addEventListener('input',glabel);
 function fallback(s){const a=document.createElement('textarea');a.value=s;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(e){}a.remove()}
 document.querySelectorAll('.gbtn').forEach(b=>b.addEventListener('click',()=>{
