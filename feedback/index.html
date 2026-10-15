@@ -163,7 +163,7 @@ const flat=t=>(t||'').replace(/\n/g,' ');
 const fmt=s=>new Date(s+'T12:00').toLocaleDateString('en-CA',{weekday:'short',month:'short',day:'numeric'});
 
 /* ---- session: pre-fill from ?e=, fallback picker ---- */
-function choose(val,name){evIn.value=val; const p=(name||'').split(' · '); evName.textContent=p[0]||''; if(p[1]){evName.appendChild(document.createElement('br')); const d=document.createElement('span'); d.className='evdate'; d.textContent=p.slice(1).join(' · '); evName.appendChild(d);} $('sub').hidden=!name;}
+function choose(val,name){evIn.value=val; const p=(name||'').split(' · '); const tp=(p[0]||'').split(/:\s+/); evName.textContent=tp[0]||''; if(tp[1]){evName.appendChild(document.createElement('br')); evName.appendChild(document.createTextNode(tp.slice(1).join(': ')));} if(p[1]){evName.appendChild(document.createElement('br')); const d=document.createElement('span'); d.className='evdate'; d.textContent=p.slice(1).join(' · '); evName.appendChild(d);} $('sub').hidden=!name;}
 picker.addEventListener('change',()=>{const o=picker.selectedOptions[0]; if(!o||!o.value){choose('','');return} choose(o.value,o.dataset.name);});
 $('change').addEventListener('click',e=>{e.preventDefault();pickwrap.classList.toggle('on');if(pickwrap.classList.contains('on'))picker.focus()});
 function addOpt(val,label,name){const o=document.createElement('option');o.value=val;o.textContent=label;o.dataset.name=name;picker.appendChild(o);return o}
