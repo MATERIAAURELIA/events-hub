@@ -242,12 +242,12 @@ for(const n of [1,2,3]){const u=safeUrl(Q.get('r'+n)||''); if(u) res.push({u,t:(
 if(!res.length) res.push({u:'https://www.earthharmonysoundwellness.com/articles/so-how-was-your-first-sound-bath.html',t:'So, how was your sound bath?',d:'What people notice the day after.',l:'2 min read'});
 const list=$('resList');
 res.forEach(r=>{
-  const kind=/youtu\.?be/i.test(r.u)?['Video','\u25B6 Watch']:/\.(mp3|m4a|wav)(\?|$)/i.test(r.u)?['Audio','\u25B6 Listen']:/sdz\.sh|soundiiz|spotify|playlist/i.test(r.u)?['Playlist','\u25B6 Listen']:['Article','Read \u2192'];
+  const kind=/youtu\.?be/i.test(r.u)?['Video','\u25B6 Video']:/\.(mp3|m4a|wav)(\?|$)/i.test(r.u)?['Audio','\u25B6 Audio']:/sdz\.sh|soundiiz|spotify|playlist/i.test(r.u)?['Playlist','\u25B6 Playlist']:['Article','Article'];
   const a=document.createElement('a');a.className='rcard';a.href=r.u;a.target='_blank';a.rel='noopener';
   const txt=document.createElement('div');txt.className='rtxt';
   const t=document.createElement('div');t.className='rt';t.textContent=r.t;txt.appendChild(t);
-  const m=document.createElement('div');m.className='rm';m.textContent=kind[0]+(r.d?' \u00b7 '+r.d:'');txt.appendChild(m);
-  const i=document.createElement('span');i.className='ri';i.textContent=kind[1]+(r.l?' \u00b7 '+r.l.replace(/ read$/,''):'');
+  const m=document.createElement('div');m.className='rm';m.textContent=r.d||'';if(!r.d)m.hidden=true;txt.appendChild(m);
+  const i=document.createElement('span');i.className='ri';i.textContent=kind[1]+(r.l?' \u00b7 '+r.l.replace(/ read$/,''):'')+(kind[0]==='Article'?' \u2192':'');
   a.appendChild(txt);a.appendChild(i);list.appendChild(a);
 });
 })();
