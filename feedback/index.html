@@ -2,209 +2,251 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Share Your Experience | Earth Harmony Sound & Wellness</title>
+<title>How Was It? | Earth Harmony Sound & Wellness</title>
 <meta name="robots" content="noindex">
-<meta property="og:title" content="Share your experience — Earth Harmony">
-<meta property="og:description" content="A few words about your session. Thank you for being part of the circle.">
+<meta property="og:title" content="How was it? — Earth Harmony">
+<meta property="og:description" content="A quick rating, a Google review, or a few words. Thank you for being part of the circle.">
 <meta property="og:image" content="https://www.earthharmonysoundwellness.com/images/og-gong-cymatics.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--gold:#d2a44e;--gold2:#e7c877;--ink:#efe6d6;--mut:#8d7d61;--bg:#0d1117}
+:root{--gold:#d2a44e;--gold2:#e7c877;--ink:#efe6d6;--mut:#8d7d61;--bg:#0d1117;--soft:#cfc4ab}
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:radial-gradient(ellipse at 50% -10%, #1c2333 0%, #0d1117 55%);color:var(--ink);font-family:'Nunito Sans',sans-serif;min-height:100vh}
-.wrap{max-width:620px;margin:0 auto;padding:44px 18px 90px}
-.me{display:block;width:96px;height:96px;margin:0 auto 16px;border-radius:50%;object-fit:cover;border:2px solid rgba(210,164,78,.7);box-shadow:0 0 0 6px rgba(210,164,78,.12),0 10px 30px rgba(0,0,0,.45)}
-.kicker{text-align:center;font-size:12px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold)}
-h1{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:600;text-align:center;line-height:1.12;margin:10px 0 6px}
-.sub{text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.18rem;color:#cfc4ab}
-.why{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:22px 0 6px}
-.why div{text-align:center;padding:14px 10px;border-radius:14px;background:rgba(255,253,247,.03);border:1px solid rgba(210,164,78,.18);font-size:.82rem;line-height:1.5;color:#cfc4ab}
-.why b{display:block;font-size:1.3rem;margin-bottom:4px}
-.step{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--gold);text-align:center;margin:30px 0 14px}
-.step span{display:inline-block;width:30px;height:30px;line-height:30px;border-radius:50%;border:1px solid var(--gold);font-size:1rem;margin-right:8px;vertical-align:2px;font-family:'Nunito Sans',sans-serif}
-.tiles{display:flex;flex-direction:column;gap:10px}
-.tile{position:relative;display:flex;align-items:center;gap:14px;width:100%;border-radius:12px;cursor:pointer;border:1.5px solid rgba(210,164,78,.2);background:rgba(255,253,247,.03);transition:border-color .15s,background .15s,box-shadow .15s;text-align:left;padding:10px 12px 10px 10px;font:inherit;color:inherit}
-.tile:hover{border-color:rgba(210,164,78,.55);background:rgba(255,253,247,.05)}
-.tile img{flex:0 0 64px;width:64px;height:64px;border-radius:9px;object-fit:cover}
-.tile .cap{min-width:0}
-.tile .t{font-family:'Cormorant Garamond',serif;font-size:1.15rem;line-height:1.2}
-.tile .d{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold2);margin-top:4px}
-.tile .sel{margin-left:auto;flex:0 0 auto;padding:7px 14px;border-radius:999px;border:1px solid rgba(210,164,78,.55);color:var(--gold);font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
-.tile.on .sel{background:var(--gold);color:#181207;border-color:var(--gold)}
-.tile.on{border-color:var(--gold);background:rgba(210,164,78,.08);box-shadow:0 0 0 3px rgba(210,164,78,.15)}
-.other{justify-content:center;padding:14px;font-size:.9rem;color:#cfc4ab;border-style:dashed}
-#rest{display:none;animation:rise .5s ease}
-@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
-.chosen{text-align:center;font-size:.9rem;color:#cfc4ab;margin:6px 0 0}
-.chosen b{color:var(--gold2);font-weight:600}
-.chosen a{color:var(--mut);font-size:.8rem;margin-left:6px}
-.card{background:rgba(255,253,247,.035);border:1px solid rgba(210,164,78,.25);border-radius:16px;padding:22px 20px;margin-top:18px}
-.card h2{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.4rem;color:var(--gold);margin-bottom:4px}
-.hint{font-size:.86rem;color:#b9ae95;line-height:1.6;margin-bottom:8px}
-.hint em{color:var(--gold2);font-style:italic}
-label{display:block;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--mut);margin:14px 0 5px}
-input,textarea{width:100%;background:rgba(13,17,23,.6);border:1px solid rgba(210,164,78,.3);border-radius:10px;color:var(--ink);font:inherit;font-size:.95rem;padding:11px 12px}
-textarea{min-height:110px;resize:vertical;line-height:1.55}
-input:focus,textarea:focus{outline:none;border-color:var(--gold)}
-.row{display:flex;gap:12px}.row>div{flex:1}
-.check{display:flex;gap:10px;align-items:flex-start;margin-top:14px;font-size:.9rem;color:#ddd3bd;line-height:1.5;text-transform:none;letter-spacing:0}
-.check input{width:auto;margin-top:4px}
-.send{width:100%;margin-top:22px;background:linear-gradient(180deg,#e0b568,#c89a44);color:#181207;font-weight:800;font-size:.95rem;letter-spacing:.12em;text-transform:uppercase;border:none;border-radius:12px;padding:16px;cursor:pointer}
+html{-webkit-text-size-adjust:100%}
+body{background:#0d1117 radial-gradient(ellipse at 50% -10%, #1c2333 0%, #0d1117 55%) no-repeat;color:var(--ink);font-family:'Nunito Sans',sans-serif;min-height:100vh;font-size:17px;overflow-x:hidden}
+.wrap{max-width:560px;margin:0 auto;padding:36px 16px 80px}
+.me{display:block;width:84px;height:84px;margin:0 auto 14px;border-radius:50%;object-fit:cover;border:2px solid rgba(210,164,78,.7);box-shadow:0 0 0 6px rgba(210,164,78,.12),0 10px 30px rgba(0,0,0,.45)}
+.kicker{text-align:center;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
+h1{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:600;text-align:center;line-height:1.12;margin:10px 0 6px}
+.sub{text-align:center;font-size:1rem;color:var(--soft);line-height:1.5}
+.sub b{color:var(--gold2);font-weight:700}
+.sub a{color:var(--mut);font-size:.85rem;margin-left:6px}
+.pickwrap{display:none;margin:14px auto 0;max-width:420px}
+.pickwrap.on{display:block}
+.card{background:rgba(255,253,247,.035);border:1px solid rgba(210,164,78,.25);border-radius:16px;padding:20px 18px;margin-top:18px}
+.card h2{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.55rem;color:var(--gold);margin-bottom:6px}
+.center{text-align:center}
+label{display:block;font-size:.95rem;font-weight:700;color:var(--ink);margin:16px 0 6px}
+label small{font-weight:400;color:var(--mut);font-size:.8rem}
+input,textarea,select{width:100%;background:rgba(13,17,23,.6);border:1px solid rgba(210,164,78,.3);border-radius:10px;color:var(--ink);font:inherit;font-size:16px;padding:12px}
+select{appearance:auto;min-height:48px}
+textarea{min-height:84px;resize:vertical;line-height:1.5}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--gold)}
+/* rating */
+.face{font-size:3rem;line-height:1;margin:6px 0 4px;transition:transform .15s}
+.face.pop{transform:scale(1.15)}
+.rlabel{font-weight:700;color:var(--gold2);min-height:1.5em}
+.unset .rlabel{color:var(--mut);font-weight:400}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:44px;background:transparent;border:none;padding:0;margin-top:8px;cursor:pointer;touch-action:pan-y}
+input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:99px;background:linear-gradient(90deg,#5b4a2a,var(--gold))}
+input[type=range]::-moz-range-track{height:8px;border-radius:99px;background:linear-gradient(90deg,#5b4a2a,var(--gold))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:34px;height:34px;margin-top:-13px;border-radius:50%;background:var(--gold2);border:3px solid #181207;box-shadow:0 0 0 3px rgba(210,164,78,.35)}
+input[type=range]::-moz-range-thumb{width:30px;height:30px;border-radius:50%;background:var(--gold2);border:3px solid #181207;box-shadow:0 0 0 3px rgba(210,164,78,.35)}
+.unset input[type=range]::-webkit-slider-thumb{background:#3a3326;box-shadow:none;border-color:var(--mut)}
+.unset input[type=range]::-moz-range-thumb{background:#3a3326;box-shadow:none;border-color:var(--mut)}
+.ticks{display:flex;justify-content:space-between;margin-top:2px}
+.ticks span{font-size:.8rem;color:var(--mut);padding-top:4px}
+.ticks button.on{opacity:1}
+/* choice */
+.choice{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
+.big{display:flex;align-items:center;justify-content:center;text-align:center;min-height:64px;padding:14px 12px;border-radius:14px;font:inherit;font-weight:800;font-size:1rem;cursor:pointer;text-decoration:none;line-height:1.3}
+.big.g{background:linear-gradient(180deg,#e0b568,#c89a44);color:#181207;border:none}
+.big.f{background:rgba(255,253,247,.04);color:var(--gold2);border:1.5px solid rgba(210,164,78,.6)}
+.big.f[aria-expanded=true]{background:rgba(210,164,78,.12);border-color:var(--gold)}
+.gnote{display:none;margin:10px auto 0;max-width:360px;font-size:.88rem;color:var(--gold);line-height:1.5;text-align:center}.gnote.on{display:block}
+#quick{display:none;animation:rise .4s ease}
+#quick.on{display:block}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.check{display:flex;gap:10px;align-items:flex-start;margin-top:16px;font-size:.92rem;font-weight:400;color:#ddd3bd;line-height:1.5}
+.check input{width:22px;height:22px;flex:none;margin-top:1px;accent-color:var(--gold)}
+.send{width:100%;margin-top:20px;background:linear-gradient(180deg,#e0b568,#c89a44);color:#181207;font-weight:800;font-size:1rem;letter-spacing:.1em;text-transform:uppercase;border:none;border-radius:12px;padding:17px;cursor:pointer}
 .send:disabled{opacity:.6;cursor:default}
-.fine{font-size:.78rem;color:var(--mut);text-align:center;margin-top:14px;line-height:1.6}
-.gnote{display:none;margin:10px auto 0;max-width:340px;font-size:.85rem;color:var(--gold);line-height:1.5}.gnote.on{display:block}
-.gbtn{display:inline-block;margin-top:12px;padding:12px 22px;border:1px solid rgba(210,164,78,.5);border-radius:999px;color:var(--gold);text-decoration:none;font-weight:700;font-size:.9rem}
-#thanks{display:none;text-align:center}
-#thanks p{font-size:1rem;line-height:1.75;color:#ddd3bd;margin:10px 0}
-@media (max-width:760px){
-  .why{grid-template-columns:1fr}
-  .why div{display:flex;align-items:center;gap:14px;text-align:left;font-size:1.08rem;padding:14px 16px}
-  .why b{display:inline;margin:0;font-size:1.5rem;flex:none}
-}
-@media (max-width:560px){
-  body{font-size:17px}
-  .wrap{padding:32px 16px 80px}
-  h1{font-size:2.1rem}.sub{font-size:1.25rem}.kicker{font-size:11px;letter-spacing:.3em}
-  .step{font-size:1.65rem}
-  .tile img{flex-basis:70px;width:70px;height:70px}
-  .tile .t{font-size:1.25rem}.tile .d{font-size:.8rem}
-  .tile .sel{font-size:.78rem;padding:9px 14px}
-  .chosen{font-size:1rem}
-  .card h2{font-size:1.6rem}
-  .hint{font-size:1rem;line-height:1.6}
-  label{font-size:.8rem}
-  input,textarea{font-size:16px}
-  .check{font-size:1rem}
-  .send{font-size:1.05rem;padding:18px}
-  .gbtn{font-size:1rem;padding:14px 24px}
-  .fine{font-size:.9rem}
-  .row{flex-direction:column;gap:0}
+.fine{font-size:.82rem;color:var(--mut);text-align:center;margin-top:12px;line-height:1.5}
+/* resources */
+.res h2{text-align:center}
+.grow-h{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.55rem;color:var(--gold);text-align:center;margin:22px 0 10px}
+.rcard{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;padding:18px 16px;border-radius:14px;border:1px solid rgba(210,164,78,.25);background:rgba(13,17,23,.4);margin-top:12px}.rcard a{align-self:center;min-width:150px;display:inline-flex;justify-content:center;align-items:center;gap:6px}
+.rcard .rt{font-weight:700;font-size:1.02rem;line-height:1.35;overflow-wrap:anywhere}
+.rcard .rd{font-size:.9rem;color:var(--soft);line-height:1.5;overflow-wrap:anywhere;max-width:30em}
+.rbtn{align-self:flex-start;margin-top:6px;display:inline-flex;align-items:center;min-height:44px;padding:10px 18px;border:1px solid rgba(210,164,78,.55);border-radius:999px;color:var(--gold);text-decoration:none;font-weight:700;font-size:.92rem}
+#thanks{display:none}
+#thanks p{font-size:1rem;line-height:1.7;color:#ddd3bd;margin:8px 0}
+.gbtn2{display:inline-flex;align-items:center;justify-content:center;min-height:52px;margin-top:12px;padding:12px 24px;border-radius:999px;background:linear-gradient(180deg,#e0b568,#c89a44);color:#181207;text-decoration:none;font-weight:800}
+.upcoming{display:inline-block;margin-top:18px;color:var(--gold);font-weight:700;padding:8px 0}
+.rate-h{text-wrap:balance;margin-bottom:2px!important}.brand-l{font-family:'Nunito Sans',sans-serif;font-weight:800;letter-spacing:.18em;text-transform:uppercase;font-size:.95rem;color:var(--gold2);margin-bottom:8px}
+h1,h2,.sub,.res-sub,.fine,.rcard p,.rcard div,.check{text-wrap:balance}
+.evdate{font-weight:600;opacity:.8}
+@media (max-width:480px){
+  .choice{grid-template-columns:1fr}
+  h1{font-size:2rem}
 }
 </style></head>
 <body><div class="wrap">
 <img class="me" src="../photos/marcus-feedback-portrait.jpg" alt="Marcus Fung">
-<div class="kicker">Earth Harmony Sound &amp; Wellness</div>
-<h1>Share your experience</h1>
-<div class="sub">thank you for being part of the circle</div>
-
-<div class="why">
-  <div><b>🌱</b>Your words help me understand your experience and its benefits</div>
-  <div><b>🧭</b>Your words help others choose the session that's a good fit for them</div>
-  <div><b>🔧</b>Your honest suggestions help every session get better</div>
+<h1>Thank you for coming</h1>
+<p class="sub" id="sub" hidden><b id="evName"></b><a href="#" id="change">change</a></p>
+<div class="pickwrap" id="pickwrap">
+  <label for="picker" style="text-align:center;margin-top:0">Which session were you at?</label>
+  <select id="picker"><option value="">Choose your session…</option></select>
 </div>
 
-<form id="fb">
-<div class="step"><span>1</span>Which session did you attend?</div>
-<div class="tiles" id="tiles"></div>
-<input type="hidden" name="event" id="event">
+<form id="fb" novalidate>
+  <input type="hidden" name="event" id="event">
+  <input type="hidden" name="rating" id="ratingVal">
 
-<div id="rest">
-  <p class="chosen">Sharing about <b id="chosenName"></b><a href="#" id="change">change</a></p>
-
-  <div class="step"><span>2</span>Your feedback</div>
-
-  <div class="card" id="expCard">
-    <h2>Your experience <span style="font-family:'Nunito Sans',sans-serif;font-size:.75rem;color:var(--mut);letter-spacing:.1em">(optional)</span></h2>
-    <p class="hint">In a sentence or two: what did you enjoy, feel, notice, or take home with you?</p>
-    <textarea name="experience" id="experience" placeholder="e.g. I felt a deep release, and slept better than I have in months…"></textarea>
-    <div class="row">
-      <div><label for="initials">Initials or first name</label><input id="initials" name="initials" placeholder="e.g. Karen Q."></div>
-      <div><label for="vocation">Your vocation (optional, have fun)</label><input id="vocation" name="vocation" placeholder="e.g. nurse, freedom fighter"></div>
-    </div>
-    <label class="check"><input type="checkbox" name="share_ok" id="share_ok" value="yes" checked> You may share my words, with my initials and vocation, on the Earth Harmony website.</label>
+  <div class="card center unset" id="rateCard">
+    <h2 class="rate-h">How was your overall<br>experience with</h2>
+    <div class="brand-l">Earth Harmony?</div>
+    <div class="face" id="face">✨</div>
+    <div class="rlabel" id="rlabel">Slide or tap to rate</div>
+    <input type="range" id="rate" min="0" max="10" step="1" value="5" aria-label="Overall experience, from 0 to 10" aria-valuetext="Not rated yet">
+    <div class="ticks" id="ticks"></div>
   </div>
 
-  <div class="card">
-    <h2>Help us grow</h2>
+  <h2 class="grow-h">🌱 Help us grow!</h2>
+  <div class="choice">
+    <a class="big g gbtn" id="gbtn" href="https://g.page/r/CeK7fPWpwspuEAE/review" target="_blank" rel="noopener">⭐ Leave a Google review</a>
+    <button type="button" class="big f" id="openQuick" aria-expanded="false" aria-controls="quick">💬 Share quick feedback</button>
+  </div>
+  <div class="gnote" id="gnote"></div>
+
+  <div class="card" id="quick">
+    <h2>Quick feedback</h2>
+    <p class="fine" style="text-align:left;margin:0">All optional. A few words is plenty.</p>
     <label for="well">What did we do well?</label>
-    <textarea name="did_well" id="well" style="min-height:80px" placeholder="What worked for you: the sound, the space, the welcome…"></textarea>
-    <label for="improve">What could we do better?</label>
-    <textarea name="improve" id="improve" placeholder="The room, the sound, the timing, anything at all. Honest suggestions are a gift."></textarea>
-  </div>
+    <textarea name="did_well" id="well" placeholder="The sound, the space, the welcome…"></textarea>
+    <label class="check"><input type="checkbox" name="share_ok" id="share_ok" value="yes"> OK to share these words on our website (first name or initials only)</label>
+    <label for="improve">What would make it a 10?</label>
+    <textarea name="improve" id="improve" placeholder="Anything at all. Honest is helpful."></textarea>
+    <label for="suggest">Any suggestions?</label>
+    <textarea name="suggestions" id="suggest" placeholder="Something you'd love to see next time"></textarea>
+    <label for="initials">Your name <small>(optional, staying anonymous is fine)</small></label>
+    <input id="initials" name="initials" placeholder="e.g. Karen" autocomplete="given-name">
+    <label class="check"><input type="checkbox" name="reply_wanted" id="reply_wanted" value="yes"> Would you like us to get back to you?</label>
+    <div id="contactWrap" hidden><label for="contact">Best email or phone</label>
+    <input id="contact" name="contact" placeholder="so Marcus can reply" autocomplete="email"></div>
 
-  <div class="card" style="text-align:center">
-    <h2>Really happy?</h2>
-    <p class="hint">Leave us a Google review and help us serve more people. It takes a minute, and it's how most newcomers find us.</p>
-    <a class="gbtn" href="https://g.page/r/CeK7fPWpwspuEAE/review" target="_blank" rel="noopener">⭐ Leave a Google review</a>
-    <div class="gnote"></div>
+    <input type="hidden" name="_subject" id="subj" value="💬 Feedback">
+    <input type="hidden" name="_template" value="table">
+    <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+    <button type="submit" class="send" id="send">Send my feedback</button>
+    <div class="fine">Goes only to Marcus, and stays private.</div>
   </div>
-
-  <input type="hidden" name="_subject" id="subj" value="💬 Feedback">
-  <input type="hidden" name="_template" value="table">
-  <input type="text" name="_honey" style="display:none">
-  <button type="submit" class="send" id="send">Send my feedback</button>
-  <div class="fine">Goes only to Marcus. Nothing is ever posted without your permission.</div>
-</div>
 </form>
 
-<div id="thanks" class="card">
+<div id="thanks" class="card center">
   <h2>Thank you 🙏</h2>
-  <p>Your words help others find their way to the circle, and your suggestions help us make every session better.</p>
-  <a class="gbtn" href="https://g.page/r/CeK7fPWpwspuEAE/review" target="_blank" rel="noopener">⭐ Leave a Google review</a>
+  <p>Got it. Marcus reads every one.</p>
+  <a class="gbtn gbtn2" href="https://g.page/r/CeK7fPWpwspuEAE/review" target="_blank" rel="noopener">⭐ Leave a Google review</a>
   <div class="gnote"></div>
-  <p style="margin-top:22px"><a href="https://events.earthharmonysoundwellness.com" style="color:var(--gold)">See upcoming sessions →</a></p>
+  <div><a class="upcoming" href="https://events.earthharmonysoundwellness.com">See upcoming sessions →</a></div>
+</div>
+
+<div class="card res" id="res">
+  <h2>From our Toolbox</h2>
+  <p class="res-sub" style="text-align:center;color:var(--mut);font-size:.92rem;margin:-2px 0 4px">For the drive home, or to come back to at home, so the calm comes with you.</p>
+  <div id="resList"></div>
+  <p style="text-align:center;margin-top:16px;font-size:.92rem"><a class="upcoming" href="https://events.earthharmonysoundwellness.com">When you're ready for the next one →</a></p>
 </div>
 
 <script>
-const tiles=document.getElementById('tiles'), evIn=document.getElementById('event'), rest=document.getElementById('rest');
-const want=new URLSearchParams(location.search).get('e');
+(function(){
+const Q=new URLSearchParams(location.search);
+const want=Q.get('e');
+const $=id=>document.getElementById(id);
+const evIn=$('event'), evName=$('evName'), picker=$('picker'), pickwrap=$('pickwrap');
 const SKIP=['ev-sep26-moondance'];
-const fTime=t=>{const[h,m]=(t||'').split(':').map(Number);return isNaN(h)?'':`${h%12||12}:${String(m||0).padStart(2,'0')}${h>=12?'pm':'am'}`};
 const flat=t=>(t||'').replace(/\n/g,' ');
 const fmt=s=>new Date(s+'T12:00').toLocaleDateString('en-CA',{weekday:'short',month:'short',day:'numeric'});
-function pick(btn,val,name,scroll){
-  document.querySelectorAll('.tile').forEach(t=>{t.classList.remove('on');const x=t.querySelector('.sel');if(x)x.textContent='Select'});
-  btn.classList.add('on');const sx=btn.querySelector('.sel');if(sx)sx.textContent='✓ Selected'; evIn.value=val; document.getElementById('chosenName').textContent=name;
-  rest.style.display='block';
-  if(scroll) setTimeout(()=>rest.scrollIntoView({behavior:'smooth',block:'start'}),60);
-}
+
+/* ---- session: pre-fill from ?e=, fallback picker ---- */
+function choose(val,name){evIn.value=val; const p=(name||'').split(' · '); evName.textContent=p[0]||''; if(p[1]){evName.appendChild(document.createElement('br')); const d=document.createElement('span'); d.className='evdate'; d.textContent=p.slice(1).join(' · '); evName.appendChild(d);} $('sub').hidden=!name;}
+picker.addEventListener('change',()=>{const o=picker.selectedOptions[0]; if(!o||!o.value){choose('','');return} choose(o.value,o.dataset.name);});
+$('change').addEventListener('click',e=>{e.preventDefault();pickwrap.classList.toggle('on');if(pickwrap.classList.contains('on'))picker.focus()});
+function addOpt(val,label,name){const o=document.createElement('option');o.value=val;o.textContent=label;o.dataset.name=name;picker.appendChild(o);return o}
 fetch('../site-config.json?cb='+Date.now()).then(r=>r.json()).then(d=>{
   const today=new Date().toISOString().slice(0,10), past=new Date(Date.now()-14*864e5).toISOString().slice(0,10);
-  const EXTRA={'carley-sep25':{id:'carley-sep25',title:"Carley's Group: Grief & Gratitude Journey",date:'2026-09-25',time:'18:30',img:'photos/equinox-grief-gratitude-sep21.jpg',status:'published'}};
+  const EXTRA={'carley-sep25':{id:'carley-sep25',title:"Carley's Group: Grief & Gratitude Journey",date:'2026-09-25',time:'18:30',status:'published'}};
   if(EXTRA[want]) (d.events=d.events||[]).push(EXTRA[want]);
   const evs=(d.events||[]).filter(e=>e.status!=='draft'&&!/^private/i.test(e.title||'')&&!SKIP.includes(e.id)&&e.date&&((e.date>=past&&e.date<=today)||e.id===want)).sort((a,b)=>b.date.localeCompare(a.date));
   let pre=null;
   evs.forEach(e=>{
-    const b=document.createElement('button'); b.type='button'; b.className='tile';
-    const img=e.img?(/^https?:/.test(e.img)?e.img:'../'+e.img):'../photos/plate-clearing-balance-jul17.jpg';
-    b.innerHTML=`<img src="${img}" alt="" loading="lazy"><div class="cap"><div class="t">${flat(e.title)}</div><div class="d">${fmt(e.date)}${e.time?' · '+fTime(e.time):''}</div></div><span class="sel">Select</span>`;
-    const val=flat(e.title)+' — '+e.date;
-    b.onclick=()=>pick(b,val,flat(e.title)+' · '+fmt(e.date),true);
-    tiles.appendChild(b); if(e.id===want) pre=[b,val,flat(e.title)+' · '+fmt(e.date)];
+    const val=flat(e.title)+' — '+e.date, name=flat(e.title)+' · '+fmt(e.date);
+    const o=addOpt(val,name,name); if(e.id===want) pre=o;
   });
-  const o=document.createElement('button'); o.type='button'; o.className='tile other'; o.textContent='✦ Another session or a private booking';
-  o.onclick=()=>pick(o,'Other / private session','another session',true); tiles.appendChild(o);
-  if(pre) pick(...pre,false);
-}).catch(()=>{tiles.innerHTML='<button type="button" class="tile other">✦ Tap to continue</button>';tiles.firstChild.onclick=function(){pick(this,'Unknown','your session',true)}});
-document.getElementById('change').onclick=e=>{e.preventDefault();tiles.scrollIntoView({behavior:'smooth'})};
-document.getElementById('fb').addEventListener('submit',async ev=>{
+  addOpt('Other / private session','Another session or a private booking','');
+  if(!pre&&evs.length){const v=flat(evs[0].title)+' — '+evs[0].date; pre=[...picker.options].find(o=>o.value===v)||null;}
+  if(pre){pre.selected=true; choose(pre.value,pre.dataset.name);}
+  else pickwrap.classList.add('on');
+}).catch(()=>{addOpt('Unknown','My session',''); pickwrap.classList.add('on');});
+
+document.getElementById('reply_wanted').addEventListener('change',e=>{document.getElementById('contactWrap').hidden=!e.target.checked;if(e.target.checked)document.getElementById('contact').focus()});
+/* ---- rating slider (starts unset) ---- */
+const face=v=>v<=3?'\u{1F615}':v<=5?'\u{1F610}':v<=7?'\u{1F642}':v<=8?'\u{1F60A}':'\u{1F929}';
+const word=v=>v<=3?'Not for me':v<=5?'It was okay':v<=7?'Good':v<=8?'Really good':v<=9?'Wonderful':'Perfect 10';
+const rate=$('rate'), rateCard=$('rateCard'), ticks=$('ticks');
+let rated=false;
+ticks.innerHTML='<span>0</span><span>5</span><span>10</span>';
+function setRate(){
+  rated=true; const v=+rate.value; rateCard.classList.remove('unset');
+  $('face').textContent=face(v); $('rlabel').textContent=v+'/10 \u00b7 '+word(v);
+  rate.setAttribute('aria-valuetext',v+' out of 10, '+word(v));
+  $('ratingVal').value=v+'/10 \u2014 '+word(v);
+  const f=$('face'); f.classList.add('pop'); setTimeout(()=>f.classList.remove('pop'),150);
+  const q=$('quick'); if(v<=8&&!q.classList.contains('on')){q.classList.add('on');$('openQuick').setAttribute('aria-expanded',true)}
+}
+['input','change','pointerup','keyup'].forEach(t=>rate.addEventListener(t,setRate));
+
+/* ---- reveal quick feedback ---- */
+$('openQuick').addEventListener('click',function(){
+  const q=$('quick'), open=!q.classList.contains('on');
+  q.classList.toggle('on',open); this.setAttribute('aria-expanded',open);
+  if(open) setTimeout(()=>q.scrollIntoView({behavior:'smooth',block:'start'}),60);
+});
+
+/* ---- submit (FormSubmit AJAX, unchanged endpoint) ---- */
+$('fb').addEventListener('submit',async ev=>{
   ev.preventDefault();
-  if(!evIn.value){tiles.scrollIntoView({behavior:'smooth'});return}
-  const fx=ev.target.experience.value.trim(), fi=ev.target.improve.value.trim(), fw=ev.target.did_well.value.trim();
-  if(!fx&&!fi&&!fw){alert('Add a few words about your experience, or a suggestion, before sending. Or simply close the page. No pressure at all.');return}
-  const b=document.getElementById('send'); b.disabled=true; b.textContent='Sending…';
-  document.getElementById('subj').value='💬 Feedback — '+evIn.value;
-  const fd=new FormData(ev.target); if(!fd.get('share_ok')) fd.set('share_ok','no');
+  if(!evIn.value){pickwrap.classList.add('on');picker.focus();alert('Pick your session first, at the top.');return}
+  const t=ev.target, fw=t.did_well.value.trim(), fi=t.improve.value.trim(), fs=t.suggestions.value.trim();
+  if(!rated&&!fw&&!fi&&!fs){alert('Add a rating or a few words before sending. Or simply close the page. No pressure at all.');return}
+  const b=$('send'); b.disabled=true; b.textContent='Sending…';
+  $('subj').value='💬 Feedback — '+evIn.value+(rated?' · '+rate.value+'/10':'');
+  const fd=new FormData(t); if(!fd.get('reply_wanted')) fd.set('reply_wanted','no'); if(!fd.get('share_ok')) fd.set('share_ok','no'); if(!rated) fd.set('rating','not rated');
   try{
     const r=await fetch('https://formsubmit.co/ajax/68bf44fd6c680760a90740f0fc752510',{method:'POST',headers:{'Accept':'application/json'},body:fd});
     if(!r.ok) throw 0;
-    ev.target.style.display='none'; document.querySelector('.why').style.display='none';
-    document.getElementById('thanks').style.display='block'; window.scrollTo(0,0);
+    t.style.display='none'; $('change').style.display='none'; pickwrap.classList.remove('on'); $('thanks').style.display='block'; $('thanks').scrollIntoView({block:'start'});
   }catch(e){ b.disabled=false; b.textContent='Send my feedback'; alert('Hmm, that did not send. Please try again, or email earthharmonysoundhealing@gmail.com'); }
 });
-</script>
-</div><script data-goatcounter="https://earthharmony.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
-<script>
-// ⭐ Copy-and-paste review: if they've written about their experience, copy it so Google is just "paste".
-(function(){const ex=document.getElementById('experience');
- const label=()=>{const has=ex&&ex.value.trim().length>15;document.querySelectorAll('.gbtn').forEach(b=>b.textContent=has?'⭐ Copy my words & open Google':'⭐ Leave a Google review')};
- if(ex){ex.addEventListener('input',label)}
- document.querySelectorAll('.gbtn').forEach(b=>b.addEventListener('click',()=>{const txt=ex?ex.value.trim():'';if(txt.length<=15)return;
-  const note=b.parentElement.querySelector('.gnote');
+
+/* ---- Google review: if they wrote what we did well, copy it so Google is just "paste" ---- */
+const well=$('well');
+const glabel=()=>{const has=well.value.trim().length>15;document.querySelectorAll('.gbtn').forEach(b=>b.textContent=has?'⭐ Copy my words & open Google':'⭐ Leave a Google review')};
+well.addEventListener('input',glabel);
+function fallback(s){const a=document.createElement('textarea');a.value=s;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(e){}a.remove()}
+document.querySelectorAll('.gbtn').forEach(b=>b.addEventListener('click',()=>{
+  const txt=well.value.trim(); if(txt.length<=15) return;
+  const note=b.id==='gbtn'?$('gnote'):b.parentElement.querySelector('.gnote');
   const ok=()=>{if(note){note.textContent='✓ Your words are copied. On Google, tap the review box, then Paste (long-press on a phone).';note.classList.add('on')}};
-  try{navigator.clipboard.writeText(txt).then(ok).catch(()=>{fallback(txt);ok()})}catch(e){fallback(txt);ok()}}));
- function fallback(s){const a=document.createElement('textarea');a.value=s;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(e){}a.remove()}
+  try{navigator.clipboard.writeText(txt).then(ok).catch(()=>{fallback(txt);ok()})}catch(e){fallback(txt);ok()}
+}));
+
+/* ---- Take it home: r1/r1t/r1d, r2/r2t/r2d (text via textContent; http(s) only) ---- */
+function safeUrl(u){try{const x=new URL(u);return /^https?:$/.test(x.protocol)?x.href:null}catch(e){return null}}
+const res=[];
+for(const n of [1,2]){const u=safeUrl(Q.get('r'+n)||''); if(u) res.push({u,t:(Q.get('r'+n+'t')||'').slice(0,140)||'Open resource',d:(Q.get('r'+n+'d')||'').slice(0,240)})}
+if(!res.length) res.push({u:'https://www.earthharmonysoundwellness.com/articles/so-how-was-your-first-sound-bath.html',t:'So, how was your sound bath?',d:'What people notice the day after, and how to keep the calm going.'});
+const list=$('resList');
+res.forEach(r=>{
+  const c=document.createElement('div');c.className='rcard';
+  const t=document.createElement('div');t.className='rt';t.textContent=r.t;c.appendChild(t);
+  if(r.d){const d=document.createElement('div');d.className='rd';d.textContent=r.d;c.appendChild(d)}
+  const a=document.createElement('a');a.className='rbtn';a.href=r.u;a.target='_blank';a.rel='noopener';
+  a.textContent=/youtu\.?be/i.test(r.u)?'▶ Watch':/\.(mp3|m4a|wav)(\?|$)/i.test(r.u)?'▶ Listen':'Open →';
+  c.appendChild(a); list.appendChild(c);
+});
 })();
 </script>
+</div><script data-goatcounter="https://earthharmony.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body></html>
