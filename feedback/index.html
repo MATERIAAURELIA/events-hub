@@ -246,7 +246,10 @@ document.querySelectorAll('.gbtn').forEach(b=>b.addEventListener('click',()=>{
 
 /* ---- Take it home: r1/r1t/r1d, r2/r2t/r2d (text via textContent; http(s) only) ---- */
 function safeUrl(u){try{const x=new URL(u);return /^https?:$/.test(x.protocol)?x.href:null}catch(e){return null}}
-{const s=safeUrl(Q.get('s')||'');if(s){$('shiftBtn').href=s;$('shiftWrap').hidden=false}}
+{const s=safeUrl(Q.get('s')||'');if(s&&$('shiftWrap')){$('shiftBtn').href=s;$('shiftWrap').hidden=false}}
+if(Q.get('from')==='email'){/* email already showed shift + toolbox: land on rating + open form */
+  const sw=$('shiftWrap');if(sw)sw.remove();const rs=$('res');if(rs)rs.style.display='none';
+  const q=$('quick');if(q){q.classList.add('on');$('openQuick').setAttribute('aria-expanded',true)}}
 const res=[];
 for(const n of [1,2,3]){const u=safeUrl(Q.get('r'+n)||''); if(u) res.push({u,t:(Q.get('r'+n+'t')||'').slice(0,140)||'Open resource',d:(Q.get('r'+n+'d')||'').slice(0,240),l:(Q.get('r'+n+'l')||'').slice(0,20)})}
 if(!res.length) res.push({u:'https://www.earthharmonysoundwellness.com/articles/so-how-was-your-first-sound-bath.html',t:'So, how was your sound bath?',d:'What people notice the day after.',l:'2 min read'});
