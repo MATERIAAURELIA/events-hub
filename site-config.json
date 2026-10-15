@@ -1138,7 +1138,9 @@
       "futureDates": [
         "2026-11-28 18:00",
         "2026-12-19 18:00"
-      ]
+      ],
+      "reminder": false,
+      "reminderNote": "Yoga Within (partner) sends their own"
     },
     {
       "id": "ev-oct17-ekatra",
