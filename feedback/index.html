@@ -65,7 +65,7 @@ input[type=range]::-moz-range-thumb{width:30px;height:30px;border-radius:50%;bac
 /* resources */
 .res h2{text-align:center}
 .grow-h{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.55rem;color:var(--gold);text-align:center;margin:22px 0 10px}
-.rcard{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;padding:18px 16px;border-radius:14px;border:1px solid rgba(210,164,78,.25);background:rgba(13,17,23,.4);margin-top:12px}.rcard a{align-self:center;min-width:150px;display:inline-flex;justify-content:center;align-items:center;gap:6px}
+.rcard{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;border:1px solid rgba(210,164,78,.25);background:rgba(13,17,23,.4);margin-top:10px;text-decoration:none;color:inherit;text-align:left}.rcard:hover{border-color:rgba(210,164,78,.6)}.rtxt{flex:1;min-width:0}.rm{font-size:.82rem;color:var(--soft);line-height:1.4;margin-top:2px}.ri{flex:0 0 36px;height:36px;border-radius:50%;border:1px solid rgba(210,164,78,.5);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:.9rem}
 .rcard .rt{font-weight:700;font-size:1.02rem;line-height:1.35;overflow-wrap:anywhere}
 .rcard .rd{font-size:.9rem;color:var(--soft);line-height:1.5;overflow-wrap:anywhere;max-width:30em}
 .rbtn{align-self:flex-start;margin-top:6px;display:inline-flex;align-items:center;min-height:44px;padding:10px 18px;border:1px solid rgba(210,164,78,.55);border-radius:999px;color:var(--gold);text-decoration:none;font-weight:700;font-size:.92rem}
@@ -143,8 +143,8 @@ h1,h2,.sub,.res-sub,.fine,.rcard p,.rcard div,.check{text-wrap:balance}
 </div>
 
 <div class="card res" id="res">
-  <h2>From our Toolbox</h2>
-  <p class="res-sub" style="text-align:center;color:var(--mut);font-size:.92rem;margin:-2px 0 4px">For the drive home, or to come back to at home, so the calm comes with you.</p>
+  <h2>From our Toolbox Library</h2>
+  <p class="res-sub" style="text-align:center;color:var(--mut);font-size:.92rem;margin:-2px 0 4px">For support with your integration</p>
   <div id="resList"></div>
   <p style="text-align:center;margin-top:16px;font-size:.92rem"><a class="upcoming" href="https://events.earthharmonysoundwellness.com">When you're ready for the next one →</a></p>
 </div>
@@ -235,16 +235,17 @@ document.querySelectorAll('.gbtn').forEach(b=>b.addEventListener('click',()=>{
 /* ---- Take it home: r1/r1t/r1d, r2/r2t/r2d (text via textContent; http(s) only) ---- */
 function safeUrl(u){try{const x=new URL(u);return /^https?:$/.test(x.protocol)?x.href:null}catch(e){return null}}
 const res=[];
-for(const n of [1,2]){const u=safeUrl(Q.get('r'+n)||''); if(u) res.push({u,t:(Q.get('r'+n+'t')||'').slice(0,140)||'Open resource',d:(Q.get('r'+n+'d')||'').slice(0,240)})}
-if(!res.length) res.push({u:'https://www.earthharmonysoundwellness.com/articles/so-how-was-your-first-sound-bath.html',t:'So, how was your sound bath?',d:'What people notice the day after, and how to keep the calm going.'});
+for(const n of [1,2,3]){const u=safeUrl(Q.get('r'+n)||''); if(u) res.push({u,t:(Q.get('r'+n+'t')||'').slice(0,140)||'Open resource',d:(Q.get('r'+n+'d')||'').slice(0,240),l:(Q.get('r'+n+'l')||'').slice(0,20)})}
+if(!res.length) res.push({u:'https://www.earthharmonysoundwellness.com/articles/so-how-was-your-first-sound-bath.html',t:'So, how was your sound bath?',d:'What people notice the day after.',l:'2 min read'});
 const list=$('resList');
 res.forEach(r=>{
-  const c=document.createElement('div');c.className='rcard';
-  const t=document.createElement('div');t.className='rt';t.textContent=r.t;c.appendChild(t);
-  if(r.d){const d=document.createElement('div');d.className='rd';d.textContent=r.d;c.appendChild(d)}
-  const a=document.createElement('a');a.className='rbtn';a.href=r.u;a.target='_blank';a.rel='noopener';
-  a.textContent=/youtu\.?be/i.test(r.u)?'▶ Watch':/\.(mp3|m4a|wav)(\?|$)/i.test(r.u)?'▶ Listen':'Open →';
-  c.appendChild(a); list.appendChild(c);
+  const kind=/youtu\.?be/i.test(r.u)?['Video','\u25B6']:/\.(mp3|m4a|wav)(\?|$)/i.test(r.u)?['Audio','\u25B6']:/soundiiz|spotify|playlist/i.test(r.u)?['Playlist','\u25B6']:['Read','\u2192'];
+  const a=document.createElement('a');a.className='rcard';a.href=r.u;a.target='_blank';a.rel='noopener';
+  const txt=document.createElement('div');txt.className='rtxt';
+  const t=document.createElement('div');t.className='rt';t.textContent=r.t;txt.appendChild(t);
+  const m=document.createElement('div');m.className='rm';m.textContent=kind[0]+(r.l?' \u00b7 '+r.l:'')+(r.d?' \u00b7 '+r.d:'');txt.appendChild(m);
+  const i=document.createElement('span');i.className='ri';i.textContent=kind[1];i.setAttribute('aria-hidden','true');
+  a.appendChild(txt);a.appendChild(i);list.appendChild(a);
 });
 })();
 </script>
