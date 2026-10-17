@@ -1166,7 +1166,7 @@
       "cancelled": true
     },
     {
-      "id": "ev-nov7-ekatra",
+      "id": "ev-nov7-ekatra", "cancelled": true,
       "type": "sound-bath",
       "title": "Held & Nurtured:\nThe Divine Mother Journey",
       "date": "2026-11-07",
@@ -1184,7 +1184,7 @@
       "titleAlign": "center"
     },
     {
-      "id": "ev-dec12-ekatra",
+      "id": "ev-dec12-ekatra", "cancelled": true,
       "type": "sound-bath",
       "title": "Return & Remember:\nThe Harmonic OM",
       "date": "2026-12-12",
