@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Response>
-  <Say voice="Polly.Stephen-Neural">Hi Marcus, it's MAT. This is voice one. Calm and steady.</Say>
-  <Pause length="1"/>
-  <Say voice="Google.en-US-Neural2-J">This is voice two. A little warmer, maybe.</Say>
-  <Pause length="1"/>
-  <Say voice="Google.en-US-Chirp3-HD-Charon">And this is voice three, the newest kind. Tell me which one you like.</Say>
+  <Say voice="Google.en-US-Chirp3-HD-Charon">Hi Marcus, it's MAT. The line works, and this is the voice you picked. I can't talk back yet. Once we build the live connection, you'll be able to talk with me right here. Talk soon.</Say>
 </Response>
