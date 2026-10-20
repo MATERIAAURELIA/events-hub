@@ -1533,6 +1533,41 @@ loadConfig().then(()=>{
     -webkit-tap-highlight-color:transparent}
   #vr-door:hover,#vr-door:focus{color:rgba(212,175,55,.95);background:rgba(212,175,55,.09)}
 </style>
-<script>/* volunteer layer: only with ?volunteer */ if(new URLSearchParams(location.search).has('volunteer')){var s=document.createElement('script');s.src='volunteer-board/volunteer.js?v=7';document.body.appendChild(s);}</script>
+<!-- Volunteer Portal: button on the hub + password gate (Marcus, Oct 20). Light gate for convenience, not real security: only first names are public. -->
+<div id="vol-portal-row" style="text-align:center;margin:10px 0 28px"><button type="button" class="home-link" id="vol-portal-btn" data-gc="Volunteer Portal" style="cursor:pointer;font-family:var(--body-font)">🙋 Volunteer Portal</button></div>
+<div id="vol-gate" style="display:none;position:fixed;inset:0;z-index:300;background:rgba(5,9,16,.82);align-items:center;justify-content:center;padding:16px">
+  <form id="vol-gate-form" style="width:100%;max-width:340px;background:var(--bg);border:1px solid rgba(210,164,78,.35);border-radius:16px;padding:22px 20px;text-align:center;color:rgba(243,235,221,.92);font-family:var(--body-font)">
+    <div style="font-family:var(--heading-font);font-size:1.15rem;margin-bottom:6px">Volunteer Portal</div>
+    <div style="font-size:.8rem;opacity:.75;margin-bottom:14px">Enter the team password</div>
+    <input id="vol-gate-pw" type="password" autocomplete="off" autocapitalize="none" style="width:100%;box-sizing:border-box;padding:10px 12px;border-radius:10px;border:1px solid rgba(210,164,78,.4);background:rgba(243,235,221,.06);color:inherit;font-size:16px">
+    <div id="vol-gate-err" style="color:#e8a090;font-size:.75rem;min-height:1.1em;margin-top:8px"></div>
+    <div style="display:flex;gap:8px;justify-content:center;margin-top:8px">
+      <button type="button" id="vol-gate-cancel" style="padding:8px 16px;border-radius:18px;border:1px solid rgba(243,235,221,.25);background:none;color:inherit;cursor:pointer">Cancel</button>
+      <button type="submit" style="padding:8px 18px;border-radius:18px;border:none;background:#c8a44e;color:#000;font-weight:700;cursor:pointer">Enter</button>
+    </div>
+  </form>
+</div>
+<script>
+(function(){
+  var HASH='5f81844560b8e86051dc515148cd6261672cc28505b4c695a71d5fd45b5f4f30', KEY='eh-vol-ok';
+  var qs=new URLSearchParams(location.search), gate=document.getElementById('vol-gate');
+  var row=document.getElementById('vol-portal-row'), hl=document.querySelector('.header .home-link');
+  if(hl){row.style.margin='8px 0 0';row.style.display='block';hl.parentNode.insertBefore(row,hl.nextSibling);}
+  function ok(){try{return localStorage.getItem(KEY)===HASH}catch(e){return false}}
+  function load(){var s=document.createElement('script');s.src='volunteer-board/volunteer.js?v=7';document.body.appendChild(s);document.getElementById('vol-portal-row').style.display='none';}
+  function open(){gate.style.display='flex';document.getElementById('vol-gate-err').textContent='';setTimeout(function(){document.getElementById('vol-gate-pw').focus()},50);}
+  function enter(){qs.set('volunteer','');location.search=qs.toString().replace('volunteer=','volunteer');}
+  async function sha(t){var b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t));return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,'0')}).join('');}
+  document.getElementById('vol-portal-btn').onclick=function(){ ok()?enter():open(); };
+  document.getElementById('vol-gate-cancel').onclick=function(){ gate.style.display='none'; if(qs.has('volunteer')){qs.delete('volunteer');qs.delete('admin');location.search=qs.toString();} };
+  document.getElementById('vol-gate-form').onsubmit=async function(e){
+    e.preventDefault();
+    var v=document.getElementById('vol-gate-pw').value.trim().toLowerCase().replace(/\s+/g,'');
+    if(await sha(v)===HASH){try{localStorage.setItem(KEY,HASH)}catch(e){} gate.style.display='none'; qs.has('volunteer')?load():enter();}
+    else document.getElementById('vol-gate-err').textContent='Not quite — try again.';
+  };
+  if(qs.has('volunteer')){ ok()?load():open(); }
+})();
+</script>
 </body>
 </html>
