@@ -66,7 +66,19 @@ const sec=t=>{const[m,s]=t.split(':');return +m*60+ +s};
 ch.forEach(([t,n])=>{const li=document.createElement('li'),b=document.createElement('button');
  b.innerHTML='<span class="t">'+t+'</span><span></span>';b.lastChild.textContent=n;
  b.onclick=()=>{a.currentTime=sec(t);a.play()};li.appendChild(b);toc.appendChild(li)});
+// GoatCounter events: who listens, how far, which chapters (Marcus, Oct 23)
+const gc=(p,t)=>{try{if(window.goatcounter&&goatcounter.count)goatcounter.count({path:p,title:t,event:true})}catch(_){}};
+const src=new URLSearchParams(location.search).get('utm_source');
+addEventListener('load',()=>setTimeout(()=>gc('onboarding-open-'+(src||'direct'),'Onboarding page opened'),800));
+const track=(el,name)=>{const hit=new Set();let played=false;
+ el.addEventListener('play',()=>{if(!played){played=true;gc('onboarding-play-'+name,'Play '+name)}});
+ el.addEventListener('timeupdate',()=>{if(!el.duration)return;const p=el.currentTime/el.duration;
+  [25,50,75,95].forEach(m=>{if(p*100>=m&&!hit.has(m)){hit.add(m);gc('onboarding-'+name+'-'+m+'pct','Listened '+m+'% ('+name+')')}})})};
+track(a,'full');track(document.querySelector('#short audio'),'essentials');
+toc.querySelectorAll('button').forEach((b,k)=>b.addEventListener('click',()=>gc('onboarding-chapter-'+ch[k][0].replace(':','m'),'Chapter: '+ch[k][1])));
+document.querySelector('.dl').addEventListener('click',()=>gc('onboarding-download','Download MP3'));
 a.addEventListener('timeupdate',()=>{let i=0;ch.forEach(([t],k)=>{if(a.currentTime>=sec(t))i=k});
  toc.querySelectorAll('button').forEach((b,k)=>b.classList.toggle('on',k===i))});
 </script>
+<script data-goatcounter="https://earthharmony.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body></html>
