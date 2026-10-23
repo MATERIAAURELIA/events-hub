@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Before Your Sound Bath · Earth Harmony</title>
+<meta name="robots" content="noindex">
+<meta property="og:title" content="Before Your Sound Bath · onboarding talk with Marcus">
+<meta property="og:image" content="https://events.earthharmonysoundwellness.com/onboarding/marcus-talk.jpg">
+<style>
+:root{--navy:#0e1522;--gold:#d2a44e;--goldtxt:#a87a24;--cream:#f8f4ec;--ink:#1f2733;--dim:#4a5363;--line:#e6dfd2}
+*{box-sizing:border-box}
+body{margin:0;background:#eef0f4;color:var(--ink);font-family:Georgia,'Times New Roman',serif}
+.wrap{max-width:600px;margin:0 auto;background:#fff;min-height:100vh}
+header{background:var(--navy);text-align:center;padding:26px 16px}
+header img{width:56px;border-radius:50%}
+header p{margin:10px 0 0;color:var(--gold);letter-spacing:3px;font-size:14px}
+main{padding:28px 22px 36px}
+h1{font-weight:normal;font-size:27px;color:var(--navy);margin:0 0 8px}
+.lead{font-size:17px;line-height:27px;margin:0 0 22px}
+.card{display:flex;gap:16px;align-items:center;background:var(--navy);border-radius:12px;padding:16px;color:#fff}
+.card img{width:92px;height:92px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);flex:none}
+.card h2{margin:0;font-weight:normal;font-size:20px}
+.card .meta{margin:4px 0 0;color:#c6c2b2;font-size:14px}
+.beta{display:inline-block;margin-left:6px;padding:1px 8px;border:1px solid var(--gold);border-radius:999px;color:var(--gold);font-size:12px;letter-spacing:1px;vertical-align:middle}
+audio{width:100%;margin:14px 0 4px}
+.dl{font-family:Arial,sans-serif;font-size:13px;color:var(--goldtxt)}
+h3{font-weight:normal;font-size:19px;color:var(--navy);margin:26px 0 8px}
+ol.toc{list-style:none;padding:0;margin:0;border-top:1px solid var(--line)}
+ol.toc li{border-bottom:1px solid var(--line)}
+ol.toc button{all:unset;cursor:pointer;display:flex;gap:14px;width:100%;padding:10px 2px;font-size:16px}
+ol.toc button:hover,ol.toc button.on{color:var(--goldtxt)}
+ol.toc .t{color:var(--goldtxt);font-family:Arial,sans-serif;font-size:14px;min-width:44px;padding-top:2px}
+.short{margin-top:30px;background:var(--cream);border-radius:12px;padding:16px 18px}
+.short h3{margin:0 0 4px}
+.short p{margin:0;color:var(--dim);font-size:15px;line-height:23px}
+footer{background:var(--navy);color:#c6c2b2;text-align:center;padding:20px 16px;font-size:13px}
+footer a{color:var(--gold);text-decoration:none}
+</style></head>
+<body><div class="wrap">
+<header><img src="https://materiaaurelia.github.io/events-hub/images/logos/earthharmonylogo.jpg" alt=""><p>EARTH HARMONY</p></header>
+<main>
+<h1>Before your sound bath</h1>
+<p class="lead">We now share the onboarding as a talk you can listen to before you arrive, so there's more time for sound in the session. The drive over is a perfect time. Highly recommended, even if you've been to a sound bath before.</p>
+
+<div class="card">
+  <img src="marcus-talk.jpg" alt="Marcus">
+  <div><h2>Onboarding talk <span class="beta">v1.0 β</span></h2><p class="meta">with Marcus · 15 min</p></div>
+</div>
+<audio id="full" controls preload="metadata" src="onboarding-full-v1.mp3"></audio>
+<a class="dl" href="onboarding-full-v1.mp3" download>Download for the car (MP3)</a>
+
+<h3>What's inside</h3>
+<ol class="toc" id="toc"></ol>
+
+<div class="short" id="short">
+  <h3>Just need a refresher?</h3>
+  <p>The 3-minute essentials.</p>
+  <audio controls preload="metadata" src="onboarding-essentials-v1.mp3"></audio>
+</div>
+</main>
+<footer>Earth Harmony Sound &amp; Wellness · 780-257-6428<br><a href="https://www.earthharmonysoundwellness.com">earthharmonysoundwellness.com</a></footer>
+</div>
+<script>
+const ch=[["0:00","Welcome"],["0:48","What is a sound bath?"],["1:29","Story"],["2:26","Spirit"],["3:27","Science: your brain on a sound bath"],["5:05","What helps you have a deeper experience?"],["5:49","Our part"],["6:14","Your part"],["7:13","Setting an intention together"],["8:19","What to expect"],["11:25","How to navigate"],["13:08","How to prepare"],["14:28","Thank you"]];
+const a=document.getElementById('full'),toc=document.getElementById('toc');
+const sec=t=>{const[m,s]=t.split(':');return +m*60+ +s};
+ch.forEach(([t,n])=>{const li=document.createElement('li'),b=document.createElement('button');
+ b.innerHTML='<span class="t">'+t+'</span><span></span>';b.lastChild.textContent=n;
+ b.onclick=()=>{a.currentTime=sec(t);a.play()};li.appendChild(b);toc.appendChild(li)});
+a.addEventListener('timeupdate',()=>{let i=0;ch.forEach(([t],k)=>{if(a.currentTime>=sec(t))i=k});
+ toc.querySelectorAll('button').forEach((b,k)=>b.classList.toggle('on',k===i))});
+</script>
+</body></html>
