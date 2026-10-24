@@ -57,6 +57,9 @@ input[type=range]::-moz-range-thumb{width:30px;height:30px;border-radius:50%;bac
 #quick{display:none;animation:rise .4s ease}
 #quick.on{display:block}
 @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.ob{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+.ob button{all:unset;cursor:pointer;padding:10px 14px;border:1px solid var(--gold);border-radius:999px;font-family:'Nunito Sans',sans-serif;font-weight:700;font-size:.92rem;color:var(--gold2);white-space:nowrap}
+.ob button.on{background:var(--gold);color:#181207}
 .check{display:flex;gap:10px;align-items:flex-start;margin-top:16px;font-size:.92rem;font-weight:400;color:#ddd3bd;line-height:1.5}
 .check input{width:22px;height:22px;flex:none;margin-top:1px;accent-color:var(--gold)}
 .send{width:100%;margin-top:20px;background:linear-gradient(180deg,#e0b568,#c89a44);color:#181207;font-weight:800;font-size:1rem;letter-spacing:.1em;text-transform:uppercase;border:none;border-radius:12px;padding:17px;cursor:pointer}
@@ -105,6 +108,13 @@ h1,h2,.sub,.res-sub,.fine,.rcard p,.rcard div,.check{text-wrap:balance}
     <div class="rlabel" id="rlabel">Slide or tap to rate</div>
     <input type="range" id="rate" min="0" max="10" step="1" value="5" aria-label="Overall experience, from 0 to 10" aria-valuetext="Not rated yet">
     <div class="ticks" id="ticks"></div>
+  </div>
+
+
+  <div class="card center" id="obCard" hidden>
+    <h2 class="rate-h">Did you listen to the<br>onboarding talk before you came?</h2>
+    <input type="hidden" name="onboarding" id="obVal">
+    <div class="ob" id="ob"><button type="button" data-v="full">Full talk</button><button type="button" data-v="3-min">3-min version</button><button type="button" data-v="no">Not this time</button></div>
   </div>
 
   <h2 class="grow-h">🌱 Help us grow!</h2>
@@ -205,10 +215,17 @@ const STORE='https://script.google.com/macros/s/AKfycbzzu1jXVtwDuHyBThe62Ipc10Uz
 const SID=Math.random().toString(36).slice(2,10);let saveT=null;
 function saveRating(){clearTimeout(saveT);saveT=setTimeout(async()=>{try{
   const r=await fetch(STORE+'?key=feedback-ratings&cb='+Date.now());let list=[];try{const j=await r.json();list=Array.isArray(j)?j:(Array.isArray(j&&j.value)?j.value:[])}catch(e){}
-  list=list.filter(x=>x&&x.sid!==SID);list.push({sid:SID,event:evIn.value||'',rating:+rate.value,at:new Date().toISOString()});
+  list=list.filter(x=>x&&x.sid!==SID);list.push({sid:SID,event:evIn.value||'',rating:rated?+rate.value:null,onboarding:$('obVal').value||null,at:new Date().toISOString()});
   await fetch(STORE,{method:'POST',body:JSON.stringify({key:'feedback-ratings',value:list.slice(-1000)})});
 }catch(e){}},1500)}
 ['change','pointerup','keyup'].forEach(t=>rate.addEventListener(t,saveRating));
+
+
+/* ---- onboarding question (B2B, Marcus Oct 24): who listened to the talk before coming; saved silently with the rating ---- */
+if(/back2basics/.test(Q.get('e')||'')){$('obCard').hidden=false;
+ $('ob').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+  $('ob').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));$('obVal').value=b.dataset.v;saveRating();
+  try{if(window.goatcounter&&goatcounter.count)goatcounter.count({path:'feedback-onboarding-'+b.dataset.v+'-'+Q.get('e'),title:'Onboarding answer',event:true})}catch(e){}}))}
 
 /* ---- reveal quick feedback ---- */
 $('openQuick').addEventListener('click',function(){
