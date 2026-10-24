@@ -4,5 +4,17 @@
 <body><h1>Wisdom Dreams</h1><p>MARCUS FUNG · EARTH HARMONY</p>
 <div class="t"><h2>Full length · 70 min</h2><audio controls loop preload="metadata" src="wisdom-dreams-60.mp3"></audio></div>
 <div class="t"><h2>Short edit · 11 min</h2><audio controls loop preload="metadata" src="wisdom-dreams.mp3"></audio></div>
-<small>Both loop until you stop them</small>
-<script>const a=[...document.querySelectorAll('audio')];a.forEach(x=>x.addEventListener('play',()=>a.forEach(y=>y!==x&&y.pause())))</script></body></html>
+<small id="wl">Both loop until you stop them · screen stays awake while playing</small>
+<small>Or download to play offline: <a style="color:#d2a44e" href="wisdom-dreams-60.mp3" download>70 min</a> · <a style="color:#d2a44e" href="wisdom-dreams.mp3" download>11 min</a></small>
+<script>
+const a=[...document.querySelectorAll('audio')];let lock=null;
+const wake=async()=>{try{if('wakeLock' in navigator&&!lock){lock=await navigator.wakeLock.request('screen');lock.addEventListener('release',()=>{lock=null})}}catch(e){}};
+const playing=()=>a.some(x=>!x.paused);
+a.forEach(x=>{
+ x.addEventListener('play',()=>{a.forEach(y=>y!==x&&y.pause());wake();
+  if('mediaSession' in navigator){navigator.mediaSession.metadata=new MediaMetadata({title:'Wisdom Dreams',artist:'Marcus Fung',album:'Earth Harmony'});
+   navigator.mediaSession.setActionHandler('play',()=>x.play());navigator.mediaSession.setActionHandler('pause',()=>x.pause())}});
+ x.addEventListener('pause',()=>{if(!playing()&&lock){lock.release();lock=null}});
+});
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&playing())wake()});
+</script></body></html>
