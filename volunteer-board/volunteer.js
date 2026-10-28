@@ -87,6 +87,13 @@
     .vh-modal .note{font-size:11.5px;color:var(--vh-dim);font-style:italic;}
     .vh-modal .cal a{display:inline-block;margin:4px;background:transparent;border:1px solid var(--vh-gold);border-radius:999px;padding:7px 14px;color:var(--vh-gold);font-weight:700;text-decoration:none;cursor:pointer;}
     .vh-modal .x{float:right;background:none;border:0;font-size:22px;cursor:pointer;color:var(--vh-dim);}
+    .vh-filter{max-width:640px;margin:0 auto 16px;display:flex;flex-wrap:wrap;gap:7px;align-items:center;justify-content:center;}
+    @media(max-width:600px){.vh-filter{gap:5px}.vh-filter button{padding:6px 9px;font-size:12.5px}.vh-filter .lb{flex-basis:100%;text-align:center}}
+    .vh-filter .lb{color:var(--vh-gold);font-weight:700;letter-spacing:.14em;font-size:12px;margin-right:2px;}
+    .vh-filter button{background:transparent;border:1px solid var(--vh-gold-soft);color:var(--vh-ink);border-radius:999px;padding:7px 14px;font-size:13.5px;cursor:pointer;font-family:inherit;}
+    .vh-filter button.on{background:var(--vh-gold);color:#0e1522;border-color:var(--vh-gold);font-weight:700;}
+    body.vf-private #view-list,body.vf-private #view-calendar,body.vf-public .vh-pg{display:none !important;}
+    body.vf-still .vf-full{display:none !important;}
     .vh-pg{max-width:640px;margin:0 auto 22px;}
     .vh-pg-h{color:var(--vh-gold);font-family:var(--heading-font);font-size:1.15rem;margin:0 0 4px;text-align:center;}
     .vh-pg-sub{color:var(--vh-dim);font-size:13.5px;text-align:center;margin:0 0 10px;}
@@ -108,6 +115,7 @@
   const list = document.getElementById('view-list');
   const head = document.createElement('div');
   head.innerHTML = `<div class="vh-title">Team Service Exchange</div>
+    <div class="vh-filter" id="vh-filter"><span class="lb">SHOW</span><button data-f="all">All</button><button data-f="public">Public events</button><button data-f="private">Private events</button><button data-f="still">Still needed</button></div>
     <div class="vh-head"><img class="vh-face" src="${FACE}" alt="Marcus"><div class="vh-blurb" id="vh-blurb"></div></div>
     <details class="vh-ask"><summary>❓ Ask Marcus a question</summary>
       <form id="vh-ask"><input name="name" placeholder="Your name" required><input name="email" type="email" placeholder="Your email (so he can reply)" required>
@@ -115,6 +123,14 @@
     <div class="vh-defaults" id="vh-defaults" style="display:none"></div>`;
   const label = document.querySelector('.section-label');
   if (label) { label.replaceWith(head); } else { list.parentNode.insertBefore(head, list); }
+  let vf = 'all'; try { vf = localStorage.getItem('eh-vol-filter') || 'all'; } catch {}
+  const setFilter = f => {
+    vf = f; try { localStorage.setItem('eh-vol-filter', f); } catch {}
+    ['public', 'private', 'still'].forEach(k => document.body.classList.toggle('vf-' + k, k === f));
+    head.querySelectorAll('#vh-filter button').forEach(b => b.classList.toggle('on', b.dataset.f === f));
+  };
+  head.querySelectorAll('#vh-filter button').forEach(b => b.onclick = () => setFilter(b.dataset.f));
+  setFilter(vf);
   const tl = document.getElementById('top-links'); if (tl) tl.style.display = 'none';
   const me = (() => { try { return JSON.parse(localStorage.getItem('eh-volunteer') || 'null') || {}; } catch { return {}; } })();
   const remember = o => { try { localStorage.setItem('eh-volunteer', JSON.stringify({ ...me, ...o })); Object.assign(me, o); } catch {} };
@@ -167,7 +183,7 @@
     if (!shown.length && !admin) { pg.innerHTML = ''; return; }
     pg.innerHTML = `<div class="vh-pg-h">🔒 Private gigs · team needed</div><div class="vh-pg-sub">Bookings that aren't on the public calendar. Details go to you privately once you sign up.</div>`;
     shown.forEach(g => {
-      const c = document.createElement('div'); c.className = 'vh-pg-card';
+      const c = document.createElement('div'); c.className = 'vh-pg-card' + (info(g).full ? ' vf-full' : '');
       if (admin) {
         c.innerHTML = `<button class="vh-pg-del">🗑 remove</button><input data-f="title" value="${esc(g.title)}" placeholder="Title (what helpers see)">
           <div class="two"><input data-f="date" type="date" value="${esc(g.date)}"><input data-f="time" type="time" value="${esc(g.time)}"></div>
@@ -197,6 +213,7 @@
     const s = document.createElement('div');
     s.className = 'vh-strip'; s.dataset.id = ev.id;
     const I = info(ev);
+    if (I.full) s.classList.add('vf-full');
     if (I.m.hidden) s.classList.add('vh-hidden');
     if (admin) {
       s.classList.add('edit');
@@ -239,6 +256,7 @@
         let next = card.nextElementSibling;
         if (!ev || card.classList.contains('cta-event')) { card.classList.add('vh-gone'); return; }
         card.classList.toggle('vh-hidden', !!(meta[id] || {}).hidden);
+        card.classList.toggle('vf-full', !!info(ev).full);
         if (next && next.classList.contains('vh-strip')) { if (!force && next.dataset.id === id) return; next.remove(); }
         card.after(stripFor(ev));
       });
