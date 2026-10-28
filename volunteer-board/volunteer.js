@@ -243,7 +243,7 @@
       }
       s.innerHTML = `<span class="vh-pill vh-need${I.full ? ' vh-filled' : ''}">${I.full ? '✓ ' : '🙋 '}${I.need ? (I.full ? FULL_WORD : `${I.people.length} / ${I.need} helpers`) : (I.people.length ? `${I.people.length} helping` : 'Helpers welcome')}</span>
         <button class="vh-more">Show role description ▾</button>
-        <div class="vh-details"><div><b>🧹 Role:</b> ${esc(I.role) || 'TBA'}</div><div><b>⭐ Exchange:</b> ${esc(I.exchange) || 'TBA'}</div>${I.notes ? `<div><b>📝</b> ${esc(I.notes)}</div>` : ''}</div>
+        <div class="vh-details"><div><b>🧹 Role:</b> ${esc(I.role) || 'TBA'}</div>${I.exchange ? `<div><b>⭐ Exchange:</b> ${esc(I.exchange)}</div>` : ''}${I.notes ? `<div><b>📝</b> ${esc(I.notes)}</div>` : ''}</div>
         <div class="vh-row">${I.people.map(p => `<span class="vh-pill vh-who">✅ ${esc(p)}</span>`).join('')}${I.full ? '' : '<button class="vh-btn vh-go">Sign up to help</button>'}</div>`;
       s.querySelector('.vh-more').onclick = () => { const o = s.classList.toggle('open'); s.querySelector('.vh-more').textContent = o ? 'Hide role description ▴' : 'Show role description ▾'; };
       const go = s.querySelector('.vh-go'); if (go) go.onclick = () => openSignup(ev);
@@ -282,7 +282,7 @@
     const w = document.createElement('div'); w.className = 'vh-modal';
     w.innerHTML = `<div class="box"><button class="x">×</button><h3>${esc(ev.title)}</h3><div class="when">${when}</div>
       <div class="duties"><div><b>🙋 Helpers:</b> ${I.need ? `${I.people.length} of ${I.need}` : 'welcome'}</div><div><b>🧹 Role:</b> ${esc(I.role) || 'TBA'}</div>
-      <div><b>⭐ Exchange:</b> ${esc(I.exchange) || 'TBA'}</div>${I.notes ? `<div><b>📝</b> ${esc(I.notes)}</div>` : ''}</div>
+      ${I.exchange ? `<div><b>⭐ Exchange:</b> ${esc(I.exchange)}</div>` : ''}${I.notes ? `<div><b>📝</b> ${esc(I.notes)}</div>` : ''}</div>
       <form><input name="name" placeholder="Your name" required value="${esc(me.name)}"><input name="email" type="email" placeholder="Email (for your reminder)" required value="${esc(me.email)}">
       <input name="phone" type="tel" placeholder="Phone (optional)" value="${esc(me.phone)}"><button class="vh-btn">Sign up</button>
       <div class="note">Only your first name shows on the board. Your email goes privately to Marcus.</div></form></div>`;
@@ -326,7 +326,7 @@
       const I = info(ev);
       return `<div style="margin-bottom:14px"><h3>${esc(ev.title)}</h3><div class="when">${ev.time ? (typeof fTime === 'function' ? fTime(ev.time) : ev.time) : ''}${(typeof VENUES !== 'undefined' && VENUES[ev.venue]?.name) ? ' · ' + esc(VENUES[ev.venue].name) : ''}</div>
         <div class="duties"><div><b>🙋 Helpers:</b> ${I.need ? (I.full ? FULL_WORD : `${I.people.length} of ${I.need}`) : 'welcome'}</div><div><b>🧹 Role:</b> ${esc(I.role) || 'TBA'}</div>
-        <div><b>⭐ Exchange:</b> ${esc(I.exchange) || 'TBA'}</div>${I.notes ? `<div><b>📝</b> ${esc(I.notes)}</div>` : ''}${I.people.length ? `<div><b>✓ Team:</b> ${I.people.map(esc).join(', ')}</div>` : ''}</div>
+        ${I.exchange ? `<div><b>⭐ Exchange:</b> ${esc(I.exchange)}</div>` : ''}${I.notes ? `<div><b>📝</b> ${esc(I.notes)}</div>` : ''}${I.people.length ? `<div><b>✓ Team:</b> ${I.people.map(esc).join(', ')}</div>` : ''}</div>
         ${I.full ? '' : `<button class="vh-btn" data-id="${ev.id}" style="float:right">Sign up to help</button>`}<div style="clear:both"></div></div>`;
     }).join('') + '</div>';
     document.body.appendChild(w);
