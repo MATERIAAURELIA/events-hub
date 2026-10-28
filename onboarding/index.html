@@ -15,7 +15,9 @@ header img{width:56px;border-radius:50%}
 header p{margin:10px 0 0;color:var(--gold);letter-spacing:3px;font-size:14px}
 main{padding:28px 22px 36px}
 h1{font-weight:normal;font-size:27px;color:var(--navy);margin:0 0 8px}
-.lead{font-size:17px;line-height:27px;margin:0 0 22px}
+.lead{font-size:17px;line-height:27px;margin:0 0 22px;padding-left:20px}
+.lead li{margin:0 0 4px}
+.lead li::marker{color:var(--gold)}
 .why{font-size:19px;line-height:28px;font-style:italic;margin:0 0 18px}
 .why span{display:block;font-style:normal;font-size:13px;letter-spacing:2px;text-transform:uppercase;opacity:.75;margin-top:4px}
 .card{display:flex;gap:16px;align-items:center;background:var(--navy);border-radius:12px;padding:16px;color:#fff}
@@ -41,13 +43,16 @@ footer a{color:var(--gold);text-decoration:none}
 <header><img src="https://materiaaurelia.github.io/events-hub/images/logos/earthharmonylogo.jpg" alt=""><p>EARTH HARMONY</p></header>
 <main>
 <h1>Before your sound bath</h1>
-<p class="lead">We now share the onboarding as a talk you can listen to before you arrive, so there's more time for sound in the session. The drive over is a perfect time. Highly recommended, even if you've been to a sound bath before.</p>
+<ul class="lead">
+  <li>Listen before you arrive, so there's more time for sound in the session</li>
+  <li>The drive over is a perfect time</li>
+  <li>Worth it even if you've been to a sound bath before</li>
+</ul>
 
 <div class="card">
   <img src="marcus-talk.jpg" alt="Marcus">
   <div><h2>Onboarding talk <span class="beta">v1.0 β</span></h2><p class="meta">with Marcus · 15 min</p></div>
 </div>
-<p class="why">We can&rsquo;t control the outcome of your experience. But we can support you to have your best experience. We recommend listening to this audio.</p>
 <audio id="full" controls preload="metadata" src="onboarding-full-v1.mp3"></audio>
 <a class="dl" href="onboarding-full-v1.mp3" download>Download for the car (MP3)</a>
 
