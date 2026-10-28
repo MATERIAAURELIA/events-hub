@@ -8,7 +8,7 @@
 *{box-sizing:border-box}
 body{margin:0;background:var(--navy);color:var(--ink);font-family:Georgia,'Times New Roman',serif}
 .w{max-width:560px;margin:0 auto;padding:26px 16px 40px}
-.k{color:var(--gold);letter-spacing:4px;font-size:12px;text-align:center}
+.k{color:var(--gold);letter-spacing:2.5px;font-size:11px;text-align:center}
 h1{font-weight:normal;text-align:center;font-size:27px;margin:8px 0 6px}
 .sub{text-align:center;color:var(--dim);font-size:15px;line-height:1.5;margin:0 0 20px}
 .who{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
@@ -25,6 +25,13 @@ h1{font-weight:normal;text-align:center;font-size:27px;margin:8px 0 6px}
 .slot .c{font-size:15px;color:var(--gold);font-weight:700;white-space:nowrap}
 .slot.best{box-shadow:0 0 0 2px var(--gold),0 8px 24px -10px rgba(210,164,78,.8)}
 .locked .slot{cursor:default;opacity:.55}
+.days{display:grid;gap:8px}
+.day h3{margin:0 0 8px;text-align:center;font-weight:normal;color:var(--gold);font-size:16px;line-height:1.25}
+.day h3 b{display:block;color:var(--ink);font-size:21px}
+.day .slot{flex-direction:column;gap:6px;padding:12px 6px;text-align:center}
+.day .slot .d{font-size:18px}
+.day .slot .n{font-size:12px;min-height:1.2em}
+.day .slot .box{width:24px;height:24px;font-size:15px}
 .save{display:block;width:100%;margin-top:14px;background:linear-gradient(180deg,#e0b65e,#c99a3f);color:var(--navy);border:0;border-radius:999px;padding:15px;font-size:17px;font-weight:700;cursor:pointer;font-family:inherit}
 .save:disabled{opacity:.5}
 .msg{text-align:center;color:var(--gold);min-height:1.4em;margin-top:10px}
@@ -58,8 +65,10 @@ function paint(){
   const counts=Object.fromEntries(SLOTS.map(s=>[s[0],PEOPLE.filter(p=>(p===me?[...picks]:(data[p]||[])).includes(s[0]))]));
   const max=Math.max(0,...Object.values(counts).map(a=>a.length));
   const L=document.getElementById('list'); L.className=me?'':'locked';
-  L.innerHTML=SLOTS.map(([id,d,t])=>{const who=counts[id];return `<div class="slot ${picks.has(id)&&me?'mine':''} ${max>0&&who.length===max?'best':''}" data-id="${id}">
-    <div class="box">${picks.has(id)&&me?'✓':''}</div><div class="t"><div class="d">${d} · ${t}</div><div class="n">${who.length?who.join(', '):'nobody yet'}</div></div><div class="c">${who.length}/${PEOPLE.length}</div></div>`}).join('');
+  const days=[...new Set(SLOTS.map(x=>x[1]))];
+  L.innerHTML=`<div class="days" style="grid-template-columns:repeat(${days.length},1fr)">`+days.map(day=>{const [wd,...rest]=day.split(' ');
+    return `<div class="day"><h3>${wd}<b>${rest.join(' ')}</b></h3>`+SLOTS.filter(x=>x[1]===day).map(([id,,t])=>{const who=counts[id];
+      return `<div class="slot ${picks.has(id)&&me?'mine':''} ${max>0&&who.length===max?'best':''}" data-id="${id}"><div class="box">${picks.has(id)&&me?'✓':''}</div><div class="d">${t}</div><div class="c">${who.length}/${PEOPLE.length}</div><div class="n">${who.join(', ')}</div></div>`}).join('')+'</div>'}).join('')+'</div>';
   L.querySelectorAll('.slot').forEach(s=>s.onclick=()=>{if(!me)return;const id=s.dataset.id;picks.has(id)?picks.delete(id):picks.add(id);paint()});
   document.getElementById('save').disabled=!me;
   document.getElementById('save').textContent=me?`Save ${me}'s answers`:'Tap your name first';
