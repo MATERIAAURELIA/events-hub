@@ -1554,7 +1554,7 @@ loadConfig().then(()=>{
   var row=document.getElementById('vol-portal-row'), hl=document.querySelector('.header .home-link');
   if(hl){row.style.margin='8px 0 0';row.style.display='block';hl.parentNode.insertBefore(row,hl.nextSibling);}
   function ok(){try{return localStorage.getItem(KEY)===HASH}catch(e){return false}}
-  function load(){var s=document.createElement('script');s.src='volunteer-board/volunteer.js?v=9';document.body.appendChild(s);document.getElementById('vol-portal-row').style.display='none';}
+  function load(){var s=document.createElement('script');s.src='volunteer-board/volunteer.js?v=10';document.body.appendChild(s);document.getElementById('vol-portal-row').style.display='none';}
   function open(){gate.style.display='flex';document.getElementById('vol-gate-err').textContent='';setTimeout(function(){document.getElementById('vol-gate-pw').focus()},50);}
   function enter(){qs.set('volunteer','');location.search=qs.toString().replace('volunteer=','volunteer');}
   async function sha(t){var b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t));return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,'0')}).join('');}

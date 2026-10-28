@@ -232,6 +232,13 @@
       };
       s.querySelectorAll('input').forEach(el => el.addEventListener('change', store));
     } else {
+      if (I.m.locked) {
+        s.innerHTML = `<span class="vh-pill vh-need">🔒 ${I.need ? I.need + ' ' : ''}${esc(I.m.lockedLabel || 'spots by invitation')}</span>
+          <button class="vh-more">Show role description ▾</button>
+          <div class="vh-details"><div><b>🧹 Role:</b> ${esc(I.role) || 'TBA'}</div>${I.notes ? `<div><b>📝</b> ${esc(I.notes)}</div>` : ''}</div>`;
+        s.querySelector('.vh-more').onclick = () => { const o = s.classList.toggle('open'); s.querySelector('.vh-more').textContent = o ? 'Hide role description ▴' : 'Show role description ▾'; };
+        return s;
+      }
       s.innerHTML = `<span class="vh-pill vh-need${I.full ? ' vh-filled' : ''}">${I.full ? '✓ ' : '🙋 '}${I.need ? (I.full ? FULL_WORD : `${I.people.length} / ${I.need} helpers`) : (I.people.length ? `${I.people.length} helping` : 'Helpers welcome')}</span>
         <button class="vh-more">Show role description ▾</button>
         <div class="vh-details"><div><b>🧹 Role:</b> ${esc(I.role) || 'TBA'}</div><div><b>⭐ Exchange:</b> ${esc(I.exchange) || 'TBA'}</div>${I.notes ? `<div><b>📝</b> ${esc(I.notes)}</div>` : ''}</div>
