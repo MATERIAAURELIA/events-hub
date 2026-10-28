@@ -82,6 +82,11 @@ toc.querySelectorAll('button').forEach((b,k)=>b.addEventListener('click',()=>gc(
 document.querySelector('.dl').addEventListener('click',()=>gc('onboarding-download','Download MP3'));
 a.addEventListener('timeupdate',()=>{let i=0;ch.forEach(([t],k)=>{if(a.currentTime>=sec(t))i=k});
  toc.querySelectorAll('button').forEach((b,k)=>b.classList.toggle('on',k===i))});
+// Deep link ?t=m:ss (or seconds) → jump to that chapter; plays on first tap if the browser blocks autoplay (Oct 28)
+(()=>{const q=new URLSearchParams(location.search).get('t');if(!q)return;const t=q.includes(':')?sec(q):+q;if(!(t>=0))return;
+ const go=()=>{a.currentTime=t;a.scrollIntoView({behavior:'smooth',block:'center'});a.play().catch(()=>{})};
+ a.readyState>=1?go():a.addEventListener('loadedmetadata',go,{once:true});a.preload='metadata';a.load&&a.readyState===0&&a.load();
+ gc('onboarding-deeplink-'+q.replace(':','m'),'Deep link '+q)})();
 </script>
 <script data-goatcounter="https://earthharmony.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body></html>
