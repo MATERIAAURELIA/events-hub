@@ -52,7 +52,7 @@ const API='https://script.google.com/macros/s/AKfycbzzu1jXVtwDuHyBThe62Ipc10UzBJ
 const FORM='https://formsubmit.co/ajax/68bf44fd6c680760a90740f0fc752510';
 /* Reusable team poll (Oct 28 2026). ?p=<id> → config in store key 'team-poll-config-<id>':
    {kicker, title, sub, people:[...], slots:[[id,'Mon Nov 16','3:00pm'],...]}  answers → 'team-poll-<id>' */
-const PID=(new URLSearchParams(location.search).get('p')||'').replace(/[^a-z0-9-]/gi,'');
+const PID=((new URLSearchParams(location.search).get('p')||'').match(/^[a-z0-9-]+/i)||[''])[0];
 const KEY=PID==='enoch-practice'?'enoch-practice-poll':'team-poll-'+PID;
 let PEOPLE=[], SLOTS=[];
 let data={}, me=null, picks=new Set();
