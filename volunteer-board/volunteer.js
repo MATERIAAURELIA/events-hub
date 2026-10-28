@@ -88,10 +88,11 @@
     .vh-modal .cal a{display:inline-block;margin:4px;background:transparent;border:1px solid var(--vh-gold);border-radius:999px;padding:7px 14px;color:var(--vh-gold);font-weight:700;text-decoration:none;cursor:pointer;}
     .vh-modal .x{float:right;background:none;border:0;font-size:22px;cursor:pointer;color:var(--vh-dim);}
     .vh-filter{max-width:640px;margin:0 auto 16px;display:flex;flex-wrap:wrap;gap:7px;align-items:center;justify-content:center;}
-    @media(max-width:600px){.vh-filter{gap:5px}.vh-filter button{padding:6px 9px;font-size:12.5px}.vh-filter .lb{flex-basis:100%;text-align:center}}
-    .vh-filter .lb{color:var(--vh-gold);font-weight:700;letter-spacing:.14em;font-size:12px;margin-right:2px;}
-    .vh-filter button{background:transparent;border:1px solid var(--vh-gold-soft);color:var(--vh-ink);border-radius:999px;padding:7px 14px;font-size:13.5px;cursor:pointer;font-family:inherit;}
-    .vh-filter button.on{background:var(--vh-gold);color:#0e1522;border-color:var(--vh-gold);font-weight:700;}
+    .vh-filter{max-width:640px;margin:18px auto 22px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+    .vh-filter .lb{grid-column:1/-1;text-align:center;color:var(--vh-gold);font-weight:800;letter-spacing:.3em;font-size:15px;}
+    .vh-filter button{background:var(--vh-panel);border:2px solid var(--vh-gold-soft);color:var(--vh-ink);border-radius:16px;padding:18px 8px;font-size:18px;font-weight:700;line-height:1.2;cursor:pointer;font-family:inherit;}
+    .vh-filter button.on{background:linear-gradient(180deg,#e0b65e,#c99a3f);color:#0e1522;border-color:var(--vh-gold);box-shadow:0 6px 18px -6px rgba(210,164,78,.8);}
+    @media(max-width:600px){.vh-filter{grid-template-columns:1fr 1fr}.vh-filter button{font-size:17px;padding:16px 6px}}
     body.vf-private #view-list,body.vf-private #view-calendar,body.vf-public .vh-pg{display:none !important;}
     body.vf-still .vf-full{display:none !important;}
     .vh-pg{max-width:640px;margin:0 auto 22px;}
@@ -115,8 +116,8 @@
   const list = document.getElementById('view-list');
   const head = document.createElement('div');
   head.innerHTML = `<div class="vh-title">Team Service Exchange</div>
-    <div class="vh-filter" id="vh-filter"><span class="lb">SHOW</span><button data-f="all">All</button><button data-f="public">Public events</button><button data-f="private">Private events</button><button data-f="still">Still needed</button></div>
     <div class="vh-head"><img class="vh-face" src="${FACE}" alt="Marcus"><div class="vh-blurb" id="vh-blurb"></div></div>
+    <div class="vh-filter" id="vh-filter"><span class="lb">SHOW</span><button data-f="all">All</button><button data-f="public">Public events</button><button data-f="private">Private events</button><button data-f="still">Still needed</button></div>
     <details class="vh-ask"><summary>❓ Ask Marcus a question</summary>
       <form id="vh-ask"><input name="name" placeholder="Your name" required><input name="email" type="email" placeholder="Your email (so he can reply)" required>
       <textarea name="q" placeholder="Your question…" required></textarea><button class="vh-btn">Send question</button><div class="vh-ok" style="display:none;color:#d2a44e">🙏 Sent! Marcus will get back to you.</div></form></details>
