@@ -93,6 +93,7 @@
     .vh-filter button{background:var(--vh-panel);border:2px solid var(--vh-gold-soft);color:var(--vh-ink);border-radius:16px;padding:18px 8px;font-size:18px;font-weight:700;line-height:1.2;cursor:pointer;font-family:inherit;}
     .vh-filter button.on{background:linear-gradient(180deg,#e0b65e,#c99a3f);color:#0e1522;border-color:var(--vh-gold);box-shadow:0 6px 18px -6px rgba(210,164,78,.8);}
     @media(max-width:600px){.vh-filter{grid-template-columns:1fr 1fr}.vh-filter button{font-size:17px;padding:16px 6px}}
+    #filters,#sort-row{display:none !important;} /* hub chips clash with SHOW (Marcus, Oct 28) */
     body.vf-private #view-list,body.vf-private #view-calendar,body.vf-public .vh-pg{display:none !important;}
     body.vf-still .vf-full{display:none !important;}
     .vh-pg{max-width:640px;margin:0 auto 22px;}
