@@ -6,7 +6,7 @@
 (() => {
   const API_URL = 'https://script.google.com/macros/s/AKfycbzzu1jXVtwDuHyBThe62Ipc10UzBJkDQDACGZfe5oEF9jXIUl3qtGjbJD2c3IW_q4EjKQ/exec';
   const FORM = 'https://formsubmit.co/ajax/68bf44fd6c680760a90740f0fc752510';
-  const META_KEY = 'volunteer-events-meta', SIGNUPS_KEY = 'volunteer-signups', BLURB_KEY = 'volunteer-board-blurb';
+  const META_KEY = 'volunteer-events-meta', SIGNUPS_KEY = 'volunteer-signups', BLURB_KEY = 'volunteer-board-blurb', GIGS_KEY = 'volunteer-private-gigs';
   const FACE = 'https://events.earthharmonysoundwellness.com/photos/marcus-face-gong-halo.jpg?v=2';
   const DEFAULT_BLURB = 'Hi friends — these are the next gigs where I welcome support. Come give your gift of presence. Exchange for a session, <em>learn</em>, <em>assist</em>, and <em>shadow</em> the work. 🌹';
   const ROLE_PRESETS = ['Host: sweep, set up mats & blankets, welcome guests', 'Welcome hosts · move + set up equipment', 'Greet + welcome guests', 'Room setup: candles, mats, blankets', 'Roving / small percussion', 'Snore patrol', 'Load drums in + out'];
@@ -16,11 +16,11 @@
 
   const urlAdmin = new URLSearchParams(location.search).get('admin') === '1';
   let admin = urlAdmin;
-  let meta = {}, signups = {}, blurb = '';
+  let meta = {}, signups = {}, blurb = '', gigs = [];
   const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const load = async k => { try { const r = await fetch(`${API_URL}?key=${encodeURIComponent(k)}`); return r.ok ? await r.json() : {}; } catch { return {}; } };
   const save = async (k, v) => { try { await fetch(API_URL, { method: 'POST', body: JSON.stringify({ key: k, value: v }) }); } catch {} };
-  const evById = id => (typeof EVENTS !== 'undefined' ? EVENTS : []).find(e => e.id === id);
+  const evById = id => (typeof EVENTS !== 'undefined' ? EVENTS : []).find(e => e.id === id) || gigs.find(g => g.id === id);
   const typeOf = ev => (meta[ev.id] || {}).type || (ev.venue === 'home' ? 'home'
     : /drum|circle|rhythm|pulse/i.test(ev.title) ? 'drum' : /sound|bath|gong|bowl/i.test(ev.title) ? 'sound' : 'other');
   const info = ev => {
@@ -29,7 +29,7 @@
     const need = m.need ?? d.need ?? 0;
     return { m, d, people, need, role: m.role || d.role || '', exchange: m.exchange || d.exchange || '', notes: m.notes || '', full: need && people.length >= need };
   };
-  const startISO = ev => `${ev.date}T${ev.time || '00:00'}:00`;
+  const startISO = ev => ev.date ? `${ev.date}T${ev.time || '00:00'}:00` : '';
 
   /* ---------- styles (hub is dark navy + gold; strip is warm cream) ---------- */
   const css = document.createElement('style');
@@ -87,6 +87,18 @@
     .vh-modal .note{font-size:11.5px;color:var(--vh-dim);font-style:italic;}
     .vh-modal .cal a{display:inline-block;margin:4px;background:transparent;border:1px solid var(--vh-gold);border-radius:999px;padding:7px 14px;color:var(--vh-gold);font-weight:700;text-decoration:none;cursor:pointer;}
     .vh-modal .x{float:right;background:none;border:0;font-size:22px;cursor:pointer;color:var(--vh-dim);}
+    .vh-pg{max-width:640px;margin:0 auto 22px;}
+    .vh-pg-h{color:var(--vh-gold);font-family:var(--heading-font);font-size:1.15rem;margin:0 0 4px;text-align:center;}
+    .vh-pg-sub{color:var(--vh-dim);font-size:13.5px;text-align:center;margin:0 0 10px;}
+    .vh-pg-card{background:#141c2e;border:1px solid var(--vh-gold);border-bottom:0;border-radius:14px 14px 0 0;padding:12px 14px;color:var(--vh-ink);}
+    .vh-pg-card .t{font-weight:700;font-size:16px;}
+    .vh-pg-card .w{color:var(--vh-gold);font-size:14px;margin-top:2px;}
+    .vh-pg-card .pl{color:var(--vh-dim);font-size:13.5px;}
+    .vh-pg-card input{width:100%;margin-top:5px;padding:7px 9px;border:1px solid var(--vh-gold-soft);border-radius:8px;background:#0e1522;color:var(--vh-ink);font-size:15px;font-family:inherit;box-sizing:border-box;}
+    .vh-pg-card .two{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+    .vh-pg-del{float:right;background:none;border:0;color:var(--vh-dim);cursor:pointer;font-size:13px;}
+    .vh-pg-add{display:block;margin:4px auto 0;background:transparent;border:1px dashed var(--vh-gold);color:var(--vh-gold);border-radius:999px;padding:8px 16px;cursor:pointer;font-weight:700;}
+    .vh-pg .vh-strip{margin-bottom:14px;}
     #vh-switch{position:fixed;left:16px;bottom:16px;z-index:150;background:var(--vh-gold);color:#0e1522;border:0;border-radius:999px;padding:11px 18px;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,.4);cursor:pointer;}
   `;
   document.head.appendChild(css);
@@ -139,6 +151,44 @@
     }
   }
   document.getElementById('vh-blurb').addEventListener('blur', async e => { if (!admin) return; blurb = e.target.innerHTML.trim(); await save(BLURB_KEY, { html: blurb }); });
+
+  /* ---------- private gigs: not on the public hub; Marcus adds them here (Oct 28 2026) ---------- */
+  const pg = document.createElement('section'); pg.className = 'vh-pg'; pg.id = 'private';
+  head.after(pg);
+  const whenOf = g => {
+    if (!g.date) return g.dateNote || 'Date TBC';
+    const d = new Date(g.date + 'T00:00:00');
+    return d.toLocaleDateString('en-CA', { weekday: 'short', month: 'short', day: 'numeric' }) + (g.time ? ' · ' + (typeof fTime === 'function' ? fTime(g.time) : g.time) : '') + (g.timeNote ? ' ' + g.timeNote : '');
+  };
+  const saveGigs = () => save(GIGS_KEY, { list: gigs });
+  function paintGigs() {
+    const today = new Date().toISOString().slice(0, 10);
+    const shown = gigs.filter(g => !g.date || g.date >= today).sort((a, b) => (a.date || '9999').localeCompare(b.date || '9999'));
+    if (!shown.length && !admin) { pg.innerHTML = ''; return; }
+    pg.innerHTML = `<div class="vh-pg-h">🔒 Private gigs · team needed</div><div class="vh-pg-sub">Bookings that aren't on the public calendar. Details go to you privately once you sign up.</div>`;
+    shown.forEach(g => {
+      const c = document.createElement('div'); c.className = 'vh-pg-card';
+      if (admin) {
+        c.innerHTML = `<button class="vh-pg-del">🗑 remove</button><input data-f="title" value="${esc(g.title)}" placeholder="Title (what helpers see)">
+          <div class="two"><input data-f="date" type="date" value="${esc(g.date)}"><input data-f="time" type="time" value="${esc(g.time)}"></div>
+          <div class="two"><input data-f="dateNote" value="${esc(g.dateNote)}" placeholder="If no date: e.g. early Dec, TBC"><input data-f="timeNote" value="${esc(g.timeNote)}" placeholder="e.g. (arrive 2:15)"></div>
+          <input data-f="place" value="${esc(g.place)}" placeholder="Area (keep client private)">`;
+        c.querySelectorAll('input').forEach(el => el.addEventListener('change', async () => { g[el.dataset.f] = el.value.trim(); await saveGigs(); }));
+        c.querySelector('.vh-pg-del').onclick = async () => { if (!confirm('Remove this gig?')) return; gigs = gigs.filter(x => x !== g); await saveGigs(); paintGigs(); };
+      } else {
+        c.innerHTML = `<div class="t">${esc(g.title)}</div><div class="w">${esc(whenOf(g))}</div>${g.place ? `<div class="pl">📍 ${esc(g.place)}</div>` : ''}`;
+      }
+      pg.appendChild(c);
+      const st = stripFor(g); if (!admin && st.classList.contains('vh-hidden')) st.style.display = 'none';
+      pg.appendChild(st);
+    });
+    if (admin) {
+      const b = document.createElement('button'); b.className = 'vh-pg-add'; b.textContent = '+ Add a private gig';
+      b.onclick = async () => { const id = 'pg-' + Date.now().toString(36); gigs.push({ id, title: '', date: '', time: '' }); meta[id] = { ...(meta[id] || {}), type: 'private' }; await Promise.all([saveGigs(), save(META_KEY, meta)]); paintGigs(); };
+      pg.appendChild(b);
+    }
+    if (location.hash === '#private' && !pg.dataset.jumped) { pg.dataset.jumped = '1'; setTimeout(() => pg.scrollIntoView({ behavior: 'smooth' }), 300); }
+  }
 
   const dl = (id, items) => { const x = document.getElementById(id) || document.body.appendChild(Object.assign(document.createElement('datalist'), { id })); x.innerHTML = items.map(v => `<option value="${esc(v)}">`).join(''); };
 
@@ -193,6 +243,7 @@
         card.after(stripFor(ev));
       });
       paintHeader();
+      paintGigs();
     } finally { busy = false; }
   }
   new MutationObserver(() => decorate(false)).observe(list, { childList: true });
@@ -200,7 +251,7 @@
   /* ---------- sign-up pop-up ---------- */
   function openSignup(ev) {
     const I = info(ev), d = new Date(ev.date + 'T00:00:00');
-    const when = `${d.toLocaleDateString('en-CA', { weekday: 'long', month: 'long', day: 'numeric' })}${ev.time ? ' · ' + (typeof fTime === 'function' ? fTime(ev.time) : ev.time) : ''}`;
+    const when = !ev.date ? (ev.dateNote || 'Date TBC') : `${d.toLocaleDateString('en-CA', { weekday: 'long', month: 'long', day: 'numeric' })}${ev.time ? ' · ' + (typeof fTime === 'function' ? fTime(ev.time) : ev.time) : ''}${ev.timeNote ? ' ' + ev.timeNote : ''}`;
     const w = document.createElement('div'); w.className = 'vh-modal';
     w.innerHTML = `<div class="box"><button class="x">×</button><h3>${esc(ev.title)}</h3><div class="when">${when}</div>
       <div class="duties"><div><b>🙋 Helpers:</b> ${I.need ? `${I.people.length} of ${I.need}` : 'welcome'}</div><div><b>🧹 Role:</b> ${esc(I.role) || 'TBA'}</div>
@@ -221,9 +272,10 @@
       (signups[ev.id] = signups[ev.id] || []).push({ name: full.split(/\s+/)[0], ts: new Date().toISOString() });
       await save(SIGNUPS_KEY, signups);
       try { await fetch(FORM, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({ _subject: `🙋 Volunteer sign-up — ${ev.title} — ${ev.date}`, _template: 'table', _captcha: 'false',
-          name: full, email, phone, event: ev.title, event_id: ev.id, start: startISO(ev), location: (typeof VENUES !== 'undefined' && VENUES[ev.venue]?.name) || '',
+        body: JSON.stringify({ _subject: `🙋 Volunteer sign-up — ${ev.title} — ${ev.date || ev.dateNote || 'date TBC'}`, _template: 'table', _captcha: 'false',
+          name: full, email, phone, event: ev.title, event_id: ev.id, start: startISO(ev), location: ev.place || (typeof VENUES !== 'undefined' && VENUES[ev.venue]?.name) || '',
           role: I.role, exchange: I.exchange, notes: I.notes }) }); } catch {}
+      if (!ev.date) { f.outerHTML = `<div style="text-align:center;margin-top:8px"><b style="color:#d2a44e;font-size:1.1rem">🙏 You're on the team!</b><div style="margin-top:4px;font-size:14px">Marcus will send you the date and details.</div></div>`; decorate(true); return; }
       const st = new Date(startISO(ev)), en = new Date(st.getTime() + 90 * 60000);
       const z = x => x.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
       const det = [I.role && 'Role: ' + I.role, I.exchange && 'Exchange: ' + I.exchange, I.notes].filter(Boolean).join('\n');
@@ -264,8 +316,8 @@
   }
 
   (async () => {
-    const [m, s, b] = await Promise.all([load(META_KEY), load(SIGNUPS_KEY), load(BLURB_KEY)]);
-    meta = m || {}; signups = s || {}; blurb = (b && b.html) || '';
+    const [m, s, b, g] = await Promise.all([load(META_KEY), load(SIGNUPS_KEY), load(BLURB_KEY), load(GIGS_KEY)]);
+    meta = m || {}; signups = s || {}; blurb = (b && b.html) || ''; gigs = (g && g.list) || [];
     decorate(true);
   })();
   decorate(true);
