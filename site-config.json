@@ -1335,9 +1335,9 @@
       "img": "photos/grief-gratitude-flute.jpg",
       "titleAlign": "center",
       "tint": "#8a6a9e",
-      "full": false,
+      "full": true,
       "capacity": 8,
-      "spots": 1
+      "spots": 0
     },
     {
       "id": "ev-nov24-chakras",
