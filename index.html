@@ -1553,7 +1553,7 @@ loadConfig().then(()=>{
   var qs=new URLSearchParams(location.search), gate=document.getElementById('vol-gate');
   var row=document.getElementById('vol-portal-row'), hl=document.querySelector('.header .home-link');
   if(hl){row.style.margin='8px 0 0';row.style.display='block';hl.parentNode.insertBefore(row,hl.nextSibling);}
-  function ok(){try{return localStorage.getItem(KEY)===HASH}catch(e){return false}}
+  function ok(){return true} /* gate OFF Oct 29 (Marcus): Brock locked out after Oct 21 pw change */
   function load(){var s=document.createElement('script');s.src='volunteer-board/volunteer.js?v=14';document.body.appendChild(s);document.getElementById('vol-portal-row').style.display='none';}
   function open(){gate.style.display='flex';document.getElementById('vol-gate-err').textContent='';setTimeout(function(){document.getElementById('vol-gate-pw').focus()},50);}
   function enter(){qs.set('volunteer','');location.search=qs.toString().replace('volunteer=','volunteer');}
