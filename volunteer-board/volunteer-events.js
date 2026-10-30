@@ -1,56 +1,6 @@
-// Auto-generated 2026-10-12T14:00:05.043645 from the Events Hub (public events only)
-// 9 public events in the next 90 days
+// Auto-generated 2026-10-29T18:00:09.474170 from the Events Hub (public events only)
+// 10 public events in the next 90 days
 const VOLUNTEER_EVENTS = [
-  {
-    "id": "ev-oct15-om",
-    "title": "Return & Remember: The Harmonic OM",
-    "start": "2026-10-15T18:30:00-06:00",
-    "end": "2026-10-15T20:00:00-06:00",
-    "description": "This sound journey is unique from the others. Instead of melody, it focuses on drones, layered sounds, and the perfect fifth \u2014 going deeper and deeper into one sound: OM. The sound said to be contained in all sounds.",
-    "location": "Private Home Studio \u00b7 Terwillegar (address on registration)",
-    "source": "hub",
-    "img": "https://events.earthharmonysoundwellness.com/photos/harmonic-om-marcus-shruti-v2.jpg"
-  },
-  {
-    "id": "ev-oct16-brandenburg",
-    "title": "Express Yourself! Our Sound Therapy Open House",
-    "start": "2026-10-16T18:15:00-06:00",
-    "end": "2026-10-16T21:15:00-06:00",
-    "description": "A free drop-in evening of sound at Brandenburg Music. Six 30-minute tastings \u2014 come for one, stay for all of it. New people meet the instruments; regulars try things they've never done.",
-    "location": "Brandenburg Music \u00b7 15907 100A Ave NW, Edmonton",
-    "source": "hub",
-    "img": "https://events.earthharmonysoundwellness.com/photos/open-house-oct16.jpg"
-  },
-  {
-    "id": "ev-oct23-yogawithin",
-    "title": "Restorative Yoga & Healing Soundbath",
-    "start": "2026-10-23T18:00:00-06:00",
-    "end": "2026-10-23T19:30:00-06:00",
-    "description": "With Melanie Checknita & Marcus Fung.",
-    "location": "Yoga Within",
-    "source": "hub",
-    "img": "https://events.earthharmonysoundwellness.com/photos/blank-templates/yoga-sound-blank.png"
-  },
-  {
-    "id": "ev-oct24-back2basics",
-    "title": "Back 2 Basics Community Sound Bath \u00b7 Session 1",
-    "start": "2026-10-24T16:00:00-06:00",
-    "end": "2026-10-24T17:00:00-06:00",
-    "description": "An elegant, effective community sound bath at an accessible cost \u2014 a spacious venue, a small team guiding the experience, and room to simply rest.",
-    "location": "Roots on Whyte \u00b7 3rd Floor",
-    "source": "hub",
-    "img": "https://events.earthharmonysoundwellness.com/photos/community-soundbath-candlelit.jpg"
-  },
-  {
-    "id": "ev-oct24-back2basics-2",
-    "title": "Back 2 Basics Community Sound Bath \u00b7 Session 2",
-    "start": "2026-10-24T17:30:00-06:00",
-    "end": "2026-10-24T18:30:00-06:00",
-    "description": "An elegant, effective community sound bath at an accessible cost \u2014 a spacious venue, a small team guiding the experience, and room to simply rest.",
-    "location": "Roots on Whyte \u00b7 3rd Floor",
-    "source": "hub",
-    "img": "https://events.earthharmonysoundwellness.com/photos/community-soundbath-candlelit.jpg"
-  },
   {
     "id": "ev-oct30-gong",
     "title": "Stillness & Release: Planetary Gong Immersion",
@@ -72,6 +22,16 @@ const VOLUNTEER_EVENTS = [
     "img": "https://events.earthharmonysoundwellness.com/photos/galactic-gong-grotto.jpg"
   },
   {
+    "id": "ev-nov11-grief",
+    "title": "Grief & Gratitude: Honouring Those We've Loved and Lost",
+    "start": "2026-11-11T19:00:00-06:00",
+    "end": "2026-11-11T20:30:00-06:00",
+    "description": "On the evening of Remembrance Day, join us for a sound journey at my cozy home studio. A place to feel the grief and the gratitude, honouring those who have departed to the next part of the great journey. Come in remembrance of your pets, parents, friends, children and others, in a small sharing honouring circle and full multi-instrumental sound journey.",
+    "location": "Private Home Studio \u00b7 Terwillegar (address on registration)",
+    "source": "hub",
+    "img": "https://events.earthharmonysoundwellness.com/photos/grief-gratitude-flute.jpg"
+  },
+  {
     "id": "ev-nov17-galactic-gong",
     "title": "\u2605 The Galactic Gong Activation Intensity",
     "start": "2026-11-17T19:00:00-06:00",
@@ -90,5 +50,55 @@ const VOLUNTEER_EVENTS = [
     "location": "",
     "source": "hub",
     "img": "https://events.earthharmonysoundwellness.com/photos/blank-templates/pulse-of-life-blank.png"
+  },
+  {
+    "id": "ev-nov21-back2basics",
+    "title": "Back 2 Basics Community Sound Bath \u00b7 Session 1",
+    "start": "2026-11-21T16:00:00-06:00",
+    "end": "2026-11-21T17:00:00-06:00",
+    "description": "An elegant, effective community sound bath at an accessible cost \u2014 a spacious venue, a small team guiding the experience, and room to simply rest.",
+    "location": "Roots on Whyte \u00b7 3rd Floor",
+    "source": "hub",
+    "img": "https://events.earthharmonysoundwellness.com/photos/community-soundbath-candlelit.jpg"
+  },
+  {
+    "id": "ev-nov21-back2basics-2",
+    "title": "Back 2 Basics Community Sound Bath \u00b7 Session 2",
+    "start": "2026-11-21T17:30:00-06:00",
+    "end": "2026-11-21T18:30:00-06:00",
+    "description": "An elegant, effective community sound bath at an accessible cost \u2014 a spacious venue, a small team guiding the experience, and room to simply rest.",
+    "location": "Roots on Whyte \u00b7 3rd Floor",
+    "source": "hub",
+    "img": "https://events.earthharmonysoundwellness.com/photos/community-soundbath-candlelit.jpg"
+  },
+  {
+    "id": "ev-nov24-chakras",
+    "title": "Clearing & Balancing: Sound Journey through the Chakras",
+    "start": "2026-11-24T19:00:00-06:00",
+    "end": "2026-11-24T20:30:00-06:00",
+    "description": "An immersive and melodic multi-instrumental sound journey that also features the human voice. With sound, we navigate the map of the 7 chakra centres.",
+    "location": "Private Home Studio \u00b7 Terwillegar (address on registration)",
+    "source": "hub",
+    "img": "https://events.earthharmonysoundwellness.com/photos/plate-clearing-balance-jul17.jpg"
+  },
+  {
+    "id": "ev-dec19-back2basics",
+    "title": "Back 2 Basics Community Sound Bath \u00b7 Session 1",
+    "start": "2026-12-19T16:00:00-06:00",
+    "end": "2026-12-19T17:00:00-06:00",
+    "description": "An elegant, effective community sound bath at an accessible cost \u2014 a spacious venue, a small team guiding the experience, and room to simply rest.",
+    "location": "Roots on Whyte \u00b7 3rd Floor",
+    "source": "hub",
+    "img": "https://events.earthharmonysoundwellness.com/photos/community-soundbath-candlelit.jpg"
+  },
+  {
+    "id": "ev-dec19-back2basics-2",
+    "title": "Back 2 Basics Community Sound Bath \u00b7 Session 2",
+    "start": "2026-12-19T17:30:00-06:00",
+    "end": "2026-12-19T18:30:00-06:00",
+    "description": "An elegant, effective community sound bath at an accessible cost \u2014 a spacious venue, a small team guiding the experience, and room to simply rest.",
+    "location": "Roots on Whyte \u00b7 3rd Floor",
+    "source": "hub",
+    "img": "https://events.earthharmonysoundwellness.com/photos/community-soundbath-candlelit.jpg"
   }
 ];
