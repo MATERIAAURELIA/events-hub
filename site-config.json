@@ -1428,6 +1428,28 @@
         "2026-11-22 13:00"
       ],
       "spots": 4
+    },
+    {
+      "id": "ev-nov26-hotsauce",
+      "type": "sound-bath",
+      "title": "Singing Bowl Hot Sauce\nAn Experiment in Chosen Intensity",
+      "date": "2026-11-26",
+      "time": "19:00",
+      "endTime": "20:15",
+      "venue": "",
+      "venueOverride": "Sweet Pea Café",
+      "price": "40",
+      "booking": "https://EarthHarmony.as.me/?appointmentType=100012653",
+      "contactEmail": "earthharmonysoundhealing@gmail.com",
+      "contactPhone": "780-257-6428",
+      "desc": "An experimental session of chosen intensity. Bowls played deliberately, with more intensity and volume, so the busy mind can let go and lose itself more easily.\n\nA gentle caution: sustained volume can grate on the ears and be jarring for the nervous system. Recommended for extra busy minds, or those who know they can handle more intensity.\n\nOver the years, people have thanked me for being so sensitive with the sounds. Now I'm responding to those who've asked for more intensity.",
+      "img": "photos/singing-bowl-hot-sauce.jpg",
+      "imgCrop": "center",
+      "status": "published",
+      "repeatable": false,
+      "series": "community",
+      "capacity": 15,
+      "spots": 15
     }
   ],
   "bgColor": "#0e1522",
