@@ -1,5 +1,29 @@
 [
- {"slug":"thank-you-song","title":"Everyday Sing-Along: The Thank You Song","desc":"A simple sing-along of gratitude, from Marcus's Everyday Sing-Alongs series.","type":"Sing-along","length":"3 min","youtube":"_6sdujaxDJc","url":"https://youtu.be/_6sdujaxDJc","related":"Stillness & Release · Grief & Gratitude"},
- {"slug":"manifesto","title":"Manifesto","desc":"A beautiful song about musical medicine, by Nahko and Medicine for the People.","type":"Video","youtube":"PtE10YN1kDU","url":"https://youtu.be/PtE10YN1kDU","related":"Pulse of Life drum circles"},
- {"slug":"pulse-of-life-rhythms-1","title":"Pulse of Life Rhythms #1","desc":"Rhythms from around the world, a playlist to carry the drum circle home.","type":"Playlist","url":"https://sdz.sh/VCo3XK","related":"Pulse of Life drum circles"}
+ {
+  "slug": "thank-you-song",
+  "title": "Everyday Sing-Along: The Thank You Song",
+  "desc": "A simple sing-along of gratitude, from Marcus's Everyday Sing-Alongs series.",
+  "type": "Sing-along",
+  "length": "3 min",
+  "youtube": "_6sdujaxDJc",
+  "url": "https://youtu.be/_6sdujaxDJc",
+  "related": "our Stillness & Release gong journeys"
+ },
+ {
+  "slug": "manifesto",
+  "title": "Manifesto",
+  "desc": "A beautiful song about musical medicine, by Nahko and Medicine for the People.",
+  "type": "Video",
+  "youtube": "PtE10YN1kDU",
+  "url": "https://youtu.be/PtE10YN1kDU",
+  "related": "our Pulse of Life drum circles"
+ },
+ {
+  "slug": "pulse-of-life-rhythms-1",
+  "title": "Pulse of Life Rhythms #1",
+  "desc": "Rhythms from around the world, a playlist to carry the drum circle home.",
+  "type": "Playlist",
+  "url": "https://sdz.sh/VCo3XK",
+  "related": "our Pulse of Life drum circles"
+ }
 ]
