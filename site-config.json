@@ -1338,6 +1338,28 @@
       "capacity": 8
     },
     {
+      "type": "deep-gong",
+      "title": "Stillness & Release:\nPlanetary Gong Immersion",
+      "date": "2026-12-04",
+      "venue": "home",
+      "price": "62.50",
+      "contactEmail": "earthharmonysoundhealing@gmail.com",
+      "contactPhone": "780-257-6428",
+      "desc": "6 Large planetary gongs, deep vibrations and resonance felt in an intimate room — thick mats, sheepskins, blankets, bolsters and tea all provided.\n\nThe gongs carry you into the deep;  your only task is to arrive and let your nervous system find its own way home. A sound journey like no other — a space to be held, for those who hold a lot.\n\nIf this session books out, join the waitlist — if there's enough interest I'll open a second sitting the same evening.\n\nOften called a gong bath — you lie down, the gongs do the rest.",
+      "status": "published",
+      "repeatable": true,
+      "venueOverride": "Terwillegar Home Studio",
+      "img": "photos/plate-stillness-release-jul31.jpg",
+      "tint": "#c98a3f",
+      "id": "ev-dec4-stillness",
+      "time": "19:00",
+      "endTime": "20:30",
+      "spots": 8,
+      "booking": "https://EarthHarmony.as.me/?appointmentType=97625755",
+      "capacity": 8,
+      "full": false
+    },
+    {
       "id": "ev-nov11-grief",
       "type": "sound-bath",
       "title": "Grief & Gratitude:\nHonouring Those We've Loved and Lost",
