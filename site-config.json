@@ -1450,6 +1450,26 @@
       "series": "community",
       "capacity": 15,
       "spots": 15
+    },
+    {
+      "id": "ev-nov12-mmm",
+      "type": "sound-bath",
+      "title": "Music Movement Medicine\nSilent Disco + Sound Bath",
+      "date": "2026-11-12",
+      "time": "19:00",
+      "endTime": "20:30",
+      "venue": "",
+      "venueOverride": "Sweet Pea Café",
+      "price": "25",
+      "booking": "https://EarthHarmony.as.me/?appointmentType=98286757",
+      "contactEmail": "earthharmonysoundhealing@gmail.com",
+      "contactPhone": "780-257-6428",
+      "desc": "Join Marcus for an intentionally curated musical journey of world rhythms and positive, uplifting vibes: a soundtrack for exploring this miraculous vehicle, your human body, as you move through life. Move at your own comfort level while the headphones create a very special inner-journey feeling.\n\nMovement is medicine: it shakes loose stress and stuck energy, lifts the mood, and helps the nervous system settle, so the sound bath afterward lands even deeper.\n\nThe journey includes an opening circle, a warm-up, solo and group flow, and a cool-down, followed by a live sound healing transmission from Marcus. Room for about 15 movers.",
+      "img": "photos/mmm-silhouette-headphones.jpg",
+      "imgCrop": "center",
+      "status": "published",
+      "repeatable": false,
+      "series": "community"
     }
   ],
   "bgColor": "#0e1522",
