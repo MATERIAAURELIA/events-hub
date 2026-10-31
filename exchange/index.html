@@ -50,34 +50,35 @@ input:focus,textarea:focus,select:focus,button:focus-visible{outline:2px solid v
 .status{font-size:14px;color:var(--dim);min-height:20px;margin-top:10px}
 .examples{font-size:14px;color:var(--faint);margin:-8px 0 16px}
 .examples button{font:inherit;font-size:13px;background:none;border:0;color:var(--sky);cursor:pointer;padding:0 4px;text-decoration:underline dotted}
-.board{display:flex;flex-direction:column;gap:12px}
-.prop{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--st,var(--line));border-radius:14px;padding:16px 18px}
-.prop h3{font-family:Marcellus,serif;font-weight:400;font-size:21px;margin:0 0 4px;line-height:1.2}
-.meta{display:flex;flex-wrap:wrap;gap:6px 10px;font-size:13px;color:var(--faint);margin-bottom:8px}
-.pill{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:999px;border:1px solid var(--st);color:var(--st)}
-.prop p{margin:0 0 8px;color:var(--dim)}
-.gear{display:flex;flex-wrap:wrap;gap:6px}
-.gear span{font-size:12.5px;padding:3px 9px;border-radius:999px;background:var(--panel2);border:1px solid var(--line)}
-.gear span.mine{border-color:var(--ok);color:var(--ok)}
-.gear span.prov{border-color:var(--gold-soft);color:var(--gold)}
+.lead2{color:var(--dim);font-size:14px;margin:0 0 14px}
+.tbl{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.thead{display:grid;grid-template-columns:150px minmax(0,1fr) 90px 150px;gap:12px;padding:10px 16px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);border-bottom:1px solid var(--gold-soft)}
+.prow{border-bottom:1px solid var(--line);padding:14px 16px}
+.prow:last-child{border-bottom:0}
+.pmain{display:grid;grid-template-columns:150px minmax(0,1fr) 90px 150px;gap:12px;align-items:start}
+.pname{font-family:Marcellus,serif;font-size:21px;line-height:1.2}
+.idea{font-size:16px;color:var(--ink)}
+.idea.unsure{color:var(--faint);font-style:italic}
+.idea.blank{color:var(--faint)}
+.idea small{display:block;color:var(--dim);font-size:14px;margin-top:3px}
+.cell{font-size:14px;color:var(--dim)}
+.cell .k{display:none}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.acts .btn{padding:7px 13px;font-size:11.5px}
+.edit{display:none;margin-top:12px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px}
+.edit.open{display:block}
+.edit input[type=text],.edit textarea,.edit select{background:var(--bg)}
+.pill{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 9px;border-radius:999px;border:1px solid var(--st);color:var(--st);margin-left:6px;vertical-align:middle}
 .note{margin-top:8px;font-size:14px;color:var(--ink);background:rgba(210,164,78,.08);border-radius:8px;padding:8px 10px}
 .admin{margin-top:10px;display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:8px;align-items:center}
-@media(max-width:560px){.admin{grid-template-columns:1fr 1fr}}
-.empty{color:var(--faint);text-align:center;padding:30px;border:1px dashed var(--line);border-radius:14px}
-.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
-.thanks{text-align:center;padding:26px}
-.thanks b{font-family:Marcellus,serif;font-weight:400;font-size:26px;color:var(--gold);display:block;margin-bottom:6px}
-.react{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
-.react .btn{padding:8px 14px;font-size:12px}
 .cmts{margin-top:8px;display:flex;flex-direction:column;gap:6px}
 .cmt{font-size:14px;color:var(--dim);background:var(--panel2);border-radius:8px;padding:7px 10px}
 .cmt b{color:var(--ink);font-weight:600}
 .cform{display:none;grid-template-columns:120px minmax(0,1fr) auto;gap:8px;margin-top:8px}
 .cform.open{display:grid}
-@media(max-width:560px){.cform{grid-template-columns:1fr}}
-.line{font-size:15px;color:var(--gold);margin:0 0 8px}
-.att{margin-top:10px;font-size:14px;color:var(--ink)}
-.att b{color:var(--gold);font-weight:700}
+.addme{display:flex;gap:8px;margin-top:14px}
+.addme input{flex:1}
+@media(max-width:640px){.thead{display:none}.pmain{grid-template-columns:1fr;gap:4px}.cell .k{display:inline;color:var(--faint)}.cell{display:inline-block;margin-right:12px}.admin,.cform{grid-template-columns:1fr}.head{align-items:flex-start}.face{width:64px;height:64px}}
 .foot{margin-top:28px;font-size:13px;color:var(--faint);text-align:center}
 </style>
 </head>
@@ -87,60 +88,18 @@ input:focus,textarea:focus,select:focus,button:focus-visible{outline:2px solid v
     <img class="face" src="https://events.earthharmonysoundwellness.com/photos/marcus-face-gong-halo.jpg?v=2" alt="Marcus">
     <div>
       <div class="eyebrow">Team Exchange</div>
-      <h1>What do you want to explore?</h1>
-      <p class="lead">A space to try something: lead a journey, experiment with one instrument, or get honest feedback on your playing. Propose it here, see what everyone's offering and who's attending, and add your thoughts.</p>
+      <h1>What would you like to explore?</h1>
+      <p class="lead">Find your name below and add what you'd love to try: lead a journey, experiment with one instrument, or get honest feedback on your playing. Not sure yet? That's welcome too. Everyone can see what everyone's exploring and add a thought.</p>
     </div>
   </div>
+  <p class="lead2">🔔 Marcus is happy to provide the equipment unless you'd like to bring your own. All his bowls are tuned to 440 Hz. Sometimes it's nice to work with your own bowls, since every bowl is unique. Mats &amp; blankets are already here.</p>
 
-  <div class="tabs" role="group" aria-label="View">
-    <button id="tPropose" aria-pressed="true">Propose an idea</button>
-    <button id="tBoard" aria-pressed="false">Ideas so far <span id="count"></span></button>
+  <div id="rosterAdmin"></div>
+  <div class="tbl" role="table" aria-label="Who's exploring what">
+    <div class="thead" role="row"><span>Name</span><span>Would like to explore</span><span>Time</span><span>Equipment</span></div>
+    <div id="rows"><div class="prow cell">Loading…</div></div>
   </div>
-
-  <section id="propose" class="card" aria-label="Propose an idea">
-    <form id="form" novalidate>
-      <label class="f"><span>What do you want to explore?</span>
-        <input type="text" id="title" maxlength="90" placeholder="e.g. A vocal-only sound journey" required></label>
-      <div class="examples">Need a spark? <button type="button" data-ex="A vocal-only sound journey">vocal-only journey</button>·<button type="button" data-ex="A 7-bowl journey">7-bowl journey</button>·<button type="button" data-ex="Experimenting solely with the spinning pyramids">spinning pyramids</button>·<button type="button" data-ex="I'd love feedback on my playing">feedback on my playing</button></div>
-
-      <div class="f" style="margin-bottom:16px"><span class="lbl">What kind of exchange?</span>
-        <div class="chips" id="kind" role="group" aria-label="Kind">
-          <button type="button" class="chip" data-v="Lead a journey" aria-pressed="false">🌙 Lead a journey</button>
-          <button type="button" class="chip" data-v="Experiment / explore" aria-pressed="false">🧪 Experiment / explore</button>
-          <button type="button" class="chip" data-v="Feedback on my playing" aria-pressed="false">👂 Feedback on my playing</button>
-          <button type="button" class="chip" data-v="Perform / share" aria-pressed="false">🎶 Perform / share</button>
-          <button type="button" class="chip" data-v="Idea for anyone to take" aria-pressed="false">💡 An idea for anyone to take</button>
-          <button type="button" class="chip" data-v="Something else" aria-pressed="false">✨ Something else</button>
-        </div></div>
-
-      <label class="f"><span>Tell us a little more <span class="hint">(what you'd love to try, what it's for)</span></span>
-        <textarea id="desc" maxlength="800" placeholder="What would happen, who it's for, what you're hoping to learn…"></textarea></label>
-
-      <div class="f" style="margin-bottom:16px"><span class="lbl">Equipment</span>
-        <p class="hint" style="margin:0 0 10px;font-size:14px;color:var(--dim)">Marcus is happy to provide the equipment unless you'd like to bring your own. All his bowls are tuned to 440 Hz. Sometimes it's nice to work with your own bowls, since every bowl is unique. Mats &amp; blankets are already here.</p>
-        <div class="chips" id="gearQ" role="group" aria-label="Equipment">
-          <button type="button" class="chip" data-v="Using Marcus's equipment" aria-pressed="true">🔔 Use Marcus's equipment</button>
-          <button type="button" class="chip" data-v="Bringing own equipment" aria-pressed="false">🎒 I'll bring my own</button>
-        </div>
-        <input type="text" id="gearNote" maxlength="120" placeholder="Anything specific? (e.g. 7 bowls, looper + mic)" style="margin-top:10px"></div>
-
-      <div class="row2">
-        <label class="f"><span>Who are you?</span>
-          <select id="who"><option value="">Choose your name…</option></select>
-          <input type="text" id="name" maxlength="40" placeholder="Your first name" style="margin-top:8px" hidden></label>
-        <label class="f"><span>How long do you need?</span>
-          <select id="len"><option>10 min</option><option>15 min</option><option>20 min</option><option selected>30 min</option><option>45 min</option></select></label>
-      </div>
-
-      <button class="btn" id="submit" type="submit">Send my idea</button>
-      <div class="status" id="status" role="status"></div>
-    </form>
-  </section>
-
-  <section id="board" hidden aria-label="Ideas so far">
-    <div class="filters chips" id="filters" role="group" aria-label="Filter"></div>
-    <div class="board" id="list"><div class="empty">Loading ideas…</div></div>
-  </section>
+  <div class="addme"><input type="text" id="newName" maxlength="30" placeholder="Not on the list? Your first name"><button class="btn ghost" id="addName">Add me</button></div>
 
   <p class="foot">Earth Harmony Sound &amp; Wellness · <a href="https://events.earthharmonysoundwellness.com/?volunteer">Team Service board</a></p>
 </div>
@@ -149,119 +108,111 @@ input:focus,textarea:focus,select:focus,button:focus-visible{outline:2px solid v
 (() => {
   const API_URL = 'https://script.google.com/macros/s/AKfycbzzu1jXVtwDuHyBThe62Ipc10UzBJkDQDACGZfe5oEF9jXIUl3qtGjbJD2c3IW_q4EjKQ/exec';
   const FORM = 'https://formsubmit.co/ajax/68bf44fd6c680760a90740f0fc752510';
-  const KEY = 'exchange-proposals';
+  const KEY = 'exchange-proposals', RKEY = 'exchange-roster';
+  const DEFAULT_ROSTER = ['Marcus', 'Brock', 'Holly', 'Sheryl', 'Jen', 'Val', 'Desiree', 'Seema', 'Oksana'];
   const ADMIN = new URLSearchParams(location.search).get('admin') === '1';
-  const GEAR = ['Singing bowls', 'Crystal bowls', 'Gongs', 'Spinning pyramids', 'Handpan', 'Drums', 'Voice / mic', 'Looper', 'Speaker / PA', 'Mats & blankets', 'Chimes', 'Flute'];
   const STATUS = [
     { id: 'new', label: 'Proposed', c: 'var(--sky)' },
     { id: 'yes', label: "Yes, let's do it", c: 'var(--gold)' },
     { id: 'scheduled', label: 'Scheduled', c: 'var(--ok)' },
     { id: 'done', label: 'Done 🙏', c: 'rgba(243,235,221,.5)' },
     { id: 'later', label: 'Later', c: 'rgba(243,235,221,.35)' }];
+  const STAGES = [['unsure', '🤔 Not sure yet'], ['seed', '🌱 A seed of an idea'], ['try', '🌿 Ready to try it'], ['share', '🌸 Ready to share']];
+  const stageLbl = k => (STAGES.find(x => x[0] === k) || [])[1] || '';
+  const GEAR = { marcus: "Marcus's equipment", own: 'Bringing own', unsure: 'Not sure yet' };
   const $ = id => document.getElementById(id);
   const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  const load = async () => { try { const r = await fetch(`${API_URL}?key=${KEY}&t=${Date.now()}`); const v = r.ok ? await r.json() : []; return Array.isArray(v) ? v : (Array.isArray(v && v.value) ? v.value : []); } catch { return null; } };
+  const get = async k => { try { const r = await fetch(`${API_URL}?key=${k}&t=${Date.now()}`); const v = r.ok ? await r.json() : null; return v; } catch { return undefined; } };
+  const load = async () => { const v = await get(KEY); if (v === undefined) return null; return Array.isArray(v) ? v : (Array.isArray(v && v.value) ? v.value : []); };
   const save = async v => { const r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ key: KEY, value: v }) }); if (!r.ok) throw new Error('save failed'); };
 
-  let items = [], kind = '', filter = 'all';
-
-  /* ---------- tabs ---------- */
-  const show = t => { $('propose').hidden = t !== 'propose'; $('board').hidden = t !== 'board'; $('tPropose').setAttribute('aria-pressed', t === 'propose'); $('tBoard').setAttribute('aria-pressed', t === 'board'); if (t === 'board') refresh(); };
-  $('tPropose').onclick = () => show('propose'); $('tBoard').onclick = () => show('board');
-
-
-  /* ---------- roster: names of who's coming (Marcus edits in admin) ---------- */
-  const RKEY = 'exchange-roster', DEFAULT_ROSTER = ['Marcus', 'Brock', 'Holly', 'Sheryl', 'Jen', 'Val', 'Desiree', 'Seema', 'Oksana'];
-  let roster = DEFAULT_ROSTER.slice();
-  const drawWho = () => { const cur = $('who') ? $('who').value : ''; if (!$('who')) return; $('who').innerHTML = '<option value="">Choose your name…</option>' + roster.map(n => `<option${n === cur ? ' selected' : ''}>${esc(n)}</option>`).join('') + '<option value="__other">Someone else…</option>'; };
-  (async () => { try { const r = await fetch(`${API_URL}?key=${RKEY}&t=${Date.now()}`); const v = r.ok ? await r.json() : null; if (Array.isArray(v) && v.length) roster = v; } catch {} drawWho(); drawRosterAdmin(); })();
-  if ($('who')) $('who').onchange = () => { const o = $('who').value === '__other'; $('name').hidden = !o; if (o) $('name').focus(); };
-  const drawRosterAdmin = () => { if (!ADMIN) return; let box = $('rosterAdmin'); if (!box) { box = document.createElement('div'); box.id = 'rosterAdmin'; box.className = 'card'; box.style.marginBottom = '12px'; $('board').prepend(box); }
-    box.innerHTML = `<span class="lbl">Who's coming (names in the dropdown)</span><input type="text" id="rosterTxt" value="${esc(roster.join(', '))}"><div style="margin-top:8px"><button class="btn" id="rosterSave">Save names</button> <span class="hint" id="rosterSt"></span></div>`;
-    $('rosterSave').onclick = async () => { roster = $('rosterTxt').value.split(',').map(x => x.trim()).filter(Boolean); try { await fetch(API_URL, { method: 'POST', body: JSON.stringify({ key: RKEY, value: roster }) }); $('rosterSt').textContent = 'Saved.'; drawWho(); } catch { $('rosterSt').textContent = "Couldn't save."; } }; };
-  /* ---------- form ---------- */
-  document.querySelectorAll('[data-ex]').forEach(b => b.onclick = () => { $('title').value = b.dataset.ex; $('title').focus(); });
-  $('kind').onclick = e => { const b = e.target.closest('.chip'); if (!b) return; kind = kind === b.dataset.v ? '' : b.dataset.v; $('kind').querySelectorAll('.chip').forEach(x => x.setAttribute('aria-pressed', x.dataset.v === kind)); };
-  let gearAns = "Using Marcus's equipment";
-  $('gearQ').onclick = e => { const b = e.target.closest('.chip'); if (!b) return; gearAns = b.dataset.v; $('gearQ').querySelectorAll('.chip').forEach(x => x.setAttribute('aria-pressed', x.dataset.v === gearAns)); };
-
-  $('form').onsubmit = async e => {
-    e.preventDefault();
-    const title = $('title').value.trim(), name = ($('who').value && $('who').value !== '__other') ? $('who').value : $('name').value.trim();
-    if (!title) { $('status').textContent = 'Give your idea a name first.'; $('title').focus(); return; }
-    if (!name) { $('status').textContent = 'Choose your name first.'; $('who').focus(); return; }
-    $('submit').disabled = true; $('status').textContent = 'Sending…';
-    const entry = { id: 'x' + Date.now().toString(36), first: name.split(/\s+/)[0], title, kind, desc: $('desc').value.trim(), gearAns, gearNote: $('gearNote').value.trim(), len: $('len').value, status: 'new', note: '', ts: new Date().toISOString() };
-    try {
-      const cur = await load(); if (cur === null) throw new Error('offline');
-      cur.push(entry); await save(cur);
-      fetch(FORM, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({ _subject: `💡 Team Exchange idea: ${title} (${name})`, _template: 'table', _captcha: 'false', name, idea: title, kind: kind || '-', details: entry.desc || '-', length: entry.len, equipment: (gearAns || '-') + (entry.gearNote ? ' · ' + entry.gearNote : '') }) }).catch(() => {});
-      $('form').outerHTML = `<div class="thanks"><b>Thank you, ${esc(entry.first)} 🙏</b>Your idea is on the board for everyone to see.<div style="margin-top:16px"><button class="btn ghost" onclick="location.reload()">Propose another</button> <button class="btn" id="seeBoard">See the ideas</button></div></div>`;
-      $('seeBoard').onclick = () => show('board');
-    } catch (err) {
-      $('submit').disabled = false; $('status').textContent = "Couldn't send just now. Please try again in a moment.";
-    }
-  };
-
-  /* ---------- board ---------- */
+  let items = [], roster = DEFAULT_ROSTER.slice(), extra = [];
+  const people = () => { const seen = new Set(), out = []; [...roster, ...items.map(x => x.first), ...extra].forEach(n => { const k = (n || '').toLowerCase(); if (n && !seen.has(k)) { seen.add(k); out.push(n); } }); return out; };
+  const entryOf = n => items.find(x => (x.first || '').toLowerCase() === n.toLowerCase());
   const st = id => STATUS.find(s => s.id === id) || STATUS[0];
-  const drawFilters = () => {
-    const opts = [['all', 'All']].concat(STATUS.map(s => [s.id, s.label]));
-    $('filters').innerHTML = opts.map(([v, l]) => `<button type="button" class="chip" data-f="${v}" aria-pressed="${filter === v}">${esc(l)}</button>`).join('');
-  };
-  $('filters').onclick = e => { const b = e.target.closest('[data-f]'); if (!b) return; filter = b.dataset.f; drawFilters(); drawList(); };
-  const drawList = () => {
-    $('count').textContent = items.length ? `(${items.length})` : '';
-    const list = items.filter(x => filter === 'all' || x.status === filter).sort((a, b) => String(b.ts).localeCompare(String(a.ts)));
-    if (!list.length) { $('list').innerHTML = `<div class="empty">${items.length ? 'Nothing here yet.' : 'No ideas yet. Be the first to propose one.'}</div>`; return; }
-    $('list').innerHTML = list.map(x => {
-      const s = st(x.status);
-      return `<article class="prop" style="--st:${s.c}">
-        <h3>${esc(x.first)} · ${esc(x.title)}</h3>
-        <div class="line">${x.len ? 'needs ' + esc(x.len) : ''}${x.gearAns ? ' · ' + esc(/Bringing/.test(x.gearAns) ? 'bringing own equipment' : "using Marcus's equipment") : ''}${x.gearNote ? ' (' + esc(x.gearNote) + ')' : ''}</div>
-        <div class="meta"><span class="pill">${esc(s.label)}</span>${x.kind ? `<span>${esc(x.kind)}</span>` : ''}</div>
-        ${x.desc ? `<p>${esc(x.desc)}</p>` : ''}
-        <div class="att"><b>Attending:</b> ${(x.ins||[]).length ? (x.ins).map(esc).join(', ') : '<span class="hint">no one yet</span>'}</div>
-        ${x.note ? `<div class="note">📌 Marcus: ${esc(x.note)}</div>` : ''}
-        ${(x.comments||[]).length ? `<div class="cmts">${x.comments.map(c => `<div class="cmt"><b>${esc(c.first)}</b> ${esc(c.text)}</div>`).join('')}</div>` : ''}
-        <div class="react" data-id="${esc(x.id)}"><button class="btn ghost" data-r="in">🙋 I'll be there${(x.ins||[]).length ? ' · ' + x.ins.length : ''}</button><button class="btn ghost" data-r="open">💬 Add a thought</button></div>
-        <form class="cform" data-id="${esc(x.id)}"><input type="text" maxlength="30" placeholder="Your first name" aria-label="First name"><input type="text" maxlength="240" placeholder="A suggestion, idea, or encouragement" aria-label="Thought"><button class="btn" type="submit">Post</button></form>
-        ${ADMIN ? `<div class="admin" data-id="${esc(x.id)}"><select aria-label="Status">${STATUS.map(o => `<option value="${o.id}"${o.id === x.status ? ' selected' : ''}>${esc(o.label)}</option>`).join('')}</select><input type="text" maxlength="160" placeholder="Note on the board (e.g. Tue Dec 8, 7pm)" value="${esc(x.note || '')}"><button class="btn" data-a="save">Save</button><button class="btn ghost" data-a="del">Remove</button></div>` : ''}
-      </article>`;
+
+  const draw = () => {
+    $('rows').innerHTML = people().map(n => {
+      const x = entryOf(n), id = esc(n);
+      let idea;
+      if (!x) idea = `<div class="idea blank">Tap "Add mine" to share</div>`;
+      else if (!x.title) idea = `<div class="idea unsure">🤔 Not sure yet</div>`;
+      else idea = `<div class="idea">${esc(x.title)}${x.status && x.status !== 'new' ? `<span class="pill" style="--st:${st(x.status).c}">${esc(st(x.status).label)}</span>` : ''}${x.stage && x.stage !== 'unsure' ? `<small style="color:var(--gold)">${esc(stageLbl(x.stage))}</small>` : ''}${x.desc ? `<small>${esc(x.desc)}</small>` : ''}</div>`;
+      const len = x && x.title ? esc(x.len || '') : '';
+      const gear = x ? esc(GEAR[x.gear] || '') + (x.gearNote ? ` <span class="hint">(${esc(x.gearNote)})</span>` : '') : '';
+      return `<div class="prow" role="row" data-n="${id}">
+        <div class="pmain"><div class="pname">${esc(n)}</div>${idea}<div class="cell"><span class="k">Time: </span>${len || '–'}</div><div class="cell"><span class="k">Equipment: </span>${gear || '–'}</div></div>
+        ${x && x.note ? `<div class="note">📌 Marcus: ${esc(x.note)}</div>` : ''}
+        ${x && (x.comments || []).length ? `<div class="cmts">${x.comments.map(c => `<div class="cmt"><b>${esc(c.first)}</b> ${esc(c.text)}</div>`).join('')}</div>` : ''}
+        <div class="acts"><button class="btn ghost" data-r="edit">${x ? '✏️ Edit' : '＋ Add mine'}</button>${x ? '<button class="btn ghost" data-r="cmt">💬 Add a thought</button>' : ''}</div>
+        <form class="edit" novalidate>
+          <label class="f"><span>What would you like to explore?</span><input type="text" name="title" maxlength="90" placeholder="e.g. A vocal-only live loop journey" value="${esc(x && x.title || '')}"></label>
+          <div class="f" style="margin-bottom:16px"><span class="lbl">Where are you with it?</span><div class="chips">${STAGES.map(([k, l]) => `<button type="button" class="chip" data-stage="${k}" aria-pressed="${(x ? (x.stage || (x.unsure ? 'unsure' : '')) : '') === k}">${l}</button>`).join('')}</div></div>
+          <label class="f"><span>A little more <span class="hint">(optional)</span></span><textarea name="desc" maxlength="600" style="min-height:70px" placeholder="What you'd love to try, or feedback you're hoping for">${esc(x && x.desc || '')}</textarea></label>
+          <div class="row2">
+            <label class="f"><span>How long do you need?</span><select name="len">${['10 min', '15 min', '20 min', '30 min', '45 min', 'Not sure yet'].map(o => `<option${(x ? x.len : '30 min') === o ? ' selected' : ''}>${o}</option>`).join('')}</select></label>
+            <label class="f"><span>Equipment</span><select name="gear">${Object.entries(GEAR).map(([k, l]) => `<option value="${k}"${(x ? x.gear : 'marcus') === k ? ' selected' : ''}>${k === 'own' ? "I'll bring my own" : k === 'marcus' ? "Use Marcus's" : l}</option>`).join('')}</select></label>
+          </div>
+          <label class="f"><span>Anything specific? <span class="hint">(optional)</span></span><input type="text" name="gearNote" maxlength="120" placeholder="e.g. my 7 bowls, looper + mic" value="${esc(x && x.gearNote || '')}"></label>
+          <button class="btn" type="submit">Save</button> <span class="status" style="display:inline"></span>
+        </form>
+        <form class="cform"><input type="text" maxlength="30" placeholder="Your first name" aria-label="First name"><input type="text" maxlength="240" placeholder="A suggestion, idea, or encouragement" aria-label="Thought"><button class="btn" type="submit">Post</button></form>
+        ${ADMIN && x ? `<div class="admin"><select aria-label="Status">${STATUS.map(o => `<option value="${o.id}"${o.id === x.status ? ' selected' : ''}>${esc(o.label)}</option>`).join('')}</select><input type="text" maxlength="160" placeholder="Note on the board (e.g. Tue Dec 8, 7pm)" value="${esc(x.note || '')}"><button class="btn" data-a="save">Save</button><button class="btn ghost" data-a="del">Clear</button></div>` : ''}
+      </div>`;
     }).join('');
   };
-  $('list').onclick = async e => {
-    const b = e.target.closest('[data-a]'); if (!b) return; const box = b.closest('.admin'), id = box.dataset.id;
-    b.disabled = true;
-    try {
-      const cur = await load(); if (cur === null) throw 0;
-      const i = cur.findIndex(x => x.id === id); if (i < 0) throw 0;
-      if (b.dataset.a === 'del') { if (!confirm('Remove this idea from the board?')) { b.disabled = false; return; } cur.splice(i, 1); }
-      else { cur[i].status = box.querySelector('select').value; cur[i].note = box.querySelector('input').value.trim(); }
-      await save(cur); items = cur; drawList();
-    } catch { b.disabled = false; alert("Couldn't save. Try again."); }
-  };
 
-  /* ---------- reactions: I'd join + comments (first names only) ---------- */
-  const mutate = async (id, fn) => { const cur = await load(); if (cur === null) throw 0; const it = cur.find(x => x.id === id); if (!it) throw 0; fn(it); await save(cur); items = cur; drawList(); };
-  const askName = () => { let n = ''; try { n = localStorage.getItem('ex-first') || ''; } catch {} n = (prompt('Your first name?', n) || '').trim().split(/\s+/)[0]; if (n) { try { localStorage.setItem('ex-first', n); } catch {} } return n; };
-  $('list').addEventListener('click', async e => {
-    const b = e.target.closest('[data-r]'); if (!b) return; const id = b.closest('.react').dataset.id;
-    if (b.dataset.r === 'open') { const f = $('list').querySelector(`.cform[data-id="${CSS.escape(id)}"]`); f.classList.toggle('open'); let n = ''; try { n = localStorage.getItem('ex-first') || ''; } catch {} if (n && !f.elements[0].value) f.elements[0].value = n; f.elements[f.elements[0].value ? 1 : 0].focus(); return; }
-    const n = askName(); if (!n) return; b.disabled = true;
-    try { await mutate(id, it => { it.ins = it.ins || []; const k = it.ins.indexOf(n); if (k < 0) it.ins.push(n); else it.ins.splice(k, 1); }); } catch { b.disabled = false; alert("Couldn't save. Try again."); }
+  const mutate = async fn => { const cur = await load(); if (cur === null) throw 0; fn(cur); await save(cur); items = cur; draw(); };
+
+  $('rows').addEventListener('click', async e => {
+    const row = e.target.closest('.prow'); if (!row) return; const n = row.dataset.n;
+    const u = e.target.closest('[data-stage]'); if (u) { u.parentNode.querySelectorAll('[data-stage]').forEach(b => b.setAttribute('aria-pressed', b === u)); return; }
+    const r = e.target.closest('[data-r]');
+    if (r && r.dataset.r === 'edit') { const f = row.querySelector('.edit'); f.classList.toggle('open'); if (f.classList.contains('open')) f.elements.title.focus(); return; }
+    if (r && r.dataset.r === 'cmt') { const f = row.querySelector('.cform'); f.classList.toggle('open'); let m = ''; try { m = localStorage.getItem('ex-first') || ''; } catch {} if (m && !f.elements[0].value) f.elements[0].value = m; f.elements[f.elements[0].value ? 1 : 0].focus(); return; }
+    const a = e.target.closest('[data-a]'); if (!a) return; const box = a.closest('.admin'); a.disabled = true;
+    try { await mutate(cur => { const i = cur.findIndex(x => (x.first || '').toLowerCase() === n.toLowerCase()); if (i < 0) throw 0;
+      if (a.dataset.a === 'del') { if (!confirm(`Clear ${n}'s idea?`)) throw 'no'; cur.splice(i, 1); } else { cur[i].status = box.querySelector('select').value; cur[i].note = box.querySelector('input').value.trim(); } }); }
+    catch (err) { a.disabled = false; if (err !== 'no') alert("Couldn't save. Try again."); }
   });
-  $('list').addEventListener('submit', async e => {
-    const f = e.target.closest('.cform'); if (!f) return; e.preventDefault();
-    const first = f.elements[0].value.trim().split(/\s+/)[0], text = f.elements[1].value.trim(); if (!first || !text) return;
-    try { localStorage.setItem('ex-first', first); } catch {}
-    f.querySelector('button').disabled = true;
-    try { await mutate(f.dataset.id, it => { (it.comments = it.comments || []).push({ first, text, ts: new Date().toISOString() }); }); } catch { f.querySelector('button').disabled = false; alert("Couldn't post. Try again."); }
+
+  $('rows').addEventListener('submit', async e => {
+    e.preventDefault(); const f = e.target, row = f.closest('.prow'), n = row.dataset.n;
+    if (f.classList.contains('cform')) {
+      const first = f.elements[0].value.trim().split(/\s+/)[0], text = f.elements[1].value.trim(); if (!first || !text) return;
+      try { localStorage.setItem('ex-first', first); } catch {}
+      f.querySelector('button').disabled = true;
+      try { await mutate(cur => { const it = cur.find(x => (x.first || '').toLowerCase() === n.toLowerCase()); if (!it) throw 0; (it.comments = it.comments || []).push({ first, text, ts: new Date().toISOString() }); }); }
+      catch { f.querySelector('button').disabled = false; alert("Couldn't post. Try again."); }
+      return;
+    }
+    const title = f.elements.title.value.trim(), sb = f.querySelector('[data-stage][aria-pressed="true"]'), stage = sb ? sb.dataset.stage : '', unsure = stage === 'unsure';
+    const msg = f.querySelector('.status');
+    if (!title && !unsure) { msg.textContent = 'Add an idea, or tap "Not sure yet".'; return; }
+    const data = { title, stage, unsure, desc: f.elements.desc.value.trim(), len: f.elements.len.value, gear: f.elements.gear.value, gearNote: f.elements.gearNote.value.trim() };
+    f.querySelector('button[type=submit]').disabled = true; msg.textContent = 'Saving…';
+    try {
+      await mutate(cur => { const it = cur.find(x => (x.first || '').toLowerCase() === n.toLowerCase());
+        if (it) Object.assign(it, data, { ts: new Date().toISOString() });
+        else cur.push(Object.assign({ id: 'x' + Date.now().toString(36), first: n, status: 'new', note: '', ts: new Date().toISOString() }, data)); });
+      fetch(FORM, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ _subject: `💡 Team Exchange: ${n} · ${title || 'not sure yet'}`, _template: 'table', _captcha: 'false', name: n, explore: title || 'Not sure yet', stage: stageLbl(stage) || '-', details: data.desc || '-', length: data.len, equipment: GEAR[data.gear] + (data.gearNote ? ' · ' + data.gearNote : '') }) }).catch(() => {});
+    } catch { f.querySelector('button[type=submit]').disabled = false; msg.textContent = "Couldn't save just now. Try again in a moment."; }
   });
-  const refresh = async () => { const v = await load(); if (v === null) { $('list').innerHTML = `<div class="empty">Couldn't load the ideas right now.</div>`; return; } items = v; drawFilters(); drawList(); };
-  refresh();
-  if (ADMIN) { document.title = 'Team Exchange (admin)'; show('board'); }
+
+  $('addName').onclick = () => { const n = $('newName').value.trim().split(/\s+/)[0]; if (!n) return; const c = n[0].toUpperCase() + n.slice(1); if (!people().some(p => p.toLowerCase() === c.toLowerCase())) extra.push(c); $('newName').value = ''; draw(); const row = $('rows').querySelector(`.prow[data-n="${CSS.escape(c)}"]`); if (row) { row.querySelector('.edit').classList.add('open'); row.scrollIntoView({ behavior: 'smooth', block: 'center' }); row.querySelector('.edit').elements.title.focus(); } };
+
+  const drawRosterAdmin = () => { if (!ADMIN) return; const box = $('rosterAdmin'); box.className = 'card'; box.style.marginBottom = '12px';
+    box.innerHTML = `<span class="lbl">Who's coming (rows in the table)</span><input type="text" id="rosterTxt" value="${esc(roster.join(', '))}"><div style="margin-top:8px"><button class="btn" id="rosterSave">Save names</button> <span class="hint" id="rosterSt"></span></div>`;
+    $('rosterSave').onclick = async () => { roster = $('rosterTxt').value.split(',').map(x => x.trim()).filter(Boolean); try { await fetch(API_URL, { method: 'POST', body: JSON.stringify({ key: RKEY, value: roster }) }); $('rosterSt').textContent = 'Saved.'; draw(); } catch { $('rosterSt').textContent = "Couldn't save."; } }; };
+
+  (async () => {
+    const [v, r] = await Promise.all([load(), get(RKEY)]);
+    if (Array.isArray(r) && r.length) roster = r;
+    if (v === null) { $('rows').innerHTML = `<div class="prow cell">Couldn't load just now. Refresh in a moment.</div>`; return; }
+    items = v; draw(); drawRosterAdmin();
+    if (ADMIN) document.title = 'Team Exchange (admin)';
+  })();
 })();
 </script>
 </body>
