@@ -75,6 +75,9 @@ input:focus,textarea:focus,select:focus,button:focus-visible{outline:2px solid v
 .cform{display:none;grid-template-columns:120px minmax(0,1fr) auto;gap:8px;margin-top:8px}
 .cform.open{display:grid}
 @media(max-width:560px){.cform{grid-template-columns:1fr}}
+.line{font-size:15px;color:var(--gold);margin:0 0 8px}
+.att{margin-top:10px;font-size:14px;color:var(--ink)}
+.att b{color:var(--gold);font-weight:700}
 .foot{margin-top:28px;font-size:13px;color:var(--faint);text-align:center}
 </style>
 </head>
@@ -85,7 +88,7 @@ input:focus,textarea:focus,select:focus,button:focus-visible{outline:2px solid v
     <div>
       <div class="eyebrow">Team Exchange</div>
       <h1>What do you want to explore?</h1>
-      <p class="lead">A space to try something: lead a journey, experiment with one instrument, or get honest feedback on your playing. Propose it here, see what others are offering, and add your thoughts or say you're in.</p>
+      <p class="lead">A space to try something: lead a journey, experiment with one instrument, or get honest feedback on your playing. Propose it here, see what everyone's offering and who's attending, and add your thoughts.</p>
     </div>
   </div>
 
@@ -96,7 +99,7 @@ input:focus,textarea:focus,select:focus,button:focus-visible{outline:2px solid v
 
   <section id="propose" class="card" aria-label="Propose an idea">
     <form id="form" novalidate>
-      <label class="f"><span>Your idea</span>
+      <label class="f"><span>What do you want to explore?</span>
         <input type="text" id="title" maxlength="90" placeholder="e.g. A vocal-only sound journey" required></label>
       <div class="examples">Need a spark? <button type="button" data-ex="A vocal-only sound journey">vocal-only journey</button>·<button type="button" data-ex="A 7-bowl journey">7-bowl journey</button>·<button type="button" data-ex="Experimenting solely with the spinning pyramids">spinning pyramids</button>·<button type="button" data-ex="I'd love feedback on my playing">feedback on my playing</button></div>
 
@@ -113,26 +116,21 @@ input:focus,textarea:focus,select:focus,button:focus-visible{outline:2px solid v
       <label class="f"><span>Tell us a little more <span class="hint">(what you'd love to try, what it's for)</span></span>
         <textarea id="desc" maxlength="800" placeholder="What would happen, who it's for, what you're hoping to learn…"></textarea></label>
 
-      <div class="f" style="margin-bottom:16px"><span class="lbl">Equipment <span class="hint">tap what you need, then say who brings it</span></span>
-        <div class="chips" id="gearPick" role="group" aria-label="Equipment"></div>
-        <div class="eq" id="gearList" style="margin-top:10px"></div>
-        <div class="add"><input type="text" id="gearNew" maxlength="40" placeholder="Something else? (e.g. shruti box)"><button type="button" class="btn ghost" id="gearAdd">Add</button></div>
-      </div>
+      <div class="f" style="margin-bottom:16px"><span class="lbl">Equipment</span>
+        <p class="hint" style="margin:0 0 10px;font-size:14px;color:var(--dim)">Marcus is happy to provide the equipment unless you'd like to bring your own. All his bowls are tuned to 440 Hz. Sometimes it's nice to work with your own bowls, since every bowl is unique. Mats &amp; blankets are already here.</p>
+        <div class="chips" id="gearQ" role="group" aria-label="Equipment">
+          <button type="button" class="chip" data-v="Using Marcus's equipment" aria-pressed="true">🔔 Use Marcus's equipment</button>
+          <button type="button" class="chip" data-v="Bringing own equipment" aria-pressed="false">🎒 I'll bring my own</button>
+        </div>
+        <input type="text" id="gearNote" maxlength="120" placeholder="Anything specific? (e.g. 7 bowls, looper + mic)" style="margin-top:10px"></div>
 
       <div class="row2">
-        <label class="f"><span>How long?</span>
-          <select id="len"><option>15 min</option><option selected>30 min</option><option>45 min</option><option>60 min</option><option>Not sure yet</option></select></label>
-        <label class="f"><span>When suits you? <span class="hint">(optional)</span></span>
-          <input type="text" id="when" maxlength="80" placeholder="e.g. weekday evenings, after Dec 1"></label>
+        <label class="f"><span>Who are you?</span>
+          <select id="who"><option value="">Choose your name…</option></select>
+          <input type="text" id="name" maxlength="40" placeholder="Your first name" style="margin-top:8px" hidden></label>
+        <label class="f"><span>How long do you need?</span>
+          <select id="len"><option>10 min</option><option>15 min</option><option>20 min</option><option selected>30 min</option><option>45 min</option></select></label>
       </div>
-
-      <div class="row2">
-        <label class="f"><span>Your name</span>
-          <input type="text" id="name" maxlength="60" autocomplete="name" placeholder="First and last" required></label>
-        <label class="f"><span>Email <span class="hint">(private, only Marcus sees it)</span></span>
-          <input type="email" id="email" maxlength="90" autocomplete="email" placeholder="you@example.com" required></label>
-      </div>
-      <p class="hint" style="margin:-6px 0 16px">Only your first name and your idea show on the board.</p>
 
       <button class="btn" id="submit" type="submit">Send my idea</button>
       <div class="status" id="status" role="status"></div>
@@ -165,40 +163,41 @@ input:focus,textarea:focus,select:focus,button:focus-visible{outline:2px solid v
   const load = async () => { try { const r = await fetch(`${API_URL}?key=${KEY}&t=${Date.now()}`); const v = r.ok ? await r.json() : []; return Array.isArray(v) ? v : (Array.isArray(v && v.value) ? v.value : []); } catch { return null; } };
   const save = async v => { const r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ key: KEY, value: v }) }); if (!r.ok) throw new Error('save failed'); };
 
-  let items = [], kind = '', gear = {}, filter = 'all';
+  let items = [], kind = '', filter = 'all';
 
   /* ---------- tabs ---------- */
   const show = t => { $('propose').hidden = t !== 'propose'; $('board').hidden = t !== 'board'; $('tPropose').setAttribute('aria-pressed', t === 'propose'); $('tBoard').setAttribute('aria-pressed', t === 'board'); if (t === 'board') refresh(); };
   $('tPropose').onclick = () => show('propose'); $('tBoard').onclick = () => show('board');
 
+
+  /* ---------- roster: names of who's coming (Marcus edits in admin) ---------- */
+  const RKEY = 'exchange-roster', DEFAULT_ROSTER = ['Marcus', 'Brock', 'Holly', 'Sheryl', 'Jen', 'Val', 'Desiree', 'Seema', 'Oksana'];
+  let roster = DEFAULT_ROSTER.slice();
+  const drawWho = () => { const cur = $('who') ? $('who').value : ''; if (!$('who')) return; $('who').innerHTML = '<option value="">Choose your name…</option>' + roster.map(n => `<option${n === cur ? ' selected' : ''}>${esc(n)}</option>`).join('') + '<option value="__other">Someone else…</option>'; };
+  (async () => { try { const r = await fetch(`${API_URL}?key=${RKEY}&t=${Date.now()}`); const v = r.ok ? await r.json() : null; if (Array.isArray(v) && v.length) roster = v; } catch {} drawWho(); drawRosterAdmin(); })();
+  if ($('who')) $('who').onchange = () => { const o = $('who').value === '__other'; $('name').hidden = !o; if (o) $('name').focus(); };
+  const drawRosterAdmin = () => { if (!ADMIN) return; let box = $('rosterAdmin'); if (!box) { box = document.createElement('div'); box.id = 'rosterAdmin'; box.className = 'card'; box.style.marginBottom = '12px'; $('board').prepend(box); }
+    box.innerHTML = `<span class="lbl">Who's coming (names in the dropdown)</span><input type="text" id="rosterTxt" value="${esc(roster.join(', '))}"><div style="margin-top:8px"><button class="btn" id="rosterSave">Save names</button> <span class="hint" id="rosterSt"></span></div>`;
+    $('rosterSave').onclick = async () => { roster = $('rosterTxt').value.split(',').map(x => x.trim()).filter(Boolean); try { await fetch(API_URL, { method: 'POST', body: JSON.stringify({ key: RKEY, value: roster }) }); $('rosterSt').textContent = 'Saved.'; drawWho(); } catch { $('rosterSt').textContent = "Couldn't save."; } }; };
   /* ---------- form ---------- */
   document.querySelectorAll('[data-ex]').forEach(b => b.onclick = () => { $('title').value = b.dataset.ex; $('title').focus(); });
   $('kind').onclick = e => { const b = e.target.closest('.chip'); if (!b) return; kind = kind === b.dataset.v ? '' : b.dataset.v; $('kind').querySelectorAll('.chip').forEach(x => x.setAttribute('aria-pressed', x.dataset.v === kind)); };
-  const drawGear = () => {
-    $('gearPick').innerHTML = GEAR.concat(Object.keys(gear).filter(g => !GEAR.includes(g))).map(g => `<button type="button" class="chip" data-g="${esc(g)}" aria-pressed="${g in gear}">${esc(g)}</button>`).join('');
-    $('gearList').innerHTML = Object.entries(gear).map(([g, who]) => `<div class="eqrow"><b>${esc(g)}</b><span class="seg" role="group" aria-label="Who brings ${esc(g)}"><button type="button" data-w="${esc(g)}" data-v="mine" aria-pressed="${who === 'mine'}">I'll bring it</button><button type="button" data-w="${esc(g)}" data-v="prov" aria-pressed="${who === 'prov'}">Please provide</button></span></div>`).join('');
-  };
-  $('gearPick').onclick = e => { const b = e.target.closest('[data-g]'); if (!b) return; const g = b.dataset.g; if (g in gear) delete gear[g]; else gear[g] = 'prov'; drawGear(); };
-  $('gearList').onclick = e => { const b = e.target.closest('[data-w]'); if (!b) return; gear[b.dataset.w] = b.dataset.v; drawGear(); };
-  const addGear = () => { const v = $('gearNew').value.trim(); if (!v) return; gear[v] = 'prov'; $('gearNew').value = ''; drawGear(); };
-  $('gearAdd').onclick = addGear; $('gearNew').onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); addGear(); } };
-  drawGear();
+  let gearAns = "Using Marcus's equipment";
+  $('gearQ').onclick = e => { const b = e.target.closest('.chip'); if (!b) return; gearAns = b.dataset.v; $('gearQ').querySelectorAll('.chip').forEach(x => x.setAttribute('aria-pressed', x.dataset.v === gearAns)); };
 
   $('form').onsubmit = async e => {
     e.preventDefault();
-    const title = $('title').value.trim(), name = $('name').value.trim(), email = $('email').value.trim();
+    const title = $('title').value.trim(), name = ($('who').value && $('who').value !== '__other') ? $('who').value : $('name').value.trim();
     if (!title) { $('status').textContent = 'Give your idea a name first.'; $('title').focus(); return; }
-    if (!name) { $('status').textContent = 'Add your name so Marcus knows who it is.'; $('name').focus(); return; }
-    if (!/^\S+@\S+\.\S+$/.test(email)) { $('status').textContent = 'Add an email so Marcus can reply.'; $('email').focus(); return; }
+    if (!name) { $('status').textContent = 'Choose your name first.'; $('who').focus(); return; }
     $('submit').disabled = true; $('status').textContent = 'Sending…';
-    const entry = { id: 'x' + Date.now().toString(36), first: name.split(/\s+/)[0], title, kind, desc: $('desc').value.trim(), gear: { ...gear }, len: $('len').value, when: $('when').value.trim(), status: 'new', note: '', ts: new Date().toISOString() };
+    const entry = { id: 'x' + Date.now().toString(36), first: name.split(/\s+/)[0], title, kind, desc: $('desc').value.trim(), gearAns, gearNote: $('gearNote').value.trim(), len: $('len').value, status: 'new', note: '', ts: new Date().toISOString() };
     try {
       const cur = await load(); if (cur === null) throw new Error('offline');
       cur.push(entry); await save(cur);
-      const gearTxt = Object.entries(gear).map(([g, w]) => `${g} (${w === 'mine' ? 'bringing own' : 'needs provided'})`).join(', ') || 'none listed';
       fetch(FORM, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({ _subject: `💡 Team Exchange idea: ${title} (${name})`, _template: 'table', _captcha: 'false', name, email, idea: title, kind: kind || '-', details: entry.desc || '-', equipment: gearTxt, length: entry.len, when: entry.when || '-' }) }).catch(() => {});
-      $('form').outerHTML = `<div class="thanks"><b>Thank you, ${esc(entry.first)} 🙏</b>Your idea is on the board. Marcus will be in touch to find a time.<div style="margin-top:16px"><button class="btn ghost" onclick="location.reload()">Propose another</button> <button class="btn" id="seeBoard">See the ideas</button></div></div>`;
+        body: JSON.stringify({ _subject: `💡 Team Exchange idea: ${title} (${name})`, _template: 'table', _captcha: 'false', name, idea: title, kind: kind || '-', details: entry.desc || '-', length: entry.len, equipment: (gearAns || '-') + (entry.gearNote ? ' · ' + entry.gearNote : '') }) }).catch(() => {});
+      $('form').outerHTML = `<div class="thanks"><b>Thank you, ${esc(entry.first)} 🙏</b>Your idea is on the board for everyone to see.<div style="margin-top:16px"><button class="btn ghost" onclick="location.reload()">Propose another</button> <button class="btn" id="seeBoard">See the ideas</button></div></div>`;
       $('seeBoard').onclick = () => show('board');
     } catch (err) {
       $('submit').disabled = false; $('status').textContent = "Couldn't send just now. Please try again in a moment.";
@@ -217,15 +216,16 @@ input:focus,textarea:focus,select:focus,button:focus-visible{outline:2px solid v
     const list = items.filter(x => filter === 'all' || x.status === filter).sort((a, b) => String(b.ts).localeCompare(String(a.ts)));
     if (!list.length) { $('list').innerHTML = `<div class="empty">${items.length ? 'Nothing here yet.' : 'No ideas yet. Be the first to propose one.'}</div>`; return; }
     $('list').innerHTML = list.map(x => {
-      const s = st(x.status), g = Object.entries(x.gear || {});
+      const s = st(x.status);
       return `<article class="prop" style="--st:${s.c}">
-        <h3>${esc(x.title)}</h3>
-        <div class="meta"><span class="pill">${esc(s.label)}</span><span>${esc(x.first)}</span>${x.kind ? `<span>${esc(x.kind)}</span>` : ''}<span>${esc(x.len || '')}</span>${x.when ? `<span>${esc(x.when)}</span>` : ''}</div>
+        <h3>${esc(x.first)} · ${esc(x.title)}</h3>
+        <div class="line">${x.len ? 'needs ' + esc(x.len) : ''}${x.gearAns ? ' · ' + esc(/Bringing/.test(x.gearAns) ? 'bringing own equipment' : "using Marcus's equipment") : ''}${x.gearNote ? ' (' + esc(x.gearNote) + ')' : ''}</div>
+        <div class="meta"><span class="pill">${esc(s.label)}</span>${x.kind ? `<span>${esc(x.kind)}</span>` : ''}</div>
         ${x.desc ? `<p>${esc(x.desc)}</p>` : ''}
-        ${g.length ? `<div class="gear">${g.map(([k, w]) => `<span class="${w === 'mine' ? 'mine' : 'prov'}">${esc(k)} · ${w === 'mine' ? 'bringing' : 'provide'}</span>`).join('')}</div>` : ''}
+        <div class="att"><b>Attending:</b> ${(x.ins||[]).length ? (x.ins).map(esc).join(', ') : '<span class="hint">no one yet</span>'}</div>
         ${x.note ? `<div class="note">📌 Marcus: ${esc(x.note)}</div>` : ''}
         ${(x.comments||[]).length ? `<div class="cmts">${x.comments.map(c => `<div class="cmt"><b>${esc(c.first)}</b> ${esc(c.text)}</div>`).join('')}</div>` : ''}
-        <div class="react" data-id="${esc(x.id)}"><button class="btn ghost" data-r="in">🙋 I'd join${(x.ins||[]).length ? ' · ' + x.ins.length : ''}</button><button class="btn ghost" data-r="open">💬 Add a thought</button>${(x.ins||[]).length ? `<span class="hint">${x.ins.map(esc).join(', ')}</span>` : ''}</div>
+        <div class="react" data-id="${esc(x.id)}"><button class="btn ghost" data-r="in">🙋 I'll be there${(x.ins||[]).length ? ' · ' + x.ins.length : ''}</button><button class="btn ghost" data-r="open">💬 Add a thought</button></div>
         <form class="cform" data-id="${esc(x.id)}"><input type="text" maxlength="30" placeholder="Your first name" aria-label="First name"><input type="text" maxlength="240" placeholder="A suggestion, idea, or encouragement" aria-label="Thought"><button class="btn" type="submit">Post</button></form>
         ${ADMIN ? `<div class="admin" data-id="${esc(x.id)}"><select aria-label="Status">${STATUS.map(o => `<option value="${o.id}"${o.id === x.status ? ' selected' : ''}>${esc(o.label)}</option>`).join('')}</select><input type="text" maxlength="160" placeholder="Note on the board (e.g. Tue Dec 8, 7pm)" value="${esc(x.note || '')}"><button class="btn" data-a="save">Save</button><button class="btn ghost" data-a="del">Remove</button></div>` : ''}
       </article>`;
