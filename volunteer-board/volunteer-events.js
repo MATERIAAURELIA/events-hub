@@ -1,6 +1,16 @@
-// Auto-generated 2026-10-31T10:00:05.339504 from the Events Hub (public events only)
-// 9 public events in the next 90 days
+// Auto-generated 2026-10-31T14:00:07.430185 from the Events Hub (public events only)
+// 14 public events in the next 90 days
 const VOLUNTEER_EVENTS = [
+  {
+    "id": "ev-nov8-aquaholics",
+    "title": "Wag, Swim & Unwind A Sound Bath for Dogs",
+    "start": "2026-11-08T13:00:00-06:00",
+    "end": "2026-11-08T14:30:00-06:00",
+    "description": "Join Aquaholics and Earth Harmony Sound & Wellness for a joyful 90 minutes with your dog:",
+    "location": "",
+    "source": "hub",
+    "img": "https://events.earthharmonysoundwellness.com/photos/aquaholics-wag-swim-unwind.jpg"
+  },
   {
     "id": "ev-nov10-galactic-gong",
     "title": "\u2605 The Galactic Gong Activation Intensity",
@@ -20,6 +30,16 @@ const VOLUNTEER_EVENTS = [
     "location": "Private Home Studio \u00b7 Terwillegar (address on registration)",
     "source": "hub",
     "img": "https://events.earthharmonysoundwellness.com/photos/grief-gratitude-flute.jpg"
+  },
+  {
+    "id": "ev-nov12-mmm",
+    "title": "Music Movement Medicine: Resilience Silent Disco + Sound Healing",
+    "start": "2026-11-12T19:00:00-06:00",
+    "end": "2026-11-12T20:30:00-06:00",
+    "description": "Join Marcus for an intentionally curated musical journey of world rhythms and positive, uplifting vibes: a soundtrack for exploring this miraculous vehicle, your human body, as you move through life. Move at your own comfort level while the headphones create a very special inner-journey feeling.",
+    "location": "",
+    "source": "hub",
+    "img": "https://events.earthharmonysoundwellness.com/photos/mmm-silhouette-headphones.jpg"
   },
   {
     "id": "ev-nov17-galactic-gong",
@@ -70,6 +90,36 @@ const VOLUNTEER_EVENTS = [
     "location": "Private Home Studio \u00b7 Terwillegar (address on registration)",
     "source": "hub",
     "img": "https://events.earthharmonysoundwellness.com/photos/plate-clearing-balance-jul17.jpg"
+  },
+  {
+    "id": "ev-nov25-galactic-gong",
+    "title": "\u2605 The Galactic Gong Activation Intensity",
+    "start": "2026-11-25T18:30:00-06:00",
+    "end": "2026-11-25T20:00:00-06:00",
+    "description": "By request: a more intensified gong journey for people who already know the gongs. Longer, deeper, more of the big waves, in an intimate room of 8.",
+    "location": "Private Home Studio \u00b7 Terwillegar (address on registration)",
+    "source": "hub",
+    "img": "https://events.earthharmonysoundwellness.com/photos/galactic-gong-grotto.jpg"
+  },
+  {
+    "id": "ev-nov26-hotsauce",
+    "title": "Singing Bowl Hot Sauce An Experiment in Chosen Intensity",
+    "start": "2026-11-26T19:00:00-06:00",
+    "end": "2026-11-26T20:15:00-06:00",
+    "description": "An experimental session of chosen intensity. Bowls played deliberately, with more intensity and volume, so the busy mind can let go and lose itself more easily.",
+    "location": "",
+    "source": "hub",
+    "img": "https://events.earthharmonysoundwellness.com/photos/singing-bowl-hot-sauce.jpg"
+  },
+  {
+    "id": "ev-dec4-stillness",
+    "title": "Stillness & Release: Planetary Gong Immersion",
+    "start": "2026-12-04T18:30:00-06:00",
+    "end": "2026-12-04T20:00:00-06:00",
+    "description": "6 Large planetary gongs, deep vibrations and resonance felt in an intimate room \u2014 thick mats, sheepskins, blankets, bolsters and tea all provided.",
+    "location": "Private Home Studio \u00b7 Terwillegar (address on registration)",
+    "source": "hub",
+    "img": "https://events.earthharmonysoundwellness.com/photos/plate-stillness-release-jul31.jpg"
   },
   {
     "id": "ev-dec19-back2basics",
