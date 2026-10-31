@@ -1,16 +1,6 @@
-// Auto-generated 2026-10-30T22:00:06.725743 from the Events Hub (public events only)
-// 10 public events in the next 90 days
+// Auto-generated 2026-10-31T06:00:09.494884 from the Events Hub (public events only)
+// 9 public events in the next 90 days
 const VOLUNTEER_EVENTS = [
-  {
-    "id": "ev-oct30-gong",
-    "title": "Stillness & Release: Planetary Gong Immersion",
-    "start": "2026-10-30T18:30:00-06:00",
-    "end": "2026-10-30T20:00:00-06:00",
-    "description": "6 Large planetary gongs, deep vibrations and resonance felt in an intimate room \u2014 thick mats, sheepskins, blankets, bolsters and tea all provided.",
-    "location": "Private Home Studio \u00b7 Terwillegar (address on registration)",
-    "source": "hub",
-    "img": "https://events.earthharmonysoundwellness.com/photos/plate-stillness-release-jul31.jpg"
-  },
   {
     "id": "ev-nov10-galactic-gong",
     "title": "\u2605 The Galactic Gong Activation Intensity",
