@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Team Exchange · Earth Harmony</title>
+<meta name="description" content="Propose what you want to explore, perform or get feedback on in an Earth Harmony team exchange.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Nunito+Sans:wght@400;600;700&display=swap">
+<style>
+/* Team Exchange: proposals board. Same back end as the volunteer board (Apps Script key/value store),
+   private contact details go to Marcus's inbox via FormSubmit. Admin: ?admin=1 */
+:root{--bg:#0e1522;--panel:#18213a;--panel2:#1f2a47;--ink:#f3ebdd;--dim:rgba(243,235,221,.72);--faint:rgba(243,235,221,.5);--gold:#d2a44e;--gold-soft:rgba(210,164,78,.38);--line:rgba(243,235,221,.14);--ok:#7fb287;--sky:#8fb6d8}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Nunito Sans",system-ui,sans-serif;font-size:16px;line-height:1.5}
+.wrap{max-width:860px;margin:0 auto;padding:28px 16px 80px}
+a{color:var(--gold)}
+.head{display:flex;gap:16px;align-items:center;margin-bottom:22px}
+.face{width:84px;height:84px;border-radius:50%;object-fit:cover;flex-shrink:0;box-shadow:0 0 0 2px var(--bg),0 0 0 3px var(--gold)}
+.eyebrow{font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
+h1{font-family:Marcellus,serif;font-weight:400;font-size:clamp(28px,6vw,40px);line-height:1.1;margin:4px 0 6px}
+.lead{color:var(--dim);margin:0;max-width:60ch}
+.tabs{display:flex;gap:8px;margin:18px 0}
+.tabs button{font:inherit;font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;padding:10px 16px;border-radius:999px;border:1px solid var(--gold-soft);background:transparent;color:var(--gold);cursor:pointer}
+.tabs button[aria-pressed="true"]{background:var(--gold);color:var(--bg);border-color:var(--gold)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px}
+label.f{display:block;margin:0 0 16px}
+label.f>span,.lbl{display:block;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.hint{font-size:13px;color:var(--faint);font-weight:400;text-transform:none;letter-spacing:0}
+input[type=text],input[type=email],textarea,select{width:100%;font:inherit;color:var(--ink);background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:11px 12px}
+textarea{min-height:96px;resize:vertical}
+input:focus,textarea:focus,select:focus,button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:560px){.row2{grid-template-columns:1fr}.head{align-items:flex-start}.face{width:64px;height:64px}}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:inherit;font-size:14px;padding:8px 13px;border-radius:999px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);cursor:pointer}
+.chip[aria-pressed="true"]{border-color:var(--gold);background:rgba(210,164,78,.16);color:var(--gold)}
+.eq{display:flex;flex-direction:column;gap:8px}
+.eqrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.eqrow b{font-weight:600}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.seg button{font:inherit;font-size:12.5px;padding:6px 10px;border:0;background:transparent;color:var(--dim);cursor:pointer;white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--gold);color:var(--bg);font-weight:700}
+.add{display:flex;gap:8px;margin-top:8px}
+.add input{flex:1}
+.btn{font:inherit;font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:13px;padding:13px 22px;border-radius:999px;border:0;background:var(--gold);color:var(--bg);cursor:pointer}
+.btn.ghost{background:transparent;border:1px solid var(--gold-soft);color:var(--gold)}
+.btn[disabled]{opacity:.5;cursor:default}
+.status{font-size:14px;color:var(--dim);min-height:20px;margin-top:10px}
+.examples{font-size:14px;color:var(--faint);margin:-8px 0 16px}
+.examples button{font:inherit;font-size:13px;background:none;border:0;color:var(--sky);cursor:pointer;padding:0 4px;text-decoration:underline dotted}
+.board{display:flex;flex-direction:column;gap:12px}
+.prop{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--st,var(--line));border-radius:14px;padding:16px 18px}
+.prop h3{font-family:Marcellus,serif;font-weight:400;font-size:21px;margin:0 0 4px;line-height:1.2}
+.meta{display:flex;flex-wrap:wrap;gap:6px 10px;font-size:13px;color:var(--faint);margin-bottom:8px}
+.pill{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:999px;border:1px solid var(--st);color:var(--st)}
+.prop p{margin:0 0 8px;color:var(--dim)}
+.gear{display:flex;flex-wrap:wrap;gap:6px}
+.gear span{font-size:12.5px;padding:3px 9px;border-radius:999px;background:var(--panel2);border:1px solid var(--line)}
+.gear span.mine{border-color:var(--ok);color:var(--ok)}
+.gear span.prov{border-color:var(--gold-soft);color:var(--gold)}
+.note{margin-top:8px;font-size:14px;color:var(--ink);background:rgba(210,164,78,.08);border-radius:8px;padding:8px 10px}
+.admin{margin-top:10px;display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:8px;align-items:center}
+@media(max-width:560px){.admin{grid-template-columns:1fr 1fr}}
+.empty{color:var(--faint);text-align:center;padding:30px;border:1px dashed var(--line);border-radius:14px}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.thanks{text-align:center;padding:26px}
+.thanks b{font-family:Marcellus,serif;font-weight:400;font-size:26px;color:var(--gold);display:block;margin-bottom:6px}
+.react{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.react .btn{padding:8px 14px;font-size:12px}
+.cmts{margin-top:8px;display:flex;flex-direction:column;gap:6px}
+.cmt{font-size:14px;color:var(--dim);background:var(--panel2);border-radius:8px;padding:7px 10px}
+.cmt b{color:var(--ink);font-weight:600}
+.cform{display:none;grid-template-columns:120px minmax(0,1fr) auto;gap:8px;margin-top:8px}
+.cform.open{display:grid}
+@media(max-width:560px){.cform{grid-template-columns:1fr}}
+.foot{margin-top:28px;font-size:13px;color:var(--faint);text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <img class="face" src="https://events.earthharmonysoundwellness.com/photos/marcus-face-gong-halo.jpg?v=2" alt="Marcus">
+    <div>
+      <div class="eyebrow">Team Exchange</div>
+      <h1>What do you want to explore?</h1>
+      <p class="lead">A space to try something: lead a journey, experiment with one instrument, or get honest feedback on your playing. Propose it here, see what others are offering, and add your thoughts or say you're in.</p>
+    </div>
+  </div>
+
+  <div class="tabs" role="group" aria-label="View">
+    <button id="tPropose" aria-pressed="true">Propose an idea</button>
+    <button id="tBoard" aria-pressed="false">Ideas so far <span id="count"></span></button>
+  </div>
+
+  <section id="propose" class="card" aria-label="Propose an idea">
+    <form id="form" novalidate>
+      <label class="f"><span>Your idea</span>
+        <input type="text" id="title" maxlength="90" placeholder="e.g. A vocal-only sound journey" required></label>
+      <div class="examples">Need a spark? <button type="button" data-ex="A vocal-only sound journey">vocal-only journey</button>·<button type="button" data-ex="A 7-bowl journey">7-bowl journey</button>·<button type="button" data-ex="Experimenting solely with the spinning pyramids">spinning pyramids</button>·<button type="button" data-ex="I'd love feedback on my playing">feedback on my playing</button></div>
+
+      <div class="f" style="margin-bottom:16px"><span class="lbl">What kind of exchange?</span>
+        <div class="chips" id="kind" role="group" aria-label="Kind">
+          <button type="button" class="chip" data-v="Lead a journey" aria-pressed="false">🌙 Lead a journey</button>
+          <button type="button" class="chip" data-v="Experiment / explore" aria-pressed="false">🧪 Experiment / explore</button>
+          <button type="button" class="chip" data-v="Feedback on my playing" aria-pressed="false">👂 Feedback on my playing</button>
+          <button type="button" class="chip" data-v="Perform / share" aria-pressed="false">🎶 Perform / share</button>
+          <button type="button" class="chip" data-v="Idea for anyone to take" aria-pressed="false">💡 An idea for anyone to take</button>
+          <button type="button" class="chip" data-v="Something else" aria-pressed="false">✨ Something else</button>
+        </div></div>
+
+      <label class="f"><span>Tell us a little more <span class="hint">(what you'd love to try, what it's for)</span></span>
+        <textarea id="desc" maxlength="800" placeholder="What would happen, who it's for, what you're hoping to learn…"></textarea></label>
+
+      <div class="f" style="margin-bottom:16px"><span class="lbl">Equipment <span class="hint">tap what you need, then say who brings it</span></span>
+        <div class="chips" id="gearPick" role="group" aria-label="Equipment"></div>
+        <div class="eq" id="gearList" style="margin-top:10px"></div>
+        <div class="add"><input type="text" id="gearNew" maxlength="40" placeholder="Something else? (e.g. shruti box)"><button type="button" class="btn ghost" id="gearAdd">Add</button></div>
+      </div>
+
+      <div class="row2">
+        <label class="f"><span>How long?</span>
+          <select id="len"><option>15 min</option><option selected>30 min</option><option>45 min</option><option>60 min</option><option>Not sure yet</option></select></label>
+        <label class="f"><span>When suits you? <span class="hint">(optional)</span></span>
+          <input type="text" id="when" maxlength="80" placeholder="e.g. weekday evenings, after Dec 1"></label>
+      </div>
+
+      <div class="row2">
+        <label class="f"><span>Your name</span>
+          <input type="text" id="name" maxlength="60" autocomplete="name" placeholder="First and last" required></label>
+        <label class="f"><span>Email <span class="hint">(private, only Marcus sees it)</span></span>
+          <input type="email" id="email" maxlength="90" autocomplete="email" placeholder="you@example.com" required></label>
+      </div>
+      <p class="hint" style="margin:-6px 0 16px">Only your first name and your idea show on the board.</p>
+
+      <button class="btn" id="submit" type="submit">Send my idea</button>
+      <div class="status" id="status" role="status"></div>
+    </form>
+  </section>
+
+  <section id="board" hidden aria-label="Ideas so far">
+    <div class="filters chips" id="filters" role="group" aria-label="Filter"></div>
+    <div class="board" id="list"><div class="empty">Loading ideas…</div></div>
+  </section>
+
+  <p class="foot">Earth Harmony Sound &amp; Wellness · <a href="https://events.earthharmonysoundwellness.com/?volunteer">Team Service board</a></p>
+</div>
+
+<script>
+(() => {
+  const API_URL = 'https://script.google.com/macros/s/AKfycbzzu1jXVtwDuHyBThe62Ipc10UzBJkDQDACGZfe5oEF9jXIUl3qtGjbJD2c3IW_q4EjKQ/exec';
+  const FORM = 'https://formsubmit.co/ajax/68bf44fd6c680760a90740f0fc752510';
+  const KEY = 'exchange-proposals';
+  const ADMIN = new URLSearchParams(location.search).get('admin') === '1';
+  const GEAR = ['Singing bowls', 'Crystal bowls', 'Gongs', 'Spinning pyramids', 'Handpan', 'Drums', 'Voice / mic', 'Looper', 'Speaker / PA', 'Mats & blankets', 'Chimes', 'Flute'];
+  const STATUS = [
+    { id: 'new', label: 'Proposed', c: 'var(--sky)' },
+    { id: 'yes', label: "Yes, let's do it", c: 'var(--gold)' },
+    { id: 'scheduled', label: 'Scheduled', c: 'var(--ok)' },
+    { id: 'done', label: 'Done 🙏', c: 'rgba(243,235,221,.5)' },
+    { id: 'later', label: 'Later', c: 'rgba(243,235,221,.35)' }];
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const load = async () => { try { const r = await fetch(`${API_URL}?key=${KEY}&t=${Date.now()}`); const v = r.ok ? await r.json() : []; return Array.isArray(v) ? v : (Array.isArray(v && v.value) ? v.value : []); } catch { return null; } };
+  const save = async v => { const r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ key: KEY, value: v }) }); if (!r.ok) throw new Error('save failed'); };
+
+  let items = [], kind = '', gear = {}, filter = 'all';
+
+  /* ---------- tabs ---------- */
+  const show = t => { $('propose').hidden = t !== 'propose'; $('board').hidden = t !== 'board'; $('tPropose').setAttribute('aria-pressed', t === 'propose'); $('tBoard').setAttribute('aria-pressed', t === 'board'); if (t === 'board') refresh(); };
+  $('tPropose').onclick = () => show('propose'); $('tBoard').onclick = () => show('board');
+
+  /* ---------- form ---------- */
+  document.querySelectorAll('[data-ex]').forEach(b => b.onclick = () => { $('title').value = b.dataset.ex; $('title').focus(); });
+  $('kind').onclick = e => { const b = e.target.closest('.chip'); if (!b) return; kind = kind === b.dataset.v ? '' : b.dataset.v; $('kind').querySelectorAll('.chip').forEach(x => x.setAttribute('aria-pressed', x.dataset.v === kind)); };
+  const drawGear = () => {
+    $('gearPick').innerHTML = GEAR.concat(Object.keys(gear).filter(g => !GEAR.includes(g))).map(g => `<button type="button" class="chip" data-g="${esc(g)}" aria-pressed="${g in gear}">${esc(g)}</button>`).join('');
+    $('gearList').innerHTML = Object.entries(gear).map(([g, who]) => `<div class="eqrow"><b>${esc(g)}</b><span class="seg" role="group" aria-label="Who brings ${esc(g)}"><button type="button" data-w="${esc(g)}" data-v="mine" aria-pressed="${who === 'mine'}">I'll bring it</button><button type="button" data-w="${esc(g)}" data-v="prov" aria-pressed="${who === 'prov'}">Please provide</button></span></div>`).join('');
+  };
+  $('gearPick').onclick = e => { const b = e.target.closest('[data-g]'); if (!b) return; const g = b.dataset.g; if (g in gear) delete gear[g]; else gear[g] = 'prov'; drawGear(); };
+  $('gearList').onclick = e => { const b = e.target.closest('[data-w]'); if (!b) return; gear[b.dataset.w] = b.dataset.v; drawGear(); };
+  const addGear = () => { const v = $('gearNew').value.trim(); if (!v) return; gear[v] = 'prov'; $('gearNew').value = ''; drawGear(); };
+  $('gearAdd').onclick = addGear; $('gearNew').onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); addGear(); } };
+  drawGear();
+
+  $('form').onsubmit = async e => {
+    e.preventDefault();
+    const title = $('title').value.trim(), name = $('name').value.trim(), email = $('email').value.trim();
+    if (!title) { $('status').textContent = 'Give your idea a name first.'; $('title').focus(); return; }
+    if (!name) { $('status').textContent = 'Add your name so Marcus knows who it is.'; $('name').focus(); return; }
+    if (!/^\S+@\S+\.\S+$/.test(email)) { $('status').textContent = 'Add an email so Marcus can reply.'; $('email').focus(); return; }
+    $('submit').disabled = true; $('status').textContent = 'Sending…';
+    const entry = { id: 'x' + Date.now().toString(36), first: name.split(/\s+/)[0], title, kind, desc: $('desc').value.trim(), gear: { ...gear }, len: $('len').value, when: $('when').value.trim(), status: 'new', note: '', ts: new Date().toISOString() };
+    try {
+      const cur = await load(); if (cur === null) throw new Error('offline');
+      cur.push(entry); await save(cur);
+      const gearTxt = Object.entries(gear).map(([g, w]) => `${g} (${w === 'mine' ? 'bringing own' : 'needs provided'})`).join(', ') || 'none listed';
+      fetch(FORM, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ _subject: `💡 Team Exchange idea: ${title} (${name})`, _template: 'table', _captcha: 'false', name, email, idea: title, kind: kind || '-', details: entry.desc || '-', equipment: gearTxt, length: entry.len, when: entry.when || '-' }) }).catch(() => {});
+      $('form').outerHTML = `<div class="thanks"><b>Thank you, ${esc(entry.first)} 🙏</b>Your idea is on the board. Marcus will be in touch to find a time.<div style="margin-top:16px"><button class="btn ghost" onclick="location.reload()">Propose another</button> <button class="btn" id="seeBoard">See the ideas</button></div></div>`;
+      $('seeBoard').onclick = () => show('board');
+    } catch (err) {
+      $('submit').disabled = false; $('status').textContent = "Couldn't send just now. Please try again in a moment.";
+    }
+  };
+
+  /* ---------- board ---------- */
+  const st = id => STATUS.find(s => s.id === id) || STATUS[0];
+  const drawFilters = () => {
+    const opts = [['all', 'All']].concat(STATUS.map(s => [s.id, s.label]));
+    $('filters').innerHTML = opts.map(([v, l]) => `<button type="button" class="chip" data-f="${v}" aria-pressed="${filter === v}">${esc(l)}</button>`).join('');
+  };
+  $('filters').onclick = e => { const b = e.target.closest('[data-f]'); if (!b) return; filter = b.dataset.f; drawFilters(); drawList(); };
+  const drawList = () => {
+    $('count').textContent = items.length ? `(${items.length})` : '';
+    const list = items.filter(x => filter === 'all' || x.status === filter).sort((a, b) => String(b.ts).localeCompare(String(a.ts)));
+    if (!list.length) { $('list').innerHTML = `<div class="empty">${items.length ? 'Nothing here yet.' : 'No ideas yet. Be the first to propose one.'}</div>`; return; }
+    $('list').innerHTML = list.map(x => {
+      const s = st(x.status), g = Object.entries(x.gear || {});
+      return `<article class="prop" style="--st:${s.c}">
+        <h3>${esc(x.title)}</h3>
+        <div class="meta"><span class="pill">${esc(s.label)}</span><span>${esc(x.first)}</span>${x.kind ? `<span>${esc(x.kind)}</span>` : ''}<span>${esc(x.len || '')}</span>${x.when ? `<span>${esc(x.when)}</span>` : ''}</div>
+        ${x.desc ? `<p>${esc(x.desc)}</p>` : ''}
+        ${g.length ? `<div class="gear">${g.map(([k, w]) => `<span class="${w === 'mine' ? 'mine' : 'prov'}">${esc(k)} · ${w === 'mine' ? 'bringing' : 'provide'}</span>`).join('')}</div>` : ''}
+        ${x.note ? `<div class="note">📌 Marcus: ${esc(x.note)}</div>` : ''}
+        ${(x.comments||[]).length ? `<div class="cmts">${x.comments.map(c => `<div class="cmt"><b>${esc(c.first)}</b> ${esc(c.text)}</div>`).join('')}</div>` : ''}
+        <div class="react" data-id="${esc(x.id)}"><button class="btn ghost" data-r="in">🙋 I'd join${(x.ins||[]).length ? ' · ' + x.ins.length : ''}</button><button class="btn ghost" data-r="open">💬 Add a thought</button>${(x.ins||[]).length ? `<span class="hint">${x.ins.map(esc).join(', ')}</span>` : ''}</div>
+        <form class="cform" data-id="${esc(x.id)}"><input type="text" maxlength="30" placeholder="Your first name" aria-label="First name"><input type="text" maxlength="240" placeholder="A suggestion, idea, or encouragement" aria-label="Thought"><button class="btn" type="submit">Post</button></form>
+        ${ADMIN ? `<div class="admin" data-id="${esc(x.id)}"><select aria-label="Status">${STATUS.map(o => `<option value="${o.id}"${o.id === x.status ? ' selected' : ''}>${esc(o.label)}</option>`).join('')}</select><input type="text" maxlength="160" placeholder="Note on the board (e.g. Tue Dec 8, 7pm)" value="${esc(x.note || '')}"><button class="btn" data-a="save">Save</button><button class="btn ghost" data-a="del">Remove</button></div>` : ''}
+      </article>`;
+    }).join('');
+  };
+  $('list').onclick = async e => {
+    const b = e.target.closest('[data-a]'); if (!b) return; const box = b.closest('.admin'), id = box.dataset.id;
+    b.disabled = true;
+    try {
+      const cur = await load(); if (cur === null) throw 0;
+      const i = cur.findIndex(x => x.id === id); if (i < 0) throw 0;
+      if (b.dataset.a === 'del') { if (!confirm('Remove this idea from the board?')) { b.disabled = false; return; } cur.splice(i, 1); }
+      else { cur[i].status = box.querySelector('select').value; cur[i].note = box.querySelector('input').value.trim(); }
+      await save(cur); items = cur; drawList();
+    } catch { b.disabled = false; alert("Couldn't save. Try again."); }
+  };
+
+  /* ---------- reactions: I'd join + comments (first names only) ---------- */
+  const mutate = async (id, fn) => { const cur = await load(); if (cur === null) throw 0; const it = cur.find(x => x.id === id); if (!it) throw 0; fn(it); await save(cur); items = cur; drawList(); };
+  const askName = () => { let n = ''; try { n = localStorage.getItem('ex-first') || ''; } catch {} n = (prompt('Your first name?', n) || '').trim().split(/\s+/)[0]; if (n) { try { localStorage.setItem('ex-first', n); } catch {} } return n; };
+  $('list').addEventListener('click', async e => {
+    const b = e.target.closest('[data-r]'); if (!b) return; const id = b.closest('.react').dataset.id;
+    if (b.dataset.r === 'open') { const f = $('list').querySelector(`.cform[data-id="${CSS.escape(id)}"]`); f.classList.toggle('open'); let n = ''; try { n = localStorage.getItem('ex-first') || ''; } catch {} if (n && !f.elements[0].value) f.elements[0].value = n; f.elements[f.elements[0].value ? 1 : 0].focus(); return; }
+    const n = askName(); if (!n) return; b.disabled = true;
+    try { await mutate(id, it => { it.ins = it.ins || []; const k = it.ins.indexOf(n); if (k < 0) it.ins.push(n); else it.ins.splice(k, 1); }); } catch { b.disabled = false; alert("Couldn't save. Try again."); }
+  });
+  $('list').addEventListener('submit', async e => {
+    const f = e.target.closest('.cform'); if (!f) return; e.preventDefault();
+    const first = f.elements[0].value.trim().split(/\s+/)[0], text = f.elements[1].value.trim(); if (!first || !text) return;
+    try { localStorage.setItem('ex-first', first); } catch {}
+    f.querySelector('button').disabled = true;
+    try { await mutate(f.dataset.id, it => { (it.comments = it.comments || []).push({ first, text, ts: new Date().toISOString() }); }); } catch { f.querySelector('button').disabled = false; alert("Couldn't post. Try again."); }
+  });
+  const refresh = async () => { const v = await load(); if (v === null) { $('list').innerHTML = `<div class="empty">Couldn't load the ideas right now.</div>`; return; } items = v; drawFilters(); drawList(); };
+  refresh();
+  if (ADMIN) { document.title = 'Team Exchange (admin)'; show('board'); }
+})();
+</script>
+</body>
+</html>
