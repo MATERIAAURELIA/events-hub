@@ -1404,6 +1404,30 @@
       "capacity": 8,
       "full": false,
       "video": "videos/featured-clearing-balancing.mp4"
+    },
+    {
+      "id": "ev-nov8-aquaholics",
+      "type": "sound-bath",
+      "title": "Wag, Swim & Unwind\nA Sound Bath for Dogs",
+      "date": "2026-11-08",
+      "time": "13:00",
+      "endTime": "14:30",
+      "venue": "",
+      "venueOverride": "Aquaholics · Devon",
+      "price": "65",
+      "booking": "https://EarthHarmony.as.me/?appointmentType=99322960",
+      "contactEmail": "earthharmonysoundhealing@gmail.com",
+      "contactPhone": "780-257-6428",
+      "desc": "Join Aquaholics and Earth Harmony Sound & Wellness for a joyful 90 minutes with your dog:\n\n- 30 min pack walk: fresh air and good company\n- 30 min dog swim: splash time in the warm pool\n- 30 min Floating Hound Sound Bath: gentle bowls and soothing sound for you and your pup\n\nHosted at Aquaholics in Devon.",
+      "img": "photos/aquaholics-wag-swim-unwind.jpg",
+      "imgCrop": "center top",
+      "status": "published",
+      "repeatable": false,
+      "series": "community",
+      "futureDates": [
+        "2026-11-22 13:00"
+      ],
+      "spots": 4
     }
   ],
   "bgColor": "#0e1522",
