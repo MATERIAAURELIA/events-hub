@@ -20,7 +20,9 @@ a{color:var(--gold)}
 .face{width:84px;height:84px;border-radius:50%;object-fit:cover;flex-shrink:0;box-shadow:0 0 0 2px var(--bg),0 0 0 3px var(--gold)}
 .eyebrow{font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
 h1{font-family:Marcellus,serif;font-weight:400;font-size:clamp(28px,6vw,40px);line-height:1.1;margin:4px 0 6px}
-.lead{color:var(--dim);margin:0;max-width:60ch}
+.lead{color:var(--dim);margin:0;max-width:60ch;padding-left:20px}
+.lead li,.lead2 li{margin:2px 0}
+.lead li::marker,.lead2 li::marker{color:var(--gold)}
 .tabs{display:flex;gap:8px;margin:18px 0}
 .tabs button{font:inherit;font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;padding:10px 16px;border-radius:999px;border:1px solid var(--gold-soft);background:transparent;color:var(--gold);cursor:pointer}
 .tabs button[aria-pressed="true"]{background:var(--gold);color:var(--bg);border-color:var(--gold)}
@@ -50,7 +52,7 @@ input:focus,textarea:focus,select:focus,button:focus-visible{outline:2px solid v
 .status{font-size:14px;color:var(--dim);min-height:20px;margin-top:10px}
 .examples{font-size:14px;color:var(--faint);margin:-8px 0 16px}
 .examples button{font:inherit;font-size:13px;background:none;border:0;color:var(--sky);cursor:pointer;padding:0 4px;text-decoration:underline dotted}
-.lead2{color:var(--dim);font-size:14px;margin:0 0 14px}
+.lead2{color:var(--dim);font-size:14px;margin:0 0 14px;padding-left:20px}
 .tbl{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden}
 .thead{display:grid;grid-template-columns:150px minmax(0,1fr) 90px 150px;gap:12px;padding:10px 16px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);border-bottom:1px solid var(--gold-soft)}
 .prow{border-bottom:1px solid var(--line);padding:14px 16px}
@@ -58,6 +60,7 @@ input:focus,textarea:focus,select:focus,button:focus-visible{outline:2px solid v
 .pmain{display:grid;grid-template-columns:150px minmax(0,1fr) 90px 150px;gap:12px;align-items:start}
 .pname{font-family:Marcellus,serif;font-size:21px;line-height:1.2}
 .idea{font-size:16px;color:var(--ink)}
+.bubble{display:inline-block;background:rgba(210,164,78,.16);border:1px solid var(--gold-soft);color:var(--ink);font-weight:700;border-radius:14px;padding:8px 14px;margin:2px 0 4px;line-height:1.35}
 .idea.unsure{color:var(--faint);font-style:italic}
 .idea.blank{color:var(--faint)}
 .idea small{display:block;color:var(--dim);font-size:14px;margin-top:3px}
@@ -89,10 +92,19 @@ input:focus,textarea:focus,select:focus,button:focus-visible{outline:2px solid v
     <div>
       <div class="eyebrow">Team Exchange</div>
       <h1>What would you like to explore?</h1>
-      <p class="lead">Find your name below and add what you'd love to try: lead a journey, experiment with one instrument, or get honest feedback on your playing. Not sure yet? That's welcome too. Everyone can see what everyone's exploring and add a thought.</p>
+      <ul class="lead">
+        <li>Find your name below</li>
+        <li>Add what you'd love to try: lead a journey, play with one instrument, or get feedback</li>
+        <li>Not sure yet? That's welcome too</li>
+        <li>Everyone sees each other's ideas and can add a thought</li>
+      </ul>
     </div>
   </div>
-  <p class="lead2">🔔 Marcus is happy to provide the equipment unless you'd like to bring your own. All his bowls are tuned to 440 Hz. Sometimes it's nice to work with your own bowls, since every bowl is unique. Mats &amp; blankets are already here.</p>
+  <ul class="lead2">
+    <li>Marcus provides the equipment, or bring your own</li>
+    <li>His bowls are tuned to 440 Hz. Your own bowls are welcome, since every bowl is unique</li>
+    <li>Mats &amp; blankets are already here</li>
+  </ul>
 
   <div id="rosterAdmin"></div>
   <div class="tbl" role="table" aria-label="Who's exploring what">
@@ -137,7 +149,7 @@ input:focus,textarea:focus,select:focus,button:focus-visible{outline:2px solid v
       let idea;
       if (!x) idea = `<div class="idea blank">Tap "Add mine" to share</div>`;
       else if (!x.title) idea = `<div class="idea unsure">🤔 Not sure yet</div>`;
-      else idea = `<div class="idea">${esc(x.title)}${x.status && x.status !== 'new' ? `<span class="pill" style="--st:${st(x.status).c}">${esc(st(x.status).label)}</span>` : ''}${x.stage && x.stage !== 'unsure' ? `<small style="color:var(--gold)">${esc(stageLbl(x.stage))}</small>` : ''}${x.desc ? `<small>${esc(x.desc)}</small>` : ''}</div>`;
+      else idea = `<div class="idea"><span class="bubble">💡 ${esc(x.title)}</span>${x.status && x.status !== 'new' ? `<span class="pill" style="--st:${st(x.status).c}">${esc(st(x.status).label)}</span>` : ''}${x.stage && x.stage !== 'unsure' ? `<small style="color:var(--gold)">${esc(stageLbl(x.stage))}</small>` : ''}${x.desc ? `<small>${esc(x.desc)}</small>` : ''}</div>`;
       const len = x && x.title ? esc(x.len || '') : '';
       const gear = x ? esc(GEAR[x.gear] || '') + (x.gearNote ? ` <span class="hint">(${esc(x.gearNote)})</span>` : '') : '';
       return `<div class="prow" role="row" data-n="${id}">
