@@ -1,5 +1,32 @@
 [
  {
+  "slug": "sensitivity-and-stimulation",
+  "custom": true,
+  "title": "Sensitivity & Stimulation",
+  "desc": "Why I'm offering two sessions about intensity, after years of playing on the gentle side. With chapters and a community circle.",
+  "type": "Story"
+ },
+ {
+  "slug": "power-of-humming",
+  "title": "The Power of Humming",
+  "desc": "Marcus on humming, the simplest way to use your own voice to settle your nervous system (2021).",
+  "type": "Video",
+  "length": "8 min",
+  "youtube": "3zNUls9bI9s",
+  "url": "https://youtu.be/3zNUls9bI9s",
+  "related": "our sound journeys"
+ },
+ {
+  "slug": "falling-in-love-with-your-own-voice",
+  "title": "Falling in Love with Your Own Voice",
+  "desc": "Marcus in conversation (2022): why it's easier to love someone else's voice than our own, and what changes when we listen.",
+  "type": "Video",
+  "length": "2 min",
+  "youtube": "ezGG2NwaWW0",
+  "url": "https://youtu.be/ezGG2NwaWW0",
+  "related": "our sound journeys"
+ },
+ {
   "slug": "thank-you-song",
   "title": "Everyday Sing-Along: The Thank You Song",
   "desc": "A simple sing-along of gratitude, from Marcus's Everyday Sing-Alongs series.",

@@ -1,0 +1,54 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Keep Me Posted · Earth Harmony</title><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet"><style>
+:root{--bg:#f4ede1;--card:#fffdf7;--ink:#2b2218;--soft:#6b5a45;--gold:#8a6418;--line:#e6d6b0}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17130f;--card:#211b15;--ink:#f3ead2;--soft:#cbbd9f;--gold:#e0b45a;--line:#4a3b26}}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 'Nunito Sans',Arial,sans-serif;padding:24px 16px}
+.w{max-width:620px;margin:0 auto}.k{font-size:12px;letter-spacing:.18em;color:var(--soft);text-transform:uppercase}
+h1{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:34px;line-height:1.15;margin:8px 0 10px;text-wrap:balance}
+.c{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px 18px;margin:16px 0}
+a{color:var(--gold)}
+.opt{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--line);cursor:pointer}.opt:first-of-type{border-top:0}
+.opt input{width:20px;height:20px;margin-top:3px;accent-color:var(--gold);flex:none}
+.opt b{display:block}.opt span{color:var(--soft);font-size:15px}
+label.f{display:block;font-size:14px;color:var(--soft);margin:14px 0 4px}
+input.t{width:100%;box-sizing:border-box;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+button{margin-top:18px;padding:12px 26px;border:1px solid var(--gold);border-radius:999px;background:var(--gold);color:var(--card);font:inherit;font-weight:700;cursor:pointer}
+button:disabled{opacity:.5;cursor:default}.note{font-size:14px;color:var(--soft)}
+</style></head><body><div class="w">
+<div class="k">Earth Harmony</div>
+<h1>Keep me posted</h1>
+<p>Tick what you're curious about, and you'll hear from us first when it opens. No spam, just the things you chose.</p>
+<form class="c" id="f">
+  <label class="opt"><input type="checkbox" name="i" value="Sing the Body Electric"><div><b>Sing the Body Electric</b><span>Voice and tones for the whole body, coming into our sessions</span></div></label>
+  <label class="opt"><input type="checkbox" name="i" value="Music Movement Medicine"><div><b>Music Movement Medicine</b><span>Move, clear the noise, then receive</span></div></label>
+  <label class="opt"><input type="checkbox" name="i" value="Intensity sessions"><div><b>Intensity sessions</b><span>Galactic Gong Activation and Singing Bowl Hot Sauce dates</span></div></label>
+  <label class="opt"><input type="checkbox" name="i" value="Sound healing training"><div><b>Sound healing training</b><span>Learn to hold sound sessions yourself (waitlist)</span></div></label>
+  <label class="f" for="nm">First name</label><input class="t" id="nm" maxlength="40" autocomplete="given-name" required>
+  <label class="f" for="em">Email</label><input class="t" id="em" type="email" maxlength="120" autocomplete="email" required>
+  <button id="go">Keep me posted</button> <span id="msg" class="note"></span>
+</form>
+<p class="note">Your email stays with Marcus. It's never shown publicly or shared.</p>
+<p class="note"><a href="https://events.earthharmonysoundwellness.com/">Upcoming sessions</a> · <a href="../library/">Toolbox Library</a></p>
+</div>
+<script>
+(function(){
+  var MAP={stbe:'Sing the Body Electric',mmm:'Music Movement Medicine',intensity:'Intensity sessions',training:'Sound healing training'};
+  // ?i=stbe,mmm pre-ticks boxes from newsletter buttons
+  (new URLSearchParams(location.search).get('i')||'').split(',').forEach(function(k){
+    var v=MAP[k.trim()];if(!v)return;document.querySelectorAll('input[name=i]').forEach(function(c){if(c.value===v)c.checked=true});
+  });
+  var f=document.getElementById('f'),msg=document.getElementById('msg'),go=document.getElementById('go');
+  f.onsubmit=function(e){
+    e.preventDefault();
+    var picks=[].slice.call(document.querySelectorAll('input[name=i]:checked')).map(function(c){return c.value});
+    if(!picks.length){msg.textContent='Tick at least one.';return}
+    go.disabled=true;msg.textContent='Sending...';
+    fetch('https://formsubmit.co/ajax/68bf44fd6c680760a90740f0fc752510',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify({name:document.getElementById('nm').value.trim(),email:document.getElementById('em').value.trim(),interests:picks.join(', '),_subject:'🔔 Keep me posted — '+picks.join(', ')})})
+    .then(function(r){if(!r.ok)throw 0;f.innerHTML='<p style="margin:0">Thank you. You\'re on the list for: <b>'+picks.join(', ')+'</b>. We\'ll let you know first.</p>';
+      try{picks.forEach(function(p){window.goatcounter&&goatcounter.count({path:'keep-posted-'+p.toLowerCase().replace(/\W+/g,'-'),title:'Keep me posted',event:true})})}catch(x){}})
+    .catch(function(){go.disabled=false;msg.textContent='That did not go through. Try again, or email earthharmonysoundhealing@gmail.com'});
+  };
+})();
+</script>
+<script data-goatcounter="https://earthharmony.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body></html>
