@@ -1,0 +1,88 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sensitivity &amp; Stimulation · Toolbox Library</title><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet"><style>
+:root{--bg:#f4ede1;--card:#fffdf7;--ink:#2b2218;--soft:#6b5a45;--gold:#8a6418;--line:#e6d6b0}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17130f;--card:#211b15;--ink:#f3ead2;--soft:#cbbd9f;--gold:#e0b45a;--line:#4a3b26}}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 'Nunito Sans',Arial,sans-serif;padding:24px 16px}
+.w{max-width:620px;margin:0 auto}.k{font-size:12px;letter-spacing:.18em;color:var(--soft);text-transform:uppercase}
+h1{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:34px;line-height:1.15;margin:8px 0 10px;text-wrap:balance}
+h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:26px;line-height:1.2;margin:0 0 8px;text-wrap:balance}
+.c{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px 18px;margin:16px 0}
+video{width:100%;max-height:80vh;border-radius:12px;background:#000;display:block}
+a{color:var(--gold)}ol{padding-left:22px}li{margin:6px 0}.ch{cursor:pointer;text-decoration:underline;color:var(--gold)}
+label{display:block;font-size:14px;color:var(--soft);margin:12px 0 4px}
+input,textarea{width:100%;box-sizing:border-box;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+textarea{min-height:110px;resize:vertical}
+button{margin-top:14px;padding:10px 22px;border:1px solid var(--gold);border-radius:999px;background:var(--gold);color:var(--card);font:inherit;font-weight:700;cursor:pointer}
+button:disabled{opacity:.5;cursor:default}
+.post{border-top:1px solid var(--line);padding:14px 0}.post:first-child{border-top:0}
+.who{font-weight:700}.when{font-size:13px;color:var(--soft);margin-left:6px}.txt{margin:4px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.del{font-size:13px;margin-left:10px;color:#a33;cursor:pointer;display:none}.admin .del{display:inline}
+.note{font-size:14px;color:var(--soft)}
+</style></head><body><div class="w">
+<div class="k">Toolbox Library · Story · 9 min</div>
+<h1>Sensitivity &amp; Stimulation</h1>
+<p>Why I'm offering two sessions about intensity, after years of playing on the gentle side. A story about my own bias, a turning point, and a dream.</p>
+
+<div class="c">
+  <video id="vid" controls playsinline preload="metadata" poster="poster.jpg"><source src="VIDEO_SRC" type="video/mp4"></video>
+  <p class="note" style="margin:10px 0 0">Prefer to listen? <a href="AUDIO_SRC">Audio only</a></p>
+</div>
+
+<div class="c" id="chapters"><h2>Chapters</h2><ol id="chl"><!-- CHAPTERS --></ol></div>
+
+<div class="c">
+  <h2>Activation and relaxation</h2>
+  <p>Intensity, chosen, in the name of self-intimacy. Sometimes the body needs to be rocked awake. Sometimes it needs to be held still. Both are nutrients, at different times.</p>
+  <p><strong>So what does your nervous system need right now?</strong></p>
+</div>
+
+<div class="c" id="forum">
+  <h2>Community circle</h2>
+  <p class="note" style="margin-top:0">Share what you're noticing. Answers are public, so please use your first name only.</p>
+  <label for="nm">First name</label><input id="nm" maxlength="30" autocomplete="given-name">
+  <label for="tx">Your answer</label><textarea id="tx" maxlength="1500" placeholder="Right now my nervous system needs..."></textarea>
+  <button id="go">Share</button> <span id="msg" class="note"></span>
+  <div id="posts" style="margin-top:18px"></div>
+</div>
+
+<p class="note"><a href="../">← Toolbox Library</a> · <a href="https://events.earthharmonysoundwellness.com/">Upcoming sessions</a></p>
+</div>
+<script>
+(function(){
+  var API='https://script.google.com/macros/s/AKfycbzzu1jXVtwDuHyBThe62Ipc10UzBJkDQDACGZfe5oEF9jXIUl3qtGjbJD2c3IW_q4EjKQ/exec';
+  var KEY='forum-sensitivity-stimulation';
+  var Q=new URLSearchParams(location.search), admin=Q.get('admin')==='1';
+  if(admin) document.body.classList.add('admin');
+  var $=function(id){return document.getElementById(id)};
+  function load(){return fetch(API+'?key='+encodeURIComponent(KEY)).then(function(r){return r.ok?r.json():{}}).catch(function(){return {}})}
+  function save(v){return fetch(API,{method:'POST',body:JSON.stringify({key:KEY,value:v})})}
+  function list(d){return (d&&d.value&&d.value.posts)||(d&&d.posts)||[]}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+  function render(posts){
+    var live=posts.filter(function(p){return !p.hidden}).sort(function(a,b){return b.t-a.t});
+    $('posts').innerHTML=live.length?live.map(function(p){
+      return '<div class="post"><span class="who">'+esc(p.name)+'</span><span class="when">'+new Date(p.t).toLocaleDateString(undefined,{month:'short',day:'numeric'})+'</span><span class="del" data-id="'+p.id+'">remove</span><p class="txt">'+esc(p.text)+'</p></div>'
+    }).join(''):'<p class="note">Be the first to share.</p>';
+  }
+  load().then(function(d){render(list(d))});
+  $('go').onclick=function(){
+    var name=$('nm').value.trim().split(/\s+/)[0], text=$('tx').value.trim();
+    if(!name||!text){$('msg').textContent='Add your first name and an answer.';return}
+    $('go').disabled=true;$('msg').textContent='Sharing...';
+    var p={id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),name:name.slice(0,30),text:text.slice(0,1500),t:Date.now()};
+    // re-read right before saving so we never overwrite someone else's answer
+    load().then(function(d){var posts=list(d);posts.push(p);return save({posts:posts}).then(function(){render(posts)})})
+      .then(function(){$('tx').value='';$('msg').textContent='Thank you for sharing.';try{window.goatcounter&&goatcounter.count({path:'forum-post-sensitivity',title:'Forum post',event:true})}catch(e){}})
+      .catch(function(){$('msg').textContent='Something went wrong. Please try again.'})
+      .then(function(){$('go').disabled=false});
+  };
+  $('posts').onclick=function(e){
+    var id=e.target.dataset&&e.target.dataset.id; if(!id||!admin||!confirm('Remove this answer?'))return;
+    load().then(function(d){var posts=list(d);posts.forEach(function(p){if(p.id===id)p.hidden=true});return save({posts:posts}).then(function(){render(posts)})});
+  };
+  // chapter links: <li data-t="seconds">
+  $('chl').onclick=function(e){var t=e.target.closest('[data-t]');if(t){var v=$('vid');v.currentTime=+t.dataset.t;v.play();v.scrollIntoView({behavior:'smooth',block:'center'})}};
+})();
+</script>
+<script data-goatcounter="https://earthharmony.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script>/* Toolbox: count outbound clicks (Marcus, Nov 2: see what people actually access) */document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a[href]");if(!a||a.host===location.host)return;try{window.goatcounter&&goatcounter.count({path:"toolbox-out:"+location.pathname+" -> "+a.href,title:a.textContent.trim().slice(0,80),event:true})}catch(x){}},true);</script>
+</body></html>
