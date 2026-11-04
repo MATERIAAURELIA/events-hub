@@ -247,7 +247,11 @@ $('fb').addEventListener('submit',async ev=>{
     const r=await fetch('https://formsubmit.co/ajax/68bf44fd6c680760a90740f0fc752510',{method:'POST',headers:{'Accept':'application/json'},body:fd});
     if(!r.ok) throw 0;
     t.style.display='none'; $('change').style.display='none'; pickwrap.classList.remove('on'); $('thanks').style.display='block'; $('thanks').scrollIntoView({block:'start'});
-  }catch(e){ b.disabled=false; b.textContent='Send my feedback'; alert('Hmm, that did not send. Please try again, or email earthharmonysoundhealing@gmail.com'); }
+  }catch(e){ b.disabled=false; b.textContent='Send my feedback';
+    /* FormSubmit down (Nov 4, 522): offer a prefilled email so the feedback isn't lost */
+    const lines=['Session: '+evIn.value,'Rating: '+(rated?rate.value+'/10':'not rated'),'What we did well: '+fw,'What could be better: '+fi,'Suggestions: '+fs];
+    const href='mailto:earthharmonysoundhealing@gmail.com?subject='+encodeURIComponent($('subj').value)+'&body='+encodeURIComponent(lines.join('\n\n'));
+    if(confirm('Our form service is having a moment. Send your feedback by email instead? (It will be all filled in.)')) location.href=href; }
 });
 
 /* ---- Google review: if they wrote what we did well, copy it so Google is just "paste" ---- */

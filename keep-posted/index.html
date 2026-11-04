@@ -46,7 +46,11 @@ button:disabled{opacity:.5;cursor:default}.note{font-size:14px;color:var(--soft)
       body:JSON.stringify({name:document.getElementById('nm').value.trim(),email:document.getElementById('em').value.trim(),interests:picks.join(', '),_subject:'🔔 Keep me posted — '+picks.join(', ')})})
     .then(function(r){if(!r.ok)throw 0;f.innerHTML='<p style="margin:0">Thank you. You\'re on the list for: <b>'+picks.join(', ')+'</b>. We\'ll let you know first.</p>';
       try{picks.forEach(function(p){window.goatcounter&&goatcounter.count({path:'keep-posted-'+p.toLowerCase().replace(/\W+/g,'-'),title:'Keep me posted',event:true})})}catch(x){}})
-    .catch(function(){go.disabled=false;msg.textContent='That did not go through. Try again, or email earthharmonysoundhealing@gmail.com'});
+    .catch(function(){go.disabled=false;
+      /* FormSubmit down (Nov 4, 522): hand them a ready-made email instead */
+      var nm=document.getElementById('nm').value.trim(),em=document.getElementById('em').value.trim();
+      var href='mailto:earthharmonysoundhealing@gmail.com?subject='+encodeURIComponent('Keep me posted: '+picks.join(', '))+'&body='+encodeURIComponent('Hi Marcus,\n\nPlease keep me posted on: '+picks.join(', ')+'\n\n'+nm+'\n'+em);
+      msg.innerHTML='Our form service is having a moment. <a href="'+href+'">Tap here to send it by email instead</a> (it\'s all filled in).'});
   };
 })();
 </script>
