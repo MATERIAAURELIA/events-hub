@@ -980,7 +980,7 @@
       ],
       "imgCrop": "center top",
       "capacity": 22,
-      "spots": 14
+      "spots": 13
     },
     {
       "id": "ev-oct24-back2basics",
@@ -1327,7 +1327,7 @@
       "venueOverride": "Terwillegar Home Studio",
       "price": "62.50",
       "full": false,
-      "spots": 7,
+      "spots": 6,
       "status": "published",
       "booking": "https://EarthHarmony.as.me/?appointmentType=99174444",
       "contactEmail": "earthharmonysoundhealing@gmail.com",
