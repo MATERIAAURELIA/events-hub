@@ -1,0 +1,22 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sync Test</title><meta name="robots" content="noindex">
+<style>body{margin:0;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:#0e1522;color:#f3ead2;font:18px/1.4 -apple-system,Arial,sans-serif;text-align:center;padding:16px}
+button{font-size:24px;padding:22px 40px;border-radius:999px;border:0;background:#d2a44e;color:#0e1522;font-weight:700}
+#s{min-height:2em}</style></head><body>
+<div>Earth Harmony · sync test</div>
+<button id="b">Tap to test</button>
+<div id="s"></div>
+<script>
+const d=new Date(),S='S'+d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');
+const sess=new URLSearchParams(location.search).get('session')||S;
+const dev=(navigator.userAgent.match(/iPad|iPhone|Android|Mac|Windows/)||['device'])[0];
+document.getElementById('b').onclick=async()=>{
+ const s=document.getElementById('s');s.textContent='Sending…';
+ const rec={test:true,device:dev,name:'Test '+Math.floor(Math.random()*900+100),alignment:5,body:6,spirit:7,harmony:8,mind:6,intention:'test intention',insight:'test insight',ts:Date.now()};
+ try{const r=await fetch('https://earth-harmony-portal-4baeb-default-rtdb.firebaseio.com/sessions/'+sess+'/pings.json',{method:'POST',body:JSON.stringify(rec)});
+  if(!r.ok)throw new Error(r.status);
+  const back=await (await fetch('https://earth-harmony-portal-4baeb-default-rtdb.firebaseio.com/sessions/'+sess+'/pings.json?shallow=true')).json();
+  s.innerHTML='✅ Synced<br><small>'+Object.keys(back||{}).length+' device(s) so far · '+sess+'</small>';
+ }catch(e){s.textContent='❌ No connection ('+e.message+')';}
+};
+</script></body></html>
