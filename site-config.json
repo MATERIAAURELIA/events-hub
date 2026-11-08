@@ -1455,22 +1455,23 @@
     {
       "id": "ev-nov12-mmm",
       "type": "sound-bath",
-      "title": "Music Movement Medicine: Resilience\nSilent Disco + Sound Healing",
+      "title": "POSTPONED · Music Movement Medicine: Resilience\nNew date coming soon",
       "date": "2026-11-12",
       "time": "19:00",
       "endTime": "20:30",
       "venue": "",
       "venueOverride": "Space connected to Sweet Pea Café · west side",
       "price": "25",
-      "booking": "https://EarthHarmony.as.me/?appointmentType=98286757",
+      "booking": "mailto:earthharmonysoundhealing@gmail.com?subject=Keep%20me%20posted%3A%20Music%20Movement%20Medicine",
       "contactEmail": "earthharmonysoundhealing@gmail.com",
       "contactPhone": "780-257-6428",
-      "desc": "Join Marcus for an intentionally curated musical journey of world rhythms and positive, uplifting vibes: a soundtrack for exploring this miraculous vehicle, your human body, as you move through life. Move at your own comfort level while the headphones create a very special inner-journey feeling.\n\nMovement is medicine: it shakes loose stress and stuck energy, lifts the mood, and helps the nervous system settle, so the sound healing transmission afterward lands even deeper.\n\nThe journey includes an opening circle, a warm-up, solo and group flow, and a cool-down, followed by a live sound healing transmission from Marcus: just his voice and a looper, layered live. In an indoor space connected to Sweet Pea Café, on the west side. Room for about 15 movers.",
+      "desc": "POSTPONED. This evening is moving to a new date, coming soon. Email us to hear first when it is set.\n\nJoin Marcus for an intentionally curated musical journey of world rhythms and positive, uplifting vibes: a soundtrack for exploring this miraculous vehicle, your human body, as you move through life. Move at your own comfort level while the headphones create a very special inner-journey feeling.\n\nMovement is medicine: it shakes loose stress and stuck energy, lifts the mood, and helps the nervous system settle, so the sound healing transmission afterward lands even deeper.\n\nThe journey includes an opening circle, a warm-up, solo and group flow, and a cool-down, followed by a live sound healing transmission from Marcus: just his voice and a looper, layered live. In an indoor space connected to Sweet Pea Café, on the west side. Room for about 15 movers.",
       "img": "photos/mmm-silhouette-headphones.jpg",
       "imgCrop": "center",
       "status": "published",
       "repeatable": false,
-      "series": "community"
+      "series": "community",
+      "reminder": false
     }
   ],
   "bgColor": "#0e1522",
