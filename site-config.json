@@ -1379,7 +1379,8 @@
       "titleAlign": "center",
       "tint": "#8a6a9e",
       "capacity": 8,
-      "spots": 1
+      "spots": 0,
+      "full": true
     },
     {
       "id": "ev-nov24-chakras",
