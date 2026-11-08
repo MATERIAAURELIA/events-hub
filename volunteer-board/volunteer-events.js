@@ -1,4 +1,4 @@
-// Auto-generated 2026-11-07T18:00:07.479698 from the Events Hub (public events only)
+// Auto-generated 2026-11-07T22:00:09.787485 from the Events Hub (public events only)
 // 14 public events in the next 90 days
 const VOLUNTEER_EVENTS = [
   {
@@ -33,10 +33,10 @@ const VOLUNTEER_EVENTS = [
   },
   {
     "id": "ev-nov12-mmm",
-    "title": "Music Movement Medicine: Resilience Silent Disco + Sound Healing",
+    "title": "POSTPONED \u00b7 Music Movement Medicine: Resilience New date coming soon",
     "start": "2026-11-12T19:00:00-06:00",
     "end": "2026-11-12T20:30:00-06:00",
-    "description": "Join Marcus for an intentionally curated musical journey of world rhythms and positive, uplifting vibes: a soundtrack for exploring this miraculous vehicle, your human body, as you move through life. Move at your own comfort level while the headphones create a very special inner-journey feeling.",
+    "description": "POSTPONED. This evening is moving to a new date, coming soon. Email us to hear first when it is set.",
     "location": "",
     "source": "hub",
     "img": "https://events.earthharmonysoundwellness.com/photos/mmm-silhouette-headphones.jpg"
