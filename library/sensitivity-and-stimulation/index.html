@@ -6,7 +6,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 'Nunito Sans'
 h1{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:34px;line-height:1.15;margin:8px 0 10px;text-wrap:balance}
 h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:26px;line-height:1.2;margin:0 0 8px;text-wrap:balance}
 .c{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px 18px;margin:16px 0}
-video{width:100%;max-height:80vh;border-radius:12px;background:#000;display:block}
+.yt{position:relative;width:100%;max-width:420px;margin:0 auto;aspect-ratio:9/16;max-height:80vh;border-radius:12px;overflow:hidden;background:#000}.yt iframe,.yt #vid{position:absolute;inset:0;width:100%;height:100%;border:0}
 a{color:var(--gold)}ol{padding-left:22px}li{margin:6px 0}.ch{cursor:pointer;text-decoration:underline;color:var(--gold)}
 label{display:block;font-size:14px;color:var(--soft);margin:12px 0 4px}
 input,textarea{width:100%;box-sizing:border-box;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
@@ -23,8 +23,8 @@ button:disabled{opacity:.5;cursor:default}
 <p>Why I'm offering two sessions about intensity, after years of playing on the gentle side. A story about my own bias, a turning point, and a dream.</p>
 
 <div class="c">
-  <video id="vid" controls playsinline preload="metadata" poster="poster.jpg"><source src="video.mp4" type="video/mp4"></video>
-  <p class="note" style="margin:10px 0 0">Prefer to listen? <a href="audio.mp3">Audio only</a> · Tap a chapter below to jump.</p>
+  <div class="yt"><div id="vid"></div></div>
+  <p class="note" style="margin:10px 0 0">Prefer to listen? <a href="audio.mp3" onclick="try{window.goatcounter&&goatcounter.count({path:'toolbox-play:sensitivity-audio',title:'Sensitivity audio',event:true})}catch(x){}">Audio only</a> · Tap a chapter below to jump.</p>
 </div>
 
 <div class="c" id="chapters"><h2>Chapters</h2><ol id="chl"><li data-t="0"><span class="ch">0:00</span> Stimulation vs sensitivity</li>
@@ -95,9 +95,10 @@ button:disabled{opacity:.5;cursor:default}
     load().then(function(d){var posts=list(d);posts.forEach(function(p){if(p.id===id)p.hidden=true});return save({posts:posts}).then(function(){render(posts)})});
   };
   // chapter links: <li data-t="seconds">
-  $('chl').onclick=function(e){var t=e.target.closest('[data-t]');if(t){var v=$('vid');v.currentTime=+t.dataset.t;v.play();v.scrollIntoView({behavior:'smooth',block:'center'})}};
+  $('chl').onclick=function(e){var t=e.target.closest('[data-t]');if(t){if(window.ytp&&ytp.seekTo){ytp.seekTo(+t.dataset.t,true);ytp.playVideo()}document.querySelector('.yt').scrollIntoView({behavior:'smooth',block:'center'});try{window.goatcounter&&goatcounter.count({path:'toolbox-chapter:sensitivity '+t.dataset.t,title:t.textContent.trim().slice(0,60),event:true})}catch(x){}}};
 })();
 </script>
+<script>/* YouTube player (HDR plays true; Marcus Nov 7). Counts first play per visit. */var ytp,ytPlayed=false;function onYouTubeIframeAPIReady(){ytp=new YT.Player('vid',{videoId:'ZOMtyfkC6oE',playerVars:{playsinline:1,rel:0,modestbranding:1},events:{onStateChange:function(e){if(e.data===1&&!ytPlayed){ytPlayed=true;try{window.goatcounter&&goatcounter.count({path:'toolbox-play:sensitivity-video',title:'Sensitivity video play',event:true})}catch(x){}}}}})}</script><script src="https://www.youtube.com/iframe_api" async></script>
 <script data-goatcounter="https://earthharmony.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <script>/* Toolbox: count outbound clicks (Marcus, Nov 2: see what people actually access) */document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a[href]");if(!a||a.host===location.host)return;try{window.goatcounter&&goatcounter.count({path:"toolbox-out:"+location.pathname+" -> "+a.href,title:a.textContent.trim().slice(0,80),event:true})}catch(x){}},true);</script>
 </body></html>
