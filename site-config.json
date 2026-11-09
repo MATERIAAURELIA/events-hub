@@ -1383,7 +1383,6 @@
       "full": true,
       "reminderNote": "If you wish, bring a photo or a small memento of a loved one who has passed. We will create a small altar space together to honour them.",
       "reminderNoteImg": "https://events.earthharmonysoundwellness.com/images/grief-altar.jpg",
-      "reminderToolboxIntro": "For before, and for the weeks after",
       "reminderToolbox": [
         {
           "emoji": "🎧",
@@ -1391,25 +1390,29 @@
           "sub": "Listen or watch · 8½ min",
           "btn": "▶ Listen",
           "url": "https://events.earthharmonysoundwellness.com/library/sensitivity-and-stimulation/",
-          "color": "gold"
+          "color": "gold",
+          "event": {
+            "img": "https://events.earthharmonysoundwellness.com/images/thumbs/hotsauce-nov26.jpg",
+            "title": "Singing Bowl Hot Sauce",
+            "when": "Thu Nov 26 · 7:00 PM · Sweet Pea Café",
+            "line": "An experiment in chosen intensity: you pick how much you feel.",
+            "url": "https://events.earthharmonysoundwellness.com/?e=ev-nov26-hotsauce"
+          }
         },
         {
           "emoji": "🥁",
-          "title": "Pulse of Life · Drum Circle & Rhythm Cradle",
-          "sub": "Fri Nov 20 · 7:00 PM · shared rhythm, then being held in sound",
-          "btn": "See the evening",
-          "url": "https://events.earthharmonysoundwellness.com/?e=ev-nov20-pulseoflife",
+          "title": "Pulse of Life Rhythms",
+          "sub": "Playlist · drum + rhythm to move and feel to",
+          "btn": "▶ Listen",
+          "url": "https://events.earthharmonysoundwellness.com/library/pulse-of-life-rhythms-1/",
           "color": "teal",
-          "link2": "https://events.earthharmonysoundwellness.com/library/pulse-of-life-rhythms-1/",
-          "link2_text": "Listen to the Pulse of Life playlist"
-        },
-        {
-          "emoji": "🥣",
-          "title": "Singing Bowl Hot Sauce",
-          "sub": "Thu Nov 26 · 7:00 PM · an experiment in chosen intensity",
-          "btn": "See the evening",
-          "url": "https://events.earthharmonysoundwellness.com/?e=ev-nov26-hotsauce",
-          "color": "rust"
+          "event": {
+            "img": "https://events.earthharmonysoundwellness.com/images/thumbs/pulse-nov20.jpg",
+            "title": "Pulse of Life · Drum Circle & Rhythm Cradle",
+            "when": "Fri Nov 20 · 7:00 PM · Integr8 Massage, Sherwood Park",
+            "line": "Shared rhythm, then being held in soothing, healing sound.",
+            "url": "https://events.earthharmonysoundwellness.com/?e=ev-nov20-pulseoflife"
+          }
         }
       ]
     },
