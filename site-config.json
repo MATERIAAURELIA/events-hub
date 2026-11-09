@@ -1382,7 +1382,36 @@
       "spots": 0,
       "full": true,
       "reminderNote": "If you wish, bring a photo or a small memento of a loved one who has passed. We will create a small altar space together to honour them.",
-      "reminderNoteImg": "https://events.earthharmonysoundwellness.com/images/grief-altar.jpg"
+      "reminderNoteImg": "https://events.earthharmonysoundwellness.com/images/grief-altar.jpg",
+      "reminderToolboxIntro": "For before, and for the weeks after",
+      "reminderToolbox": [
+        {
+          "emoji": "🎧",
+          "title": "More Stimulation vs More Sensitivity",
+          "sub": "Listen or watch · 8½ min",
+          "btn": "▶ Listen",
+          "url": "https://events.earthharmonysoundwellness.com/library/sensitivity-and-stimulation/",
+          "color": "gold"
+        },
+        {
+          "emoji": "🥁",
+          "title": "Pulse of Life · Drum Circle & Rhythm Cradle",
+          "sub": "Fri Nov 20 · 7:00 PM · shared rhythm, then being held in sound",
+          "btn": "See the evening",
+          "url": "https://events.earthharmonysoundwellness.com/?e=ev-nov20-pulseoflife",
+          "color": "teal",
+          "link2": "https://events.earthharmonysoundwellness.com/library/pulse-of-life-rhythms-1/",
+          "link2_text": "Listen to the Pulse of Life playlist"
+        },
+        {
+          "emoji": "🥣",
+          "title": "Singing Bowl Hot Sauce",
+          "sub": "Thu Nov 26 · 7:00 PM · an experiment in chosen intensity",
+          "btn": "See the evening",
+          "url": "https://events.earthharmonysoundwellness.com/?e=ev-nov26-hotsauce",
+          "color": "rust"
+        }
+      ]
     },
     {
       "id": "ev-nov24-chakras",
