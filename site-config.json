@@ -1386,7 +1386,7 @@
       "reminderToolbox": [
         {
           "kicker": "Sound baths",
-          "title": "More Stimulation vs More Sensitivity",
+          "title": "More Stimulation\nvs More Sensitivity",
           "sub": "What's best for you?",
           "btn": "Listen",
           "url": "https://events.earthharmonysoundwellness.com/library/sensitivity-and-stimulation/",
@@ -1406,17 +1406,17 @@
           ]
         },
         {
-          "kicker": "Drumming",
-          "title": "Pulse of Life Rhythms",
-          "sub": "Rhythms to move and feel to",
+          "kicker": "Playlist",
+          "title": "World Rhythms #1",
+          "sub": "Drum out the noise.\nFind your joy, together.",
           "btn": "Listen",
           "url": "https://events.earthharmonysoundwellness.com/library/pulse-of-life-rhythms-1/",
           "color": "teal",
           "offers_label": "Feel it live",
           "offers": [
             {
-              "text": "Pulse of Life Drum Circle",
-              "when": "Fri Nov 20 · 7:00 PM · Sherwood Park",
+              "text": "Pulse of Life Drum Circle\n& Rhythm Cradle",
+              "when": "Fri Nov 20 · 7:00 PM",
               "url": "https://events.earthharmonysoundwellness.com/?e=ev-nov20-pulseoflife"
             }
           ]
