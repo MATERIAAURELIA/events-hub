@@ -1410,7 +1410,7 @@
       "id": "ev-nov8-aquaholics",
       "type": "sound-bath",
       "title": "Wag, Swim & Unwind\nA Sound Bath for Dogs",
-      "date": "2026-11-08",
+      "date": "2026-11-22",
       "time": "13:00",
       "endTime": "14:30",
       "venue": "",
@@ -1425,10 +1425,8 @@
       "status": "published",
       "repeatable": false,
       "series": "community",
-      "futureDates": [
-        "2026-11-22 13:00"
-      ],
-      "spots": 4
+      "futureDates": [],
+      "spots": 7
     },
     {
       "id": "ev-nov26-hotsauce",
