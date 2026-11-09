@@ -1381,7 +1381,8 @@
       "capacity": 8,
       "spots": 0,
       "full": true,
-      "reminderNote": "🕯 If you wish, bring a photo or a small memento of a loved one who has passed. We will create a small altar space together to honour them."
+      "reminderNote": "If you wish, bring a photo or a small memento of a loved one who has passed. We will create a small altar space together to honour them.",
+      "reminderNoteImg": "https://events.earthharmonysoundwellness.com/images/grief-altar.jpg"
     },
     {
       "id": "ev-nov24-chakras",
