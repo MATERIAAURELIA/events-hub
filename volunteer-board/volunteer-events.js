@@ -1,5 +1,5 @@
-// Auto-generated 2026-11-09T06:00:05.522466 from the Events Hub (public events only)
-// 13 public events in the next 90 days
+// Auto-generated 2026-11-09T10:00:10.076115 from the Events Hub (public events only)
+// 14 public events in the next 90 days
 const VOLUNTEER_EVENTS = [
   {
     "id": "ev-nov10-galactic-gong",
@@ -70,6 +70,16 @@ const VOLUNTEER_EVENTS = [
     "location": "Roots on Whyte \u00b7 3rd Floor",
     "source": "hub",
     "img": "https://events.earthharmonysoundwellness.com/photos/community-soundbath-candlelit.jpg"
+  },
+  {
+    "id": "ev-nov8-aquaholics",
+    "title": "Wag, Swim & Unwind A Sound Bath for Dogs",
+    "start": "2026-11-22T13:00:00-06:00",
+    "end": "2026-11-22T14:30:00-06:00",
+    "description": "Join Aquaholics and Earth Harmony Sound & Wellness for a joyful 90 minutes with your dog:",
+    "location": "",
+    "source": "hub",
+    "img": "https://events.earthharmonysoundwellness.com/photos/aquaholics-wag-swim-unwind.jpg"
   },
   {
     "id": "ev-nov24-chakras",
