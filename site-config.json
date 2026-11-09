@@ -1385,34 +1385,41 @@
       "reminderNoteImg": "https://events.earthharmonysoundwellness.com/images/grief-altar.jpg",
       "reminderToolbox": [
         {
-          "emoji": "🎧",
+          "kicker": "Sound baths",
           "title": "More Stimulation vs More Sensitivity",
-          "sub": "Listen or watch · 8½ min",
-          "btn": "▶ Listen",
+          "sub": "What's best for you?",
+          "btn": "Listen",
           "url": "https://events.earthharmonysoundwellness.com/library/sensitivity-and-stimulation/",
           "color": "gold",
-          "event": {
-            "img": "https://events.earthharmonysoundwellness.com/images/thumbs/hotsauce-nov26.jpg",
-            "title": "Singing Bowl Hot Sauce",
-            "when": "Thu Nov 26 · 7:00 PM · Sweet Pea Café",
-            "line": "An experiment in chosen intensity: you pick how much you feel.",
-            "url": "https://events.earthharmonysoundwellness.com/?e=ev-nov26-hotsauce"
-          }
+          "offers_label": "Two offerings with more intensity",
+          "offers": [
+            {
+              "text": "Singing Bowl Hot Sauce",
+              "when": "Thu Nov 26 · 7:00 PM",
+              "url": "https://events.earthharmonysoundwellness.com/?e=ev-nov26-hotsauce"
+            },
+            {
+              "text": "The Galactic Gong Activation",
+              "when": "Wed Nov 25 · 6:30 PM",
+              "url": "https://events.earthharmonysoundwellness.com/?e=ev-nov25-galactic-gong"
+            }
+          ]
         },
         {
-          "emoji": "🥁",
+          "kicker": "Drumming",
           "title": "Pulse of Life Rhythms",
-          "sub": "Playlist · drum + rhythm to move and feel to",
-          "btn": "▶ Listen",
+          "sub": "Rhythms to move and feel to",
+          "btn": "Listen",
           "url": "https://events.earthharmonysoundwellness.com/library/pulse-of-life-rhythms-1/",
           "color": "teal",
-          "event": {
-            "img": "https://events.earthharmonysoundwellness.com/images/thumbs/pulse-nov20.jpg",
-            "title": "Pulse of Life · Drum Circle & Rhythm Cradle",
-            "when": "Fri Nov 20 · 7:00 PM · Integr8 Massage, Sherwood Park",
-            "line": "Shared rhythm, then being held in soothing, healing sound.",
-            "url": "https://events.earthharmonysoundwellness.com/?e=ev-nov20-pulseoflife"
-          }
+          "offers_label": "Feel it live",
+          "offers": [
+            {
+              "text": "Pulse of Life Drum Circle",
+              "when": "Fri Nov 20 · 7:00 PM · Sherwood Park",
+              "url": "https://events.earthharmonysoundwellness.com/?e=ev-nov20-pulseoflife"
+            }
+          ]
         }
       ]
     },
