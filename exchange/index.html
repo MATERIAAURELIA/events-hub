@@ -120,8 +120,25 @@ input:focus,textarea:focus,select:focus,button:focus-visible{outline:2px solid v
 (() => {
   const API_URL = 'https://script.google.com/macros/s/AKfycbzzu1jXVtwDuHyBThe62Ipc10UzBJkDQDACGZfe5oEF9jXIUl3qtGjbJD2c3IW_q4EjKQ/exec';
   const FORM = 'https://formsubmit.co/ajax/68bf44fd6c680760a90740f0fc752510';
-  const KEY = 'exchange-proposals', RKEY = 'exchange-roster';
-  const DEFAULT_ROSTER = ['Brock', 'Oksanna', 'Ashley'];
+  // ?ev=<id> = a separate exchange board for one gathering (own proposals + roster, own heading)
+  const EVENTS = {
+    'stbe-nov15': { eyebrow: 'Team Exchange · Sun Nov 15 · 4–6pm', h1: 'Sing the Body Electric',
+      img: 'https://events.earthharmonysoundwellness.com/photos/nl-2026-11/stbe.jpg',
+      lead: ['Find your name and tap in if you\'re coming', 'An intro to Sing the Body Electric, then chant and song together',
+             'Have a chant or song you\'d love to share? Add it', 'Optional potluck after: bring a small snack to share if you can'],
+      roster: ['Oksanna', 'Brock', 'Nadeen', 'Ashlii', 'Judy', 'Treyna', 'Jen', 'Desiree'] } };
+  const EVID = new URLSearchParams(location.search).get('ev');
+  const EV = EVENTS[EVID];
+  const KEY = EV ? 'exchange-proposals-' + EVID : 'exchange-proposals', RKEY = EV ? 'exchange-roster-' + EVID : 'exchange-roster';
+  const DEFAULT_ROSTER = EV ? EV.roster : ['Brock', 'Oksanna', 'Ashley'];
+  if (EV) {
+    document.querySelector('.eyebrow').textContent = EV.eyebrow;
+    document.querySelector('h1').textContent = EV.h1;
+    document.querySelector('.face').src = EV.img;
+    document.querySelector('.lead').innerHTML = EV.lead.map(t => '<li>' + t + '</li>').join('');
+    document.querySelector('.lead2').style.display = 'none';
+    document.title = EV.h1 + ' · Team Exchange';
+  }
   const ADMIN = new URLSearchParams(location.search).get('admin') === '1';
   const STATUS = [
     { id: 'new', label: 'Proposed', c: 'var(--sky)' },
