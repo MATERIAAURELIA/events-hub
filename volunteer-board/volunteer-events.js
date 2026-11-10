@@ -1,5 +1,5 @@
-// Auto-generated 2026-11-10T10:00:09.661443 from the Events Hub (public events only)
-// 14 public events in the next 90 days
+// Auto-generated 2026-11-10T14:00:10.154000 from the Events Hub (public events only)
+// 15 public events in the next 90 days
 const VOLUNTEER_EVENTS = [
   {
     "id": "ev-nov10-galactic-gong",
@@ -30,6 +30,16 @@ const VOLUNTEER_EVENTS = [
     "location": "",
     "source": "hub",
     "img": "https://events.earthharmonysoundwellness.com/photos/mmm-silhouette-headphones.jpg"
+  },
+  {
+    "id": "ev-nov14-downtime",
+    "title": "Downtime Sound Healing & Yin Yoga",
+    "start": "2026-11-14T18:00:00-06:00",
+    "end": "2026-11-14T19:30:00-06:00",
+    "description": "A 90-minute sound healing and yin yoga experience with David Palfenier & Marcus Fung.",
+    "location": "",
+    "source": "hub",
+    "img": "https://events.earthharmonysoundwellness.com/photos/downtime-om-hot-yoga.jpg"
   },
   {
     "id": "ev-nov17-galactic-gong",
@@ -79,7 +89,7 @@ const VOLUNTEER_EVENTS = [
     "description": "Join Aquaholics and Earth Harmony Sound & Wellness for a joyful 90 minutes with your dog:",
     "location": "",
     "source": "hub",
-    "img": "https://events.earthharmonysoundwellness.com/photos/aquaholics-wag-swim-unwind.jpg"
+    "img": "https://events.earthharmonysoundwellness.com/photos/aquaholics-pool-dogs.jpg"
   },
   {
     "id": "ev-nov24-chakras",
