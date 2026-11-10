@@ -90,6 +90,22 @@
   "related": "our sound journeys"
  },
  {
+  "slug": "laughter-yoga",
+  "title": "Introduction to Laughter Yoga",
+  "desc": "A 30-minute laughter yoga practice with Marcus. Laughter is the best medicine.",
+  "type": "Practice",
+  "length": "30 min",
+  "youtube": "2mCiAohQbiA",
+  "url": "https://www.youtube.com/watch?v=2mCiAohQbiA",
+  "kicker": "Body",
+  "sub": "Laughter is the best medicine",
+  "btn": "Practice",
+  "img": "img/laughter.jpg",
+  "color": "gold",
+  "cat": "body",
+  "related": "our laughter yoga workshops"
+ },
+ {
   "slug": "african-polyrhythms",
   "title": "African Polyrhythms",
   "desc": "C.K. Ladzekpo on the drum rhythm principles of percussion polyrhythm from Ghana, West Africa.",
