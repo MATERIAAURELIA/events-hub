@@ -10,7 +10,7 @@
   "length": "15 min",
   "img": "img/onboarding.jpg",
   "color": "gold",
-  "cat": "listen"
+  "cat": "talks"
  },
  {
   "slug": "sensitivity-and-stimulation",
@@ -24,7 +24,7 @@
   "length": "8½ min",
   "img": "img/sensitivity.jpg",
   "color": "rust",
-  "cat": "listen"
+  "cat": "talks"
  },
  {
   "slug": "power-of-humming",
@@ -70,7 +70,7 @@
   "btn": "Watch",
   "img": "https://img.youtube.com/vi/JGxWT4EUVbs/hqdefault.jpg",
   "color": "rust",
-  "cat": "listen",
+  "cat": "talks",
   "related": "our sound journeys"
  },
  {
@@ -132,7 +132,7 @@
   "btn": "Listen",
   "img": "img/rhythms.jpg",
   "color": "gold",
-  "cat": "rhythm",
+  "cat": "playlists",
   "section": "playlists"
  },
  {
@@ -161,7 +161,7 @@
   "btn": "Watch",
   "img": "img/prayer.jpg",
   "color": "rust",
-  "cat": "listen"
+  "cat": "talks"
  },
  {
   "slug": "manifesto",
@@ -176,7 +176,7 @@
   "btn": "Watch",
   "img": "https://img.youtube.com/vi/PtE10YN1kDU/hqdefault.jpg",
   "color": "plum",
-  "cat": "listen"
+  "cat": "talks"
  },
  {
   "slug": "movement-medicine-playlist",
@@ -189,7 +189,7 @@
   "btn": "Listen",
   "img": "img/movement.jpg",
   "color": "plum",
-  "cat": "body",
+  "cat": "playlists",
   "section": "playlists",
   "related": "our Music Movement Medicine gatherings"
  }
