@@ -59,6 +59,21 @@
   "cat": "voice"
  },
  {
+  "slug": "medicine-of-frequencies",
+  "title": "The Medicine of Frequencies",
+  "desc": "Dr. Mitchell Abrams at TEDx on sound, frequency and healing: what did Einstein mean?",
+  "type": "Talk",
+  "youtube": "JGxWT4EUVbs",
+  "url": "https://youtu.be/JGxWT4EUVbs",
+  "kicker": "Talk",
+  "sub": "What did Einstein mean? (TEDx)",
+  "btn": "Watch",
+  "img": "https://img.youtube.com/vi/JGxWT4EUVbs/hqdefault.jpg",
+  "color": "rust",
+  "cat": "listen",
+  "related": "our sound journeys"
+ },
+ {
   "slug": "antler-twist",
   "title": "Antler Twist",
   "desc": "A short fascia release from Human Garage. Two minutes to loosen the body before or after a session.",
@@ -75,6 +90,21 @@
   "related": "our sound journeys"
  },
  {
+  "slug": "african-polyrhythms",
+  "title": "African Polyrhythms",
+  "desc": "C.K. Ladzekpo on the drum rhythm principles of percussion polyrhythm from Ghana, West Africa.",
+  "type": "Video",
+  "youtube": "yK42w0H8rSU",
+  "url": "https://youtu.be/yK42w0H8rSU",
+  "kicker": "Rhythm",
+  "sub": "Polyrhythm principles from Ghana, with C.K. Ladzekpo",
+  "btn": "Watch",
+  "img": "https://img.youtube.com/vi/yK42w0H8rSU/hqdefault.jpg",
+  "color": "gold",
+  "cat": "rhythm",
+  "related": "our Pulse of Life drum circles"
+ },
+ {
   "slug": "pulse-of-life-rhythms-1",
   "title": "World Rhythms #1",
   "desc": "Rhythms from around the world, a playlist to carry the drum circle home.",
@@ -86,7 +116,8 @@
   "btn": "Listen",
   "img": "img/rhythms.jpg",
   "color": "gold",
-  "cat": "rhythm"
+  "cat": "rhythm",
+  "section": "playlists"
  },
  {
   "slug": "thank-you-song",
@@ -130,5 +161,20 @@
   "img": "https://img.youtube.com/vi/PtE10YN1kDU/hqdefault.jpg",
   "color": "plum",
   "cat": "listen"
+ },
+ {
+  "slug": "movement-medicine-playlist",
+  "title": "Movement Medicine",
+  "desc": "A playlist to move, shake and dance to, from our Music Movement Medicine gatherings.",
+  "type": "Playlist",
+  "url": "https://sdz.sh/HibYZg",
+  "kicker": "Playlist",
+  "sub": "To move, shake and dance",
+  "btn": "Listen",
+  "img": "img/movement.jpg",
+  "color": "plum",
+  "cat": "body",
+  "section": "playlists",
+  "related": "our Music Movement Medicine gatherings"
  }
 ]
