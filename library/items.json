@@ -1,10 +1,30 @@
 [
  {
+  "slug": "onboarding",
+  "href": "../onboarding/",
+  "title": "15-minute onboarding",
+  "desc": "What to expect at a session, and how to get the most from it. Recorded for our sound baths.",
+  "kicker": "Start here",
+  "sub": "Optional, for the drive over",
+  "btn": "Listen",
+  "length": "15 min",
+  "img": "img/onboarding.jpg",
+  "color": "gold",
+  "cat": "listen"
+ },
+ {
   "slug": "sensitivity-and-stimulation",
   "custom": true,
   "title": "Sensitivity & Stimulation",
   "desc": "Why I'm offering two sessions about intensity, after years of playing on the gentle side. With chapters and a community circle.",
-  "type": "Story"
+  "type": "Story",
+  "kicker": "Story",
+  "sub": "What’s best for you?",
+  "btn": "Watch",
+  "length": "8½ min",
+  "img": "img/sensitivity.jpg",
+  "color": "rust",
+  "cat": "listen"
  },
  {
   "slug": "power-of-humming",
@@ -14,7 +34,13 @@
   "length": "8 min",
   "youtube": "3zNUls9bI9s",
   "url": "https://youtu.be/3zNUls9bI9s",
-  "related": "our sound journeys"
+  "related": "our sound journeys",
+  "kicker": "Voice",
+  "sub": "The simplest way to settle your nervous system",
+  "btn": "Watch",
+  "img": "https://img.youtube.com/vi/3zNUls9bI9s/hqdefault.jpg",
+  "color": "teal",
+  "cat": "voice"
  },
  {
   "slug": "falling-in-love-with-your-own-voice",
@@ -24,7 +50,43 @@
   "length": "2 min",
   "youtube": "ezGG2NwaWW0",
   "url": "https://youtu.be/ezGG2NwaWW0",
+  "related": "our sound journeys",
+  "kicker": "Voice",
+  "sub": "Why it’s easier to love someone else’s",
+  "btn": "Watch",
+  "img": "https://img.youtube.com/vi/ezGG2NwaWW0/hqdefault.jpg",
+  "color": "teal",
+  "cat": "voice"
+ },
+ {
+  "slug": "antler-twist",
+  "title": "Antler Twist",
+  "desc": "A short fascia release from Human Garage. Two minutes to loosen the body before or after a session.",
+  "type": "Video",
+  "length": "2 min",
+  "youtube": "mR-Owhn0ugo",
+  "url": "https://youtu.be/mR-Owhn0ugo",
+  "kicker": "Body",
+  "sub": "A 2-minute fascia release",
+  "btn": "Watch",
+  "img": "https://img.youtube.com/vi/mR-Owhn0ugo/hqdefault.jpg",
+  "color": "plum",
+  "cat": "body",
   "related": "our sound journeys"
+ },
+ {
+  "slug": "pulse-of-life-rhythms-1",
+  "title": "World Rhythms #1",
+  "desc": "Rhythms from around the world, a playlist to carry the drum circle home.",
+  "type": "Playlist",
+  "url": "https://sdz.sh/VCo3XK",
+  "related": "our Pulse of Life drum circles",
+  "kicker": "Playlist",
+  "sub": "Music Medicine",
+  "btn": "Listen",
+  "img": "img/rhythms.jpg",
+  "color": "gold",
+  "cat": "rhythm"
  },
  {
   "slug": "thank-you-song",
@@ -34,7 +96,25 @@
   "length": "3 min",
   "youtube": "_6sdujaxDJc",
   "url": "https://youtu.be/_6sdujaxDJc",
-  "related": "our Stillness & Release gong journeys"
+  "related": "our Stillness & Release gong journeys",
+  "kicker": "Sing-along",
+  "sub": "An everyday song of gratitude",
+  "btn": "Sing",
+  "img": "https://img.youtube.com/vi/_6sdujaxDJc/hqdefault.jpg",
+  "color": "teal",
+  "cat": "voice"
+ },
+ {
+  "slug": "prayer-for-the-love-denied",
+  "href": "https://www.earthharmonysoundwellness.com/library/prayer-for-the-love-denied.html",
+  "title": "Prayer for the Love Denied",
+  "desc": "A prayer for healing trauma on Earth.",
+  "kicker": "Prayer",
+  "sub": "A prayer for healing trauma on Earth",
+  "btn": "Watch",
+  "img": "img/prayer.jpg",
+  "color": "rust",
+  "cat": "listen"
  },
  {
   "slug": "manifesto",
@@ -43,14 +123,12 @@
   "type": "Video",
   "youtube": "PtE10YN1kDU",
   "url": "https://youtu.be/PtE10YN1kDU",
-  "related": "our Pulse of Life drum circles"
- },
- {
-  "slug": "pulse-of-life-rhythms-1",
-  "title": "Pulse of Life Rhythms #1",
-  "desc": "Rhythms from around the world, a playlist to carry the drum circle home.",
-  "type": "Playlist",
-  "url": "https://sdz.sh/VCo3XK",
-  "related": "our Pulse of Life drum circles"
+  "related": "our Pulse of Life drum circles",
+  "kicker": "Song",
+  "sub": "Musical medicine, by Nahko & Medicine for the People",
+  "btn": "Watch",
+  "img": "https://img.youtube.com/vi/PtE10YN1kDU/hqdefault.jpg",
+  "color": "plum",
+  "cat": "listen"
  }
 ]
