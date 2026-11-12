@@ -32,6 +32,10 @@
     const full = roles ? roles.every(r => r.who.length >= (r.need || 0)) : (need && people.length >= need);
     return { m, d, people, need, roles, role: m.role || d.role || '', exchange: m.exchange || d.exchange || '', notes: m.notes || '', full };
   };
+  const fmtTeam = t => esc(t)
+    .replace(/(Shift \d|Doors open|Settle in|Pack-up \+ debrief|Session \d)/g, '<strong>$1</strong>')
+    .replace(/(\d{1,2}:\d\d)\s*-\s*(\d{1,2}:\d\d)/g, '<span class="vh-time">$1–$2</span>')
+    .replace(/\b([A-F])\b/g, '<i class="vh-dot">$1</i>');
   const startISO = ev => ev.date ? `${ev.date}T${ev.time || '00:00'}:00` : '';
 
   /* ---------- styles (hub is dark navy + gold; strip is warm cream) ---------- */
@@ -133,6 +137,9 @@
     .vh-dot{display:inline-flex;width:20px;height:20px;border-radius:50%;background:var(--vh-gold);color:#0e1522;font-style:normal;font-weight:800;font-size:12px;align-items:center;justify-content:center;margin:0 1px;vertical-align:1px;}
     .vh-pick{flex-basis:100%;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;justify-content:space-between;background:rgba(210,164,78,.12);border:1px solid var(--vh-gold);border-radius:10px;padding:8px 11px;font-weight:800;font-size:12.5px;letter-spacing:.06em;color:var(--vh-gold);}
     .vh-pick .vh-dot{width:24px;height:24px;font-size:13px;margin:0 2px;}
+    .vh-time{display:inline-block;border:1.5px solid var(--vh-gold);color:var(--vh-gold);border-radius:999px;padding:0 8px;font-weight:800;white-space:nowrap;font-size:.95em;}
+    .vh-tl .tl-session .vh-time{background:#0e1522;color:var(--vh-gold);border-color:#0e1522;}
+    .vh-gnote strong,.vh-group strong{color:var(--vh-ink);}
     .vh-group{font-weight:800;color:var(--vh-gold);font-size:13.5px;letter-spacing:.04em;margin:6px 2px 0;}
     .vh-gnote{font-size:13px;color:var(--vh-dim);margin:-2px 2px 2px;line-height:1.45;}
     .vh-foot{flex-basis:100%;font-size:13.5px;line-height:1.5;color:var(--vh-ink);background:rgba(210,164,78,.10);border:1px dashed var(--vh-gold-soft);border-radius:10px;padding:8px 11px;}
@@ -275,9 +282,9 @@
       if (I.roles) {   // role slots (Marcus, Nov 12: "very clear what time and roles to sign up for")
         s.innerHTML = `${I.m.teamTime ? `<div class="vh-team">👥 ${esc(I.m.teamTime)}</div>` : ''}
           <div class="vh-pick"><span>CHOOSE A LETTER (ROLE), THEN SIGN UP</span><span>${I.roles.map(r => `<i class="vh-dot">${esc(r.k)}</i>`).join('')}</span></div>
-          ${Array.isArray(I.m.timeline) ? `<div class="vh-tl">${I.m.timeline.map(t => `<div${t[2] ? ` class="tl-${esc(t[2])}"` : ''}><b>${esc(t[0])}</b><span>${esc(t[1]).replace(/(Shift \d|Doors open|Settle in|Pack-up \+ debrief|Session \d(?: \([^)]*\))?)/g, '<strong>$1</strong>').replace(/\b([A-F])\b/g, '<i class="vh-dot">$1</i>')}</span></div>`).join('')}</div>` : ''}
+          ${Array.isArray(I.m.timeline) ? `<div class="vh-tl">${I.m.timeline.map(t => `<div${t[2] ? ` class="tl-${esc(t[2])}"` : ''}><b>${esc(t[0])}</b><span>${fmtTeam(t[1])}</span></div>`).join('')}</div>` : ''}
           <div class="vh-roles">${I.roles.map((r, i) => { const done = r.who.length >= (r.need || 0);
-            const gh = r.g && (i === 0 || I.roles[i - 1].g !== r.g) && (I.m.groups || {})[r.g] ? `<div class="vh-group">${esc(I.m.groups[r.g])}</div>${(I.m.groupNotes || {})[r.g] ? `<div class="vh-gnote">${esc(I.m.groupNotes[r.g])}</div>` : ''}` : '';
+            const gh = r.g && (i === 0 || I.roles[i - 1].g !== r.g) && (I.m.groups || {})[r.g] ? `<div class="vh-group">${fmtTeam(I.m.groups[r.g])}</div>${(I.m.groupNotes || {})[r.g] ? `<div class="vh-gnote">${fmtTeam(I.m.groupNotes[r.g])}</div>` : ''}` : '';
             return gh + `<div class="vh-role${done ? ' done' : ''}"><span class="k">${esc(r.k)}</span><span class="l">${esc(r.label)}${r.time ? `<small>${esc(r.time)}</small>` : ''}</span>
               ${done ? '<span class="ok">✓ filled</span>' : `<button class="vh-btn" data-k="${esc(r.k)}">Sign up</button>`}
               ${r.who.length || r.need ? `<div class="who">${r.who.map(p => `<span class="vh-pill vh-who">✅ ${esc(p)}</span>`).join('')}${done ? '' : `<span class="vh-pill">${r.who.length} / ${r.need || 1}</span>`}</div>` : ''}</div>`; }).join('')}</div>
