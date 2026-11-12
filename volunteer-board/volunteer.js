@@ -16,7 +16,7 @@
 
   const urlAdmin = new URLSearchParams(location.search).get('admin') === '1';
   const ONLY = new URLSearchParams(location.search).get('only') || '';   // direct link to one event's team card
-  let admin = urlAdmin;
+  let admin = false;   // admin link opens in the guest view, editable in place (Marcus, Nov 12); the corner button switches to the full editor
   let meta = {}, signups = {}, blurb = '', gigs = [];
   const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const load = async k => { try { const r = await fetch(`${API_URL}?key=${encodeURIComponent(k)}`); return r.ok ? await r.json() : {}; } catch { return {}; } };
@@ -49,7 +49,7 @@
     .vh-blurb p{margin:0 0 10px;text-wrap:pretty;}.vh-blurb p:last-child{margin:0;}.vh-blurb .nw{white-space:nowrap;}
     .vh-blurb em{color:var(--vh-gold);}
     .vh-blurb [style*="text-align:center"]{color:var(--vh-gold);}
-    .vh-blurb[contenteditable=true]{outline:1px dashed var(--vh-gold);cursor:text;}
+    .vh-blurb[contenteditable=true]{cursor:text;}.vh-blurb[contenteditable=true]:hover,.vh-blurb[contenteditable=true]:focus{outline:1px dashed var(--vh-gold);}
     .vh-title{text-align:center;color:var(--vh-gold);font-family:var(--heading-font);font-size:1.5rem;margin:6px 0 10px;letter-spacing:.02em;}
     .vh-ask{max-width:640px;margin:0 auto 16px;text-align:center;}
     .vh-ask summary{display:inline-block;list-style:none;cursor:pointer;background:transparent;color:var(--vh-ink);border:1px solid var(--vh-gold-soft);border-radius:999px;padding:7px 16px;font-size:14px;}
@@ -149,7 +149,10 @@
     .vh-all{display:block;text-align:center;margin:14px auto 0;color:var(--vh-gold);font-size:14px;}
     .vh-editing [data-ed]{outline:1px dashed rgba(210,164,78,.55);outline-offset:2px;border-radius:4px;cursor:text;min-width:1ch;}
     .vh-editing [data-ed]:focus{outline:2px solid var(--vh-gold);background:rgba(210,164,78,.08);}
-    .vh-editing [data-ed].vh-saved{outline-color:#8fc285;}
+    .vh-editing [data-ed].vh-saved,.vh-editing-soft [data-ed].vh-saved{outline:2px solid #8fc285;}
+    .vh-editing-soft [data-ed]{cursor:text;border-radius:4px;}
+    .vh-editing-soft [data-ed]:hover{outline:1px dashed rgba(210,164,78,.6);outline-offset:2px;}
+    .vh-editing-soft [data-ed]:focus{outline:2px solid var(--vh-gold);outline-offset:2px;background:rgba(210,164,78,.08);}
     #vh-switch{position:fixed;left:16px;bottom:16px;z-index:150;background:var(--vh-gold);color:#0e1522;border:0;border-radius:999px;padding:11px 18px;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,.4);cursor:pointer;}
   `;
   document.head.appendChild(css);
@@ -191,7 +194,7 @@
   function paintHeader() {
     const b = document.getElementById('vh-blurb');
     if (document.activeElement !== b) b.innerHTML = blurb || DEFAULT_BLURB;
-    b.contentEditable = admin ? 'true' : 'false';
+    b.contentEditable = urlAdmin ? 'true' : 'false';
     const dp = document.getElementById('vh-defaults');
     dp.style.display = admin ? '' : 'none';
     if (admin && !dp.dataset.built) {
@@ -210,7 +213,7 @@
       dp.addEventListener('focusout', e => { if (!dp.contains(e.relatedTarget)) decorate(true); });
     }
   }
-  document.getElementById('vh-blurb').addEventListener('blur', async e => { if (!admin) return; blurb = e.target.innerHTML.trim(); await save(BLURB_KEY, { html: blurb }); });
+  document.getElementById('vh-blurb').addEventListener('blur', async e => { if (!urlAdmin) return; blurb = e.target.innerHTML.trim(); await save(BLURB_KEY, { html: blurb }); });
 
   /* ---------- private gigs: not on the public hub; Marcus adds them here (Oct 28 2026) ---------- */
   const pg = document.createElement('section'); pg.className = 'vh-pg'; pg.id = 'private';
@@ -305,7 +308,7 @@
         out += `<div class="tl-row">${E('timeline.' + i + '.0', esc(t[0]), 'b')}${E('timeline.' + i + '.1', fmtTeam(t[1]))}</div>`; });
       return `<div class="vh-tl">${out}${open ? '</div></div>' : ''}</div>`; })() : '';
     s.innerHTML = `${I.m.teamTime || admin ? `<div class="vh-team">👥 ${E('teamTime', esc(I.m.teamTime || ''))}</div>` : ''}
-      <div class="vh-pick"><span>CHOOSE A LETTER (ROLE), THEN SIGN UP</span><span>${I.roles.map(r => `<i class="vh-dot">${esc(r.k)}</i>`).join('')}</span></div>
+      <div class="vh-pick">${E('pickLabel', esc(I.m.pickLabel || 'CHOOSE A LETTER (ROLE), THEN SIGN UP'))}<span>${I.roles.map(r => `<i class="vh-dot">${esc(r.k)}</i>`).join('')}</span></div>
       ${tl}
       <div class="vh-roles">${I.roles.map((r, i) => { const done = !admin && r.who.length >= (r.need || 0);
         const gh = r.g && (i === 0 || I.roles[i - 1].g !== r.g) && (I.m.groups || {})[r.g] ? `${E('groups.' + r.g, fmtTeam(I.m.groups[r.g]), 'div', 'vh-group')}${(I.m.groupNotes || {})[r.g] || admin ? E('groupNotes.' + r.g, fmtTeam((I.m.groupNotes || {})[r.g] || ''), 'div', 'vh-gnote') : ''}` : '';
@@ -316,9 +319,9 @@
       <button class="vh-more">Show exchange + details ▾</button>
       <div class="vh-details"><div><b>⭐ Exchange:</b> ${E('exchange', (I.m.exchange || '').split('\n').map(esc).join('<br>'), 'div')}</div>${E('notes', esc(I.m.notes || ''), 'div')}</div>`;
     s.querySelector('.vh-more').onclick = () => { const o = s.classList.toggle('open'); s.querySelector('.vh-more').textContent = o ? 'Hide exchange + details ▴' : 'Show exchange + details ▾'; };
-    s.querySelectorAll('.vh-role .vh-btn').forEach(b => b.onclick = () => { if (!admin) openSignup(ev, I.roles.find(r => r.k === b.dataset.k)); });
-    if (admin) {
-      s.classList.add('vh-editing'); s.classList.add('open');
+    s.querySelectorAll('.vh-role .vh-btn').forEach(b => b.onclick = () => { if (!urlAdmin) openSignup(ev, I.roles.find(r => r.k === b.dataset.k)); });
+    if (urlAdmin) {   // admin link: editable in both views; guest view keeps the guest look (outline only on hover)
+      s.classList.add(admin ? 'vh-editing' : 'vh-editing-soft'); if (admin) s.classList.add('open');
       s.querySelectorAll('[data-ed]').forEach(el => {
         el.contentEditable = 'true';
         el.addEventListener('keydown', e => { if (e.key === 'Enter' && !/exchange|notes|groupNotes/.test(el.dataset.ed)) { e.preventDefault(); el.blur(); } });
