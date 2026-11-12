@@ -153,6 +153,10 @@
     .vh-editing-soft [data-ed]{cursor:text;border-radius:4px;}
     .vh-editing-soft [data-ed]:hover{outline:1px dashed rgba(210,164,78,.6);outline-offset:2px;}
     .vh-editing-soft [data-ed]:focus{outline:2px solid var(--vh-gold);outline-offset:2px;background:rgba(210,164,78,.08);}
+    .vh-loader{max-width:640px;margin:10px auto 18px;display:flex;align-items:center;justify-content:center;gap:10px;color:var(--vh-gold);font-size:15px;font-weight:600;}
+    .vh-spin{width:18px;height:18px;border-radius:50%;border:2px solid var(--vh-gold-soft);border-top-color:var(--vh-gold);animation:vhspin .8s linear infinite;}
+    @keyframes vhspin{to{transform:rotate(360deg)}}
+    body.vh-loading #view-list .vh-strip,body.vh-loading #view-list .link-btn{opacity:.25;pointer-events:none;}
     #vh-switch{position:fixed;left:16px;bottom:16px;z-index:150;background:var(--vh-gold);color:#0e1522;border:0;border-radius:999px;padding:11px 18px;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,.4);cursor:pointer;}
   `;
   document.head.appendChild(css);
@@ -437,10 +441,16 @@
     document.body.appendChild(sw);
   }
 
+  // loading sign while the team data arrives (Marcus, Nov 12: "it hung the first time")
+  document.body.classList.add('vh-loading');
+  const loader = document.createElement('div'); loader.className = 'vh-loader';
+  loader.innerHTML = '<span class="vh-spin"></span>Loading the team board…';
+  head.after(loader);
   (async () => {
     const [m, s, b, g] = await Promise.all([load(META_KEY), load(SIGNUPS_KEY), load(BLURB_KEY), load(GIGS_KEY)]);
     meta = m || {}; signups = s || {}; blurb = (b && b.html) || ''; gigs = (g && g.list) || [];
     decorate(true);
+    document.body.classList.remove('vh-loading'); loader.remove();
   })();
   decorate(true);
 })();
