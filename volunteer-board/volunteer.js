@@ -34,7 +34,7 @@
   };
   const fmtTeam = t => esc(t)
     .replace(/(Shift \d|Doors open|Settle in|Pack-up \+ debrief|Session \d)/g, '<strong>$1</strong>')
-    .replace(/(\d{1,2}:\d\d)\s*-\s*(\d{1,2}:\d\d)/g, '<span class="vh-time">$1–$2</span>')
+    .replace(/(\d{1,2}:\d\d)\s*[-–]\s*(\d{1,2}:\d\d)/g, '<span class="vh-time">$1–$2</span>')
     .replace(/\b([A-F])\b/g, '<i class="vh-dot">$1</i>');
   const startISO = ev => ev.date ? `${ev.date}T${ev.time || '00:00'}:00` : '';
 
@@ -147,6 +147,9 @@
     .vh-foot{flex-basis:100%;font-size:13.5px;line-height:1.5;color:var(--vh-ink);background:rgba(210,164,78,.10);border:1px dashed var(--vh-gold-soft);border-radius:10px;padding:8px 11px;}
     body.vh-only #view-list > :not(.vh-keep),body.vh-only .vh-filter,body.vh-only .vh-pg,body.vh-only .view-toggle,body.vh-only #view-calendar{display:none !important;}
     .vh-all{display:block;text-align:center;margin:14px auto 0;color:var(--vh-gold);font-size:14px;}
+    .vh-editing [data-ed]{outline:1px dashed rgba(210,164,78,.55);outline-offset:2px;border-radius:4px;cursor:text;min-width:1ch;}
+    .vh-editing [data-ed]:focus{outline:2px solid var(--vh-gold);background:rgba(210,164,78,.08);}
+    .vh-editing [data-ed].vh-saved{outline-color:#8fc285;}
     #vh-switch{position:fixed;left:16px;bottom:16px;z-index:150;background:var(--vh-gold);color:#0e1522;border:0;border-radius:999px;padding:11px 18px;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,.4);cursor:pointer;}
   `;
   document.head.appendChild(css);
@@ -256,6 +259,7 @@
     const I = info(ev);
     if (I.full) s.classList.add('vf-full');
     if (I.m.hidden) s.classList.add('vh-hidden');
+    if (I.roles) return roleStrip(s, ev, I);
     if (admin) {
       s.classList.add('edit');
       s.innerHTML = `<button class="vh-hide ${I.m.hidden ? 'off' : ''}">${I.m.hidden ? 'Hidden · show' : 'Hide'}</button>
@@ -281,32 +285,52 @@
         s.querySelector('.vh-more').onclick = () => { const o = s.classList.toggle('open'); s.querySelector('.vh-more').textContent = o ? 'Hide role description ▴' : 'Show role description ▾'; };
         return s;
       }
-      if (I.roles) {   // role slots (Marcus, Nov 12: "very clear what time and roles to sign up for")
-        s.innerHTML = `${I.m.teamTime ? `<div class="vh-team">👥 ${esc(I.m.teamTime)}</div>` : ''}
-          <div class="vh-pick"><span>CHOOSE A LETTER (ROLE), THEN SIGN UP</span><span>${I.roles.map(r => `<i class="vh-dot">${esc(r.k)}</i>`).join('')}</span></div>
-          ${Array.isArray(I.m.timeline) ? `<div class="vh-tl">${(() => { let out = '', open = '';   // rows sharing a block (e.g. Session 1) sit inside one framed box (Marcus's sketch, Nov 12)
-            I.m.timeline.forEach(t => { const blk = t[3] || '';
-              if (blk !== open) { if (open) out += '</div></div>'; if (blk) out += `<div class="tl-block"><div class="tl-bh">${fmtTeam((I.m.blocks || {})[blk] || blk)}</div><div class="tl-times">`; open = blk; }
-              out += `<div class="tl-row"><b>${esc(t[0])}</b><span>${fmtTeam(t[1])}</span></div>`; });
-            return out + (open ? '</div></div>' : ''); })()}</div>` : ''}
-          <div class="vh-roles">${I.roles.map((r, i) => { const done = r.who.length >= (r.need || 0);
-            const gh = r.g && (i === 0 || I.roles[i - 1].g !== r.g) && (I.m.groups || {})[r.g] ? `<div class="vh-group">${fmtTeam(I.m.groups[r.g])}</div>${(I.m.groupNotes || {})[r.g] ? `<div class="vh-gnote">${fmtTeam(I.m.groupNotes[r.g])}</div>` : ''}` : '';
-            return gh + `<div class="vh-role${done ? ' done' : ''}"><span class="k">${esc(r.k)}</span><span class="l">${esc(r.label)}${r.time ? `<small>${esc(r.time)}</small>` : ''}</span>
-              ${done ? '<span class="ok">✓ filled</span>' : `<button class="vh-btn" data-k="${esc(r.k)}">Sign up</button>`}
-              ${r.who.length || r.need ? `<div class="who">${r.who.map(p => `<span class="vh-pill vh-who">✅ ${esc(p)}</span>`).join('')}${done ? '' : `<span class="vh-pill">${r.who.length} / ${r.need || 1}</span>`}</div>` : ''}</div>`; }).join('')}</div>
-          ${I.m.footnote ? `<div class="vh-foot">${esc(I.m.footnote)}</div>` : ''}
-          <button class="vh-more">Show exchange + details ▾</button>
-          <div class="vh-details">${I.exchange ? `<div><b>⭐ Exchange:</b> ${I.exchange.split('\n').map(esc).join('<br>')}</div>` : ''}${I.notes ? `<div style="margin-top:6px">${esc(I.notes)}</div>` : ''}</div>`;
-        s.querySelector('.vh-more').onclick = () => { const o = s.classList.toggle('open'); s.querySelector('.vh-more').textContent = o ? 'Hide exchange + details ▴' : 'Show exchange + details ▾'; };
-        s.querySelectorAll('.vh-role .vh-btn').forEach(b => b.onclick = () => openSignup(ev, I.roles.find(r => r.k === b.dataset.k)));
-        return s;
-      }
       s.innerHTML = `<span class="vh-pill vh-need${I.full ? ' vh-filled' : ''}">${I.full ? '✓ ' : '🙋 '}${I.need ? (I.full ? FULL_WORD : `${I.people.length} / ${I.need} helpers`) : (I.people.length ? `${I.people.length} helping` : 'Helpers welcome')}</span>
         <button class="vh-more">Show role description ▾</button>
         <div class="vh-details"><div><b>🧹 Role:</b> ${esc(I.role) || 'TBA'}</div>${I.exchange ? `<div><b>⭐ Exchange:</b> ${esc(I.exchange)}</div>` : ''}${I.notes ? `<div><b>📝</b> ${esc(I.notes)}</div>` : ''}</div>
         <div class="vh-row">${I.people.map(p => `<span class="vh-pill vh-who">✅ ${esc(p)}</span>`).join('')}${I.full ? '' : '<button class="vh-btn vh-go">Sign up to help</button>'}</div>`;
       s.querySelector('.vh-more').onclick = () => { const o = s.classList.toggle('open'); s.querySelector('.vh-more').textContent = o ? 'Hide role description ▴' : 'Show role description ▾'; };
       const go = s.querySelector('.vh-go'); if (go) go.onclick = () => openSignup(ev);
+    }
+    return s;
+  }
+
+
+  /* ---------- role-slot team card (Marcus, Nov 12). In admin every text is editable in place: click, type, click away = saved ---------- */
+  function roleStrip(s, ev, I) {
+    const E = (path, html, tag = 'span', cls = '') => `<${tag}${cls ? ` class="${cls}"` : ''} data-ed="${path}">${html}</${tag}>`;
+    const tl = Array.isArray(I.m.timeline) ? (() => { let out = '', open = '';
+      I.m.timeline.forEach((t, i) => { const blk = t[3] || '';
+        if (blk !== open) { if (open) out += '</div></div>'; if (blk) out += `<div class="tl-block">${E('blocks.' + blk, fmtTeam((I.m.blocks || {})[blk] || blk), 'div', 'tl-bh')}<div class="tl-times">`; open = blk; }
+        out += `<div class="tl-row">${E('timeline.' + i + '.0', esc(t[0]), 'b')}${E('timeline.' + i + '.1', fmtTeam(t[1]))}</div>`; });
+      return `<div class="vh-tl">${out}${open ? '</div></div>' : ''}</div>`; })() : '';
+    s.innerHTML = `${I.m.teamTime || admin ? `<div class="vh-team">👥 ${E('teamTime', esc(I.m.teamTime || ''))}</div>` : ''}
+      <div class="vh-pick"><span>CHOOSE A LETTER (ROLE), THEN SIGN UP</span><span>${I.roles.map(r => `<i class="vh-dot">${esc(r.k)}</i>`).join('')}</span></div>
+      ${tl}
+      <div class="vh-roles">${I.roles.map((r, i) => { const done = !admin && r.who.length >= (r.need || 0);
+        const gh = r.g && (i === 0 || I.roles[i - 1].g !== r.g) && (I.m.groups || {})[r.g] ? `${E('groups.' + r.g, fmtTeam(I.m.groups[r.g]), 'div', 'vh-group')}${(I.m.groupNotes || {})[r.g] || admin ? E('groupNotes.' + r.g, fmtTeam((I.m.groupNotes || {})[r.g] || ''), 'div', 'vh-gnote') : ''}` : '';
+        return gh + `<div class="vh-role${done ? ' done' : ''}"><span class="k">${esc(r.k)}</span><span class="l">${E('roles.' + i + '.label', esc(r.label))}${r.time || admin ? E('roles.' + i + '.time', esc(r.time || ''), 'small') : ''}</span>
+          ${done ? '<span class="ok">✓ filled</span>' : `<button class="vh-btn" data-k="${esc(r.k)}">Sign up</button>`}
+          <div class="who">${r.who.map(p => `<span class="vh-pill vh-who">✅ ${esc(p)}</span>`).join('')}${done ? '' : `<span class="vh-pill">${r.who.length} / ${admin ? E('roles.' + i + '.need', String(r.need || 1)) : (r.need || 1)}</span>`}</div></div>`; }).join('')}</div>
+      ${I.m.footnote || admin ? E('footnote', esc(I.m.footnote || ''), 'div', 'vh-foot') : ''}
+      <button class="vh-more">Show exchange + details ▾</button>
+      <div class="vh-details"><div><b>⭐ Exchange:</b> ${E('exchange', (I.m.exchange || '').split('\n').map(esc).join('<br>'), 'div')}</div>${E('notes', esc(I.m.notes || ''), 'div')}</div>`;
+    s.querySelector('.vh-more').onclick = () => { const o = s.classList.toggle('open'); s.querySelector('.vh-more').textContent = o ? 'Hide exchange + details ▴' : 'Show exchange + details ▾'; };
+    s.querySelectorAll('.vh-role .vh-btn').forEach(b => b.onclick = () => { if (!admin) openSignup(ev, I.roles.find(r => r.k === b.dataset.k)); });
+    if (admin) {
+      s.classList.add('vh-editing'); s.classList.add('open');
+      s.querySelectorAll('[data-ed]').forEach(el => {
+        el.contentEditable = 'true';
+        el.addEventListener('keydown', e => { if (e.key === 'Enter' && !/exchange|notes|groupNotes/.test(el.dataset.ed)) { e.preventDefault(); el.blur(); } });
+        el.addEventListener('blur', async () => {
+          const parts = el.dataset.ed.split('.'), m = meta[ev.id] = meta[ev.id] || {};
+          let v = (el.dataset.ed === 'exchange' ? el.innerText : el.innerText.replace(/\s*\n\s*/g, ' ')).replace(/–/g, '-').trim();
+          if (/\.need$/.test(el.dataset.ed)) v = Math.max(0, parseInt(v, 10) || 0);
+          let o = m; for (let k = 0; k < parts.length - 1; k++) { const key = parts[k]; if (o[key] == null) o[key] = /^\d+$/.test(parts[k + 1]) ? [] : {}; o = o[key]; }
+          const last = parts[parts.length - 1]; if (o[last] === v) return;
+          o[last] = v; el.classList.add('vh-saving'); await save(META_KEY, meta); el.classList.remove('vh-saving'); el.classList.add('vh-saved'); setTimeout(() => el.classList.remove('vh-saved'), 900);
+        });
+      });
     }
     return s;
   }
