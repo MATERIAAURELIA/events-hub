@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Your Breath & Reset Deck · Earth Harmony</title>
+<meta name="description" content="Seven simple breath and body tools to ground, calm and reset, from Earth Harmony Sound & Wellness.">
+<meta property="og:title" content="Your Breath & Reset Toolkit">
+<meta property="og:description" content="Seven simple tools to ground, calm and reset. From Earth Harmony Sound & Wellness.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Nunito+Sans:wght@400;600;700;800&display=swap">
+<style>
+/* Attendee take-home: the house look (cream, brown, gold), one line-drawn icon per tool, big readable type, prints as a handout */
+:root{--bg:#f4eee2;--card:#fffdf8;--inner:#fbf6ea;--line:#e3d2ae;--ink:#2a2418;--soft:#5a4e3c;--brown:#8a6418;--gold:#c9973a;
+ --ground:#7a5a3a;--clear:#3d7f8a;--calm:#4f6fa8;--energy:#b9582a;--release:#7a5aa0;--focus:#2f7a55;--center:#8a6418}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Nunito Sans",Arial,sans-serif;font-size:17px;line-height:1.55}
+.wrap{max-width:760px;margin:0 auto;padding:28px max(16px,env(safe-area-inset-left)) 60px max(16px,env(safe-area-inset-right))}
+header{text-align:center;padding:16px 0 8px}
+header img{width:64px;height:64px;border-radius:50%}
+.brand{margin:10px 0 0;font:600 13px "Nunito Sans";letter-spacing:.3em;color:var(--brown)}
+h1{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:clamp(38px,8vw,54px);line-height:1.02;margin:14px 0 8px;text-wrap:balance}
+h1 em{color:var(--brown)}
+.lede{color:var(--soft);font-size:18px;max-width:52ch;margin:0 auto;text-wrap:pretty}
+.key{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:20px 0 6px}
+.tag{display:inline-block;font:800 12px "Nunito Sans";letter-spacing:.06em;text-transform:uppercase;color:#fff;border-radius:999px;padding:5px 12px}
+.t-ground{background:var(--ground)}.t-clear{background:var(--clear)}.t-calm{background:var(--calm)}.t-energy{background:var(--energy)}.t-release{background:var(--release)}.t-focus{background:var(--focus)}.t-center{background:var(--center)}
+.cards{display:grid;gap:16px;margin-top:22px}
+.c{display:grid;grid-template-columns:96px minmax(0,1fr);gap:18px;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:20px;break-inside:avoid;box-shadow:0 8px 22px rgba(60,40,10,.06)}
+.ic{width:96px;height:96px;border-radius:50%;background:var(--inner);border:1px solid var(--line);display:flex;align-items:center;justify-content:center}
+.ic svg{width:60px;height:60px;stroke:var(--brown);stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.n{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.num{font:600 15px "Nunito Sans";color:var(--brown);letter-spacing:.1em}
+h2{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:clamp(26px,5vw,32px);line-height:1.05;margin:0}
+.meta{color:var(--soft);font-size:14.5px;margin:4px 0 8px}
+.c .tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+ol{margin:0;padding-left:20px}ol li{margin-bottom:4px}
+.why{margin:8px 0 0;font-style:italic;color:var(--soft)}
+.flow{margin-top:26px;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:20px}
+.flow h3{font-family:"Cormorant Garamond",Georgia,serif;font-size:28px;margin:0 0 6px}
+.flow p{margin:0;color:var(--soft)}
+.steps{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.steps span{background:var(--inner);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-weight:700;font-size:14.5px}
+footer{text-align:center;margin-top:30px;color:var(--soft);font-size:15px}
+footer a{color:var(--brown);font-weight:700}
+.print{display:inline-block;margin-top:12px;font:700 15px "Nunito Sans";background:linear-gradient(135deg,#f7dc94,#e0b45a);color:#1a1408;border:0;border-radius:999px;padding:11px 22px;cursor:pointer}
+@media (max-width:520px){.c{grid-template-columns:1fr;text-align:left}.ic{width:76px;height:76px}.ic svg{width:48px;height:48px}}
+@media print{body{background:#fff;font-size:13px}.wrap{padding:0}.c{box-shadow:none;padding:12px;border-radius:12px}.print,.noprint{display:none}h1{font-size:34px}.cards{gap:8px}}
+
+.deck{position:relative;margin:10px auto 0}
+.track{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:18px;justify-content:center}
+.track::-webkit-scrollbar{display:none}
+.slide{perspective:1400px;max-width:420px;width:100%;margin:0 auto}.slide.hide{display:none}
+.flip{position:relative;width:100%;aspect-ratio:5/7;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.2,.7,.2,1);cursor:pointer}
+.flip.on{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--card);border:1px solid var(--line);border-radius:24px;box-shadow:0 16px 36px rgba(60,40,10,.14);display:flex;flex-direction:column;overflow:hidden}
+.front{align-items:center;justify-content:center;text-align:center;padding:26px 20px;background:radial-gradient(circle at 50% 36%,var(--card),var(--bg) 75%)}
+.front::before{content:"";position:absolute;inset:12px;border:1.5px solid var(--gold);border-radius:16px;opacity:.5;pointer-events:none}
+.front .num{position:absolute;top:24px;left:0;right:0;font:700 13px "Nunito Sans";letter-spacing:.24em;color:var(--brown)}
+.front .ic{width:62%;height:auto;aspect-ratio:1;border-radius:50%;background:var(--card);border:1px solid var(--line);display:flex;align-items:center;justify-content:center}
+.front .ic.art{border:1px solid var(--line);background:#f8f1df;width:72%;padding:0}.front .ic.art img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.front .ic svg{width:62%;height:62%;stroke:var(--brown);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.front h2{font-size:clamp(32px,8vw,42px);margin:22px 0 12px}
+.front .tags,.back .tags{display:flex;flex-wrap:wrap;gap:5px;justify-content:center}
+.back .tags{justify-content:flex-start;margin:4px 0 12px}
+.hint{position:absolute;bottom:16px;left:0;right:0;text-align:center;font-size:13px;color:var(--soft);letter-spacing:.05em}
+.back{transform:rotateY(180deg);padding:24px 22px 48px;overflow:auto;text-align:left}
+.back h3{font-family:"Cormorant Garamond",Georgia,serif;font-size:32px;margin:0;line-height:1.05}
+.back .meta{margin:4px 0 6px}
+.back ol{font-size:17.5px;line-height:1.55}
+.filters{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:18px 0 6px;position:sticky;top:0;z-index:3;background:var(--bg);padding:10px 0}
+.filters button{font:800 13.5px "Nunito Sans";letter-spacing:.05em;text-transform:uppercase;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:8px 14px;cursor:pointer}
+.filters button.on{color:#fff;border-color:transparent}
+.count{text-align:center;color:var(--soft);font-size:15px;margin:0 0 10px}
+.nav{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:4px}
+.nav button{width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:var(--card);font-size:24px;color:var(--brown);cursor:pointer}
+.dots{display:flex;gap:7px}.dots i{width:9px;height:9px;border-radius:50%;background:var(--line)}.dots i.on{background:var(--brown)}
+.more{text-align:center;margin-top:18px;font-size:16px}.more a{color:var(--brown);font-weight:800}
+@media (prefers-reduced-motion:reduce){.flip{transition:none}}
+
+/* back of the card (Nov 12 refresh): numbered gold steps, idea panel, good-to-know, watch buttons */
+.back{background:var(--card)}
+.back .princ{margin:2px 0 14px;background:var(--bg);border-left:4px solid var(--gold);border-radius:10px;padding:10px 14px;font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-size:20px;line-height:1.35}
+.back .princ span,.back .gk span{display:block;font:800 11px "Nunito Sans";font-style:normal;letter-spacing:.2em;text-transform:uppercase;color:var(--brown);margin-bottom:3px}
+.back ol.st{list-style:none;padding:0;margin:0 0 6px;display:grid;gap:10px}
+.back ol.st li{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start;font-size:17px;line-height:1.5}
+.back ol.st b{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#f7dc94,#e0b45a);color:#1a1408;display:flex;align-items:center;justify-content:center;font:800 14px "Nunito Sans"}
+.back .gk{margin-top:12px;background:var(--bg);border-radius:12px;padding:10px 14px;font-size:15px;color:var(--soft);line-height:1.5}
+.back .hint{position:static;margin-top:16px}
+.back .lk{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.back .lk a{font:800 15px "Nunito Sans";text-decoration:none;color:#1a1408;background:linear-gradient(135deg,#f7dc94,#e0b45a);border-radius:999px;padding:9px 16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img src="https://materiaaurelia.github.io/events-hub/images/logos/earthharmonylogo.jpg" alt="Earth Harmony">
+    <div class="brand">EARTH HARMONY SOUND &amp; WELLNESS</div>
+    <h1>Your Breath &amp; <em>Reset</em> Deck</h1>
+    <p class="lede">Simple breath and body tools from today's session, and a few more to explore. <b>Tap a card to flip it</b> for the steps and resources. Use the tabs to find a tool for how you feel.</p>
+  </header>
+  <div class="filters" id="filters">
+    <button data-f="all" class="on" style="background:var(--ink)">All</button>
+    <button data-f="t-ground">Grounding</button><button data-f="t-clear">Clearing</button><button data-f="t-calm">Calming</button>
+    <button data-f="t-center">Centering</button><button data-f="t-focus">Focusing</button><button data-f="t-energy">Energizing</button><button data-f="t-release">Releasing tension</button>
+  </div>
+  <p class="count" id="count"></p>
+  <div class="deck"><div class="track" id="track">
+{{SLIDES}}
+  </div>
+  </div>
+
+  <div class="flow">
+    <h3>A 15-minute reset</h3>
+    <p>When the day gets heavy, try these in order:</p>
+    <div class="steps"><span>1 · Soles of the Feet</span><span>2 · 9 Purifying Breaths</span><span>3 · Belly–Heart Breath</span><span>4 · Shake Out</span><span>5 · 4-7-8 Breath</span></div>
+  </div>
+  <p class="more"><a href="list.html">See all seven on one page, or print them →</a></p>
+  <footer>
+    <p>With care, Marcus Fung<br>Earth Harmony Sound &amp; Wellness · Edmonton<br><a href="https://www.earthharmonysoundwellness.com">earthharmonysoundwellness.com</a></p>
+  </footer>
+</div>
+<script>
+const slides=[...document.querySelectorAll('.slide')], count=document.getElementById('count');
+const COLORS={'t-center':'var(--center)','t-ground':'var(--ground)','t-clear':'var(--clear)','t-calm':'var(--calm)','t-focus':'var(--focus)','t-energy':'var(--energy)','t-release':'var(--release)'};
+function filter(f){
+  document.querySelectorAll('#filters button').forEach(b=>{const on=b.dataset.f===f;b.classList.toggle('on',on);b.style.background=on?(COLORS[b.dataset.f]||'var(--ink)'):'';});
+  let n=0;slides.forEach(s=>{const show=f==='all'||s.querySelector('.front .tag.'+f);s.classList.toggle('hide',!show);if(show)n++;});
+  count.textContent=n+(n===1?' tool':' tools')+(f==='all'?'':' for '+document.querySelector('#filters [data-f="'+f+'"]').textContent.toLowerCase());
+}
+document.querySelectorAll('#filters button').forEach(b=>b.onclick=()=>filter(b.dataset.f));
+document.querySelectorAll('.flip').forEach(f=>{f.onclick=e=>{if(e.target.closest('a'))return;f.classList.toggle('on');};f.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();f.classList.toggle('on');}};});
+filter('all');
+</script>
+<script data-goatcounter="https://earthharmony.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
