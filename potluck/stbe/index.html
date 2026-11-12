@@ -54,7 +54,8 @@ button:hover{filter:brightness(1.06)}button:disabled{opacity:.6}
     <div class="glow"></div><div class="rings"><i></i><i></i><i></i></div>
     <div class="kicker">A Team Gathering</div>
     <h1>A Vocal<br><em>Gathering</em></h1>
-    <div class="sub">Sing the Body Electric · voice · community</div>
+    <div class="sub">with Marcus Fung</div>
+    <div class="sub" style="font-size:19px;margin-top:4px;opacity:.85">Sing the Body Electric · voice · community</div>
     <div class="when"><b>Sunday, November 15</b> · <span style="white-space:nowrap">4:00 to 6:00 pm</span></div>
     <div class="where">Marcus's Home · Terwillegar</div>
   </div>
@@ -95,7 +96,7 @@ button:hover{filter:brightness(1.06)}button:disabled{opacity:.6}
 </div>
 <script>
 const API='https://script.google.com/macros/s/AKfycbzzu1jXVtwDuHyBThe62Ipc10UzBJkDQDACGZfe5oEF9jXIUl3qtGjbJD2c3IW_q4EjKQ/exec', KEY='potluck-stbe-nov15';
-const GUESTS=['Brock','Judy','Treyna','Jen','Ashley','Nadeen','Desiree','Oksana'].map(w=>({who:w,status:'yes'}));
+const GUESTS=['Marcus (host)','Brock','Judy','Treyna','Jen','Ashley','Nadeen','Desiree','Oksana'].map(w=>({who:w,status:'yes'}));
 GUESTS.find(g=>g.who==='Jen').dish='leaving at 5:15 · no dish';
 const getDishes=()=>fetch(API+'?key='+KEY+'&t='+Date.now()).then(r=>r.json()).then(v=>Array.isArray(v)?v:[]).catch(()=>[]);
 function paint(){ getDishes().then(list=>render({guests:GUESTS.map(g=>({...g})),dishes:list,dietary:[...new Set(list.map(x=>x.diet).filter(Boolean))]})); }
