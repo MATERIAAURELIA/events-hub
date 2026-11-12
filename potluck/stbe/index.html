@@ -17,6 +17,9 @@ body{color:#f6ece0;font-family:'Jost',sans-serif;min-height:100vh;padding:0 18px
 @keyframes ring{0%{transform:translate(-50%,-50%) scale(.15);opacity:.9}100%{transform:translate(-50%,-50%) scale(1.15);opacity:0}}
 @media (prefers-reduced-motion:reduce){.rings i{animation:none;opacity:.25;transform:translate(-50%,-50%) scale(.7)}}
 .glow{position:absolute;left:50%;top:150px;width:340px;height:340px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(255,196,120,.32),rgba(255,140,120,.08) 45%,transparent 70%);filter:blur(4px);pointer-events:none}
+.frame{position:relative;margin:0 auto;max-width:400px;padding:30px 18px 26px;border:1px solid rgba(255,213,154,.55);border-radius:28px 28px 28px 28px;box-shadow:inset 0 0 0 6px rgba(255,213,154,.06),0 0 40px -10px rgba(255,190,120,.35);background:rgba(20,14,36,.25)}
+.frame::before,.frame::after{content:'✦';position:absolute;left:50%;transform:translateX(-50%);color:#ffd59a;font-size:14px;background:#24163c;padding:0 10px}
+.frame::before{top:-10px}.frame::after{bottom:-10px}
 .kicker{position:relative;font-size:12px;letter-spacing:.55em;text-transform:uppercase;color:#f3c98b}
 h1{position:relative;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(46px,13vw,68px);line-height:1;letter-spacing:.02em;color:#fff4e3;margin:18px 0 10px;text-shadow:0 0 30px rgba(255,190,120,.35)}
 h1 em{font-style:italic;color:#ffd59a}
@@ -52,10 +55,12 @@ button:hover{filter:brightness(1.06)}button:disabled{opacity:.6}
 <div class="wrap">
   <div class="hero">
     <div class="glow"></div><div class="rings"><i></i><i></i><i></i></div>
+    <div class="frame">
     <div class="kicker">A Team Gathering</div>
     <h1>A Vocal<br><em>Gathering</em></h1>
     <div class="sub">with Marcus Fung</div>
     <div class="sub" style="font-size:19px;margin-top:4px;opacity:.85">Sing the Body Electric · voice · community</div>
+    </div>
     <div class="when"><b>Sunday, November 15</b> · <span style="white-space:nowrap">4:00 to 6:00 pm</span></div>
     <div class="where">Marcus's Home · Terwillegar</div>
   </div>
