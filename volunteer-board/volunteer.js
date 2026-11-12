@@ -125,7 +125,11 @@
     .vh-tl div::before{content:"";grid-column:2;grid-row:1;width:9px;height:9px;border-radius:50%;background:var(--vh-gold);margin-top:6px;justify-self:center;box-shadow:0 0 8px rgba(210,164,78,.6);}
     .vh-tl div::after{content:"";position:absolute;left:54px;top:18px;bottom:-6px;width:1px;background:var(--vh-gold-soft);}
     .vh-tl div:last-child::after{display:none;}
-    .vh-tl b{grid-column:1;grid-row:1;}.vh-tl span{grid-column:3;grid-row:1;}.vh-tl b{color:var(--vh-gold);}.vh-tl strong{color:var(--vh-ink);font-weight:800;}
+    .vh-tl b{grid-column:1;grid-row:1;}.vh-tl span{grid-column:3;grid-row:1;}
+    .vh-tl .tl-session span{background:linear-gradient(180deg,#e0b65e,#c99a3f);color:#0e1522;border-radius:12px;padding:4px 12px;font-weight:700;justify-self:stretch;}
+    .vh-tl .tl-session span strong{color:#0e1522;}
+    .vh-tl .tl-session::before{width:13px;height:13px;margin-top:5px;}
+    .vh-tl .tl-soft span{color:var(--vh-dim);font-style:italic;}.vh-tl b{color:var(--vh-gold);}.vh-tl strong{color:var(--vh-ink);font-weight:800;}
     .vh-dot{display:inline-flex;width:20px;height:20px;border-radius:50%;background:var(--vh-gold);color:#0e1522;font-style:normal;font-weight:800;font-size:12px;align-items:center;justify-content:center;margin:0 1px;vertical-align:1px;}
     .vh-pick{flex-basis:100%;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;justify-content:space-between;background:rgba(210,164,78,.12);border:1px solid var(--vh-gold);border-radius:10px;padding:8px 11px;font-weight:800;font-size:12.5px;letter-spacing:.06em;color:var(--vh-gold);}
     .vh-pick .vh-dot{width:24px;height:24px;font-size:13px;margin:0 2px;}
@@ -271,7 +275,7 @@
       if (I.roles) {   // role slots (Marcus, Nov 12: "very clear what time and roles to sign up for")
         s.innerHTML = `${I.m.teamTime ? `<div class="vh-team">👥 ${esc(I.m.teamTime)}</div>` : ''}
           <div class="vh-pick"><span>CHOOSE A LETTER (ROLE), THEN SIGN UP</span><span>${I.roles.map(r => `<i class="vh-dot">${esc(r.k)}</i>`).join('')}</span></div>
-          ${Array.isArray(I.m.timeline) ? `<div class="vh-tl">${I.m.timeline.map(t => `<div><b>${esc(t[0])}</b><span>${esc(t[1]).replace(/(Shift \d|Doors open|Session \d(?: \([^)]*\))?)/g, '<strong>$1</strong>').replace(/\b([A-F])\b/g, '<i class="vh-dot">$1</i>')}</span></div>`).join('')}</div>` : ''}
+          ${Array.isArray(I.m.timeline) ? `<div class="vh-tl">${I.m.timeline.map(t => `<div${t[2] ? ` class="tl-${esc(t[2])}"` : ''}><b>${esc(t[0])}</b><span>${esc(t[1]).replace(/(Shift \d|Doors open|Settle in|Pack-up \+ debrief|Session \d(?: \([^)]*\))?)/g, '<strong>$1</strong>').replace(/\b([A-F])\b/g, '<i class="vh-dot">$1</i>')}</span></div>`).join('')}</div>` : ''}
           <div class="vh-roles">${I.roles.map((r, i) => { const done = r.who.length >= (r.need || 0);
             const gh = r.g && (i === 0 || I.roles[i - 1].g !== r.g) && (I.m.groups || {})[r.g] ? `<div class="vh-group">${esc(I.m.groups[r.g])}</div>${(I.m.groupNotes || {})[r.g] ? `<div class="vh-gnote">${esc(I.m.groupNotes[r.g])}</div>` : ''}` : '';
             return gh + `<div class="vh-role${done ? ' done' : ''}"><span class="k">${esc(r.k)}</span><span class="l">${esc(r.label)}${r.time ? `<small>${esc(r.time)}</small>` : ''}</span>
