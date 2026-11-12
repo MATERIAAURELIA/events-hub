@@ -119,6 +119,8 @@
     .vh-role .who{grid-column:2/-1;display:flex;flex-wrap:wrap;gap:5px;}
     .vh-role .vh-btn{padding:7px 14px;font-size:13px;align-self:center;}
     .vh-role.done{opacity:.75;}.vh-role .ok{color:#8fc285;font-weight:700;font-size:13px;}
+    .vh-tl{flex-basis:100%;display:grid;gap:3px;background:rgba(255,255,255,.04);border-radius:10px;padding:8px 11px;font-size:14px;}
+    .vh-tl div{display:grid;grid-template-columns:52px 1fr;gap:8px;}.vh-tl b{color:var(--vh-gold);}
     .vh-group{font-weight:800;color:var(--vh-gold);font-size:13.5px;letter-spacing:.04em;margin:6px 2px 0;}
     .vh-foot{flex-basis:100%;font-size:13.5px;line-height:1.5;color:var(--vh-ink);background:rgba(210,164,78,.10);border:1px dashed var(--vh-gold-soft);border-radius:10px;padding:8px 11px;}
     #vh-switch{position:fixed;left:16px;bottom:16px;z-index:150;background:var(--vh-gold);color:#0e1522;border:0;border-radius:999px;padding:11px 18px;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,.4);cursor:pointer;}
@@ -257,6 +259,7 @@
       }
       if (I.roles) {   // role slots (Marcus, Nov 12: "very clear what time and roles to sign up for")
         s.innerHTML = `${I.m.teamTime ? `<div class="vh-team">👥 ${esc(I.m.teamTime)}</div>` : ''}
+          ${Array.isArray(I.m.timeline) ? `<div class="vh-tl">${I.m.timeline.map(t => `<div><b>${esc(t[0])}</b><span>${esc(t[1])}</span></div>`).join('')}</div>` : ''}
           <div class="vh-roles">${I.roles.map((r, i) => { const done = r.who.length >= (r.need || 0);
             const gh = r.g && (i === 0 || I.roles[i - 1].g !== r.g) && (I.m.groups || {})[r.g] ? `<div class="vh-group">${esc(I.m.groups[r.g])}</div>` : '';
             return gh + `<div class="vh-role${done ? ' done' : ''}"><span class="k">${esc(r.k)}</span><span class="l">${esc(r.label)}${r.time ? `<small>${esc(r.time)}</small>` : ''}</span>
