@@ -132,7 +132,7 @@
     .vh-tl .tl-block{margin:8px 0 6px;}
     .vh-tl .tl-bh{font-weight:800;color:var(--vh-ink);font-size:14.5px;margin:0 0 3px;}
     .vh-tl .tl-times{position:relative;}
-    .vh-tl .tl-times::before{content:"";position:absolute;left:-6px;top:0;bottom:0;width:52px;border:1.5px solid rgba(255,255,255,.9);border-radius:10px;pointer-events:none;}
+    .vh-tl .tl-times::before{content:"";position:absolute;left:-6px;top:0;bottom:0;right:-6px;border:1.5px solid rgba(255,255,255,.9);border-radius:10px;pointer-events:none;}
     .vh-tl b{grid-column:1;grid-row:1;}.vh-tl span{grid-column:3;grid-row:1;}
     .vh-tl .tl-session > span{border:1.5px solid rgba(255,255,255,.9);background:transparent;border-radius:10px;padding:5px 12px;font-weight:700;justify-self:stretch;}
     .vh-tl .tl-session::before{width:13px;height:13px;margin-top:5px;}
