@@ -47,10 +47,10 @@ footer a{color:var(--brown);font-weight:700}
 @media (max-width:520px){.c{grid-template-columns:1fr;text-align:left}.ic{width:76px;height:76px}.ic svg{width:48px;height:48px}}
 @media print{body{background:#fff;font-size:13px}.wrap{padding:0}.c{box-shadow:none;padding:12px;border-radius:12px}.print,.noprint{display:none}h1{font-size:34px}.cards{gap:8px}}
 
-.deck{position:relative;max-width:440px;margin:18px auto 0}
-.track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;gap:0}
+.deck{position:relative;margin:10px auto 0}
+.track{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:18px;justify-content:center}
 .track::-webkit-scrollbar{display:none}
-.slide{flex:0 0 100%;scroll-snap-align:center;padding:10px 6px 18px;perspective:1400px}
+.slide{perspective:1400px;max-width:420px;width:100%;margin:0 auto}.slide.hide{display:none}
 .flip{position:relative;width:100%;aspect-ratio:5/7;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.2,.7,.2,1);cursor:pointer}
 .flip.on{transform:rotateY(180deg)}
 .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--card);border:1px solid var(--line);border-radius:24px;box-shadow:0 16px 36px rgba(60,40,10,.14);display:flex;flex-direction:column;overflow:hidden}
@@ -67,6 +67,10 @@ footer a{color:var(--brown);font-weight:700}
 .back h3{font-family:"Cormorant Garamond",Georgia,serif;font-size:32px;margin:0;line-height:1.05}
 .back .meta{margin:4px 0 6px}
 .back ol{font-size:17.5px;line-height:1.55}
+.filters{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:18px 0 6px;position:sticky;top:0;z-index:3;background:var(--bg);padding:10px 0}
+.filters button{font:800 13.5px "Nunito Sans";letter-spacing:.05em;text-transform:uppercase;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:8px 14px;cursor:pointer}
+.filters button.on{color:#fff;border-color:transparent}
+.count{text-align:center;color:var(--soft);font-size:15px;margin:0 0 10px}
 .nav{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:4px}
 .nav button{width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:var(--card);font-size:24px;color:var(--brown);cursor:pointer}
 .dots{display:flex;gap:7px}.dots i{width:9px;height:9px;border-radius:50%;background:var(--line)}.dots i.on{background:var(--brown)}
@@ -80,8 +84,14 @@ footer a{color:var(--brown);font-weight:700}
     <img src="https://materiaaurelia.github.io/events-hub/images/logos/earthharmonylogo.jpg" alt="Earth Harmony">
     <div class="brand">EARTH HARMONY SOUND &amp; WELLNESS</div>
     <h1>Your Breath &amp; <em>Reset</em> Deck</h1>
-    <p class="lede">Seven simple tools from today's session. <b>Tap a card to flip it</b> for the steps, and swipe for the next one.</p>
+    <p class="lede">Simple tools from today's session. <b>Tap a card to flip it</b> for the steps and resources. Use the tabs to find a tool for how you feel.</p>
   </header>
+  <div class="filters" id="filters">
+    <button data-f="all" class="on" style="background:var(--ink)">All</button>
+    <button data-f="t-ground">Grounding</button><button data-f="t-clear">Clearing</button><button data-f="t-calm">Calming</button>
+    <button data-f="t-focus">Focusing</button><button data-f="t-energy">Energizing</button><button data-f="t-release">Releasing tension</button>
+  </div>
+  <p class="count" id="count"></p>
   <div class="deck"><div class="track" id="track">
 <div class="slide" data-i="0"><div class="flip" tabindex="0" aria-label="Soles of the Feet: tap to flip">
   <div class="face front"><div class="num">01 / 07</div><div class="ic"><svg viewBox="0 0 64 64"><path d="M22 52c-6 0-9-6-8-14 1-9 3-20 9-24 5-3 9 2 8 9-1 6-2 10 0 15 2 6-1 14-9 14z"/><path d="M42 52c-5 0-8-5-7-12 1-8 3-17 8-20 4-2 8 2 7 8-1 5-2 8 0 12 2 6-1 12-8 12z"/><path d="M8 58h48"/></svg></div><h2>Soles of the Feet</h2><div class="tags"><span class="tag t-ground">Grounding</span><span class="tag t-release">Releasing tension</span></div><div class="hint">tap to flip ↻</div></div>
@@ -112,7 +122,7 @@ footer a{color:var(--brown);font-weight:700}
   <div class="face back"><h3>4-7-8 Breath</h3><div class="meta">seated · 2–3 min</div><div class="tags"><span class="tag t-calm">Calming</span></div><ol><li>Breathe in through the nose for 4.</li><li>Hold gently for 7.</li><li>Breathe out slowly through the mouth for 8. Repeat four times.</li></ol><p class="why">For winding down, and for sleep.</p><div class="hint">tap to flip back ↺</div></div>
 </div></div>
   </div>
-  <div class="nav"><button id="prev" aria-label="Previous card">‹</button><div class="dots" id="dots"></div><button id="next" aria-label="Next card">›</button></div></div>
+  </div>
 
   <div class="flow">
     <h3>A 15-minute reset</h3>
@@ -125,16 +135,16 @@ footer a{color:var(--brown);font-weight:700}
   </footer>
 </div>
 <script>
-const track=document.getElementById('track'),slides=[...track.children],dots=document.getElementById('dots');
-dots.innerHTML=slides.map(()=>'<i></i>').join('');
-const cur=()=>Math.round(track.scrollLeft/track.clientWidth);
-const paint=()=>{const c=cur();[...dots.children].forEach((d,i)=>d.classList.toggle('on',i===c));};
-const go=i=>{i=Math.max(0,Math.min(slides.length-1,i));track.scrollTo({left:i*track.clientWidth,behavior:'smooth'});};
-document.getElementById('prev').onclick=()=>go(cur()-1);document.getElementById('next').onclick=()=>go(cur()+1);
-track.addEventListener('scroll',()=>{paint();slides.forEach(s=>s.querySelector('.flip').classList.remove('on'));},{passive:true});
+const slides=[...document.querySelectorAll('.slide')], count=document.getElementById('count');
+const COLORS={'t-ground':'var(--ground)','t-clear':'var(--clear)','t-calm':'var(--calm)','t-focus':'var(--focus)','t-energy':'var(--energy)','t-release':'var(--release)'};
+function filter(f){
+  document.querySelectorAll('#filters button').forEach(b=>{const on=b.dataset.f===f;b.classList.toggle('on',on);b.style.background=on?(COLORS[b.dataset.f]||'var(--ink)'):'';});
+  let n=0;slides.forEach(s=>{const show=f==='all'||s.querySelector('.front .tag.'+f);s.classList.toggle('hide',!show);if(show)n++;});
+  count.textContent=n+(n===1?' tool':' tools')+(f==='all'?'':' for '+document.querySelector('#filters [data-f="'+f+'"]').textContent.toLowerCase());
+}
+document.querySelectorAll('#filters button').forEach(b=>b.onclick=()=>filter(b.dataset.f));
 document.querySelectorAll('.flip').forEach(f=>{f.onclick=e=>{if(e.target.closest('a'))return;f.classList.toggle('on');};f.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();f.classList.toggle('on');}};});
-document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')go(cur()+1);if(e.key==='ArrowLeft')go(cur()-1);});
-paint();
+filter('all');
 </script>
 <script data-goatcounter="https://earthharmony.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
