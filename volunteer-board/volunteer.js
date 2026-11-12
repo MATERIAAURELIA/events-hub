@@ -361,7 +361,7 @@
         list.querySelectorAll('.vh-keep:not(.vh-all-wrap)').forEach(x => x.classList.remove('vh-keep'));
         list.querySelectorAll('.link-btn').forEach(card => { const id = ((card.getAttribute('onclick') || '').match(/showPopup\('([^']+)'\)/) || [])[1];
           if (id === ONLY) { card.classList.add('vh-keep'); card.classList.remove('vh-hidden', 'vh-gone'); const n = card.nextElementSibling; if (n && n.classList.contains('vh-strip')) n.classList.add('vh-keep'); } });
-        if (!list.querySelector('.vh-all-wrap')) { const a = document.createElement('div'); a.className = 'vh-keep vh-all-wrap'; a.innerHTML = '<a class="vh-all" href="?volunteer">See all the gigs on the Team Exchange →</a>'; list.appendChild(a); }
+        if (!list.querySelector('.vh-all-wrap')) { const a = document.createElement('div'); a.className = 'vh-keep vh-all-wrap'; a.innerHTML = '<a class="vh-all" href="?volunteer' + (urlAdmin ? '&admin=1' : '') + '">See all the gigs on the Team Exchange →</a>'; list.appendChild(a); }
       }
       paintHeader();
       paintGigs();
