@@ -130,7 +130,7 @@
     .vh-tl div::after{content:"";position:absolute;left:54px;top:18px;bottom:-6px;width:1px;background:var(--vh-gold-soft);}
     .vh-tl div:last-child::after{display:none;}
     .vh-tl b{grid-column:1;grid-row:1;}.vh-tl span{grid-column:3;grid-row:1;}
-    .vh-tl .tl-session span{border:1.5px solid rgba(255,255,255,.9);background:transparent;border-radius:10px;padding:5px 12px;font-weight:700;justify-self:stretch;}
+    .vh-tl .tl-session > span{border:1.5px solid rgba(255,255,255,.9);background:transparent;border-radius:10px;padding:5px 12px;font-weight:700;justify-self:stretch;}
     .vh-tl .tl-session::before{width:13px;height:13px;margin-top:5px;}
     .vh-tl .tl-soft span{color:var(--vh-dim);font-style:italic;}.vh-tl b{color:var(--vh-gold);}.vh-tl strong{color:var(--vh-ink);font-weight:800;}
     .vh-dot{display:inline-flex;width:20px;height:20px;border-radius:50%;background:var(--vh-gold);color:#0e1522;font-style:normal;font-weight:800;font-size:12px;align-items:center;justify-content:center;margin:0 1px;vertical-align:1px;}
