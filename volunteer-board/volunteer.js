@@ -26,8 +26,10 @@
   const info = ev => {
     const m = meta[ev.id] || {}, d = (meta.__defaults || {})[typeOf(ev)] || {};
     const people = (signups[ev.id] || []).map(s => s.name).filter(Boolean);
-    const need = m.need ?? d.need ?? 0;
-    return { m, d, people, need, role: m.role || d.role || '', exchange: m.exchange || d.exchange || '', notes: m.notes || '', full: need && people.length >= need };
+    const roles = Array.isArray(m.roles) ? m.roles.map(r => ({ ...r, who: (signups[ev.id] || []).filter(s => s.role === r.k).map(s => s.name).filter(Boolean) })) : null;
+    const need = roles ? roles.reduce((a, r) => a + (r.need || 0), 0) : (m.need ?? d.need ?? 0);
+    const full = roles ? roles.every(r => r.who.length >= (r.need || 0)) : (need && people.length >= need);
+    return { m, d, people, need, roles, role: m.role || d.role || '', exchange: m.exchange || d.exchange || '', notes: m.notes || '', full };
   };
   const startISO = ev => ev.date ? `${ev.date}T${ev.time || '00:00'}:00` : '';
 
@@ -38,7 +40,8 @@
     :root{--vh-gold:#d2a44e;--vh-gold-soft:rgba(210,164,78,.38);--vh-panel:#18213a;--vh-ink:#f3ebdd;--vh-dim:rgba(243,235,221,.7);}
     .vh-head{max-width:640px;margin:0 auto 14px;display:flex;gap:12px;align-items:center;}
     .vh-face{width:92px;height:92px;border-radius:50%;object-fit:cover;flex-shrink:0;box-shadow:0 0 0 2px #0e1522,0 0 0 3px var(--vh-gold);}
-    .vh-blurb{flex:1;background:var(--vh-panel);color:var(--vh-ink);border:1px solid var(--vh-gold-soft);border-radius:14px;padding:14px 16px;font-size:15px;line-height:1.6;}
+    .vh-blurb{flex:1;background:var(--vh-panel);color:var(--vh-ink);border:1px solid var(--vh-gold-soft);border-radius:14px;padding:14px 16px;font-size:15px;line-height:1.6;text-wrap:pretty;hyphens:none;}
+    .vh-blurb p{margin:0 0 10px;text-wrap:pretty;}.vh-blurb p:last-child{margin:0;}.vh-blurb .nw{white-space:nowrap;}
     .vh-blurb em{color:var(--vh-gold);}
     .vh-blurb [style*="text-align:center"]{color:var(--vh-gold);}
     .vh-blurb[contenteditable=true]{outline:1px dashed var(--vh-gold);cursor:text;}
@@ -108,6 +111,14 @@
     .vh-pg-del{float:right;background:none;border:0;color:var(--vh-dim);cursor:pointer;font-size:13px;}
     .vh-pg-add{display:block;margin:4px auto 0;background:transparent;border:1px dashed var(--vh-gold);color:var(--vh-gold);border-radius:999px;padding:8px 16px;cursor:pointer;font-weight:700;}
     .vh-pg .vh-strip{margin-bottom:14px;}
+    .vh-team{flex-basis:100%;font-weight:700;color:var(--vh-gold);font-size:14.5px;}
+    .vh-roles{flex-basis:100%;display:flex;flex-direction:column;gap:7px;}
+    .vh-role{display:grid;grid-template-columns:30px 1fr auto;gap:4px 10px;align-items:center;background:rgba(255,255,255,.04);border:1px solid var(--vh-gold-soft);border-radius:12px;padding:9px 10px;}
+    .vh-role .k{width:30px;height:30px;border-radius:50%;background:var(--vh-gold);color:#0e1522;font-weight:800;display:flex;align-items:center;justify-content:center;}
+    .vh-role .l{font-size:14px;line-height:1.35;min-width:0;}.vh-role .l small{display:block;color:var(--vh-gold);font-size:12.5px;font-weight:700;}
+    .vh-role .who{grid-column:2/-1;display:flex;flex-wrap:wrap;gap:5px;}
+    .vh-role .vh-btn{padding:7px 14px;font-size:13px;align-self:center;}
+    .vh-role.done{opacity:.75;}.vh-role .ok{color:#8fc285;font-weight:700;font-size:13px;}
     #vh-switch{position:fixed;left:16px;bottom:16px;z-index:150;background:var(--vh-gold);color:#0e1522;border:0;border-radius:999px;padding:11px 18px;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,.4);cursor:pointer;}
   `;
   document.head.appendChild(css);
@@ -125,7 +136,7 @@
     <div class="vh-defaults" id="vh-defaults" style="display:none"></div>`;
   const label = document.querySelector('.section-label');
   if (label) { label.replaceWith(head); } else { list.parentNode.insertBefore(head, list); }
-  let vf = 'all'; try { vf = localStorage.getItem('eh-vol-filter') || 'all'; } catch {}
+  let vf = 'public';   // always open on Public events (Marcus, Nov 12)
   const setFilter = f => {
     vf = f; try { localStorage.setItem('eh-vol-filter', f); } catch {}
     ['public', 'private', 'still'].forEach(k => document.body.classList.toggle('vf-' + k, k === f));
@@ -242,6 +253,18 @@
         s.querySelector('.vh-more').onclick = () => { const o = s.classList.toggle('open'); s.querySelector('.vh-more').textContent = o ? 'Hide role description ▴' : 'Show role description ▾'; };
         return s;
       }
+      if (I.roles) {   // role slots (Marcus, Nov 12: "very clear what time and roles to sign up for")
+        s.innerHTML = `${I.m.teamTime ? `<div class="vh-team">👥 ${esc(I.m.teamTime)}</div>` : ''}
+          <div class="vh-roles">${I.roles.map(r => { const done = r.who.length >= (r.need || 0);
+            return `<div class="vh-role${done ? ' done' : ''}"><span class="k">${esc(r.k)}</span><span class="l">${esc(r.label)}${r.time ? `<small>${esc(r.time)}</small>` : ''}</span>
+              ${done ? '<span class="ok">✓ filled</span>' : `<button class="vh-btn" data-k="${esc(r.k)}">Sign up</button>`}
+              ${r.who.length || r.need ? `<div class="who">${r.who.map(p => `<span class="vh-pill vh-who">✅ ${esc(p)}</span>`).join('')}${done ? '' : `<span class="vh-pill">${r.who.length} / ${r.need || 1}</span>`}</div>` : ''}</div>`; }).join('')}</div>
+          <button class="vh-more">Show exchange + details ▾</button>
+          <div class="vh-details">${I.exchange ? `<div><b>⭐ Exchange:</b> ${I.exchange.split('\n').map(esc).join('<br>')}</div>` : ''}${I.notes ? `<div style="margin-top:6px">${esc(I.notes)}</div>` : ''}</div>`;
+        s.querySelector('.vh-more').onclick = () => { const o = s.classList.toggle('open'); s.querySelector('.vh-more').textContent = o ? 'Hide exchange + details ▴' : 'Show exchange + details ▾'; };
+        s.querySelectorAll('.vh-role .vh-btn').forEach(b => b.onclick = () => openSignup(ev, I.roles.find(r => r.k === b.dataset.k)));
+        return s;
+      }
       s.innerHTML = `<span class="vh-pill vh-need${I.full ? ' vh-filled' : ''}">${I.full ? '✓ ' : '🙋 '}${I.need ? (I.full ? FULL_WORD : `${I.people.length} / ${I.need} helpers`) : (I.people.length ? `${I.people.length} helping` : 'Helpers welcome')}</span>
         <button class="vh-more">Show role description ▾</button>
         <div class="vh-details"><div><b>🧹 Role:</b> ${esc(I.role) || 'TBA'}</div>${I.exchange ? `<div><b>⭐ Exchange:</b> ${esc(I.exchange)}</div>` : ''}${I.notes ? `<div><b>📝</b> ${esc(I.notes)}</div>` : ''}</div>
@@ -277,13 +300,14 @@
   new MutationObserver(() => decorate(false)).observe(list, { childList: true });
 
   /* ---------- sign-up pop-up ---------- */
-  function openSignup(ev) {
-    const I = info(ev), d = new Date(ev.date + 'T00:00:00');
+  function openSignup(ev, slot) {
+    const I0 = info(ev), d = new Date(ev.date + 'T00:00:00');
+    const I = slot ? { ...I0, role: `${slot.k} · ${slot.label}${slot.time ? ' · ' + slot.time : ''}`, need: slot.need || 1, people: (slot.who || []) } : I0;
     const when = !ev.date ? (ev.dateNote || 'Date TBC') : `${d.toLocaleDateString('en-CA', { weekday: 'long', month: 'long', day: 'numeric' })}${ev.time ? ' · ' + (typeof fTime === 'function' ? fTime(ev.time) : ev.time) : ''}${ev.timeNote ? ' ' + ev.timeNote : ''}`;
     const w = document.createElement('div'); w.className = 'vh-modal';
-    w.innerHTML = `<div class="box"><button class="x">×</button><h3>${esc(ev.title)}</h3><div class="when">${when}</div>
+    w.innerHTML = `<div class="box"><button class="x">×</button><h3>${esc(slot ? ev.title.replace(/\s*·\s*Session\s*\d+/i, ' · Team') : ev.title)}</h3><div class="when">${slot && I0.m.teamTime ? esc(I0.m.teamTime) : when}</div>
       <div class="duties"><div><b>🙋 Helpers:</b> ${I.need ? `${I.people.length} of ${I.need}` : 'welcome'}</div><div><b>🧹 Role:</b> ${esc(I.role) || 'TBA'}</div>
-      ${I.exchange ? `<div><b>⭐ Exchange:</b> ${esc(I.exchange)}</div>` : ''}${I.notes ? `<div><b>📝</b> ${esc(I.notes)}</div>` : ''}</div>
+      ${I.exchange ? `<div><b>⭐ Exchange:</b> ${I.exchange.split('\n').map(esc).join('<br>')}</div>` : ''}${I.notes ? `<div><b>📝</b> ${esc(I.notes)}</div>` : ''}</div>
       <form><input name="name" placeholder="Your name" required value="${esc(me.name)}"><input name="email" type="email" placeholder="Email (for your reminder)" required value="${esc(me.email)}">
       <input name="phone" type="tel" placeholder="Phone (optional)" value="${esc(me.phone)}"><button class="vh-btn">Sign up</button>
       <div class="note">Only your first name shows on the board. Your email goes privately to Marcus.</div></form></div>`;
@@ -297,7 +321,7 @@
       const btn = f.querySelector('button'); btn.disabled = true; btn.textContent = '…';
       remember({ name: full, email, phone });
       signups = await load(SIGNUPS_KEY) || {};               // re-read so we never overwrite someone else
-      (signups[ev.id] = signups[ev.id] || []).push({ name: full.split(/\s+/)[0], ts: new Date().toISOString() });
+      (signups[ev.id] = signups[ev.id] || []).push({ name: full.split(/\s+/)[0], ts: new Date().toISOString(), ...(slot ? { role: slot.k } : {}) });
       await save(SIGNUPS_KEY, signups);
       try { await fetch(FORM, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({ _subject: `🙋 Volunteer sign-up — ${ev.title} — ${ev.date || ev.dateNote || 'date TBC'}`, _template: 'table', _captcha: 'false',
