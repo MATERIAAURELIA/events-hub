@@ -120,8 +120,12 @@
     .vh-role .who{grid-column:2/-1;display:flex;flex-wrap:wrap;gap:5px;}
     .vh-role .vh-btn{padding:7px 14px;font-size:13px;align-self:center;}
     .vh-role.done{opacity:.75;}.vh-role .ok{color:#8fc285;font-weight:700;font-size:13px;}
-    .vh-tl{flex-basis:100%;display:grid;gap:3px;background:rgba(255,255,255,.04);border-radius:10px;padding:8px 11px;font-size:14px;}
-    .vh-tl div{display:grid;grid-template-columns:52px 1fr;gap:8px;}.vh-tl b{color:var(--vh-gold);}.vh-tl strong{color:var(--vh-ink);font-weight:800;}
+    .vh-tl{flex-basis:100%;display:grid;gap:0;background:rgba(255,255,255,.04);border-radius:10px;padding:8px 11px;font-size:14px;}
+    .vh-tl div{display:grid;grid-template-columns:44px 14px 1fr;gap:6px;align-items:start;position:relative;padding:4px 0;}
+    .vh-tl div::before{content:"";grid-column:2;grid-row:1;width:9px;height:9px;border-radius:50%;background:var(--vh-gold);margin-top:6px;justify-self:center;box-shadow:0 0 8px rgba(210,164,78,.6);}
+    .vh-tl div::after{content:"";position:absolute;left:54px;top:18px;bottom:-6px;width:1px;background:var(--vh-gold-soft);}
+    .vh-tl div:last-child::after{display:none;}
+    .vh-tl b{grid-column:1;grid-row:1;}.vh-tl span{grid-column:3;grid-row:1;}.vh-tl b{color:var(--vh-gold);}.vh-tl strong{color:var(--vh-ink);font-weight:800;}
     .vh-dot{display:inline-flex;width:20px;height:20px;border-radius:50%;background:var(--vh-gold);color:#0e1522;font-style:normal;font-weight:800;font-size:12px;align-items:center;justify-content:center;margin:0 1px;vertical-align:1px;}
     .vh-pick{flex-basis:100%;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;justify-content:space-between;background:rgba(210,164,78,.12);border:1px solid var(--vh-gold);border-radius:10px;padding:8px 11px;font-weight:800;font-size:12.5px;letter-spacing:.06em;color:var(--vh-gold);}
     .vh-pick .vh-dot{width:24px;height:24px;font-size:13px;margin:0 2px;}
@@ -267,7 +271,7 @@
       if (I.roles) {   // role slots (Marcus, Nov 12: "very clear what time and roles to sign up for")
         s.innerHTML = `${I.m.teamTime ? `<div class="vh-team">👥 ${esc(I.m.teamTime)}</div>` : ''}
           <div class="vh-pick"><span>CHOOSE A LETTER (ROLE), THEN SIGN UP</span><span>${I.roles.map(r => `<i class="vh-dot">${esc(r.k)}</i>`).join('')}</span></div>
-          ${Array.isArray(I.m.timeline) ? `<div class="vh-tl">${I.m.timeline.map(t => `<div><b>${esc(t[0])}</b><span>${esc(t[1]).replace(/(Shift \d)/g, '<strong>$1</strong>').replace(/\b([A-F])\b/g, '<i class="vh-dot">$1</i>')}</span></div>`).join('')}</div>` : ''}
+          ${Array.isArray(I.m.timeline) ? `<div class="vh-tl">${I.m.timeline.map(t => `<div><b>${esc(t[0])}</b><span>${esc(t[1]).replace(/(Shift \d|Doors open|Session \d(?: \([^)]*\))?)/g, '<strong>$1</strong>').replace(/\b([A-F])\b/g, '<i class="vh-dot">$1</i>')}</span></div>`).join('')}</div>` : ''}
           <div class="vh-roles">${I.roles.map((r, i) => { const done = r.who.length >= (r.need || 0);
             const gh = r.g && (i === 0 || I.roles[i - 1].g !== r.g) && (I.m.groups || {})[r.g] ? `<div class="vh-group">${esc(I.m.groups[r.g])}</div>${(I.m.groupNotes || {})[r.g] ? `<div class="vh-gnote">${esc(I.m.groupNotes[r.g])}</div>` : ''}` : '';
             return gh + `<div class="vh-role${done ? ' done' : ''}"><span class="k">${esc(r.k)}</span><span class="l">${esc(r.label)}${r.time ? `<small>${esc(r.time)}</small>` : ''}</span>
