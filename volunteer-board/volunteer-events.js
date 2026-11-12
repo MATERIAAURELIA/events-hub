@@ -1,16 +1,6 @@
-// Auto-generated 2026-11-11T22:00:08.881788 from the Events Hub (public events only)
-// 14 public events in the next 90 days
+// Auto-generated 2026-11-12T06:00:08.994354 from the Events Hub (public events only)
+// 13 public events in the next 90 days
 const VOLUNTEER_EVENTS = [
-  {
-    "id": "ev-nov11-grief",
-    "title": "Grief & Gratitude: Honouring Those We've Loved and Lost",
-    "start": "2026-11-11T19:00:00-06:00",
-    "end": "2026-11-11T20:30:00-06:00",
-    "description": "On the evening of Remembrance Day, join us for a sound journey at my cozy home studio. A place to feel the grief and the gratitude, honouring those who have departed to the next part of the great journey. Come in remembrance of your pets, parents, friends, children and others, in a small sharing honouring circle and full multi-instrumental sound journey.",
-    "location": "Private Home Studio \u00b7 Terwillegar (address on registration)",
-    "source": "hub",
-    "img": "https://events.earthharmonysoundwellness.com/photos/grief-gratitude-flute.jpg"
-  },
   {
     "id": "ev-nov12-mmm",
     "title": "POSTPONED \u00b7 Music Movement Medicine: Resilience New date coming soon",
