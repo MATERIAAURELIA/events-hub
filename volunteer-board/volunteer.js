@@ -125,10 +125,14 @@
     .vh-role .vh-btn{padding:7px 14px;font-size:13px;align-self:center;}
     .vh-role.done{opacity:.75;}.vh-role .ok{color:#8fc285;font-weight:700;font-size:13px;}
     .vh-tl{flex-basis:100%;display:grid;gap:0;background:rgba(255,255,255,.04);border-radius:10px;padding:8px 11px;font-size:14px;}
-    .vh-tl div{display:grid;grid-template-columns:44px 14px 1fr;gap:6px;align-items:start;position:relative;padding:4px 0;}
-    .vh-tl div::before{content:"";grid-column:2;grid-row:1;width:9px;height:9px;border-radius:50%;background:var(--vh-gold);margin-top:6px;justify-self:center;box-shadow:0 0 8px rgba(210,164,78,.6);}
-    .vh-tl div::after{content:"";position:absolute;left:54px;top:18px;bottom:-6px;width:1px;background:var(--vh-gold-soft);}
-    .vh-tl div:last-child::after{display:none;}
+    .vh-tl .tl-row{display:grid;grid-template-columns:44px 14px 1fr;gap:6px;align-items:start;position:relative;padding:4px 0;}
+    .vh-tl .tl-row::before{content:"";grid-column:2;grid-row:1;width:9px;height:9px;border-radius:50%;background:var(--vh-gold);margin-top:6px;justify-self:center;box-shadow:0 0 8px rgba(210,164,78,.6);}
+    .vh-tl .tl-row::after{content:"";position:absolute;left:54px;top:18px;bottom:-6px;width:1px;background:var(--vh-gold-soft);}
+    .vh-tl .tl-row:last-child::after{display:none;}
+    .vh-tl .tl-block{margin:8px 0 6px;}
+    .vh-tl .tl-bh{font-weight:800;color:var(--vh-ink);font-size:14.5px;margin:0 0 3px;}
+    .vh-tl .tl-times{position:relative;}
+    .vh-tl .tl-times::before{content:"";position:absolute;left:-6px;top:0;bottom:0;width:52px;border:1.5px solid rgba(255,255,255,.9);border-radius:10px;pointer-events:none;}
     .vh-tl b{grid-column:1;grid-row:1;}.vh-tl span{grid-column:3;grid-row:1;}
     .vh-tl .tl-session > span{border:1.5px solid rgba(255,255,255,.9);background:transparent;border-radius:10px;padding:5px 12px;font-weight:700;justify-self:stretch;}
     .vh-tl .tl-session::before{width:13px;height:13px;margin-top:5px;}
@@ -280,7 +284,11 @@
       if (I.roles) {   // role slots (Marcus, Nov 12: "very clear what time and roles to sign up for")
         s.innerHTML = `${I.m.teamTime ? `<div class="vh-team">👥 ${esc(I.m.teamTime)}</div>` : ''}
           <div class="vh-pick"><span>CHOOSE A LETTER (ROLE), THEN SIGN UP</span><span>${I.roles.map(r => `<i class="vh-dot">${esc(r.k)}</i>`).join('')}</span></div>
-          ${Array.isArray(I.m.timeline) ? `<div class="vh-tl">${I.m.timeline.map(t => `<div${t[2] ? ` class="tl-${esc(t[2])}"` : ''}><b>${esc(t[0])}</b><span>${fmtTeam(t[1])}</span></div>`).join('')}</div>` : ''}
+          ${Array.isArray(I.m.timeline) ? `<div class="vh-tl">${(() => { let out = '', open = '';   // rows sharing a block (e.g. Session 1) sit inside one framed box (Marcus's sketch, Nov 12)
+            I.m.timeline.forEach(t => { const blk = t[3] || '';
+              if (blk !== open) { if (open) out += '</div></div>'; if (blk) out += `<div class="tl-block"><div class="tl-bh">${fmtTeam((I.m.blocks || {})[blk] || blk)}</div><div class="tl-times">`; open = blk; }
+              out += `<div class="tl-row"><b>${esc(t[0])}</b><span>${fmtTeam(t[1])}</span></div>`; });
+            return out + (open ? '</div></div>' : ''); })()}</div>` : ''}
           <div class="vh-roles">${I.roles.map((r, i) => { const done = r.who.length >= (r.need || 0);
             const gh = r.g && (i === 0 || I.roles[i - 1].g !== r.g) && (I.m.groups || {})[r.g] ? `<div class="vh-group">${fmtTeam(I.m.groups[r.g])}</div>${(I.m.groupNotes || {})[r.g] ? `<div class="vh-gnote">${fmtTeam(I.m.groupNotes[r.g])}</div>` : ''}` : '';
             return gh + `<div class="vh-role${done ? ' done' : ''}"><span class="k">${esc(r.k)}</span><span class="l">${esc(r.label)}${r.time ? `<small>${esc(r.time)}</small>` : ''}</span>
