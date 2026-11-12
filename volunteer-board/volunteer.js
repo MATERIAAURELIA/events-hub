@@ -327,7 +327,7 @@
         el.addEventListener('keydown', e => { if (e.key === 'Enter' && !/exchange|notes|groupNotes/.test(el.dataset.ed)) { e.preventDefault(); el.blur(); } });
         el.addEventListener('blur', async () => {
           const parts = el.dataset.ed.split('.'), m = meta[ev.id] = meta[ev.id] || {};
-          let v = (el.dataset.ed === 'exchange' ? el.innerText : el.innerText.replace(/\s*\n\s*/g, ' ')).replace(/–/g, '-').trim();
+          let v = (el.dataset.ed === 'exchange' ? el.innerText : el.innerText.replace(/\s*\n\s*/g, ' ')).replace(/\u00a0/g, ' ').replace(/ {2,}/g, ' ').replace(/–/g, '-').trim();
           if (/\.need$/.test(el.dataset.ed)) v = Math.max(0, parseInt(v, 10) || 0);
           let o = m; for (let k = 0; k < parts.length - 1; k++) { const key = parts[k]; if (o[key] == null) o[key] = /^\d+$/.test(parts[k + 1]) ? [] : {}; o = o[key]; }
           const last = parts[parts.length - 1]; if (o[last] === v) return;
