@@ -119,6 +119,7 @@
     .vh-role .who{grid-column:2/-1;display:flex;flex-wrap:wrap;gap:5px;}
     .vh-role .vh-btn{padding:7px 14px;font-size:13px;align-self:center;}
     .vh-role.done{opacity:.75;}.vh-role .ok{color:#8fc285;font-weight:700;font-size:13px;}
+    .vh-foot{flex-basis:100%;font-size:13.5px;line-height:1.5;color:var(--vh-ink);background:rgba(210,164,78,.10);border:1px dashed var(--vh-gold-soft);border-radius:10px;padding:8px 11px;}
     #vh-switch{position:fixed;left:16px;bottom:16px;z-index:150;background:var(--vh-gold);color:#0e1522;border:0;border-radius:999px;padding:11px 18px;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,.4);cursor:pointer;}
   `;
   document.head.appendChild(css);
@@ -259,6 +260,7 @@
             return `<div class="vh-role${done ? ' done' : ''}"><span class="k">${esc(r.k)}</span><span class="l">${esc(r.label)}${r.time ? `<small>${esc(r.time)}</small>` : ''}</span>
               ${done ? '<span class="ok">✓ filled</span>' : `<button class="vh-btn" data-k="${esc(r.k)}">Sign up</button>`}
               ${r.who.length || r.need ? `<div class="who">${r.who.map(p => `<span class="vh-pill vh-who">✅ ${esc(p)}</span>`).join('')}${done ? '' : `<span class="vh-pill">${r.who.length} / ${r.need || 1}</span>`}</div>` : ''}</div>`; }).join('')}</div>
+          ${I.m.footnote ? `<div class="vh-foot">${esc(I.m.footnote)}</div>` : ''}
           <button class="vh-more">Show exchange + details ▾</button>
           <div class="vh-details">${I.exchange ? `<div><b>⭐ Exchange:</b> ${I.exchange.split('\n').map(esc).join('<br>')}</div>` : ''}${I.notes ? `<div style="margin-top:6px">${esc(I.notes)}</div>` : ''}</div>`;
         s.querySelector('.vh-more').onclick = () => { const o = s.classList.toggle('open'); s.querySelector('.vh-more').textContent = o ? 'Hide exchange + details ▴' : 'Show exchange + details ▾'; };
