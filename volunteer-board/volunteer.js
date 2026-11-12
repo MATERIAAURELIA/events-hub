@@ -15,6 +15,7 @@
   const FULL_WORD = 'Positions filled';
 
   const urlAdmin = new URLSearchParams(location.search).get('admin') === '1';
+  const ONLY = new URLSearchParams(location.search).get('only') || '';   // direct link to one event's team card
   let admin = urlAdmin;
   let meta = {}, signups = {}, blurb = '', gigs = [];
   const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -123,6 +124,8 @@
     .vh-tl div{display:grid;grid-template-columns:52px 1fr;gap:8px;}.vh-tl b{color:var(--vh-gold);}
     .vh-group{font-weight:800;color:var(--vh-gold);font-size:13.5px;letter-spacing:.04em;margin:6px 2px 0;}
     .vh-foot{flex-basis:100%;font-size:13.5px;line-height:1.5;color:var(--vh-ink);background:rgba(210,164,78,.10);border:1px dashed var(--vh-gold-soft);border-radius:10px;padding:8px 11px;}
+    body.vh-only #view-list > :not(.vh-keep),body.vh-only .vh-filter,body.vh-only .vh-pg,body.vh-only .view-toggle,body.vh-only #view-calendar{display:none !important;}
+    .vh-all{display:block;text-align:center;margin:14px auto 0;color:var(--vh-gold);font-size:14px;}
     #vh-switch{position:fixed;left:16px;bottom:16px;z-index:150;background:var(--vh-gold);color:#0e1522;border:0;border-radius:999px;padding:11px 18px;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,.4);cursor:pointer;}
   `;
   document.head.appendChild(css);
@@ -300,6 +303,13 @@
         if (next && next.classList.contains('vh-strip')) { if (!force && next.dataset.id === id) return; next.remove(); }
         card.after(stripFor(ev));
       });
+      if (ONLY) {
+        document.body.classList.add('vh-only');
+        list.querySelectorAll('.vh-keep:not(.vh-all-wrap)').forEach(x => x.classList.remove('vh-keep'));
+        list.querySelectorAll('.link-btn').forEach(card => { const id = ((card.getAttribute('onclick') || '').match(/showPopup\('([^']+)'\)/) || [])[1];
+          if (id === ONLY) { card.classList.add('vh-keep'); card.classList.remove('vh-hidden', 'vh-gone'); const n = card.nextElementSibling; if (n && n.classList.contains('vh-strip')) n.classList.add('vh-keep'); } });
+        if (!list.querySelector('.vh-all-wrap')) { const a = document.createElement('div'); a.className = 'vh-keep vh-all-wrap'; a.innerHTML = '<a class="vh-all" href="?volunteer">See all the gigs on the Team Exchange →</a>'; list.appendChild(a); }
+      }
       paintHeader();
       paintGigs();
     } finally { busy = false; }
