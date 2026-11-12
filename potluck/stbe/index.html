@@ -3,53 +3,65 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍲</text></svg>">
 <title>Vocal Gathering + Potluck · Nov 15</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap');
+/* Fresh look (Marcus, Nov 12): dusk sky, a voice ringing out in soft rings, warm gold + rose */
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#171310;color:#efe6d6;font-family:'Jost',sans-serif;min-height:100vh;padding:48px 20px 80px;
- background-image:radial-gradient(700px 460px at 50% 6%,rgba(210,164,78,.13),transparent 70%)}
-.wrap{max-width:560px;margin:0 auto;text-align:center}
-.kicker{font-size:13px;letter-spacing:.5em;text-transform:uppercase;color:#c8a25c}
-h1{font-family:'Cormorant Garamond',serif;font-size:64px;font-weight:500;letter-spacing:.05em;color:#f2e3c2;margin:14px 0 2px}
-.sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:22px;color:#cdb488}
-.when{margin:26px 0 4px;font-size:19px;letter-spacing:.06em}
-.when b{color:#e9c87e}
-.where{color:#b9a98c;font-size:15px}
-.shape{margin:30px auto 6px;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:#c8a25c}
-.acts{font-size:15.5px;line-height:2;color:#e6d9c0}
-.bring{margin:26px auto;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:20px;color:#dec9a1;max-width:440px;line-height:1.6}
-form{margin-top:34px;text-align:left;background:rgba(255,255,255,.028);border:1px solid rgba(210,164,78,.28);border-radius:16px;padding:26px 24px}
-label{display:block;font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;color:#c8a25c;margin:18px 0 7px}
+html{background:#14112b;overflow-x:hidden}
+body{color:#f6ece0;font-family:'Jost',sans-serif;min-height:100vh;padding:0 18px 80px;overflow-x:hidden;
+ background:linear-gradient(180deg,#14112b 0%,#2a1840 30%,#3f2045 60%,#4f2638 100%)}
+.wrap{max-width:560px;margin:0 auto;text-align:center;position:relative}
+.hero{position:relative;padding:70px 0 34px;overflow:hidden;margin:0 -18px;padding-left:18px;padding-right:18px}
+.rings{position:absolute;left:50%;top:150px;width:0;height:0;pointer-events:none}
+.rings i{position:absolute;left:0;top:0;border:1px solid rgba(255,214,150,.35);border-radius:50%;transform:translate(-50%,-50%) scale(.2);opacity:0;animation:ring 7s ease-out infinite}
+.rings i:nth-child(1){width:520px;height:520px}.rings i:nth-child(2){width:520px;height:520px;animation-delay:2.3s}.rings i:nth-child(3){width:520px;height:520px;animation-delay:4.6s}
+@keyframes ring{0%{transform:translate(-50%,-50%) scale(.15);opacity:.9}100%{transform:translate(-50%,-50%) scale(1.15);opacity:0}}
+@media (prefers-reduced-motion:reduce){.rings i{animation:none;opacity:.25;transform:translate(-50%,-50%) scale(.7)}}
+.glow{position:absolute;left:50%;top:150px;width:340px;height:340px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(255,196,120,.32),rgba(255,140,120,.08) 45%,transparent 70%);filter:blur(4px);pointer-events:none}
+.kicker{position:relative;font-size:12px;letter-spacing:.55em;text-transform:uppercase;color:#f3c98b}
+h1{position:relative;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(46px,13vw,68px);line-height:1;letter-spacing:.02em;color:#fff4e3;margin:18px 0 10px;text-shadow:0 0 30px rgba(255,190,120,.35)}
+h1 em{font-style:italic;color:#ffd59a}
+.sub{position:relative;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:23px;color:#f1cfa8}
+.when{position:relative;margin:30px 0 4px;font-size:18px;letter-spacing:.04em;color:#fff4e3}
+.when b{color:#ffd59a;font-weight:500}
+.where{position:relative;color:#d9bfae;font-size:15px}
+.shape{margin:34px auto 12px;font-size:11.5px;letter-spacing:.38em;text-transform:uppercase;color:#f3c98b}
+.acts{display:grid;gap:10px;text-align:left}
+.act{display:grid;grid-template-columns:92px 1fr;gap:12px;align-items:center;background:rgba(255,255,255,.06);border:1px solid rgba(255,220,180,.22);border-radius:16px;padding:14px 16px;backdrop-filter:blur(6px)}
+.act b{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:#ffd59a;white-space:nowrap}
+.act span{font-size:16px;line-height:1.4;color:#fff4e3}.act small{display:block;color:#d9bfae;font-size:13.5px;margin-top:2px}
+.bring{margin:28px auto 6px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:21px;color:#f6dcb8;max-width:440px;line-height:1.5}
+form{margin-top:18px;text-align:left;background:rgba(255,255,255,.06);border:1px solid rgba(255,220,180,.22);border-radius:20px;padding:26px 22px;backdrop-filter:blur(6px)}
+label{display:block;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#f3c98b;margin:18px 0 7px}
 label:first-child{margin-top:0}
-input,textarea,select{width:100%;background:#211b15;border:1px solid #3c3226;border-radius:9px;color:#efe6d6;
- font-family:'Jost',sans-serif;font-size:16px;padding:12px 13px;outline:none}
-input:focus,textarea:focus{border-color:#c8a25c}
+input,textarea,select{width:100%;background:rgba(20,14,36,.55);border:1px solid rgba(255,220,180,.25);border-radius:12px;color:#fff4e3;font-family:'Jost',sans-serif;font-size:16px;padding:12px 14px;outline:none}
+input::placeholder,textarea::placeholder{color:rgba(246,236,224,.45)}
+input:focus,textarea:focus,select:focus{border-color:#ffd59a;box-shadow:0 0 0 3px rgba(255,213,154,.15)}
 textarea{resize:vertical;min-height:64px}
-button{margin-top:26px;width:100%;background:#d2a44e;color:#171310;border:none;border-radius:999px;
- padding:16px;font-family:'Jost',sans-serif;font-weight:600;font-size:15px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
-button:hover{filter:brightness(1.08)}
-.note{margin-top:14px;font-size:12.5px;color:#8d7d61;text-align:center;line-height:1.6}
-.board{margin-top:30px;background:rgba(255,255,255,.028);border:1px solid rgba(210,164,78,.22);border-radius:16px;padding:20px 22px 22px}
+button{margin-top:24px;width:100%;background:linear-gradient(135deg,#ffd59a,#f0a07a);color:#2a1840;border:none;border-radius:999px;padding:16px;font-family:'Jost',sans-serif;font-weight:600;font-size:15px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;box-shadow:0 10px 30px -10px rgba(240,160,122,.7)}
+button:hover{filter:brightness(1.06)}button:disabled{opacity:.6}
+.note{margin-top:14px;font-size:13px;color:#d9bfae;text-align:center;line-height:1.6}
+.board{margin-top:26px;background:rgba(255,255,255,.06);border:1px solid rgba(255,220,180,.22);border-radius:20px;padding:20px 18px 22px;backdrop-filter:blur(6px)}
+.board .shape{margin-top:2px}
 .boardBody{margin-top:10px;text-align:left}
-.boardEmpty{display:block;text-align:center;font-style:italic;font-family:'Cormorant Garamond',serif;font-size:18px;color:#8d7d61}
-.cat{margin:14px 0 4px;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#c8a25c}
-.dishRow{display:flex;justify-content:space-between;gap:12px;font-size:15.5px;padding:5px 0;border-bottom:1px dashed rgba(210,164,78,.14)}
-.dishRow:last-child{border-bottom:none}
-.dishName{color:#efe6d6}
-.dishWho{color:#a8956f;font-style:italic;font-family:'Cormorant Garamond',serif;font-size:16px;white-space:nowrap}
-.dietLine{margin-top:14px;font-size:13px;color:#b9a98c;line-height:1.7}
-.dietLine b{color:#e9c87e;font-weight:500}
-.badge{display:inline-block;border:1px solid rgba(210,164,78,.4);border-radius:999px;padding:2px 11px;margin:3px 3px;font-size:12px;color:#dec9a1}
+.boardBody table td{color:#fff4e3 !important;border-top-color:rgba(255,220,180,.14) !important}
+.boardEmpty{display:block;text-align:center;font-style:italic;font-family:'Cormorant Garamond',serif;font-size:18px;color:#d9bfae}
+.cat{margin:14px 0 4px;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#f3c98b}
+.dietLine{margin-top:14px;font-size:13px;color:#d9bfae;line-height:1.7}.dietLine b{color:#ffd59a;font-weight:500}
+.badge{display:inline-block;border:1px solid rgba(255,220,180,.35);border-radius:999px;padding:2px 11px;margin:3px;font-size:12px;color:#f6dcb8}
 </style></head><body>
 <div class="wrap">
-  <div class="kicker">A Team Gathering</div>
-  <h1 style="font-size:44px;line-height:1.08">A VOCAL<br>GATHERING</h1>
-  <div class="sub">chanting · storytelling · Sing the Body Electric</div>
-  <div class="when"><b>Sunday, November 15</b> · <span style="white-space:nowrap">4:00 to 6:00 pm</span></div>
-  <div class="where">Marcus's Home · Terwillegar</div>
+  <div class="hero">
+    <div class="glow"></div><div class="rings"><i></i><i></i><i></i></div>
+    <div class="kicker">A Team Gathering</div>
+    <h1>A Vocal<br><em>Gathering</em></h1>
+    <div class="sub">Sing the Body Electric · voice · community</div>
+    <div class="when"><b>Sunday, November 15</b> · <span style="white-space:nowrap">4:00 to 6:00 pm</span></div>
+    <div class="where">Marcus's Home · Terwillegar</div>
+  </div>
   <div class="shape">The Shape of the Evening</div>
   <div class="acts">
-    <b style="color:#e9c87e">4:00–6:00</b> &nbsp;Vocal Inspired Gathering<br><span style="color:#a8956f">(chanting, storytelling, Sing the Body Electric and more)</span><br>
-    <b style="color:#e9c87e">6:00</b> &nbsp;Optional potluck<br>
+    <div class="act"><b>4:00–6:00</b><span>Vocal Inspired Gathering<small>Sing the Body Electric and more</small></span></div>
+    <div class="act"><b>6:00</b><span>Optional potluck<small>stay if you can, no worries if family is waiting</small></span></div>
   </div>
   <div class="bring">Staying for the potluck? Bring a dish to share.</div>
 
@@ -84,6 +96,7 @@ button:hover{filter:brightness(1.08)}
 <script>
 const API='https://script.google.com/macros/s/AKfycbzzu1jXVtwDuHyBThe62Ipc10UzBJkDQDACGZfe5oEF9jXIUl3qtGjbJD2c3IW_q4EjKQ/exec', KEY='potluck-stbe-nov15';
 const GUESTS=['Brock','Judy','Treyna','Jen','Ashley','Nadeen','Desiree','Oksana'].map(w=>({who:w,status:'yes'}));
+GUESTS.find(g=>g.who==='Jen').dish='leaving at 5:15 · no dish';
 const getDishes=()=>fetch(API+'?key='+KEY+'&t='+Date.now()).then(r=>r.json()).then(v=>Array.isArray(v)?v:[]).catch(()=>[]);
 function paint(){ getDishes().then(list=>render({guests:GUESTS.map(g=>({...g})),dishes:list,dietary:[...new Set(list.map(x=>x.diet).filter(Boolean))]})); }
 document.getElementById('dishForm').addEventListener('submit',async e=>{
