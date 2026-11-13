@@ -51,10 +51,11 @@ footer a{color:var(--brown);font-weight:700}
 .track{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:18px;justify-content:center}
 .track::-webkit-scrollbar{display:none}
 .slide{perspective:1400px;max-width:420px;width:100%;margin:0 auto}.slide.hide{display:none}
-.flip{position:relative;width:100%;aspect-ratio:5/7;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.2,.7,.2,1);cursor:pointer}
+.flip{position:relative;display:grid;width:100%;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.2,.7,.2,1);cursor:pointer}
 .flip.on{transform:rotateY(180deg)}
-.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--card);border:1px solid var(--line);border-radius:24px;box-shadow:0 16px 36px rgba(60,40,10,.14);display:flex;flex-direction:column;overflow:hidden}
-.front{align-items:center;justify-content:center;text-align:center;padding:26px 20px;background:radial-gradient(circle at 50% 36%,var(--card),var(--bg) 75%)}
+.flip:not(.on) .back{position:absolute;inset:0;overflow:hidden} /* closed: card keeps its shape; open: card grows to fit the steps, page scrolls normally */
+.face{position:relative;grid-area:1/1;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--card);border:1px solid var(--line);border-radius:24px;box-shadow:0 16px 36px rgba(60,40,10,.14);display:flex;flex-direction:column;overflow:hidden}
+.front{aspect-ratio:5/7;align-items:center;justify-content:center;text-align:center;padding:26px 20px;background:radial-gradient(circle at 50% 36%,var(--card),var(--bg) 75%)}
 .front::before{content:"";position:absolute;inset:12px;border:1.5px solid var(--gold);border-radius:16px;opacity:.5;pointer-events:none}
 .front .num{position:absolute;top:24px;left:0;right:0;font:700 13px "Nunito Sans";letter-spacing:.24em;color:var(--brown)}
 .front .ic{width:62%;height:auto;aspect-ratio:1;border-radius:50%;background:var(--card);border:1px solid var(--line);display:flex;align-items:center;justify-content:center}
@@ -64,7 +65,7 @@ footer a{color:var(--brown);font-weight:700}
 .front .tags,.back .tags{display:flex;flex-wrap:wrap;gap:5px;justify-content:center}
 .back .tags{justify-content:flex-start;margin:4px 0 12px}
 .hint{position:absolute;bottom:16px;left:0;right:0;text-align:center;font-size:13px;color:var(--soft);letter-spacing:.05em}
-.back{transform:rotateY(180deg);padding:24px 22px 48px;overflow:auto;text-align:left}
+.back{transform:rotateY(180deg);padding:24px 22px 48px;overflow:visible;text-align:left}
 .back h3{font-family:"Cormorant Garamond",Georgia,serif;font-size:32px;margin:0;line-height:1.05}
 .back .meta{margin:4px 0 6px}
 .back ol{font-size:17.5px;line-height:1.55}
