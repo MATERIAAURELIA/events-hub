@@ -1,5 +1,5 @@
 {
-  "how": "Two quick inhales through the nose, one long exhale through the mouth. Repeat a few times.",
+  "how": "Two quick inhales through the nose, one long exhale through the mouth. Repeat a few times to build energy\nPlay with adding movement and sound on the exhale ",
   "icon": "⚡",
   "img": "/_blob/8a602dad3e9e0b38cc04b5ab4770978c",
   "imgId": "8a602dad3e9e0b38cc04b5ab4770978c",
@@ -10,7 +10,9 @@
   "notes": "Marcus uses it to energize.",
   "order": 5,
   "posture": "any",
+  "principle": "",
   "tags": [
     "ENERGIZING"
-  ]
+  ],
+  "updated": 1794583370143
 }
