@@ -1,16 +1,6 @@
-// Auto-generated 2026-11-12T22:00:09.267683 from the Events Hub (public events only)
-// 13 public events in the next 90 days
+// Auto-generated 2026-11-13T06:00:09.534704 from the Events Hub (public events only)
+// 12 public events in the next 90 days
 const VOLUNTEER_EVENTS = [
-  {
-    "id": "ev-nov12-mmm",
-    "title": "POSTPONED \u00b7 Music Movement Medicine: Resilience New date coming soon",
-    "start": "2026-11-12T19:00:00-06:00",
-    "end": "2026-11-12T20:30:00-06:00",
-    "description": "POSTPONED. This evening is moving to a new date, coming soon. Email us to hear first when it is set.",
-    "location": "",
-    "source": "hub",
-    "img": "https://events.earthharmonysoundwellness.com/photos/mmm-silhouette-headphones.jpg"
-  },
   {
     "id": "ev-nov14-downtime",
     "title": "Downtime Sound Healing & Yin Yoga",
