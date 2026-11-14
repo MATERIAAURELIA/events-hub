@@ -1040,7 +1040,15 @@
       "status": "published",
       "repeatable": false,
       "timeLabel": "two sessions: 4:00–5:00 & 5:30–6:30 PM",
-      "video": "videos/community-b2b-trailer.mp4"
+      "video": "videos/community-b2b-trailer.mp4",
+      "checklist": [
+        "20+ years of guiding sound in Edmonton",
+        "Cared for by a whole team of practitioners",
+        "Deep grounding bowls up to celestial high tones, three full octaves",
+        "Candlelit and spacious, with room to truly lie down",
+        "$23 for a full-depth sound bath at a community price"
+      ],
+      "checklistTitle": "What to look for in a sound bath"
     },
     {
       "id": "ev-nov21-back2basics-2",
@@ -1060,7 +1068,15 @@
       "status": "published",
       "repeatable": false,
       "timeLabel": "two sessions: 4:00–5:00 & 5:30–6:30 PM",
-      "video": "videos/community-b2b-trailer.mp4"
+      "video": "videos/community-b2b-trailer.mp4",
+      "checklist": [
+        "20+ years of guiding sound in Edmonton",
+        "Cared for by a whole team of practitioners",
+        "Deep grounding bowls up to celestial high tones, three full octaves",
+        "Candlelit and spacious, with room to truly lie down",
+        "$23 for a full-depth sound bath at a community price"
+      ],
+      "checklistTitle": "What to look for in a sound bath"
     },
     {
       "id": "ev-dec19-back2basics",

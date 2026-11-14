@@ -487,6 +487,7 @@
     .btn-thumb { width: 64px; height: 64px; }
     .link-btn { padding: 5px 6px; }
   }
+.p-check{margin:14px 0 4px;padding:14px 16px;border:1px solid rgba(210,164,78,.35);border-radius:14px;background:rgba(210,164,78,.07);text-align:left}.p-check-h{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#d2a44e;margin-bottom:8px}.p-check-i{display:flex;gap:9px;align-items:flex-start;font-size:15px;line-height:1.4;padding:4px 0}.p-check-i span:first-child{flex:none}
 </style>
 <script>
 // SyncStore — localStorage only on static hosts (no server API)
@@ -1098,6 +1099,7 @@ function showPopup(id){
     <div class="pv-toolbar"><button type="button" onclick="pvAlign('descAlign','left','${ev.id}')">Text ⬅</button><button type="button" onclick="pvAlign('descAlign','center','${ev.id}')">Text ↔</button></div>`:''}
     <div class="p-desc${!isEdit&&(ev.desc||'').length>280?' clamped':''}"${isEdit?` contenteditable="true" onkeydown="pvDescKey(event,this)" onblur="pvEdit(this,'desc','${ev.id}')"`:''} style="text-align:${ev.descAlign||'left'}">${ev.desc||''}</div>
     ${!isEdit&&(ev.desc||'').length>280?`<button class="p-more" onclick="const d=this.previousElementSibling;d.classList.toggle('clamped');this.textContent=d.classList.contains('clamped')?'Show more ▾':'Show less ▴'">Show more ▾</button>`:''}
+    ${!isEdit&&ev.checklist&&ev.checklist.length?`<div class="p-check"><div class="p-check-h">${ev.checklistTitle||'What to look for'}</div>${ev.checklist.map(c=>`<div class="p-check-i"><span>✅</span><span>${c}</span></div>`).join('')}</div>`:''}
     ${ev.full
       ? `<div class="cap-box"><p><strong>This one is full.</strong> Leave your email and you'll be the first to hear when the next one opens.</p>
          <form onsubmit="return capSubmit(event,'${ev.id}')">
