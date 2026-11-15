@@ -112,7 +112,7 @@ button:hover{filter:brightness(1.06)}button:disabled{opacity:.6}
 <script>
 const API='https://script.google.com/macros/s/AKfycbzzu1jXVtwDuHyBThe62Ipc10UzBJkDQDACGZfe5oEF9jXIUl3qtGjbJD2c3IW_q4EjKQ/exec', KEY='potluck-stbe-nov15';
 const GUESTS=['Marcus (host)','Treyna','Jen','Ashley','Nadeen','Desiree'].map(w=>({who:w,status:'yes'}));
-GUESTS.find(g=>g.who==='Jen').dish='leaving at 5:15';
+GUESTS.push({who:'Nancy',status:'maybe'});
 const getDishes=()=>fetch(API+'?key='+KEY+'&t='+Date.now()).then(r=>r.json()).then(v=>Array.isArray(v)?v:[]).catch(()=>[]);
 function paint(){ getDishes().then(list=>render({guests:GUESTS.map(g=>({...g})),dishes:list,dietary:[...new Set(list.map(x=>x.diet).filter(Boolean))]})); }
 document.getElementById('dishForm').addEventListener('submit',async e=>{
