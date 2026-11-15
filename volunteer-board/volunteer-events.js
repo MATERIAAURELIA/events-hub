@@ -1,16 +1,6 @@
-// Auto-generated 2026-11-14T22:00:09.412044 from the Events Hub (public events only)
-// 12 public events in the next 90 days
+// Auto-generated 2026-11-15T06:00:09.614485 from the Events Hub (public events only)
+// 11 public events in the next 90 days
 const VOLUNTEER_EVENTS = [
-  {
-    "id": "ev-nov14-downtime",
-    "title": "Downtime Sound Healing & Yin Yoga",
-    "start": "2026-11-14T18:00:00-06:00",
-    "end": "2026-11-14T19:30:00-06:00",
-    "description": "A 90-minute sound healing and yin yoga experience with David Palfenier & Marcus Fung.",
-    "location": "",
-    "source": "hub",
-    "img": "https://events.earthharmonysoundwellness.com/photos/downtime-om-hot-yoga.jpg"
-  },
   {
     "id": "ev-nov17-galactic-gong",
     "title": "\u2605 The Galactic Gong Activation Intensity",
