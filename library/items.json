@@ -27,6 +27,22 @@
   "cat": "talks"
  },
  {
+  "slug": "no-song",
+  "title": "No Song",
+  "desc": "Storyteller Brian Rohr tells \"No Song\", the tale of a man who longed to have a song of his own. Recorded at First Friday Storynight in Port Townsend, WA (2013). A gem for anyone finding their voice.",
+  "type": "Story",
+  "length": "17½ min",
+  "youtube": "5hUGm6K6B0A",
+  "url": "https://www.youtube.com/watch?v=5hUGm6K6B0A",
+  "related": "our voice gatherings",
+  "kicker": "Voice",
+  "sub": "A story for finding your own voice",
+  "btn": "Watch",
+  "img": "https://img.youtube.com/vi/5hUGm6K6B0A/hqdefault.jpg",
+  "color": "teal",
+  "cat": "voice"
+ },
+ {
   "slug": "power-of-humming",
   "title": "The Power of Humming",
   "desc": "Marcus on humming, the simplest way to use your own voice to settle your nervous system (2021).",
