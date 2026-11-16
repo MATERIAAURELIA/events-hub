@@ -1078,7 +1078,8 @@
         "Candlelit and spacious, with room to truly lie down",
         "$23 for a full-depth sound bath at a community price"
       ],
-      "checklistTitle": "Why our sound baths stand out"
+      "checklistTitle": "Why our sound baths stand out",
+      "cancelled": true
     },
     {
       "id": "ev-dec19-back2basics",
