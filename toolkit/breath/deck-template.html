@@ -69,6 +69,12 @@ footer a{color:var(--brown);font-weight:700}
 .back h3{font-family:"Cormorant Garamond",Georgia,serif;font-size:32px;margin:0;line-height:1.05}
 .back .meta{margin:4px 0 6px}
 .back ol{font-size:17.5px;line-height:1.55}
+.setbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;margin:14px 0 0}
+.setbar label{font:800 12px "Nunito Sans";letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
+.setbar select{font:700 16px "Nunito Sans";color:var(--ink);background:var(--card);border:1.5px solid var(--line);border-radius:999px;padding:9px 16px}
+.allbtn{display:inline-block;font:800 15px "Nunito Sans";color:#1a1408;background:linear-gradient(135deg,#f7dc94,#e0b45a);border:0;border-radius:999px;padding:11px 22px;cursor:pointer;margin:6px auto 0}
+.bimg{display:block;width:100%;border-radius:14px;border:1px solid var(--line);background:#fff;margin:12px 0 4px}
+body.inset .filters,body.inset .flow,body.inset .wip,body.inset header .lede+.lede{display:none}
 .filters{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:18px 0 6px;position:sticky;top:0;z-index:3;background:var(--bg);padding:10px 0}
 .filters button{font:800 13.5px "Nunito Sans";letter-spacing:.05em;text-transform:uppercase;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:8px 14px;cursor:pointer}
 .filters button.on{color:#fff;border-color:transparent}
@@ -102,6 +108,8 @@ footer a{color:var(--brown);font-weight:700}
     <p class="lede"><b class="nw">Tap a card to flip it</b> <span class="nw">for the steps.</span> <span class="nw">Use the tabs</span> to find a tool <span class="nw">for how you feel.</span></p>
     <p class="wip">🌱 This toolkit is growing. <span class="nw">New tools and pictures</span> <span class="nw">are on the way.</span></p>
   </header>
+  <div class="setbar"><label for="setpick">Your set</label><select id="setpick"><option value="">All tools</option></select></div>
+  <p style="text-align:center" id="allwrap" hidden><button class="allbtn" id="allbtn" type="button">Explore all the tools →</button></p>
   <div class="filters" id="filters">
     <button data-f="all" class="on" style="background:var(--ink)">All</button>
     <button data-f="t-ground">Grounding</button><button data-f="t-clear">Clearing</button><button data-f="t-calm">Calming</button>
@@ -133,7 +141,20 @@ function filter(f){
 }
 document.querySelectorAll('#filters button').forEach(b=>b.onclick=()=>filter(b.dataset.f));
 document.querySelectorAll('.flip').forEach(f=>{f.onclick=e=>{if(e.target.closest('a'))return;f.classList.toggle('on');};f.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();f.classList.toggle('on');}};});
-filter('all');
+const SETS={{SETS_JSON}};
+const pick=document.getElementById('setpick'),H1=document.querySelector('h1'),L1=document.querySelector('.lede'),h1d=H1.innerHTML,l1d=L1.innerHTML,track=document.getElementById('track');
+Object.entries(SETS).forEach(([k,v])=>{const o=document.createElement('option');o.value=k;o.textContent=v.label;pick.appendChild(o);});
+function setSet(k,push){const s=SETS[k];document.body.classList.toggle('inset',!!s);pick.value=s?k:'';document.getElementById('allwrap').hidden=!s;
+  if(s){const ids=s.cards;H1.innerHTML=s.h1||h1d;L1.innerHTML=s.lede||l1d;let n=0;
+    slides.forEach(el=>{const i=ids.indexOf(el.dataset.id);el.classList.toggle('hide',i<0);el.style.order=i<0?'':i;if(i>=0)n++;});slides.forEach(el=>{const i=ids.indexOf(el.dataset.id),nm=el.querySelector('.num');if(nm){nm.dataset.o=nm.dataset.o||nm.textContent;if(i>=0)nm.textContent=String(i+1).padStart(2,'0')+' / '+String(n).padStart(2,'0');}});
+    count.textContent=n+' tools from your session';}
+  else{H1.innerHTML=h1d;L1.innerHTML=l1d;slides.forEach(el=>{el.style.order='';const nm=el.querySelector('.num');if(nm&&nm.dataset.o)nm.textContent=nm.dataset.o;});filter('all');}
+  if(push){const u=new URL(location);s?u.searchParams.set('set',k):u.searchParams.delete('set');history.replaceState(null,'',u);}
+  window.scrollTo({top:0,behavior:'smooth'});}
+pick.onchange=()=>setSet(pick.value,true);
+document.getElementById('allbtn').onclick=()=>setSet('',true);
+const q=new URLSearchParams(location.search).get('set');
+if(q&&SETS[q])setSet(q,false);else filter('all');
 </script>
 <script data-goatcounter="https://earthharmony.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>

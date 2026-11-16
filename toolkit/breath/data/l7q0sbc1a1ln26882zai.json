@@ -1,7 +1,9 @@
 {
+  "hidden": true,
   "how": "Bring your hands together\nConnect with your heart\nExperiment with bowing to things animate and inanimate\nSpend a few moments throughout your day cultivating a sense of awe, reverence, appreciation and humility\nNotice whatever there is to notice",
   "icon": "💗",
-  "img": "",
+  "img": "/_blob/b4153891a876cf471c5f18ae0f33c61d",
+  "imgId": "b4153891a876cf471c5f18ae0f33c61d",
   "level": "easy",
   "lineage": "Mooji",
   "minutes": 3,
@@ -13,6 +15,5 @@
     "CENTERING",
     "CALMING"
   ],
-  "updated": 1794528394693,
-  "hidden": true
+  "updated": 1794844900000
 }
