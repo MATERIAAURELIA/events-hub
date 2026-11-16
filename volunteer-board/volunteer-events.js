@@ -1,5 +1,5 @@
-// Auto-generated 2026-11-16T10:00:11.383324 from the Events Hub (public events only)
-// 11 public events in the next 90 days
+// Auto-generated 2026-11-16T14:00:09.145662 from the Events Hub (public events only)
+// 10 public events in the next 90 days
 const VOLUNTEER_EVENTS = [
   {
     "id": "ev-nov17-galactic-gong",
@@ -26,16 +26,6 @@ const VOLUNTEER_EVENTS = [
     "title": "Back 2 Basics Community Sound Bath \u00b7 Session 1",
     "start": "2026-11-21T16:00:00-06:00",
     "end": "2026-11-21T17:00:00-06:00",
-    "description": "An elegant, effective community sound bath at an accessible cost \u2014 a spacious venue, a small team guiding the experience, and room to simply rest.",
-    "location": "Roots on Whyte \u00b7 3rd Floor",
-    "source": "hub",
-    "img": "https://events.earthharmonysoundwellness.com/photos/community-soundbath-candlelit.jpg"
-  },
-  {
-    "id": "ev-nov21-back2basics-2",
-    "title": "Back 2 Basics Community Sound Bath \u00b7 Session 2",
-    "start": "2026-11-21T17:30:00-06:00",
-    "end": "2026-11-21T18:30:00-06:00",
     "description": "An elegant, effective community sound bath at an accessible cost \u2014 a spacious venue, a small team guiding the experience, and room to simply rest.",
     "location": "Roots on Whyte \u00b7 3rd Floor",
     "source": "hub",
