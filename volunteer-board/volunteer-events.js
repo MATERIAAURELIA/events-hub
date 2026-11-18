@@ -1,16 +1,6 @@
-// Auto-generated 2026-11-17T22:00:09.429203 from the Events Hub (public events only)
-// 10 public events in the next 90 days
+// Auto-generated 2026-11-18T06:00:10.556228 from the Events Hub (public events only)
+// 9 public events in the next 90 days
 const VOLUNTEER_EVENTS = [
-  {
-    "id": "ev-nov17-galactic-gong",
-    "title": "\u2605 The Galactic Gong Activation Intensity",
-    "start": "2026-11-17T19:00:00-06:00",
-    "end": "2026-11-17T20:30:00-06:00",
-    "description": "By request: a more intensified gong journey for people who already know the gongs. Longer, deeper, more of the big waves, in an intimate room of 8.",
-    "location": "Private Home Studio \u00b7 Terwillegar (address on registration)",
-    "source": "hub",
-    "img": "https://events.earthharmonysoundwellness.com/photos/galactic-gong-grotto.jpg"
-  },
   {
     "id": "ev-nov20-pulseoflife",
     "title": "Pulse of Life Drum Circle & Rhythm Cradle",
