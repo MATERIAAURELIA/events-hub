@@ -980,7 +980,8 @@
       ],
       "imgCrop": "center top",
       "capacity": 23,
-      "spots": 1
+      "spots": 0,
+      "full": true
     },
     {
       "id": "ev-oct24-back2basics",
