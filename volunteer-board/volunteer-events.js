@@ -1,16 +1,6 @@
-// Auto-generated 2026-11-20T22:00:05.104107 from the Events Hub (public events only)
-// 9 public events in the next 90 days
+// Auto-generated 2026-11-21T06:00:04.867520 from the Events Hub (public events only)
+// 8 public events in the next 90 days
 const VOLUNTEER_EVENTS = [
-  {
-    "id": "ev-nov20-pulseoflife",
-    "title": "Pulse of Life Drum Circle & Rhythm Cradle",
-    "start": "2026-11-20T19:00:00-06:00",
-    "end": "2026-11-20T22:00:00-06:00",
-    "description": "An evening of shared rhythm in Sherwood Park. We open with a community drum circle \u2014 every drum provided, no experience needed \u2014 and deepen into the Rhythm Cradle, a participant-driven sound experience of connection, trust and play.",
-    "location": "",
-    "source": "hub",
-    "img": "https://events.earthharmonysoundwellness.com/photos/blank-templates/pulse-of-life-blank.png"
-  },
   {
     "id": "ev-nov21-back2basics",
     "title": "Back 2 Basics Community Sound Bath \u00b7 Session 1",
