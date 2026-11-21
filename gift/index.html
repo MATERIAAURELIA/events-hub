@@ -43,7 +43,7 @@ button{margin-top:24px;width:100%;background:#c79a45;color:#fff;border:none;bord
 <ol class="steps">
 <li><b>1</b>Choose the gift and tell me who it is for.</li>
 <li><b>2</b>I email you a secure payment link.</li>
-<li><b>3</b>A printed card in a kraft envelope goes in the mail, to you or straight to them. Cards are mailed out before Christmas.</li>
+<li><b>3</b>Choose a printed card in a kraft envelope, mailed to you or straight to them, or a digital card sent by text or email with the opening you see above and their name on it.</li>
 <li><b>4</b>They book any Signature Sound Session with their own gift code.</li>
 </ol>
 
@@ -82,8 +82,21 @@ button{margin-top:24px;width:100%;background:#c79a45;color:#fff;border:none;bord
 <label for="email">Your email</label>
 <input id="email" type="email" name="email" required>
 
-<label for="mail">Where should the card be mailed?</label>
-<textarea id="mail" name="Mail to" rows="3" required placeholder="Name and full address, yours or theirs"></textarea>
+<label for="how">How should it arrive?</label>
+<select id="how" name="Delivery" required>
+<option value="Printed card by mail">Printed card in the mail</option>
+<option value="Digital by text">Digital card by text message</option>
+<option value="Digital by email">Digital card by email</option>
+</select>
+<div class="hint" id="howHint"></div>
+
+<div id="mailRow"><label for="mail">Where should the card be mailed?</label>
+<textarea id="mail" name="Mail to" rows="3" placeholder="Name and full address, yours or theirs"></textarea></div>
+
+<div id="digRow"><label for="dest" id="destLabel">Their mobile number</label>
+<input id="dest" name="Send digital card to">
+<label for="when">When should it arrive?</label>
+<input id="when" name="Send on" placeholder="December 25, 9am · or right away"></div>
 
 <label for="note">Anything else?</label>
 <textarea id="note" name="Note" rows="2" placeholder="A message for the card, a date it is needed by…"></textarea>
@@ -97,6 +110,11 @@ button{margin-top:24px;width:100%;background:#c79a45;color:#fff;border:none;bord
 </div>
 <script>
 var g=document.getElementById('gift'),o=document.getElementById('otherRow'),a=document.getElementById('amt');
+var h=document.getElementById('how'),mr=document.getElementById('mailRow'),dr=document.getElementById('digRow'),m=document.getElementById('mail'),d=document.getElementById('dest'),hh=document.getElementById('howHint'),dl=document.getElementById('destLabel');
+function how(){var p=h.value.indexOf('Printed')===0,t=h.value.indexOf('text')>0;mr.style.display=p?'block':'none';dr.style.display=p?'none':'block';m.required=p;d.required=!p;
+dl.textContent=t?'Their mobile number':'Their email address';d.type=t?'tel':'email';
+hh.textContent=p?'Order by December 10 and your printed card is mailed in time for Christmas.':'Sent on the day you choose, Christmas morning included.';}
+h.addEventListener('change',how);how();
 g.addEventListener('change',function(){var on=g.value==='other';o.style.display=on?'block':'none';a.required=on;});
 </script>
 </body></html>
