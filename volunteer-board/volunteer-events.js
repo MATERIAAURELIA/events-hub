@@ -1,16 +1,6 @@
-// Auto-generated 2026-11-21T22:00:05.351835 from the Events Hub (public events only)
-// 7 public events in the next 90 days
+// Auto-generated 2026-11-22T06:00:05.650135 from the Events Hub (public events only)
+// 6 public events in the next 90 days
 const VOLUNTEER_EVENTS = [
-  {
-    "id": "ev-nov21-back2basics",
-    "title": "Back 2 Basics Community Sound Bath \u00b7 Session 1",
-    "start": "2026-11-21T16:00:00-06:00",
-    "end": "2026-11-21T17:00:00-06:00",
-    "description": "An elegant, effective community sound bath at an accessible cost \u2014 a spacious venue, a small team guiding the experience, and room to simply rest.",
-    "location": "Roots on Whyte \u00b7 3rd Floor",
-    "source": "hub",
-    "img": "https://events.earthharmonysoundwellness.com/photos/community-soundbath-candlelit.jpg"
-  },
   {
     "id": "ev-nov24-chakras",
     "title": "Clearing & Balancing: Sound Journey through the Chakras",
