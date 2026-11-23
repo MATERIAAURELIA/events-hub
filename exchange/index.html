@@ -130,7 +130,7 @@ input:focus,textarea:focus,select:focus,button:focus-visible{outline:2px solid v
   const EVID = new URLSearchParams(location.search).get('ev');
   const EV = EVENTS[EVID];
   const KEY = EV ? 'exchange-proposals-' + EVID : 'exchange-proposals', RKEY = EV ? 'exchange-roster-' + EVID : 'exchange-roster';
-  const DEFAULT_ROSTER = EV ? EV.roster : ['Brock', 'Oksanna', 'Ashley'];
+  const DEFAULT_ROSTER = EV ? EV.roster : ['Oksanna', 'Ashley'];
   if (EV) {
     document.querySelector('.eyebrow').textContent = EV.eyebrow;
     document.querySelector('h1').textContent = EV.h1;
