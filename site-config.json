@@ -1497,8 +1497,7 @@
       "date": "2026-11-26",
       "time": "19:00",
       "endTime": "20:15",
-      "venue": "",
-      "venueOverride": "Sweet Pea Café",
+      "venue": "home",
       "price": "40",
       "booking": "https://EarthHarmony.as.me/?appointmentType=100012653",
       "contactEmail": "earthharmonysoundhealing@gmail.com",
@@ -1509,8 +1508,9 @@
       "status": "published",
       "repeatable": false,
       "series": "community",
-      "capacity": 15,
-      "spots": 13
+      "capacity": 8,
+      "spots": 6,
+      "venueOverride": "Terwillegar Home Studio"
     },
     {
       "id": "ev-nov12-mmm",
