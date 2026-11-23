@@ -1346,8 +1346,8 @@
       "venue": "home",
       "venueOverride": "Terwillegar Home Studio",
       "price": "62.50",
-      "full": true,
-      "spots": 0,
+      "full": false,
+      "spots": 1,
       "status": "published",
       "booking": "https://EarthHarmony.as.me/?appointmentType=99174444",
       "contactEmail": "earthharmonysoundhealing@gmail.com",
@@ -1355,7 +1355,8 @@
       "desc": "By request: a more intensified gong journey for people who already know the gongs. Longer, deeper, more of the big waves, in an intimate room of 8.\n\nThe Nov 10 and Nov 17 nights both filled within an hour, so here's a third.",
       "img": "photos/galactic-gong-grotto.jpg",
       "tint": "#c98a3f",
-      "capacity": 8
+      "capacity": 8,
+      "spotsLocked": true
     },
     {
       "type": "deep-gong",
@@ -1374,10 +1375,10 @@
       "id": "ev-dec4-stillness",
       "time": "18:30",
       "endTime": "20:00",
-      "spots": 0,
+      "spots": 1,
       "booking": "https://EarthHarmony.as.me/?appointmentType=97625755",
       "capacity": 8,
-      "full": true
+      "full": false
     },
     {
       "id": "ev-nov11-grief",
@@ -1462,10 +1463,10 @@
       "img": "photos/plate-clearing-balance-jul17.jpg",
       "tint": "#7c5cd6",
       "archived": false,
-      "spots": 1,
+      "spots": 0,
       "booking": "https://EarthHarmony.as.me/?appointmentType=93995396",
       "capacity": 8,
-      "full": false,
+      "full": true,
       "video": "videos/featured-clearing-balancing.mp4"
     },
     {
