@@ -1,4 +1,4 @@
-// Auto-generated 2026-11-23T10:00:08.795762 from the Events Hub (public events only)
+// Auto-generated 2026-11-23T14:00:12.203505 from the Events Hub (public events only)
 // 6 public events in the next 90 days
 const VOLUNTEER_EVENTS = [
   {
@@ -27,7 +27,7 @@ const VOLUNTEER_EVENTS = [
     "start": "2026-11-26T19:00:00-06:00",
     "end": "2026-11-26T20:15:00-06:00",
     "description": "An experimental session of chosen intensity. Bowls played deliberately, with more intensity and volume, so the busy mind can let go and lose itself more easily.",
-    "location": "",
+    "location": "Private Home Studio \u00b7 Terwillegar (address on registration)",
     "source": "hub",
     "img": "https://events.earthharmonysoundwellness.com/photos/singing-bowl-hot-sauce.jpg"
   },
