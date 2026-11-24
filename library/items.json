@@ -90,6 +90,23 @@
     "related": "our sound journeys"
   },
   {
+    "slug": "harmonic-structure-of-sound",
+    "title": "The Harmonic Structure of Sound",
+    "desc": "David Gibson on the harmonic series: the hidden notes inside every sound, odd vs even harmonics, pure vs rich tones, and overtone throat singing.",
+    "type": "Talk",
+    "length": "51 min",
+    "youtube": "ZI7uN-QdRPE",
+    "url": "https://youtu.be/ZI7uN-QdRPE",
+    "kicker": "Talk",
+    "sub": "The hidden notes inside every sound",
+    "btn": "Watch",
+    "img": "https://img.youtube.com/vi/ZI7uN-QdRPE/hqdefault.jpg",
+    "color": "teal",
+    "cat": "talks",
+    "related": "our sound journeys",
+    "custom": true
+  },
+  {
     "slug": "antler-twist",
     "title": "Antler Twist",
     "desc": "A short fascia release from Human Garage. Two minutes to loosen the body before or after a session.",
