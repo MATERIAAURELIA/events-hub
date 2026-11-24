@@ -1083,6 +1083,26 @@
       "cancelled": true
     },
     {
+      "id": "ev-dec19-didge-trilogy",
+      "type": "sound-bath",
+      "series": "community",
+      "title": "Didgeridoo Trilogy\nA Harmonic Roots Sound Journey",
+      "date": "2026-12-19",
+      "time": "15:30",
+      "endTime": "16:30",
+      "venue": "roots-on-whyte",
+      "price": 45,
+      "booking": "https://EarthHarmony.as.me/?appointmentType=100861353",
+      "contactEmail": "earthharmonysoundhealing@gmail.com",
+      "contactPhone": "780-257-6428",
+      "desc": "Three didgeridoos, one room. Featuring Forest Didjeman, Marcus Fung and Steve Gertz.\n\nThe didgeridoo, known to the Yolngu people of Arnhem Land in northern Australia as the yidaki, is a eucalyptus branch hollowed out by termites. Traditionally it accompanies song and dance in ceremony, keeping a pulse with clapsticks as the stories of land and ancestors are sung.\n\nWe honour that origin, and we will be playing it in a contemporary way: as a sound journey. Three players, circular breathing, one deep unbroken drone, and inside it a whole symphony of harmonics, shaped by breath, voice and tongue. A sound you feel in your chest as much as you hear it, and a sound to lie down in on the longest nights of the year.\n\nRoots on Whyte, 3rd floor conference room. Doors 3:00 PM, journey 3:30 to 4:30 PM. Please bring your own mat, pillow and blankets, the thicker and cozier the better.",
+      "img": "photos/didge-trilogy-dec19.jpg",
+      "status": "published",
+      "repeatable": false,
+      "capacity": 40,
+      "timeLabel": "Doors 3:00 · Journey 3:30–4:30 PM"
+    },
+    {
       "id": "ev-dec19-back2basics",
       "type": "sound-bath",
       "series": "community",
@@ -1097,7 +1117,7 @@
       "contactPhone": "780-257-6428",
       "desc": "An elegant, effective community sound bath at an accessible cost — a spacious venue, a small team guiding the experience, and room to simply rest.\n\nThis is the 4:00–5:00 pm session (doors 3:30). A second session runs 5:30–6:30 pm.\n\nPlease bring your own mat, pillow and blankets — the thicker and cozier the better. A preparation email with all the details follows your registration.",
       "img": "photos/community-soundbath-candlelit.jpg",
-      "status": "published",
+      "status": "draft",
       "repeatable": false,
       "timeLabel": "two sessions: 4:00–5:00 & 5:30–6:30 PM",
       "video": "videos/community-b2b-trailer.mp4"
@@ -1117,7 +1137,7 @@
       "contactPhone": "780-257-6428",
       "desc": "An elegant, effective community sound bath at an accessible cost — a spacious venue, a small team guiding the experience, and room to simply rest.\n\nThis is the 5:30–6:30 pm session (doors 5:00). An earlier session runs 4:00–5:00 pm.\n\nPlease bring your own mat, pillow and blankets — the thicker and cozier the better. A preparation email with all the details follows your registration.",
       "img": "photos/community-soundbath-candlelit.jpg",
-      "status": "published",
+      "status": "draft",
       "repeatable": false,
       "timeLabel": "two sessions: 4:00–5:00 & 5:30–6:30 PM",
       "video": "videos/community-b2b-trailer.mp4"
