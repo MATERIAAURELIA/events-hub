@@ -1512,8 +1512,9 @@
       "repeatable": false,
       "series": "community",
       "capacity": 8,
-      "spots": 2,
-      "venueOverride": "Terwillegar Home Studio"
+      "spots": 3,
+      "venueOverride": "Terwillegar Home Studio",
+      "spotsLocked": true
     },
     {
       "id": "ev-nov12-mmm",
