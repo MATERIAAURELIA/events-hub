@@ -1,16 +1,6 @@
-// Auto-generated 2026-11-24T22:00:06.976196 from the Events Hub (public events only)
-// 5 public events in the next 90 days
+// Auto-generated 2026-11-25T06:00:06.906658 from the Events Hub (public events only)
+// 4 public events in the next 90 days
 const VOLUNTEER_EVENTS = [
-  {
-    "id": "ev-nov24-chakras",
-    "title": "Clearing & Balancing: Sound Journey through the Chakras",
-    "start": "2026-11-24T19:00:00-06:00",
-    "end": "2026-11-24T20:30:00-06:00",
-    "description": "An immersive and melodic multi-instrumental sound journey that also features the human voice. With sound, we navigate the map of the 7 chakra centres.",
-    "location": "Private Home Studio \u00b7 Terwillegar (address on registration)",
-    "source": "hub",
-    "img": "https://events.earthharmonysoundwellness.com/photos/plate-clearing-balance-jul17.jpg"
-  },
   {
     "id": "ev-nov25-galactic-gong",
     "title": "\u2605 The Galactic Gong Activation Intensity",
