@@ -1,5 +1,5 @@
-// Auto-generated 2026-11-24T14:00:06.485470 from the Events Hub (public events only)
-// 6 public events in the next 90 days
+// Auto-generated 2026-11-24T18:00:05.506236 from the Events Hub (public events only)
+// 5 public events in the next 90 days
 const VOLUNTEER_EVENTS = [
   {
     "id": "ev-nov24-chakras",
@@ -42,23 +42,13 @@ const VOLUNTEER_EVENTS = [
     "img": "https://events.earthharmonysoundwellness.com/photos/plate-stillness-release-jul31.jpg"
   },
   {
-    "id": "ev-dec19-back2basics",
-    "title": "Back 2 Basics Community Sound Bath \u00b7 Session 1",
-    "start": "2026-12-19T16:00:00-06:00",
-    "end": "2026-12-19T17:00:00-06:00",
-    "description": "An elegant, effective community sound bath at an accessible cost \u2014 a spacious venue, a small team guiding the experience, and room to simply rest.",
+    "id": "ev-dec19-didge-trilogy",
+    "title": "Didgeridoo Trilogy A Harmonic Roots Sound Journey",
+    "start": "2026-12-19T15:30:00-06:00",
+    "end": "2026-12-19T16:30:00-06:00",
+    "description": "Three didgeridoos, one room. Featuring Forest Didjeman, Marcus Fung and Steve Gertz.",
     "location": "Roots on Whyte \u00b7 3rd Floor",
     "source": "hub",
-    "img": "https://events.earthharmonysoundwellness.com/photos/community-soundbath-candlelit.jpg"
-  },
-  {
-    "id": "ev-dec19-back2basics-2",
-    "title": "Back 2 Basics Community Sound Bath \u00b7 Session 2",
-    "start": "2026-12-19T17:30:00-06:00",
-    "end": "2026-12-19T18:30:00-06:00",
-    "description": "An elegant, effective community sound bath at an accessible cost \u2014 a spacious venue, a small team guiding the experience, and room to simply rest.",
-    "location": "Roots on Whyte \u00b7 3rd Floor",
-    "source": "hub",
-    "img": "https://events.earthharmonysoundwellness.com/photos/community-soundbath-candlelit.jpg"
+    "img": "https://events.earthharmonysoundwellness.com/photos/didge-trilogy-dec19.jpg"
   }
 ];
