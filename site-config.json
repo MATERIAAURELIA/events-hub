@@ -1298,25 +1298,6 @@
       "titleAlign": "center"
     },
     {
-      "id": "ev-dec12-ekatra",
-      "cancelled": true,
-      "type": "sound-bath",
-      "title": "Return & Remember:\nThe Harmonic OM",
-      "date": "2026-12-12",
-      "time": "19:00",
-      "endTime": "20:30",
-      "venue": "ekatra",
-      "price": "60 + GST",
-      "booking": "https://www.ekatrayoga.com/programs-events",
-      "contactEmail": "earthharmonysoundhealing@gmail.com",
-      "contactPhone": "780-257-6428",
-      "desc": "A journey into one sound, OM: drones, layered tones and the perfect fifth, with shruti box, gong, deep singing bowls and the human voice.\n\nPart of the Three Signature Journeys of Sound at Ekatra (Oct 17, Nov 7, Dec 12). Join one, or all three as a bundle. Registration through Ekatra Yoga.",
-      "status": "draft",
-      "repeatable": false,
-      "img": "photos/plate-return-remember-aug21.jpg",
-      "titleAlign": "center"
-    },
-    {
       "id": "ev-nov10-galactic-gong",
       "type": "deep-gong",
       "title": "★ The Galactic Gong Activation\nIntensity",
