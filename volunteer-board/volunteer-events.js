@@ -1,4 +1,4 @@
-// Auto-generated 2026-11-25T06:00:06.906658 from the Events Hub (public events only)
+// Auto-generated 2026-11-25T10:00:06.118731 from the Events Hub (public events only)
 // 4 public events in the next 90 days
 const VOLUNTEER_EVENTS = [
   {
