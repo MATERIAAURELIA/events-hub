@@ -1,16 +1,6 @@
-// Auto-generated 2026-11-25T22:00:08.086161 from the Events Hub (public events only)
-// 9 public events in the next 90 days
+// Auto-generated 2026-11-26T06:00:05.821587 from the Events Hub (public events only)
+// 8 public events in the next 90 days
 const VOLUNTEER_EVENTS = [
-  {
-    "id": "ev-nov25-galactic-gong",
-    "title": "\u2605 The Galactic Gong Activation Intensity",
-    "start": "2026-11-25T18:30:00-06:00",
-    "end": "2026-11-25T20:00:00-06:00",
-    "description": "By request: a more intensified gong journey for people who already know the gongs. Longer, deeper, more of the big waves, in an intimate room of 8.",
-    "location": "Private Home Studio \u00b7 Terwillegar (address on registration)",
-    "source": "hub",
-    "img": "https://events.earthharmonysoundwellness.com/photos/galactic-gong-grotto.jpg"
-  },
   {
     "id": "ev-nov26-hotsauce",
     "title": "Singing Bowl Hot Sauce An Experiment in Chosen Intensity",
