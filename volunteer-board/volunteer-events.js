@@ -1,16 +1,6 @@
-// Auto-generated 2026-11-26T22:00:08.175340 from the Events Hub (public events only)
-// 8 public events in the next 90 days
+// Auto-generated 2026-11-27T06:00:05.944113 from the Events Hub (public events only)
+// 7 public events in the next 90 days
 const VOLUNTEER_EVENTS = [
-  {
-    "id": "ev-nov26-hotsauce",
-    "title": "Singing Bowl Hot Sauce An Experiment in Chosen Intensity",
-    "start": "2026-11-26T19:00:00-06:00",
-    "end": "2026-11-26T20:15:00-06:00",
-    "description": "An experimental session of chosen intensity. Bowls played deliberately, with more intensity and volume, so the busy mind can let go and lose itself more easily.",
-    "location": "Private Home Studio \u00b7 Terwillegar (address on registration)",
-    "source": "hub",
-    "img": "https://events.earthharmonysoundwellness.com/photos/singing-bowl-hot-sauce.jpg"
-  },
   {
     "id": "ev-dec4-stillness",
     "title": "Stillness & Release: Planetary Gong Immersion",
