@@ -46,7 +46,7 @@ const VOLUNTEER_EVENTS = [
     "title": "Didgeridoo Trilogy A Harmonic Roots Sound Journey",
     "start": "2026-12-19T15:30:00-06:00",
     "end": "2026-12-19T16:30:00-06:00",
-    "description": "Three didgeridoos, one room. Featuring Forest Didjeman, Marcus Fung and Steve Gertz.",
+    "description": "Three didgeridoos, one room. Featuring Forest Didjman, Marcus Fung and Steven Gertz.",
     "location": "Roots on Whyte \u00b7 3rd Floor",
     "source": "hub",
     "img": "https://events.earthharmonysoundwellness.com/photos/didge-trilogy-dec19.jpg"
