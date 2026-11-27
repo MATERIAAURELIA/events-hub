@@ -1,4 +1,4 @@
-// Auto-generated 2026-11-26T14:00:07.477514 from the Events Hub (public events only)
+// Auto-generated 2026-11-26T18:00:05.708885 from the Events Hub (public events only)
 // 8 public events in the next 90 days
 const VOLUNTEER_EVENTS = [
   {
@@ -15,7 +15,7 @@ const VOLUNTEER_EVENTS = [
     "id": "ev-dec4-stillness",
     "title": "Stillness & Release: Planetary Gong Immersion",
     "start": "2026-12-04T18:30:00-06:00",
-    "end": "2026-12-04T20:00:00-06:00",
+    "end": "2026-12-04T20:30:00-06:00",
     "description": "6 Large planetary gongs, deep vibrations and resonance felt in an intimate room \u2014 thick mats, sheepskins, blankets, bolsters and tea all provided.",
     "location": "Private Home Studio \u00b7 Terwillegar (address on registration)",
     "source": "hub",
@@ -25,7 +25,7 @@ const VOLUNTEER_EVENTS = [
     "id": "ev-dec8-galactic-gong",
     "title": "\u2605 The Galactic Gong Activation Intensity",
     "start": "2026-12-08T19:00:00-06:00",
-    "end": "2026-12-08T20:30:00-06:00",
+    "end": "2026-12-08T21:00:00-06:00",
     "description": "By request: a more intensified gong journey for people who already know the gongs. Longer, deeper, more of the big waves, in an intimate room of 8.",
     "location": "Private Home Studio \u00b7 Terwillegar (address on registration)",
     "source": "hub",
@@ -45,7 +45,7 @@ const VOLUNTEER_EVENTS = [
     "id": "ev-dec15-chakras",
     "title": "Clearing & Balancing: Sound Journey through the Chakras",
     "start": "2026-12-15T19:00:00-06:00",
-    "end": "2026-12-15T20:30:00-06:00",
+    "end": "2026-12-15T21:00:00-06:00",
     "description": "An immersive and melodic multi-instrumental sound journey that also features the human voice. With sound, we navigate the map of the 7 chakra centres.",
     "location": "Private Home Studio \u00b7 Terwillegar (address on registration)",
     "source": "hub",
@@ -75,7 +75,7 @@ const VOLUNTEER_EVENTS = [
     "id": "ev-dec30-galactic-gong",
     "title": "\u2605 The Galactic Gong Activation Year-End Reflection",
     "start": "2026-12-30T19:00:00-06:00",
-    "end": "2026-12-30T20:30:00-06:00",
+    "end": "2026-12-30T21:00:00-06:00",
     "description": "Close the year in the big waves. An intensified gong journey for reflection and release in the quiet days between the holidays, so you can step into the new year lighter.",
     "location": "Private Home Studio \u00b7 Terwillegar (address on registration)",
     "source": "hub",
